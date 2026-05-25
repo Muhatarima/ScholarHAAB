@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "passCount": 10,
+  "total": 10,
+  "checks": [
+    {
+      "name": "anti-hallucination truth engine exists and enforces confidence",
+      "status": "PASS"
+    },
+    {
+      "name": "qbank chat validates every answer through truth engine",
+      "status": "PASS"
+    },
+    {
+      "name": "10-year qbank analyzer exports required analysis functions",
+      "status": "PASS"
+    },
+    {
+      "name": "progress engine detects accuracy, weak points, mistakes, and learning curve",
+      "status": "PASS"
+    },
+    {
+      "name": "student dashboard renders all required sections",
+      "status": "PASS"
+    },
+    {
+      "name": "progress UI component set is complete",
+      "status": "PASS"
+    },
+    {
+      "name": "dashboard API connects progress and predictions",
+      "status": "PASS"
+    },
+    {
+      "name": "analysis API is available for subject paper requests",
+      "status": "PASS"
+    },
+    {
+      "name": "question attempt route tracks full attempt metadata",
+      "status": "PASS"
+    },
+    {
+      "name": "database SQL supports detailed progress fields",
+      "status": "PASS"
+    }
+  ],
+  "generatedAt": "2026-05-17T14:56:12.990Z"
+}

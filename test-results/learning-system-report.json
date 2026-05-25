@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "passCount": 10,
+  "total": 10,
+  "checks": [
+    {
+      "name": "database schema defines all learning tables",
+      "status": "PASS"
+    },
+    {
+      "name": "memory system exports required functions",
+      "status": "PASS"
+    },
+    {
+      "name": "adaptive engine exports required functions",
+      "status": "PASS"
+    },
+    {
+      "name": "exam predictor exports required functions",
+      "status": "PASS"
+    },
+    {
+      "name": "mock generator exports required functions",
+      "status": "PASS"
+    },
+    {
+      "name": "one-to-one tutor engine exports required functions",
+      "status": "PASS"
+    },
+    {
+      "name": "emergency mode component exists",
+      "status": "PASS"
+    },
+    {
+      "name": "dashboard is adaptive learning dashboard",
+      "status": "PASS"
+    },
+    {
+      "name": "all required API routes exist",
+      "status": "PASS"
+    },
+    {
+      "name": "qbank chat updates student memory",
+      "status": "PASS"
+    }
+  ],
+  "generatedAt": "2026-05-17T14:56:13.055Z"
+}
