@@ -1,5 +1,10 @@
+import AuthGuard from '@/components/auth/AuthGuard'
 import ProductChatShell from '@/components/ProductChatShell'
 
 export default function QBankPage() {
-  return <ProductChatShell product="qbank" />
+  return (
+    <AuthGuard>
+      <ProductChatShell product="qbank" />
+    </AuthGuard>
+  )
 }

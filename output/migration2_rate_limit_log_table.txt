@@ -1,0 +1,70 @@
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (2)
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+1
+2
+3
+4
+5
+6
+7
+CREATE TABLE IF NOT EXISTS rate_limit_log (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id    UUID,
+        endpoint   TEXT,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+          );
+)
+Results
+Explain
+Chart
+Export
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+Error: Failed to run sql query: ERROR: 42601: syntax error at or near ")" LINE 7: ) ^
+
+Debug with Assistant
+
+0 row
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase

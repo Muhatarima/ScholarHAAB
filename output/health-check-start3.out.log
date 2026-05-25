@@ -1,0 +1,13 @@
+
+> scholorhaab@0.1.0 start
+> next start --port 3033
+
+▲ Next.js 16.1.6
+- Local:         http://localhost:3033
+- Network:       http://192.168.0.101:3033
+
+✓ Starting...
+✓ Ready in 1204ms
+{"timestamp":"2026-03-29T15:50:45.155Z","level":"info","message":"external_call_completed","request_id":"93afda09-8757-48f1-9878-45d6df690848","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/profiles","duration_ms":298,"status_code":200}
+{"timestamp":"2026-03-29T15:50:45.386Z","level":"info","message":"external_call_completed","request_id":"f865da4c-e2a1-4ffb-9eee-44e81095f56d","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/answer_cache","duration_ms":217,"status_code":200}
+{"timestamp":"2026-03-29T15:50:45.511Z","level":"info","message":"external_call_completed","request_id":"df4f2d33-bd97-46bf-858e-3f577a5dea32","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/llm_usage","duration_ms":121,"status_code":200}

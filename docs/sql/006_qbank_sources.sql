@@ -10,9 +10,7 @@ create table if not exists public.qbank_sources (
   quality_tier text not null,
   allowed_use text not null,
   fts tsvector generated always as (
-    to_tsvector(
-      'english',
-      coalesce(provider, '') || ' ' ||
+    to_tsvector('english', coalesce(provider, '') || ' ' ||
       coalesce(source_kind, '') || ' ' ||
       coalesce(board, '') || ' ' ||
       coalesce(level, '') || ' ' ||

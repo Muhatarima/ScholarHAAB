@@ -1,3 +1,8 @@
+create or replace function public.immutable_array_to_string(arr text[], sep text)
+returns text language sql immutable as $$
+  select array_to_string(arr, sep);
+$$;
+
 create table if not exists public.qbank_papers (
   id text primary key,
   board text not null,
@@ -15,16 +20,14 @@ create table if not exists public.qbank_papers (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   fts tsvector generated always as (
-    to_tsvector(
-      'english',
-      coalesce(board, '') || ' ' ||
+    to_tsvector('english', coalesce(board, '') || ' ' ||
       coalesce(level, '') || ' ' ||
       coalesce(subject, '') || ' ' ||
       coalesce(paper, '') || ' ' ||
       coalesce(paper_code, '') || ' ' ||
       coalesce(paper_title, '') || ' ' ||
       coalesce(session, '') || ' ' ||
-      array_to_string(focus_topics, ' ')
+      public.immutable_array_to_string(focus_topics, ' ')
     )
   ) stored
 );

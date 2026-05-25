@@ -1,0 +1,2254 @@
+{
+  "Accounting__General": {
+    "total_questions": 538,
+    "year_frequency": {
+      "2016": 70,
+      "2017": 26,
+      "2018": 63,
+      "2019": 60,
+      "2020": 83,
+      "2021": 91,
+      "2022": 28,
+      "2023": 73,
+      "2025": 35,
+      "2024": 9
+    },
+    "avg_marks": 2.0,
+    "command_words": {
+      "determine": 3,
+      "identify": 31,
+      "calculate": 53,
+      "state": 40,
+      "explain": 8,
+      "derive": 1,
+      "define": 1,
+      "list": 12,
+      "name": 16,
+      "show": 7,
+      "comment": 1,
+      "draw": 1,
+      "suggest": 4
+    },
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "The question was based on a reduction in the provision for doubtful debts. Some candidates incorrectly thought that it is the reduction in the provision that should be deducted from the trade receivables in the statement of financial position. This is not the case. It is the full amount of the provi",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Accounting 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "text": "Candidates could have approached the given data as: Opening capital ($152 000) + Capital introduced ($14 000) + Profit for the year (required answer) – Drawings ($7900) = Closing capital ($184 000). The only figure which would have worked as profit for the year was $25 900, the key of A.",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Accounting 2016 Feb_Mar Paper 1 Q12"
+      },
+      {
+        "text": "Many candidates found this question challenging. The unit cost increases as a result of the fixed element when activity decreases, as there are fewer units to spread this cost over. The level of increase, however, will be lower than level of overall decrease in activity as a result of the variable e",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Accounting 2016 Feb_Mar Paper 1 Q25"
+      },
+      {
+        "text": "Candidates were required to determine the cost of goods sold. A total of 3600 watches were sold, therefore the cost of goods sold was 3600 × $185 (direct material + labour costs + fixed manufacturing overheads) = $666 000, the key B.  International Advanced Subsidiary and Advanced Level 9706 Account",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "medium",
+        "source": "Cambridge A Level Accounting 2016 Feb_Mar Paper 1 Q26"
+      },
+      {
+        "text": "The question concerned a limited company. Candidates were required to prepare an income statement and a statement of financial position after accounting for various adjustments. The latter parts of the question concentrated on working capital and the return on capital employed. (a) This part require",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Accounting 2016 Feb_Mar Paper 1 Q1"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Biology__Cell_Biology": {
+    "total_questions": 21,
+    "year_frequency": {
+      "2022": 2,
+      "2018": 6,
+      "2017": 3,
+      "2020": 5,
+      "2016": 1,
+      "2019": 4
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 6,
+      "describe": 1
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [
+      "correct"
+    ],
+    "sample_questions": [
+      {
+        "text": "© B060/0031; MARILYN SCHALLER/SCIENCE PHOTO LIBRARY; TEM of the junction of two leaf cells; www.sciencephoto.com",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Biology 2022 May_June Paper 1 Q2"
+      },
+      {
+        "text": "© P656/0023; BIOPHOTO ASSOCIATES/SCIENCE PHOTO LIBRARY; False-colour SEM of a group of human chromosomes; www.sciencephoto.com",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Biology 2022 May_June Paper 1 Q22"
+      },
+      {
+        "text": "13 A active transport B endocytosis C exocytosis D phagocytosis 14 enzyme substrate enzyme/substrate complex Which state m ent explains how the substrate is able to enter the active site of the enzyme? Contact between the substrate and t h e enzyme causes a ch ange in the enzyme shape. The shape o f",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m18_qp_12.pdf"
+      },
+      {
+        "text": "2 A 1 2 1 B 2 1 2 C 2 2 2 D Three parts of a chromosome and their function s are listed. P1 centromere P2 histone prot eins P3 telomere function F1 packages D N A into compact structur es F2 holds two ch romatids together F3 prevents loss of genes Which combination is co rrect? 21 part A P1 and F1 B",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m18_qp_12.pdf"
+      },
+      {
+        "text": "3 Bacteria that infect skin wounds can become resistant to the antibiotic commonly used to kill Which state m ent explains how these bacteria could become resistant t o the antibio t ic? Exposure to the antibiotic causes a change in the bacterial cell wall, preventing the antibiotic Other bacteria t",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m18_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": [
+      "Correct"
+    ]
+  },
+  "Biology__Plant_Biology": {
+    "total_questions": 9,
+    "year_frequency": {
+      "2022": 1,
+      "2016": 3,
+      "2020": 1,
+      "2018": 1,
+      "2019": 3
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "show": 3,
+      "identify": 1,
+      "state": 1
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "© C011/5248; DR KEITH WHEELER/SCIENCE PHOTO LIBRARY; Oleander leaf, light micrograph; www.sciencephoto.com Permission to reproduce items where third-party owned material protected by copyright is included has been sought and cleared where possible. Every reasonable effort has been made by the publis",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Biology 2022 May_June Paper 1 Q31"
+      },
+      {
+        "text": "3 Translation will be inhibited. The diagrams show transverse sections of parts of a plant. If bacteria are treated with both drugs, what will be the immediate effects? A 1, 2 and 3 B 1 and 2 only C 1 and 3 only D 2 and 3 only 23 1 2 3 4 5 6 root stem lea f 1 2 3 4 5",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "medium",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m16_qp_12.pdf"
+      },
+      {
+        "text": "24 A Water moves through the cell walls. B Water moves through the cytoplasm. C Water moves through the plasmodesmata. D Water moves through the vacuoles. © UCLES 2016 9700/12/F/M/16 25 9 [Turn over 25 is moved from the phloem sieve tube to an actively dividing root tip? water potential in phloem si",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m16_qp_12.pdf"
+      },
+      {
+        "text": "12 A student drew a diagram to show the substances used and produced in photosynthesis in a leaf . 5 [Turn over 12 1 + 2 are used by the leaf 3 + 4 are produced by the leaf Which row shows the co rrect labels f o r the diagr am? 1 2 3 4 carbon dioxide glucose oxygen water A water carbon dioxide gluc",
+        "marks": 0,
+        "year": 2020,
+        "difficulty": "medium",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/0610_m20_qp_12.pdf"
+      },
+      {
+        "text": "5 The diagra m represents a cross-se ction of part of a leaf as seen using a microscop e. Where does translocat i o n (move m en t of sucrose and amino acids) occur? 3 [Turn over 5 CDBA The diagra m s show a n experiment to find t he rate of photosynthesis in an a quatic p l ant in different con dit",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s18_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Business__General": {
+    "total_questions": 559,
+    "year_frequency": {
+      "2016": 99,
+      "2017": 57,
+      "2018": 56,
+      "2019": 48,
+      "2020": 47,
+      "2021": 79,
+      "2022": 51,
+      "2023": 71,
+      "2025": 27,
+      "2024": 24
+    },
+    "avg_marks": 5.9,
+    "command_words": {
+      "define": 29,
+      "discuss": 7,
+      "explain": 46,
+      "show": 9,
+      "analyse": 14,
+      "identify": 44,
+      "outline": 5,
+      "describe": 3,
+      "suggest": 2,
+      "compare": 1,
+      "calculate": 12,
+      "evaluate": 5,
+      "prove": 2,
+      "list": 1,
+      "name": 3,
+      "state": 10,
+      "assess": 1,
+      "justify": 4
+    },
+    "dominant_command": "explain",
+    "solving_template": [
+      "1. Define key term/concept",
+      "2. State the relevant principle/law",
+      "3. Apply to specific context in question",
+      "4. Give example or consequence",
+      "5. Use precise scientific language"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "(a) Most candidates were able to define strategy and tactics in terms of setting broad long term objectives and then taking decisions or making policies to achieve or implement those objectives. (b) Many candidates found this part of the question challenging. Responses often lacked a business decisi",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Business 2016 May_June Paper 1 Q1"
+      },
+      {
+        "text": "(a) A majority of responses did not demonstarte knowledge of marginal costs as the additional cost of producing one more unit of output. This is a key financial concept and was expected to be well understood. (b) This explanation of other business costs was also not answered well. As with Question 1",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Business 2016 May_June Paper 1 Q2"
+      },
+      {
+        "text": "Candidates were more confident with this question. The term was generally accurately defined and many possible consequences of high labour turnover were identified and explained. Strong perceptive answers recognised that particular contexts might well determine the nature of the consequences and rec",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Business 2016 May_June Paper 1 Q3"
+      },
+      {
+        "text": "(a) Inventory management was generally well understood although some answers did not fully define the term in terms of appropriate stock levels and did not include the word ‘management’ in this term. (b) This was also well answered although some responses only explained one reason for high levels of",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Business 2016 May_June Paper 1 Q4"
+      },
+      {
+        "text": "(a) This was a popular option question. Most candidates had a basic understanding of equality and diversity, and most were able to discuss at a basic level why such policies are important. However there were a considerable number of relatively weak answers to this section where development and analy",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "hard",
+        "source": "Cambridge A Level Business 2016 May_June Paper 1 Q5"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Computer_Science__General": {
+    "total_questions": 984,
+    "year_frequency": {
+      "2017": 99,
+      "2019": 74,
+      "2020": 93,
+      "2021": 102,
+      "2022": 222,
+      "2023": 205,
+      "2016": 64,
+      "2018": 107,
+      "2025": 17,
+      "2024": 1
+    },
+    "avg_marks": 2.7,
+    "command_words": {
+      "draw": 23,
+      "state": 63,
+      "describe": 69,
+      "identify": 66,
+      "name": 27,
+      "list": 7,
+      "define": 9,
+      "explain": 47,
+      "show": 24,
+      "justify": 1,
+      "determine": 1,
+      "calculate": 5,
+      "compare": 1
+    },
+    "dominant_command": "describe",
+    "solving_template": [
+      "1. Define key term/concept",
+      "2. State the relevant principle/law",
+      "3. Apply to specific context in question",
+      "4. Give example or consequence",
+      "5. Use precise scientific language"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "A laser beam and a rotating mirror are used to draw an image of the page on the photosensitive drum.",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Computer_Science 2017 May_June Paper 11 Q1"
+      },
+      {
+        "text": ".........................",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Computer_Science 2017 May_June Paper 11 Q2"
+      },
+      {
+        "text": "Electrostatic charge attracts toner.",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Computer_Science 2017 May_June Paper 11 Q3"
+      },
+      {
+        "text": "The charged paper is rolled against the drum.",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Computer_Science 2017 May_June Paper 11 Q4"
+      },
+      {
+        "text": ".........................",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Computer_Science 2017 May_June Paper 11 Q5"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Economics__General": {
+    "total_questions": 537,
+    "year_frequency": {
+      "2016": 51,
+      "2017": 60,
+      "2018": 62,
+      "2019": 71,
+      "2020": 48,
+      "2021": 44,
+      "2022": 54,
+      "2023": 62,
+      "2025": 37,
+      "2024": 48
+    },
+    "avg_marks": 1,
+    "command_words": {
+      "sketch": 1,
+      "compare": 2,
+      "state": 15,
+      "comment": 6,
+      "explain": 22,
+      "draw": 1,
+      "calculate": 12,
+      "identify": 24,
+      "show": 4,
+      "determine": 1,
+      "assess": 2,
+      "define": 8,
+      "evaluate": 1,
+      "suggest": 1,
+      "outline": 1,
+      "name": 2,
+      "discuss": 1,
+      "analyse": 1,
+      "describe": 1,
+      "list": 1
+    },
+    "dominant_command": "identify",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "tests the ability to interpret an unfamiliar diagram. Those who opted for B made the common mistake of confusing absolute numbers with percentage values. Option C is correct as the upward trend leading to 1999 then stabilised. •",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Economics 2016 Feb_Mar Paper 1 Q14"
+      },
+      {
+        "text": "was done surprisingly poorly. A simple approach, if this was not known as a fact, would have been to sketch four different demand curves with the same shift in the supply curve. This would give B with the greatest price change as the key. Candidates might usually expect to apply the concepts of prog",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Economics 2016 Feb_Mar Paper 1 Q15"
+      },
+      {
+        "text": "(a) Most candidates gained credit here. The majority followed the instruction to compare the trend in the price of crude oil between April 2014 and June 2014 with that between June 2014 and September 2014. They recognised that there was an upward trend in the first period and a downward trend in the",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "medium",
+        "source": "Cambridge A Level Economics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "(a) The majority of candidates showed good knowledge and understanding of merit goods and demerit goods. They made good use of appropriate examples, such as education or healthcare in the case of merit goods, or the consumption of alcohol or cigarettes in the case of demerit goods. Some candidates h",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Economics 2016 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "(a) Those who attempted this question were usually able to give an accurate formula for price elasticity of supply. In addition, many went on to provide a good explanation of what was meant by supply being relatively price inelastic, i.e. a situation where the percentage change in supply was less th",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Economics 2016 Feb_Mar Paper 1 Q3"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "English__General": {
+    "total_questions": 995,
+    "year_frequency": {
+      "2016": 67,
+      "2017": 71,
+      "2018": 85,
+      "2019": 88,
+      "2020": 147,
+      "2021": 159,
+      "2022": 85,
+      "2023": 85,
+      "2024": 135,
+      "2025": 73
+    },
+    "avg_marks": 1.5,
+    "command_words": {
+      "comment": 68,
+      "discuss": 48,
+      "show": 11,
+      "list": 1,
+      "analyse": 11,
+      "describe": 17,
+      "explain": 10,
+      "identify": 15,
+      "prove": 1,
+      "name": 3,
+      "determine": 1,
+      "compare": 11
+    },
+    "dominant_command": "comment",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Ted Hughes: Selected Poems (a) Markedly fewer candidates attempted this question than the accompanying question on ‘Harvest Moon’. In a large number of cases, candidates did not pay enough attention to the phrase ‘sensitive, detailed observation’ and wrote more generally about Hughes’s poetry, usual",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level English 2016 May_June Paper 1 Q1"
+      },
+      {
+        "text": "Wilfred Owen: Selected Poems (a) A successful response to this question depended to a large degree on the appropriate choice of poems. A number of candidates fell back on Owen’s more traditional war poetry without careful consideration of whether the poems provided suitable material to respond to th",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level English 2016 May_June Paper 1 Q2"
+      },
+      {
+        "text": "Songs of Ourselves (a) The poems in the selection offer a wide range of significant experiences, but most candidates who responded to this question chose to write about love and unrequited love in particular. ‘I Grieve and Dare Not Show My Discontent’ was a very popular choice, followed closely by ‘",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level English 2016 May_June Paper 1 Q3"
+      },
+      {
+        "text": "Jhumpa Lahiri: The Namesake (a) The question on marriage was very successful, producing many carefully judged and organised responses. While there were answers which summarised key marriages in the novel, many candidates recognised an opportunity to discuss how Lahiri creates contrasts between marri",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level English 2016 May_June Paper 1 Q4"
+      },
+      {
+        "text": "Edith Wharton: The House of Mirth (a) Some less secure responses to this question opted for character study, summarising Selden’s involvement in the novel without paying due attention to the wording of the question. A large number of candidates also showed good knowledge of the character and some ap",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level English 2016 May_June Paper 1 Q5"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__General": {
+    "total_questions": 133,
+    "year_frequency": {
+      "2016": 9,
+      "2018": 19,
+      "2019": 19,
+      "2020": 3,
+      "2021": 21,
+      "2022": 15,
+      "2025": 6,
+      "2017": 15,
+      "2023": 22,
+      "2024": 4
+    },
+    "avg_marks": 2.0,
+    "command_words": {
+      "evaluate": 1,
+      "show": 8,
+      "calculate": 4,
+      "list": 2,
+      "name": 1,
+      "sketch": 2,
+      "draw": 4,
+      "estimate": 1,
+      "state": 2
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "This question was generally well answered by most candidates. Some candidates struggled with minus signs and either made both terms positive or both terms negative. Some candidates seemed unfamiliar with the technique required for part (ii) and ended up with only one term in 5 x or equated their two",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "Most candidates made use of algebraic long division as was intended. Problems occurred when attempting to deal with the lack of a term in x , which subsequently lead to errors in the quotient. Correct use of the Remainder Theorem to obtain a remainder was given credit. Answer: Quotient − + 2 2 2 x x",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "1ln 12.5 e 2 a a − = + , such as ( ) (",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2018 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "text": "1 f ln 12.5 e 2 a a a − = − + or ( ) (",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2018 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "text": "− = − were invariably more successful at obtaining the correct result without error than those who used the alternative n n p(1",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2019 Feb_Mar Paper 1 Q1"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__Algebra": {
+    "total_questions": 117,
+    "year_frequency": {
+      "2016": 12,
+      "2019": 12,
+      "2020": 19,
+      "2021": 19,
+      "2022": 14,
+      "2023": 13,
+      "2025": 18,
+      "2017": 4,
+      "2018": 3,
+      "2024": 3
+    },
+    "avg_marks": 2.3,
+    "command_words": {
+      "state": 2,
+      "show": 8,
+      "identify": 1,
+      "calculate": 2,
+      "list": 1
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "A large majority of candidates realised the need to integrate but many weaker candidates used the equation of a line formula and received no credit. Some candidates forgot to use + c after integrating and so made no further progress. The number of minus signs involved in substituting –1 also proved ",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "There was a mixed response to part (a) of this question. Many candidates knew how to solve the equation but did not give an exact answer as requested in the question. Others were unsure how to start or gave a positive rather than a negative answer. Part (b) proved more challenging than expected with",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "text": "Many almost completely correct answers were given to this question but weaker candidates often made no progress in either part. In part (i) many of them failed to substitute –2 and –3 into the original expression and so received no credit. The vast majority of candidates however realised the need to",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q8"
+      },
+      {
+        "text": "Most candidates attempted to solve the problem by squaring both sides of the given inequality, with subsequent work leading to the correct critical values. Obtaining the correct range for x was seldom done correctly with many candidates giving their inequality signs in the ‘incorrect’ direction. Cen",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "Whilst most candidates were able to deal with the simplification of 2lnx to 2 lnx , very few recognised the need to use the addition rule for 2 logarithms and were unable then to obtain the required 3-term quadratic equation. It was expected that candidates would reject the negative solution to this",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q3"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__Trigonometry": {
+    "total_questions": 315,
+    "year_frequency": {
+      "2016": 50,
+      "2017": 18,
+      "2018": 21,
+      "2019": 21,
+      "2020": 39,
+      "2021": 42,
+      "2022": 44,
+      "2023": 35,
+      "2025": 37,
+      "2024": 8
+    },
+    "avg_marks": 3.1,
+    "command_words": {
+      "deduce": 2,
+      "state": 3,
+      "identify": 2,
+      "sketch": 6,
+      "determine": 4,
+      "show": 9,
+      "draw": 5,
+      "prove": 2,
+      "calculate": 2,
+      "list": 2,
+      "explain": 3,
+      "name": 1,
+      "estimate": 1,
+      "describe": 2
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "The majority of candidates gained full marks on this question however some weaker candidates struggled to interpret the given information and were unable to form the required equations. Answer: 93  International Advanced Subsidiary and Advanced Level 9709 Mathematics March 2016 Principal Examiner Re",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q3"
+      },
+      {
+        "text": "Many candidates scored full marks on this question but weaker candidates were sometimes confused by the information presented and seemed unsure of what was expected from them. A sketch may well have helped and candidates should perhaps be encouraged to do one of these for co-ordinate geometry questi",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q5"
+      },
+      {
+        "text": "This question proved to be one of the more difficult ones on the paper. In part (i) the expected method was to find the length of CA and then deduce that CP was 3 5 of CA. Many candidates struggled with this and some weaker ones used a circular argument with the answers from part (ii). Part (ii) was",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "text": "Part (a) was generally well done but part (b) proved to be a significant challenge even for many good candidates. In part (i) the vast majority were able to use the angles in a triangle adding up to 180 degrees or 2π radians to prove the given answer. In part (ii) a surprisingly large number of cand",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q9"
+      },
+      {
+        "text": "This question was generally very well done with many candidates scoring full marks. In part (i) a number of candidates failed to realise the significance of the words ‘write down’ and spent a significant amount of time expanding and attempting to solve the subsequent equation. In part (ii) the vast ",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q10"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__Calculus": {
+    "total_questions": 41,
+    "year_frequency": {
+      "2016": 6,
+      "2019": 6,
+      "2020": 6,
+      "2021": 4,
+      "2022": 8,
+      "2023": 4,
+      "2025": 3,
+      "2024": 2,
+      "2017": 2
+    },
+    "avg_marks": 8,
+    "command_words": {
+      "determine": 2
+    },
+    "dominant_command": "determine",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "The majority of candidates scored very well on this question although weaker ones struggled in part (i) as they were unaware of the formulae for the volume and surface area of a cylinder. In part (ii) the vast majority of candidates realised the need to differentiate and set to zero and were able to",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q6"
+      },
+      {
+        "text": "(i) Most candidates recognised the need to differentiate the given equation implicitly, however some failed to deal with 24 correctly whilst other introduced a spurious d d y x into their equation. Many correct derivatives were seen, but candidates were unable to justify why the gradient of the curv",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "text": "(i) Separation of variables was required in order to make any progress with this question. However, the candidates who managed to undertake this often experienced difficulty with the integration of 1 ex . Common to see either this converted to ex or e−x incorrectly integrated as e−x. Although the in",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "text": "(i) This part was correctly found by many who realised that they had to use the fact that the velocity is continuous either at t = 4 or at t = 14 to find the value of k. Answer: k = 40 (ii) Candidates needed to produce a v–t graph showing the three parts of the motion correctly and many made a good ",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "text": "(i) This part of the question was usually well done. (ii) Most candidates attempted to integrate to find v. Some candidates arrived at v = f(x) and not 2 v = f(x). (iii) The value of x, where P comes to rest, was attempted by equating v to zero. Answers: (i) 2vdv/dx = 10 –( 3 ) 2 x (ii) Maximum spee",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q6"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__Statistics_and_Probability": {
+    "total_questions": 49,
+    "year_frequency": {
+      "2016": 8,
+      "2017": 3,
+      "2020": 7,
+      "2021": 8,
+      "2022": 8,
+      "2023": 8,
+      "2025": 5,
+      "2018": 2
+    },
+    "avg_marks": 1.5,
+    "command_words": {
+      "show": 1,
+      "sketch": 1,
+      "identify": 1,
+      "estimate": 1
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Candidates should be aware that not all dice have 6 sides, as a number of solutions were presented which ignored the 7 and 8. It was unfortunate that a few candidates did not show any workings in this question as they stated incorrect probabilities which may have come from undertaking processes whic",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "medium",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q3"
+      },
+      {
+        "text": "The context of this question was accessible by all but the weakest candidates. A common error was to use the values for males and females inconsistently through the question. (i) The majority of candidates recognised that this was an ‘arrangement’ question and used permutations correctly, although a",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q6"
+      },
+      {
+        "text": "(i) Many good solutions contained a sketch of the normal distribution to clarify the information contained within the question. Candidates should be aware that the tables provided include critical values for the normal distribution, which was the anticipated source for the z-value. Most solutions us",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "text": "This was not a well attempted question. Candidates who successfully found E(X) and E(Y) usually went on to successfully find E(X+Y). However, Var(X) and Var(Y) were not always correctly found, and even candidates who did have the correct answers of 25/9 and 5 did not always combine them successfully",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "Candidates were required to set up their Null and Alternative Hypotheses; this was omitted by some candidates. The probability of 18, 19 or 20 hits should then have been calculated using the parameters in the given Binomial situation. A valid comparison was then required (which candidates must clear",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q2"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__Geometry_and_Vectors": {
+    "total_questions": 34,
+    "year_frequency": {
+      "2020": 2,
+      "2022": 8,
+      "2016": 1,
+      "2019": 11,
+      "2021": 7,
+      "2017": 2,
+      "2023": 3
+    },
+    "avg_marks": 2,
+    "command_words": {
+      "describe": 1,
+      "state": 1,
+      "sketch": 3,
+      "calculate": 1,
+      "draw": 1,
+      "show": 2
+    },
+    "dominant_command": "sketch",
+    "solving_template": [
+      "1. Draw axes with labels and units",
+      "2. Plot correct shape/curve",
+      "3. Mark key points (origin, intercepts)",
+      "4. Label all important features",
+      "5. Check direction/gradient is correct"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "In order to fully describe the two transformations, it was necessary to state the type of each of them and not their effect on the coordinates of f(x). The best answers referred to the movement relative to the axes rather than vague terms such as up and down or horizontal and vertical.",
+        "marks": 0,
+        "year": 2020,
+        "difficulty": "medium",
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "(a) The required form was often quoted correctly but sometimes confused with the form 2 2( ) x a b − + . However, most answers gained some credit. An area candidates can improve on is reducing the amount of working they do as this will help them reach the right answer more easily.  International Adv",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2022 Feb_Mar Paper 1 Q5"
+      },
+      {
+        "text": "(a) The algebraic requirements for this part were well understood with a majority of candidates answering this question correctly. A few errors such as taking a negative square root or interchanging the coordinates of A and B could have been avoided if the given diagram had been used more effectivel",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2022 Feb_Mar Paper 1 Q8"
+      },
+      {
+        "text": "A small number of candidates found the area of wood removed rather than the area of wood remaining. Answer: 12 Question 15 (a) This part was generally well done. Some candidates found 8 = k4² but did not manage to get to the answer 4.5, either because they then made k = 2 or because they multiplied ",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Mathematics 2016 May_June Paper 1 Q7"
+      },
+      {
+        "text": "(c) (i) Many candidates described the transformation correctly. A common error was omitting to state the mirror line or to state it incorrectly as x = 0. (ii) This part was often omitted. Incorrect answers included 0 1 1 –1 , 0 1 1 0 and 1 0 0",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Mathematics 2019 May_June Paper 1 Q2"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Mathematics__Sequences_and_Series": {
+    "total_questions": 20,
+    "year_frequency": {
+      "2020": 2,
+      "2021": 2,
+      "2022": 7,
+      "2025": 1,
+      "2016": 1,
+      "2019": 1,
+      "2023": 4,
+      "2024": 2
+    },
+    "avg_marks": 3,
+    "command_words": {
+      "show": 1
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "(a) This part was almost always answered correctly. (b) Candidates who identified that the nth terms of an arithmetic progression and a geometric progression were required usually quoted and used the correct formulae. The final percentage calculation was generally set up correctly. Correct rounding ",
+        "marks": 0,
+        "year": 2020,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q8"
+      },
+      {
+        "text": "(a) (i) Most candidates were able to write down the sum to infinity of a geometric progression and use the given information to find the common ratio. Aware of the answer, many went on to find the second term of the progression correctly. (ii) The formula for the sum of a geometric progression was u",
+        "marks": 0,
+        "year": 2021,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2021 Feb_Mar Paper 1 Q9"
+      },
+      {
+        "text": "The two equations linking the given terms were nearly always quoted correctly. The algebra involved in the elimination from these of r or a and d was completed correctly in the better answers. Sign and algebraic errors were seen in a considerable number of answers, and these made it challenging for ",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2022 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "text": "Many candidates scored no marks for this question because they started by evaluating S150 and S400. As highlighted in the General Comments, candidates are advised to read the question carefully before beginning a response. Candidates who attempted to find the correct summations that needed to be sub",
+        "marks": 0,
+        "year": 2025,
+        "difficulty": "easy",
+        "source": "Cambridge A Level Mathematics 2025 Feb_Mar Paper 1 Q5"
+      },
+      {
+        "text": "A few used the wrong relationship and thought that y was proportional to x or inversely proportional to x². (b) About half of the candidates realised that if q is doubled then p is halved. Many doubled p as well obtaining the wrong answer of 30. Answers: (a) 4.5 (b) 7.5 Question 16 (a) This part was",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Mathematics 2016 May_June Paper 1 Q2"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Biology__General": {
+    "total_questions": 18,
+    "year_frequency": {
+      "2017": 3,
+      "2018": 9,
+      "2025": 1,
+      "2020": 2,
+      "2019": 3
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "sketch": 1,
+      "state": 2
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Each candidate should be provided with: (i) four potato sticks in a covered Petri dish (ii) one large test-tube containing 25 cm3 of 0.50 M sucrose solution labelled A (iii) one large test-tube containing 25 cm3 of distilled water labelled B (iv) one large test-tube containing 25 cm3 of 1.00 M sucro",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Biology 2017 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "(i) one large insect-pollinated flower with half of the petals removed on one side, so that the reproductive organs are clearly visible. (ii) a hand lens at least ×6 magnification (iii) a ruler scaled in mm The Supervisor (not the Invigilator) should carry out the practical aspects of Question 1 and",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Biology 2017 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "results: Please provide a sketch or photograph of one of the flowers provided to candidates. 4 A plan of work benches, giving details of the candidate numbers of the places occupied by the candidates for each session, must be enclosed with the scripts. Declaration (to be signed by the Supervisor) Th",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Biology 2017 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "Each candidate should be provided with: (i) two celery stalks (Apium graveolens) of the same length (approximately 15–20 cm), with no leaves and of approximately the same width (ii) two 100 cm3 beakers, each containing red stain to a depth of 1 cm (iii) two beakers that are large enough to act as wa",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Biology 2018 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "(i) a 30 cm ruler with a mm scale The Supervisor (not the Invigilator) should carry out the practical aspects of Question 1 and record their results in the space provided in the Supervisor’s Report. This must be done during the examination, using the same apparatus and reagents as the candidates but",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Biology 2018 Feb_Mar Paper 1 Q2"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__General": {
+    "total_questions": 13,
+    "year_frequency": {
+      "2022": 5,
+      "2018": 3,
+      "2016": 1,
+      "2017": 1,
+      "2020": 2,
+      "2019": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "show": 1,
+      "explain": 1
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "[MH] a tube or weighing boat containing 1.5 g of anhydrous lithium chloride 1 1.5 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2022 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "[MH] a tube or weighing boat containing 2.0 g of anhydrous lithium chloride 1 2.0 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2022 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "[MH] a tube or weighing boat containing 2.5 g of anhydrous lithium chloride 1 2.5 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2022 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "[MH] a tube or weighing boat containing 3.0 g of anhydrous lithium chloride 1 3.0 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2022 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "[MH] a tube or weighing boat containing 4.0 g of anhydrous lithium chloride 1 4.0 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2022 Feb_Mar Paper 1 Q1"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Equilibrium": {
+    "total_questions": 11,
+    "year_frequency": {
+      "2022": 2,
+      "2025": 1,
+      "2017": 2,
+      "2018": 1,
+      "2016": 3,
+      "2023": 1,
+      "2021": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 1
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "50 cm3 measuring cylinder 1 stirring thermometer, –10 °C to +110 °C with 1 °C graduations 1 100 cm3 beaker 1 stop‑clock or timer which can measure to an accuracy of 1 s 1 access to water and distilled water dropping pipette 1 4 0620/52/CI/F/M/22 © UCLES 2022 During the exam, the supervisor (not the ",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2022 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "A 1.0 g 1.0 g of calcium carbonate powder The powder should be weighed and placed in a suitable container such as a weighing bottle. It must not be provided in a 250 cm3 beaker. 0.250 mol / dm3 hydrochloric acid 120 cm3 0.250 mol / dm3 hydrochloric acid Dilute 21 cm3 of concentrated (35–37%; approxi",
+        "marks": 0,
+        "year": 2025,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2025 May_June Paper 1 Q1"
+      },
+      {
+        "text": "6 What is the rate of reaction over the first 100 se conds? 2.96 3.00 4.00 8.00 Which state m ent about sulfuric a c id is correct? Sulfuric acid is used as a bleach. in food preservation. s the rate of reaction over the first 100 se conds? 2.96 3.00 4.00 8.00 Which state m ent about sulfuric a c id",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "3 A to D correct correct correct correct 1 , 2 and 3 are 1 and 2 only are 2 and 3 only are 1 only is No other combination of statements is used a s a correct resp onse. Use of the Data Booklet may be appropriate for some questions. Compound Q contains 40% carbon by mass. What could Q be? glucose, C ",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      },
+      {
+        "text": "7 A Both graphite and diamond have giant molecular structures. B carbon dioxide and no other products. C Graphite and diamond have different melting points. D Graphite conducts electricity, whereas diamond does not. 8 ABCD © UCLES 2016 5070/11/M/J/16 Copper wire is used to complete an electrical cir",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s16_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Atomic_Structure": {
+    "total_questions": 55,
+    "year_frequency": {
+      "2025": 2,
+      "2017": 9,
+      "2016": 7,
+      "2023": 1,
+      "2019": 12,
+      "2020": 9,
+      "2018": 8,
+      "2022": 6,
+      "2021": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 7,
+      "name": 7,
+      "show": 1
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "1 × 250 cm3 beaker 1 × 100 cm3 measuring cylinder 1 × stirring rod 1 × marker suitable for labelling glassware 1 × 25 cm3 volumetric pipette 1 × pipette filler 1 × 50 cm3 burette 1 × stand 1 × burette clamp 1 × funnel for filling burette 1 × white tile 1 × conical flask or other suitable vessel for ",
+        "marks": 0,
+        "year": 2025,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2025 May_June Paper 1 Q1"
+      },
+      {
+        "text": "5 Which subst ance has a giant covale nt structure and contain s atoms of more than one element? diamond graphite methane sand Which state m ent correctly explains why chlorine, C , at 40 C diffuse s more slowly than neo n, Chlorine has a relative molecular mass of e element? diamond graphite methan",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "17 The formation of liquid water from h y drogen and oxygen ma y occur in th ree stages. 2 4H(g) + 2O(g) O(g) 2H O(l) Which stage s would be exothermic? 1, 2 and 3 1 and 2 only 2 and 3 only 2 only The equatio n shows the formation of sulfur trioxide in the co ntact process. g) + 2O(g) O(g) 2H O(l) W",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "19 Which state m ent is correct? Q is a metal. Q is more reactive than T. R is more reactive than Z. T and Z are in the same period. ABCD © UCLES 201 7 5070/11/M/J/17 The diagra m shows part of the Periodic Table. Q is a metal. Q is more reactive than T. R is more reactive than Z. T and Z are in the",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "15 Permission to re pr oduce i t em s w here third - par ty o w ned material pr o t ecte d by copy right is i n cluded has been sough t an d clear ed w here possible. Ev er y reasona ble effor t has been made by t he publisher (UCL ES) to tra c e copy right holder s, bu t if a n y items requiring cl",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Organic_Chemistry": {
+    "total_questions": 21,
+    "year_frequency": {
+      "2025": 2,
+      "2017": 3,
+      "2018": 5,
+      "2023": 1,
+      "2019": 5,
+      "2016": 1,
+      "2020": 4
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 3
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "6 × test-tubes 1 × stopper to fit test-tubes 1 × test-tube rack 1 × test-tube holder (suitable for holding a boiling tube) 2 × boiling tubes 1 × wash bottle containing distilled water 1 × Bunsen burner 1 × heat-proof mat a supply of teat/dropping pipettes 1 × beaker (for washing teat/dropping pipett",
+        "marks": 0,
+        "year": 2025,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2025 May_June Paper 1 Q2"
+      },
+      {
+        "text": "W 15 cm3 1 mol / dm3 aqueous potassium iodide Dissolve 16.6 g of potassium iodide in each 100 cm3 of solution. [O] [MH] [N] X 15 cm3 1 mol / dm3 aqueous zinc nitrate Dissolve 29.8 g of hydrated zinc nitrate, Zn(NO3)2• 6H2O [O] [MH] [N], in each 100 cm3 of solution. [MH] [N] aqueous chlorine 10 cm3 a",
+        "marks": 0,
+        "year": 2025,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Chemistry 2025 May_June Paper 1 Q2"
+      },
+      {
+        "text": "1 Mult iple Ch oice Ma y / June 20 17 1 hour Additional Ma terials: Multiple Ch oi ce Answe r Sheet Soft clean erase r Soft pencil (type B or HB is reco mmen d e d ) 5070/11 REA D THES E INSTRU CT IONS FIRST Write in soft pencil. Do not u s e st aple s , pape r clip s, glue or corre c tion flui d. W",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "21 An organic ion containin g a carbon a t om with a negative charge is called a carbanion. An organic ion containin g a carbon a t om with a positive char ge is called a carbocatio n. n organic ion containin g a carbon a t om with a negative charge is called a carbanion. An organic ion containin g ",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      },
+      {
+        "text": "5 Poly(ethene) and PVC a r e examples of addition polymers. Which state m ents are correct? On combustion, PVC can produce carbon monoxide, carbon dioxide and hydrogen chloride. When poly(ethene) is b u ried in a la ndfill site, it will not sign i f icantly biod egrade. The empirical formula of an a",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Thermal_Physics": {
+    "total_questions": 34,
+    "year_frequency": {
+      "2016": 1,
+      "2017": 3,
+      "2018": 7,
+      "2019": 4,
+      "2020": 5,
+      "2021": 3,
+      "2022": 5,
+      "2023": 1,
+      "2025": 4,
+      "2024": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "describe": 1
+    },
+    "dominant_command": "describe",
+    "solving_template": [
+      "1. Define key term/concept",
+      "2. State the relevant principle/law",
+      "3. Apply to specific context in question",
+      "4. Give example or consequence",
+      "5. Use precise scientific language"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Each block should be approximately 10 cm long. The width and thickness must be greater than the diameter of the boiling tube.",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "The apparatus should be supplied to candidates as shown in Fig. 1.1. boiling tube beaker stand boss clamp thermometer Fig. 1.1",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2017 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "Very hot water is to be available for each candidate throughout the experiment. This water should be maintained at an approximately constant temperature between 80 °C and 95 °C. Each candidate will require about 200 cm3 of hot water in total. Candidates must be able to pour hot water into the measur",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2017 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "The thermometer, clamp, boss and stand are to be set up for candidates as shown in Fig. 3.1. The thermometer bulb must be well below the 100 cm3 level of the beaker. Candidates must be able easily and safely to read temperatures up to 100 °C and to move the thermometer in and out of the beaker. beak",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "Hot water is to be available for each candidate throughout the experiment. The hot water should be maintained at an approximately constant temperature between 80 °C and 100 °C. Each candidate will require about 400 cm3 of hot water in total. They must be able to pour hot water into the beaker safely",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 Feb_Mar Paper 1 Q3"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Electricity": {
+    "total_questions": 69,
+    "year_frequency": {
+      "2016": 6,
+      "2017": 5,
+      "2018": 11,
+      "2019": 12,
+      "2020": 7,
+      "2021": 11,
+      "2022": 3,
+      "2023": 2,
+      "2024": 7,
+      "2025": 5
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "determine": 1,
+      "state": 1
+    },
+    "dominant_command": "determine",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Spare boiling tubes should be available. Action at changeover Check that the apparatus is ready for the next candidate. 4 0625/52/CI/F/M/16 © UCLES 2016 Question 2 Items to be supplied by the Centre (per set of apparatus unless otherwise specified) (i) A bare resistance wire about 105 cm in length. ",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "The resistance wire is to be fixed to the metre rule or wooden strip in such a way as to allow candidates to connect a crocodile clip to points between 10 cm and 90 cm from the left-hand end of the wire.",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "The circuit is to be set up for candidates as shown in Fig. 2.1, with the crocodile clip connected to the resistance wire. The position of the crocodile clip is not important. power supply A V resistance wire crocodile clip 5 � resistor Fig. 2.1 5 0625/52/CI/F/M/16 © UCLES 2016 [Turn over",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "When the crocodile clip is connected to the maximum length of the resistance wire, the reading on the voltmeter should be at least 2.2 V. If cells are used, they must remain adequately charged throughout the examination. Spare cells must be available.",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q3"
+      },
+      {
+        "text": "Spare resistors, leads, crocodile clips and meters should be available. Action at changeover Ensure that the circuit is connected as shown in Fig. 2.1 and check that the circuit is working. Switch the circuit off. 6 0625/52/CI/F/M/16 © UCLES 2016 Question 3 Items to be supplied by the Centre (per se",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q5"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__General": {
+    "total_questions": 56,
+    "year_frequency": {
+      "2016": 1,
+      "2018": 10,
+      "2019": 8,
+      "2020": 6,
+      "2021": 8,
+      "2022": 9,
+      "2023": 1,
+      "2024": 2,
+      "2025": 11
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "name": 1,
+      "explain": 1,
+      "determine": 2
+    },
+    "dominant_command": "determine",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Either analogue or digital meters are suitable. Any variable settings should be set by the Supervisor and fixed, e.g. taped.",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2016 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "text": "If the beaker does not have volume markings, the 200 cm3 and 100 cm3 levels must be indicated on the beaker.",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "Supervisors should stretch any new spring by approximately 10 cm, two or three times, when setting up the experiment initially.",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 May_June Paper 1 Q1"
+      },
+      {
+        "text": "A suitable rod is the rod of another retort stand held in the boss. The boss should be fixed tightly to the rod so that it does not rotate when the spring is pulled, as shown in Fig. 1.1.",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 May_June Paper 1 Q3"
+      },
+      {
+        "text": "10.0 g of sodium chloride should be dissolved in 250 cm3 of water. The solution will be re-used but it may be necessary to have extra in case of spillages.",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 May_June Paper 1 Q3"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Optics": {
+    "total_questions": 10,
+    "year_frequency": {
+      "2017": 2,
+      "2020": 1,
+      "2022": 3,
+      "2023": 1,
+      "2024": 2,
+      "2025": 1
+    },
+    "avg_marks": 0,
+    "command_words": {},
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Either analogue or digital meters are suitable. Any variable settings should be set by the Supervisor and fixed, e.g. taped. Spare meters should be available. Action at changeover Ensure that the circuit is connected as shown in Fig. 2.1 and check that the circuit is working. Switch the circuit off.",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2017 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "text": "The lamp filament, the centre of the hole which forms the object and the centre of the lens in its holder, must all be the same height above the bench.",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2017 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "Object A may be made using a piece of rigid white card approximately 15 cm × 10 cm. Five horizontal parallel lines, 5.0 mm apart, should be marked on the card using a fine tipped (0.5 mm) pen. The centre of the five lines should be approximately level with the centre of the lens. A small piece of Bl",
+        "marks": 0,
+        "year": 2020,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2020 May_June Paper 1 Q2"
+      },
+      {
+        "text": "The supervisor should set up the apparatus as shown in Fig. 3.1. Action at changeover The supervisor must ensure that the circuit is in the configuration shown in Fig. 3.1. The LDR and the LED must be separated. If cells are used, they should be checked and replaced, if necessary. Information requir",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2022 May_June Paper 1 Q4"
+      },
+      {
+        "text": "The lens must be mounted on one of the slotted masses using a small piece of adhesive putty (e.g. Blu-tack or Patafix). The screen must be placed by the 0 cm mark of the metre rule, and the cross-wire object placed by the 100 cm mark of the metre rule. The lens must be placed between the cross- wire",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2022 May_June Paper 1 Q1"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Waves": {
+    "total_questions": 27,
+    "year_frequency": {
+      "2017": 2,
+      "2018": 4,
+      "2019": 5,
+      "2021": 3,
+      "2022": 4,
+      "2024": 3,
+      "2025": 2,
+      "2020": 1,
+      "2023": 2,
+      "2016": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "list": 1,
+      "state": 4,
+      "show": 1,
+      "determine": 1,
+      "describe": 1
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "The apparatus should be situated away from direct sunlight. adhesive tape translucent paper card",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2017 Feb_Mar Paper 1 Q3"
+      },
+      {
+        "text": "A piece of aluminium foil 4 cm × 8 cm should be rolled around a cylinder (e.g. a pencil) that is slightly wider than the thermometer. The tube of aluminium should be pinched at one end. The thermometer should be able to slide in and out easily, as shown in Fig. 2.1. A few spares should also be made.",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 May_June Paper 1 Q3"
+      },
+      {
+        "text": "The lamp, set behind the screen must be capable of projecting a ray of light at least 20 cm long, across the surface of the paper, before and after reflection by the upright plane mirror.",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2019 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "text": "Cup A must be of a type more suitable for cold drinks, made from plastic or thin card. However, it must be capable of containing very hot water without distorting. Cup B must be of a type used for hot drinks, made from expanded polystyrene or corrugated card. The two cups must be slightly different ",
+        "marks": 0,
+        "year": 2021,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2021 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "text": "The load W must be able to rest on the metre rule, supported and horizontal, without toppling. The load can be slightly wider than the metre rule.",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2022 Feb_Mar Paper 1 Q5"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Forces_and_Motion": {
+    "total_questions": 38,
+    "year_frequency": {
+      "2018": 5,
+      "2019": 8,
+      "2020": 7,
+      "2021": 7,
+      "2022": 2,
+      "2024": 5,
+      "2025": 3,
+      "2017": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 3,
+      "show": 1,
+      "compare": 1
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "The string should be approximately 30 cm long, 1.5 mm wide and made of cotton or nylon. The string should be strong enough to support a 2 kg load without stretching or breaking. One end of the string should be tied to the mass holder, the other end should be tied to the end of the spring as shown in",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 May_June Paper 1 Q2"
+      },
+      {
+        "text": "The G-Clamp should be used to fix the stand to the bench or a heavy weight should be placed on the base of the stand so that the stand does not tip over when the force is applied.",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2018 May_June Paper 1 Q4"
+      },
+      {
+        "text": "The pendulum should be set up for the candidates as shown in Fig. 1.1. The end of the thread should be held in a split cork and held vertically in the clamp. The centre of the split cork should be approximately 20 cm from the centre of the stand. The thread and mass should be attached together to ma",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2019 May_June Paper 1 Q1"
+      },
+      {
+        "text": "A digital multimeter is suitable. The supervisor must ensure that the meter is set to the 0 – 20 V range. The range switch and other unused terminals must be taped over to prevent candidates changing the circuit. At the changeover the supervisor must ensure that the apparatus is restored to the arra",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2019 May_June Paper 1 Q3"
+      },
+      {
+        "text": "Candidates will use the wire hook to suspend the 200 g mass from the L-shaped beam. A suitable hook may be made using a large steel paper clip, as shown in Fig. 3.5. It must be possible to suspend a 200 g mass from one end of the wire hook. 10 cm wide end passes through hole in beam narrow end suspe",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "Cambridge O Level Physics 2019 May_June Paper 1 Q4"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Biology__Genetics": {
+    "total_questions": 4,
+    "year_frequency": {
+      "2025": 1,
+      "2018": 2,
+      "2019": 1
+    },
+    "avg_marks": 1,
+    "command_words": {},
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "The oxygen in a water molecule has a small negative charge and the hydrogen atoms each have a small positive charge. (1) A 1 and 2 only B 1 and 3 only C 2 and 3 only D 1, 2 and 3 (b) The table shows some information about the structure of amylose and amylopectin. Put one cross in the appropriate box",
+        "marks": 1,
+        "year": 2025,
+        "difficulty": "easy",
+        "source": "Edexcel A Level Biology 2025 May_June Paper 1 Q3"
+      },
+      {
+        "text": "16 Permission to re pr oduce i t em s w here third - par ty o w ned material pr o t ecte d by copy right is i n cluded has been sough t an d clear ed w here possible. Ev er y reasona ble effor t has been made by t he publisher (UCL ES) to tra c e copy right holder s, bu t if a n y items requiring cl",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s18_qp_11.pdf"
+      },
+      {
+        "text": "1 A 1 : 2 B 1 : 3 C 3 : 1 D © UCLES 201 9 5090/11/M/J/19 Which row shows the se x chromoso mes when parents have a baby boy? in the egg cell in the sperm cell in the zygote 15 38 X X XX A X Y XY B Y X XY C Y Y YY D Which state m ent about the process of genetic e ngineering is Animals with suitable ",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s19_qp_11.pdf"
+      },
+      {
+        "text": "25 The table shows the percentage of pregnancies in four groups of women. Each group used a different method of contr a ception. method of contraception percentage of 11 [Turn over 25 pregnancies the contrace ptive pill 1 monitoring body tempera t ure 14 diaphragm 7 male sterilisation (vasectomy) 0 ",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/0610_m18_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Mechanics": {
+    "total_questions": 5,
+    "year_frequency": {
+      "2024": 1,
+      "2018": 1,
+      "2019": 3
+    },
+    "avg_marks": 0,
+    "command_words": {},
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "Energy resources and energy transfers efficiency = work done = force × distance moved W = F × d gravitational potential energy = mass × gravitational field strength × height GPE = m × g × h kinetic energy = × mass × speed2 power =",
+        "marks": 0,
+        "year": 2024,
+        "difficulty": "easy",
+        "source": "Edexcel O Level Physics 2024 May_June Paper 1 Q4"
+      },
+      {
+        "text": "1 Mult iple Ch oice Februa r y /Ma rch 201 8 1 hour 15 minute s Additional Ma terials: Multiple Ch oi ce Answe r Sheet Soft clean erase r Soft pencil (type B or HB is reco mmen d e d ) PHYSICS 9702/12 REA D THES E INSTRU CT IONS FIRST Write in soft pencil. Do not u s e st aple s , pape r clip s, glu",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9702_m18_qp_12.pdf"
+      },
+      {
+        "text": "11 A garden table weighs 60 N and has a top surface of ar ea 2.0 . I t is rain ing and the rain produces a pressure of 4.0 on the table. Ignoring the pressure of t he atmosphere, what is the force exerted by the table on the ground? 52 58 68 The diagra m shows a manometer containing mercury that is ",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5054_s19_qp_11.pdf"
+      },
+      {
+        "text": "2 The electric motor being used to sup p ly the power to lift the container is using a curr ent of 240 at a potentia l difference of 2200 What is the efficiency of the system? 8.1% 8.5% 48% 83% 3 2 U rg 15 ABCD 16 m s 1 . A V. ABCD © UCLES 201 9 9702/12/F/ M /19 The data below are taken from a test ",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9702_m19_qp_12.pdf"
+      },
+      {
+        "text": "1 Mult iple Ch oice Februa r y /Ma rch 201 9 1 hour 15 minute s Additional Ma terials: Multiple Ch oi ce Answe r Sheet Soft clean erase r Soft pencil (type B or HB is reco mmen d e d ) PHYSICS 9702/12 REA D THES E INSTRU CT IONS FIRST Write in soft pencil. Do not u s e st aple s , pape r clip s, glu",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9702_m19_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Kinetics": {
+    "total_questions": 13,
+    "year_frequency": {
+      "2017": 3,
+      "2018": 4,
+      "2023": 2,
+      "2016": 1,
+      "2019": 2,
+      "2022": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 1
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "2 ABCD 18 2 2 (g) addition of more oxyge n an increase in pressure an increase in temperature removal of sulfur trioxide from the reaction cham ber 2SO 3 (g) ' H = 196 kJ / mol What would decrease the yield of sulfur trioxide? ABCD © UCLES 201 7 5070/11/M/J/17 Magnesium carbonate reacts with dilute ",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "1 Which conditions of pressure and te mperature favour the re verse pressure temperature reaction? A high high B high low C low high D low low Which state m ent about the effect of a catalyst o n a reversible reaction is correct? The activation energy of the forward reaction sta y s the same. The co",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      },
+      {
+        "text": "12 To av oid the issu e of di sclo sure o f ans w e r-relate d in formation to candid a tes, al l copy right acknow ledgements are reprodu ced onl ine in the Cam b ridge Inte rnati onal Ex ami nation s Copy right Acknow ledgements Boo k let. Thi sispr oduced for ea ch serie s o f ex aminati ons a nd",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      },
+      {
+        "text": "4 A Cyclohexene, C 6 H 10 , 8 & / ( 6 29 P shape 1 planar A 2 planar B 1 non-planar C 2 non-planar D 10 B B B In Group 2 of the Periodic T able, the properties of the elements and their compounds show regular the group. 9 P shape 1 planar A 2 planar B 1 non-planar C 2 non-planar D 10 B B B In Group ",
+        "marks": 0,
+        "year": 2023,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m23_qp_12.pdf"
+      },
+      {
+        "text": "3 A 4 BBBA student carries out four experiments to investigate the rate of reaction between 3.0 g of and hydrochloric acid. (s) + 2HC (aq) + CO (g) + H calcium carbonate CaCO 3 l (aq) CaC l 2 2 2 O(l) 3 powder + 2.0 mol dm 35 ° C experiment 1 powder + 2.0 mol dm at 35 ° C experiment 2 large chips of",
+        "marks": 0,
+        "year": 2023,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m23_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Electrochemistry": {
+    "total_questions": 2,
+    "year_frequency": {
+      "2017": 1,
+      "2018": 1
+    },
+    "avg_marks": 0,
+    "command_words": {},
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "3 Which type of reaction occurs in the extraction of each of these metals fr om their ore? decomposition by heat electrolysis precipitation reduction After the collapse of a river bridge, a new car was immersed in the river water for several months. When it wa s recovered , the parts of the car made",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s17_qp_11.pdf"
+      },
+      {
+        "text": "8 A r ? average mass of naturally occurring atoms of an element mass of one atom of 12 C A × 12 average mass of naturally occurring atoms of an element mass of one atom of 12 C × 12 B average mass of naturally occurring atoms of an element mass of one atom of 12 C C mass of one atom of 12 C average ",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/0620_m18_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Energetics": {
+    "total_questions": 6,
+    "year_frequency": {
+      "2018": 1,
+      "2016": 1,
+      "2019": 3,
+      "2017": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "calculate": 1,
+      "state": 1,
+      "show": 1
+    },
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "(g) 2H O(g) 2H Hess Law and bond ene rgy data can be used to calculate th e enthalpy change of a r e action. Bromoethan e, CH Br What is the enthalpy change for this reaction? 2 1 O 2 o H 2 O(l) C 2 (g) + O 2 (g) o 2H 2 D 2 (g) + O 2 (g) o 2H 2 O(l) 9 3 CH",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "medium",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      },
+      {
+        "text": "1 A A l 2 O 3 B CO 2 C Na 2 O D SO 2 2 colour? red litmus blue litmus ammonia red litmus blue litmus chlorine red litmus blue litmus hydrogen chloride red litmus blue litmus oxygen AB CD Dissolve it in water, add dilute sulfuric acid, filter and wash. Which statement is Energy is released when a liq",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s16_qp_11.pdf"
+      },
+      {
+        "text": "9 The equatio n for a chemical react i on is shown. A ll substa nce s are in their standard st ates. Xe F Xe O + 6HF Which state m ent describes the stan dard enthalp y change of reaction for t h is reactio n ? the enthalpy change when a total of one mole of products is produced the enthalpy change ",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m19_qp_12.pdf"
+      },
+      {
+        "text": "6 Which gas sample contains the fewest molecules? A 1.00 dm 3 of carbon dioxide at 27 ° C and 2.0 kPa B 1.00 dm 3 of hydrogen at 100 ° C and 2.0 kPa C 1.00 dm 3 of nitrogen at 300 ° C and 4.0 kPa D 1.00 dm 3 of oxygen at 250 ° C and 3.0 kPa © UCLES 2017 9701/12/F/M/17 A student mixed 25.0 hydrochlor",
+        "marks": 0,
+        "year": 2017,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m17_qp_12.pdf"
+      },
+      {
+        "text": "3 Which row is correct? WXYAXYWBCYWXYXWD © UCLES 201 9 5070/11/M/J/19 The equatio n s show fou r reversible reactions. For which reaction wou l d the equilibrium mo ve to the right for both an increase in pressure a nd an increase in temperature? reaction enthalpy change 8",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "medium",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s19_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Chemistry__Chemical_Bonding": {
+    "total_questions": 4,
+    "year_frequency": {
+      "2016": 1,
+      "2020": 1,
+      "2018": 1,
+      "2022": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 2
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "10 Which uses for sulfuric acid are correct? ABCD 11 in water and contain 2 bonds. Which words correctly complete gaps 1 and 2? A insoluble covalent B insoluble ionic C soluble covalent D soluble ionic © UCLES 2016 5070/11/M/J/16",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s16_qp_11.pdf"
+      },
+      {
+        "text": "14 A to D correct correct correct correct 1 , 2 and 3 are 1 and 2 only are 2 and 3 only are 1 only is No other combination of statements is used a s a correct resp onse. Which compounds will pr oduce a yell ow precipita t e with alkali ne aqueous iodine? 38 HO O 13 2 OH OH OH OH Which state m ents a",
+        "marks": 0,
+        "year": 2020,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m20_qp_12.pdf"
+      },
+      {
+        "text": "4 A o Cu 2+ B 2+ + 2e o Cu C 2H 2 O + Cu 2+ + 2e o Cu(OH) 2 2 D 4 2 + 4H + + 2e o 2 SO 4 + H 2 8 2 H 6 , and ammonia, NH 3 , are covalent compounds. HC HHCHHHN HH H Which state m ents are correct?",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_s18_qp_11.pdf"
+      },
+      {
+        "text": "10 Elements X and Y react to form co mpound XY. Element Y has more e l ectrons in it s outer shell than element X . Co mpou nd X Y cond ucts ele c tricity in the molten state. Which row correctly sta tes the electron change that occurs during the reaction an d the type of bonding in compound XY? ele",
+        "marks": 0,
+        "year": 2022,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5070_w22_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Biology__Human_Biology": {
+    "total_questions": 8,
+    "year_frequency": {
+      "2016": 2,
+      "2018": 2,
+      "2019": 1,
+      "2017": 2,
+      "2020": 1
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "show": 2,
+      "state": 1
+    },
+    "dominant_command": "show",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "12 The graphs show the effects of temperature and pH on enzyme activity. 5 [Turn over 12 rate of reaction rate of reaction Q P R temperature pH S At P, hydrogen bonds are formed between enzyme and substrate. At Q, the kinetic energy of enzyme and substrate is highest. At R, disulfide bonds in the en",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "medium",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m16_qp_12.pdf"
+      },
+      {
+        "text": "4 Which prop erties of wat e r are important for tran sport in xylem? 1 cohesion 2 adhesion 3 high energy requirement for evaporation 4 good solvent properties 1, 2 and 4 1 and 4 only 2, 3 and 4 2 and 3 only Which state m ent about the blood xylem? 1 cohesion 2 adhesion 3 high energy requirement for",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9700_m18_qp_12.pdf"
+      },
+      {
+        "text": "13 At which labelled point is the pressure highest? DCBA capillary tissue fluid The diagram shows arteries and veins in the human forearm. 14 vein artery Which statements apply to a vein in the human forearm? carries oxygenated blood has valves blood is returning to the heart A key B = yes C = no D ",
+        "marks": 0,
+        "year": 2016,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s16_qp_11.pdf"
+      },
+      {
+        "text": "2 A heart brain intestine liver B kidney heart C D lung heart Which word equation de scribes the r e spiration th at occurs in an athlete s muscle cells the carbon dioxide + water glucose + oxygen glucose alcohol + carbon dioxide glucose lactic a c id oxygen + g l ucose carbon dioxide + water Yeast ",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s18_qp_11.pdf"
+      },
+      {
+        "text": "15 A B organ organ blood away from organ organ organ blood away from organ pulmonary artery heart pulmonary vein pulmonary artery heart pulmonary vein hepatic portal vein liver hepatic vein hepatic vein liver hepatic portal vein pulmonary vein lungs pulmonary artery pulmonary vein lungs pulmonary ar",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s19_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Biology__Ecology": {
+    "total_questions": 3,
+    "year_frequency": {
+      "2018": 1,
+      "2019": 2
+    },
+    "avg_marks": 0,
+    "command_words": {
+      "state": 2
+    },
+    "dominant_command": "state",
+    "solving_template": [
+      "1. State the relevant fact or principle",
+      "2. Link it directly to the question context",
+      "3. Use correct Cambridge terminology",
+      "4. Add units/examples where applicable"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "21 The diagra m shows a section throu g h an eye. Which part is the recept or for the stimulus that results in a change in the size of the pupil? 9 [Turn over 21 ABDC The diagra m shows the brain in vertical se ction . g h an eye. Which part is the recept or for the stimulus that results in a change",
+        "marks": 0,
+        "year": 2018,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s18_qp_11.pdf"
+      },
+      {
+        "text": "25 Which state m ents about the use of h e roin are co rrect? addiction o c curs as higher an d higher dose s are needed to g e t everybod y who takes a dos e of heroin beco mes an addict user can sur v ive higher and h i gher necessary t o 11 [Turn over 25 the same effect tolerance to heroin means ",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s19_qp_11.pdf"
+      },
+      {
+        "text": "4 Which state m ent about enzymes is correct? All enzymes are made of protein. Enzy mes are biologica l cataly sts. Enzymes are destroyed during the r eaction they are involved in. Most human enzymes work best at t emperatures between 35 C. What is the effect of a la ck of nitrate ions on plan t lea",
+        "marks": 0,
+        "year": 2019,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/5090_s19_qp_11.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  },
+  "Physics__Nuclear_Physics": {
+    "total_questions": 1,
+    "year_frequency": {
+      "2023": 1
+    },
+    "avg_marks": 0,
+    "command_words": {},
+    "dominant_command": "calculate",
+    "solving_template": [
+      "1. Identify what is given (write down knowns)",
+      "2. Identify what is asked (write target)",
+      "3. Select appropriate formula/equation",
+      "4. Substitute values with units",
+      "5. Calculate and simplify",
+      "6. State answer with correct units",
+      "7. Check significant figures"
+    ],
+    "required_knowledge": [],
+    "common_mistakes": [],
+    "top_mark_scheme_words": [],
+    "sample_questions": [
+      {
+        "text": "3 The proton number is 26. 1 and 2 1 and 3 2 and 3 3 only What is an a r tificia l source of backgro und radiatio n? X -ray machines in hosp i tals radon gas fr om rocks cosmic rays from the Su n plants and o t her living th ings A sample of a radioactive isotope has an initial rate of emission of 1",
+        "marks": 0,
+        "year": 2023,
+        "difficulty": "easy",
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/0625_m23_qp_12.pdf"
+      }
+    ],
+    "sample_mark_schemes": []
+  }
+}

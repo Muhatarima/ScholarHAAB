@@ -1,0 +1,18 @@
+[
+  {
+    "id": "component_prompt_packing_long_context",
+    "category": "robustness",
+    "severity": "high",
+    "failureCategory": "context_truncation",
+    "notes": "Prompt packing should retain more than three unique evidence blocks so middle evidence is less likely to be dropped.",
+    "type": "prompt_packing"
+  },
+  {
+    "id": "component_ocr_guardrail_rewrites_noisy_answer",
+    "category": "robustness",
+    "severity": "high",
+    "failureCategory": "ocr_noise_corruption",
+    "notes": "Broken-spacing OCR output should be downgraded and replaced by the deterministic grounded answer when available.",
+    "type": "ocr_guardrail"
+  }
+]

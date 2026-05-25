@@ -1,0 +1,57 @@
+URL: https://supabase.com/dashboard/project/hvjludqdnhmdekcnnmiy/sql/f6ab85c7-8c32-48b3-8dab-5b9a062addd7
+TITLE: App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase
+BODY:
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (2)
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+New
+1
+Hit CTRL+K to generate query or just start typing
+Results
+Explain
+Chart
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+Click Run to execute your query.
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | Supabase

@@ -1,0 +1,5082 @@
+{
+  "generatedAt": "2026-04-10T09:16:26.974Z",
+  "verifiedCoveragePercent": 100,
+  "rawTargetSlotCoveragePercent": 84.23,
+  "tasks": [
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/mathematics-a/2016/exam-materials/4ma1-1f-que-20250516.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/mathematics-a/2016/exam-materials/4ma1-1f-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/mathematics-a/2016/exam-materials/4ma1-1f-pef-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2018,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2019,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2020,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2021,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2022,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2023,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2024,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/physics/2017/exam-materials/4ph1-1p-que-20250523.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/physics/2017/exam-materials/4ph1-1p-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Physics",
+      "year": 2025,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2018,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2019,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2020,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2021,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2022,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2023,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2024,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/chemistry/2017/exam-materials/4ch1-1c-que-20250520.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/chemistry/2017/exam-materials/4ch1-1c-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2025,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Mathematics",
+      "year": 2018,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2018,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2019,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2020,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2021,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2022,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2023,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2024,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2025,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Physics",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Physics",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Mathematics",
+      "year": 2024,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Mathematics",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2021,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2022,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2023,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2024,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2025,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2019,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2020,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Computer Science",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2018,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2019,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2019,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2019,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Accounting",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2018,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2019,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2020,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2021,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2022,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2023,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2024,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/biology/2017/exam-materials/4bi1-1b-que-20250514.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/biology/2017/exam-materials/4bi1-1b-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Biology",
+      "year": 2025,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2018,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/computer-science/2017/exam-materials/4cp0-01-que-20250510.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/computer-science/2017/exam-materials/4cp0-01-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/computer-science/2017/exam-materials/4cp0-01-pef-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/english-language-a/2016/exam-materials/4ea1-01-que-20250524.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/english-language-a/2016/exam-materials/4ea1-01-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/english-language-a/2016/exam-materials/4ea1-01-pef-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/business/2017/exam-materials/4bs1-01-que-20250510.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/business/2017/exam-materials/4bs1-01-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/business/2017/exam-materials/4bs1-01-pef-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2018,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2025,
+      "resourceType": "question_paper",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/economics/2017/exam-materials/4ec1-01-que-20250515.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2025,
+      "resourceType": "mark_scheme",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/economics/2017/exam-materials/4ec1-01-rms-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "medium",
+      "board": "Edexcel",
+      "level": "IGCSE",
+      "subject": "Economics",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "access_blocked",
+      "sourceHint": "https://qualifications.pearson.com/content/dam/secure/silver/all-uk-and-international/international-gcse/economics/2017/exam-materials/4ec1-01-pef-20250821.pdf"
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2016,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2017,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2019,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2020,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2021,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2022,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2023,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2024,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2025,
+      "resourceType": "confidential_instructions",
+      "status": "optional_secondary",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2016,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2016,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2016,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2018,
+      "resourceType": "question_paper",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2018,
+      "resourceType": "mark_scheme",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Edexcel",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2018,
+      "resourceType": "examiner_report",
+      "status": "excluded_window",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "English",
+      "year": 2024,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "missing_resource",
+      "priority": "low",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "English",
+      "year": 2025,
+      "resourceType": "examiner_report",
+      "status": "not_yet_published",
+      "sourceHint": ""
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0001",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "5",
+      "issues": [
+        "reference_table_snippet",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0002",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "6",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0003",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "17",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0004",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "2",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0005",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "19",
+      "issues": [
+        "multiple_mcq_blocks",
+        "reference_table_snippet",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0006",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "3",
+      "issues": [
+        "multiple_mcq_blocks",
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0007",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "15",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0008",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "4",
+      "issues": [
+        "reference_table_snippet"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0009",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "1",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-00417bbde227__question-paper__cambridge-o-level-chemistry-2017-june-question-paper-5070-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0010",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "2(c)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0013",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "7(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0015",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "3(a)",
+      "issues": [],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0019",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "3(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0021",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "5(a)",
+      "issues": [
+        "possible_subject_mismatch:ICT"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0022",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "5(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0031",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "6(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0032",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "6(i)(i)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0034",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2018,
+      "questionNumber": "2(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-03256aaea32b__question-paper__cambridge-a-level-computer-science-2018-may-june-question-paper-9608-s18-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0037",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "questionNumber": "1",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\economics\\papacambridge-035a313a6b6d__question-paper__cambridge-a-level-economics-2017-march-question-paper-9708-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0038",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "questionNumber": "4",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "multiple_mcq_blocks",
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\economics\\papacambridge-035a313a6b6d__question-paper__cambridge-a-level-economics-2017-march-question-paper-9708-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0039",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "questionNumber": "12",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\economics\\papacambridge-035a313a6b6d__question-paper__cambridge-a-level-economics-2017-march-question-paper-9708-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0040",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "questionNumber": "2",
+      "issues": [
+        "multiple_mcq_blocks",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\economics\\papacambridge-035a313a6b6d__question-paper__cambridge-a-level-economics-2017-march-question-paper-9708-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0041",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "questionNumber": "6",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "multiple_mcq_blocks",
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\economics\\papacambridge-035a313a6b6d__question-paper__cambridge-a-level-economics-2017-march-question-paper-9708-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0042",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Economics",
+      "year": 2017,
+      "questionNumber": "16",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\economics\\papacambridge-035a313a6b6d__question-paper__cambridge-a-level-economics-2017-march-question-paper-9708-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0043",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "1",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "possible_broken_integral_symbol",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\physics\\papacambridge-05b7d2c80713__question-paper__cambridge-o-level-physics-2018-may-june-question-paper-5054-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0044",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "2",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\physics\\papacambridge-05b7d2c80713__question-paper__cambridge-o-level-physics-2018-may-june-question-paper-5054-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0045",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "4",
+      "issues": [
+        "multiple_mcq_blocks",
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\physics\\papacambridge-05b7d2c80713__question-paper__cambridge-o-level-physics-2018-may-june-question-paper-5054-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0046",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "14",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\physics\\papacambridge-05b7d2c80713__question-paper__cambridge-o-level-physics-2018-may-june-question-paper-5054-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0047",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "questionNumber": "8(g)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-060d03538613__question-paper__cambridge-a-level-chemistry-2018-march-question-paper-9701-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0048",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "questionNumber": "1",
+      "issues": [
+        "multiple_question_commands",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-060d03538613__question-paper__cambridge-a-level-chemistry-2018-march-question-paper-9701-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0050",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "questionNumber": "21",
+      "issues": [
+        "multiple_mcq_blocks",
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-060d03538613__question-paper__cambridge-a-level-chemistry-2018-march-question-paper-9701-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0051",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "questionNumber": "3",
+      "issues": [
+        "multiple_question_commands",
+        "reference_table_snippet",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-060d03538613__question-paper__cambridge-a-level-chemistry-2018-march-question-paper-9701-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0052",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "questionNumber": "5",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-060d03538613__question-paper__cambridge-a-level-chemistry-2018-march-question-paper-9701-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0053",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2018,
+      "questionNumber": "12",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-060d03538613__question-paper__cambridge-a-level-chemistry-2018-march-question-paper-9701-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0054",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "1(a)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0055",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "1(b)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0056",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "2(a)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0057",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "2(b)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0059",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "3(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0060",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "4(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0061",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "4(b)",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0062",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "5(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0063",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "5(b)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0064",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2016,
+      "questionNumber": "6(a)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-070e0e2a90b8__question-paper__cambridge-a-level-english-2016-june-question-paper-9695-s16-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0065",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "1",
+      "issues": [
+        "contains_following_question_label",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-094343f10dc1__question-paper__cambridge-o-level-chemistry-2016-june-question-paper-5070-s16-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0066",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "5",
+      "issues": [
+        "multiple_mcq_blocks",
+        "continuation_marker_present"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-094343f10dc1__question-paper__cambridge-o-level-chemistry-2016-june-question-paper-5070-s16-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0067",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "7",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-094343f10dc1__question-paper__cambridge-o-level-chemistry-2016-june-question-paper-5070-s16-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0069",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "2",
+      "issues": [
+        "multiple_mcq_blocks",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-094343f10dc1__question-paper__cambridge-o-level-chemistry-2016-june-question-paper-5070-s16-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0070",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "4",
+      "issues": [
+        "reference_table_snippet"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\chemistry\\papacambridge-094343f10dc1__question-paper__cambridge-o-level-chemistry-2016-june-question-paper-5070-s16-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0071",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "1(a)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0073",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "1(i)(i)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0081",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "7(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0082",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "7(i)(i)",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0084",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "7(i)(iii)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0085",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "7(i)(iv)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0086",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "7(c)",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0ab0205dc390__question-paper__cambridge-a-level-computer-science-2017-june-question-paper-9608-s17-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0091",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2025,
+      "questionNumber": "10",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-0cab721dca47__question-paper__cambridge-o-level-economics-2025-may-june-question-paper-2281-s25-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0092",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2025,
+      "questionNumber": "2",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-0cab721dca47__question-paper__cambridge-o-level-economics-2025-may-june-question-paper-2281-s25-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0093",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2025,
+      "questionNumber": "9",
+      "issues": [
+        "multiple_mcq_blocks",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-0cab721dca47__question-paper__cambridge-o-level-economics-2025-may-june-question-paper-2281-s25-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0094",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2025,
+      "questionNumber": "6",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-0cab721dca47__question-paper__cambridge-o-level-economics-2025-may-june-question-paper-2281-s25-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0100",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "1(c)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0102",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "1(a)",
+      "issues": [
+        "possible_subject_mismatch:ICT"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0107",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "9(c)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0110",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "9(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0111",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "35(i)(i)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0112",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "1(b)(ii)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0115",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "2",
+      "issues": [
+        "possible_subject_mismatch:ICT",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0116",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "15(b)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0117",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Computer Science",
+      "year": 2022,
+      "questionNumber": "15(i)(i)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\computer-science\\papacambridge-0d16a243a8d3__question-paper__cambridge-a-level-computer-science-2022-oct-nov-question-paper-9618-w22-qp-11-pd.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0118",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2023,
+      "questionNumber": "10",
+      "issues": [
+        "multiple_mcq_blocks",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-0dd60a877bed__question-paper__cambridge-o-level-economics-2023-may-june-question-paper-2281-s23-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0119",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "English",
+      "year": 2020,
+      "questionNumber": "4",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\english\\papacambridge-0ddeea0db0eb__question-paper__cambridge-o-level-english-2020-may-june-question-paper-1123-s20-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0120",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "English",
+      "year": 2020,
+      "questionNumber": "2",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\english\\papacambridge-0ddeea0db0eb__question-paper__cambridge-o-level-english-2020-may-june-question-paper-1123-s20-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0122",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Business",
+      "year": 2017,
+      "questionNumber": "3(b)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\business\\papacambridge-0e8f27fcd389__question-paper__cambridge-a-level-business-2017-march-question-paper-9609-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0123",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2018,
+      "questionNumber": "5(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-100e1e4d580f__question-paper__cambridge-a-level-english-2018-may-june-question-paper-9695-s18-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0124",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2018,
+      "questionNumber": "1(a)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-100e1e4d580f__question-paper__cambridge-a-level-english-2018-may-june-question-paper-9695-s18-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0125",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2018,
+      "questionNumber": "6(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-100e1e4d580f__question-paper__cambridge-a-level-english-2018-may-june-question-paper-9695-s18-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0127",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2018,
+      "questionNumber": "3(b)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-100e1e4d580f__question-paper__cambridge-a-level-english-2018-may-june-question-paper-9695-s18-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0128",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2018,
+      "questionNumber": "4(a)",
+      "issues": [
+        "possible_subject_mismatch:Economics",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-100e1e4d580f__question-paper__cambridge-a-level-english-2018-may-june-question-paper-9695-s18-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0129",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Mathematics",
+      "year": 2020,
+      "questionNumber": "3",
+      "issues": [
+        "multiple_question_commands",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\mathematics\\papacambridge-10365b8bc947__question-paper__cambridge-o-level-mathematics-2020-may-june-question-paper-4037-s20-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0130",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "5",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\computer-science\\papacambridge-107070b37bb4__question-paper__cambridge-o-level-computer-science-2019-may-june-question-paper-2210-s19-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0131",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "6(a)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\computer-science\\papacambridge-107070b37bb4__question-paper__cambridge-o-level-computer-science-2019-may-june-question-paper-2210-s19-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0132",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "6(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\computer-science\\papacambridge-107070b37bb4__question-paper__cambridge-o-level-computer-science-2019-may-june-question-paper-2210-s19-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0140",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "8(b)",
+      "issues": [
+        "possible_subject_mismatch:ICT",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\computer-science\\papacambridge-107070b37bb4__question-paper__cambridge-o-level-computer-science-2019-may-june-question-paper-2210-s19-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0141",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "3(c)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\computer-science\\papacambridge-107070b37bb4__question-paper__cambridge-o-level-computer-science-2019-may-june-question-paper-2210-s19-qp-11-p.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0142",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2023,
+      "questionNumber": "4",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-10e9cc10ed47__question-paper__cambridge-a-level-chemistry-2023-march-question-paper-9701-m23-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0143",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2023,
+      "questionNumber": "2",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-10e9cc10ed47__question-paper__cambridge-a-level-chemistry-2023-march-question-paper-9701-m23-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0145",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2023,
+      "questionNumber": "3",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-10e9cc10ed47__question-paper__cambridge-a-level-chemistry-2023-march-question-paper-9701-m23-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0146",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2023,
+      "questionNumber": "5",
+      "issues": [
+        "chemical_formula_spacing"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-10e9cc10ed47__question-paper__cambridge-a-level-chemistry-2023-march-question-paper-9701-m23-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0147",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "8(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0148",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "8(b)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0149",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "7(a)",
+      "issues": [
+        "missing_question_signal",
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0150",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "7(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0151",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "6(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0152",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "6(b)",
+      "issues": [
+        "continuation_marker_present",
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0153",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "5(a)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0154",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "5(b)",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0155",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "4(a)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0156",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "4(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0157",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "3(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0158",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "3(b)",
+      "issues": [
+        "multiple_question_commands",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0159",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "2(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0160",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2024,
+      "questionNumber": "2(b)",
+      "issues": [
+        "multiple_question_commands",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-121cfe744768__question-paper__cambridge-a-level-english-2024-march-question-paper-9695-m24-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0163",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "9",
+      "issues": [
+        "continuation_marker_present",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0164",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "3",
+      "issues": [
+        "chemical_formula_spacing",
+        "reference_table_snippet",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0165",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "15",
+      "issues": [
+        "continuation_marker_present",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0166",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "24",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0167",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "2",
+      "issues": [
+        "contains_following_question_label",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0168",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "14",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0169",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2019,
+      "questionNumber": "1",
+      "issues": [
+        "multiple_question_commands",
+        "reference_table_snippet",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-13095b120234__question-paper__cambridge-a-level-chemistry-2019-march-question-paper-9701-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0170",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2018,
+      "questionNumber": "1",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "multiple_mcq_blocks",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-1462fbde271c__question-paper__cambridge-o-level-economics-2018-may-june-question-paper-2281-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0171",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2018,
+      "questionNumber": "5",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "possible_broken_integral_symbol",
+        "multiple_mcq_blocks",
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-1462fbde271c__question-paper__cambridge-o-level-economics-2018-may-june-question-paper-2281-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0172",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2018,
+      "questionNumber": "10",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-1462fbde271c__question-paper__cambridge-o-level-economics-2018-may-june-question-paper-2281-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0173",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2018,
+      "questionNumber": "40",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "possible_broken_integral_symbol",
+        "multiple_mcq_blocks",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-1462fbde271c__question-paper__cambridge-o-level-economics-2018-may-june-question-paper-2281-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0174",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2018,
+      "questionNumber": "8",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "possible_broken_integral_symbol",
+        "multiple_mcq_blocks",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-1462fbde271c__question-paper__cambridge-o-level-economics-2018-may-june-question-paper-2281-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0175",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Economics",
+      "year": 2018,
+      "questionNumber": "12",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "possible_broken_integral_symbol",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\economics\\papacambridge-1462fbde271c__question-paper__cambridge-o-level-economics-2018-may-june-question-paper-2281-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0176",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2020,
+      "questionNumber": "1(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\business\\papacambridge-18c33d5b5a9c__question-paper__cambridge-igcse-business-2020-march-question-paper-0450-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0177",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2020,
+      "questionNumber": "2(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\business\\papacambridge-18c33d5b5a9c__question-paper__cambridge-igcse-business-2020-march-question-paper-0450-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0179",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2020,
+      "questionNumber": "5",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\business\\papacambridge-18c33d5b5a9c__question-paper__cambridge-igcse-business-2020-march-question-paper-0450-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0180",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Business",
+      "year": 2020,
+      "questionNumber": "6(c)",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\business\\papacambridge-18c33d5b5a9c__question-paper__cambridge-igcse-business-2020-march-question-paper-0450-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0181",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "1",
+      "issues": [
+        "reference_table_snippet",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0182",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "5",
+      "issues": [
+        "chemical_formula_spacing",
+        "continuation_marker_present",
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0183",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "4",
+      "issues": [
+        "chemical_formula_spacing",
+        "continuation_marker_present"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0184",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "6",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0186",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "2",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0187",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "3",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0188",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "14",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0189",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2016,
+      "questionNumber": "16",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-1930d62bfb3f__question-paper__cambridge-a-level-chemistry-2016-march-question-paper-9701-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0190",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "3",
+      "issues": [
+        "continuation_marker_present"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\chemistry\\papacambridge-205050e40f41__question-paper__cambridge-igcse-chemistry-2017-march-question-paper-0620-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0191",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "13",
+      "issues": [
+        "chemical_formula_spacing",
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\chemistry\\papacambridge-205050e40f41__question-paper__cambridge-igcse-chemistry-2017-march-question-paper-0620-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0192",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "15",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\chemistry\\papacambridge-205050e40f41__question-paper__cambridge-igcse-chemistry-2017-march-question-paper-0620-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0193",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Chemistry",
+      "year": 2017,
+      "questionNumber": "4",
+      "issues": [
+        "reference_table_snippet"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\chemistry\\papacambridge-205050e40f41__question-paper__cambridge-igcse-chemistry-2017-march-question-paper-0620-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0194",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2016,
+      "questionNumber": "12",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-20edbac53918__question-paper__cambridge-a-level-biology-2016-march-question-paper-9700-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0196",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2016,
+      "questionNumber": "24",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-20edbac53918__question-paper__cambridge-a-level-biology-2016-march-question-paper-9700-m16-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0197",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2019,
+      "questionNumber": "1",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-24a71db8f508__question-paper__cambridge-o-level-business-2019-may-june-question-paper-7115-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0198",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2019,
+      "questionNumber": "2",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-24a71db8f508__question-paper__cambridge-o-level-business-2019-may-june-question-paper-7115-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0199",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2019,
+      "questionNumber": "4",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-24a71db8f508__question-paper__cambridge-o-level-business-2019-may-june-question-paper-7115-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0200",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2019,
+      "questionNumber": "3",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-24a71db8f508__question-paper__cambridge-o-level-business-2019-may-june-question-paper-7115-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0201",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2018,
+      "questionNumber": "23",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-25168f77f100__question-paper__cambridge-igcse-mathematics-2018-may-june-question-paper-0444-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0206",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2018,
+      "questionNumber": "6",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-25168f77f100__question-paper__cambridge-igcse-mathematics-2018-may-june-question-paper-0444-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0212",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2018,
+      "questionNumber": "12",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-25168f77f100__question-paper__cambridge-igcse-mathematics-2018-may-june-question-paper-0444-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0213",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2018,
+      "questionNumber": "15(a)",
+      "issues": [
+        "possible_broken_integral_symbol"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-25168f77f100__question-paper__cambridge-igcse-mathematics-2018-may-june-question-paper-0444-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0214",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2018,
+      "questionNumber": "15(b)",
+      "issues": [
+        "possible_raw_fraction_notation"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-25168f77f100__question-paper__cambridge-igcse-mathematics-2018-may-june-question-paper-0444-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0216",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "questionNumber": "6",
+      "issues": [
+        "multiple_mcq_blocks",
+        "possible_subject_mismatch:Chemistry",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-254ceede9381__question-paper__cambridge-a-level-biology-2018-march-question-paper-9700-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0217",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "questionNumber": "13",
+      "issues": [
+        "multiple_mcq_blocks",
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-254ceede9381__question-paper__cambridge-a-level-biology-2018-march-question-paper-9700-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0218",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "questionNumber": "2",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-254ceede9381__question-paper__cambridge-a-level-biology-2018-march-question-paper-9700-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0219",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "questionNumber": "4",
+      "issues": [
+        "possible_subject_mismatch:Chemistry",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-254ceede9381__question-paper__cambridge-a-level-biology-2018-march-question-paper-9700-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0220",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "questionNumber": "3",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-254ceede9381__question-paper__cambridge-a-level-biology-2018-march-question-paper-9700-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0221",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Biology",
+      "year": 2018,
+      "questionNumber": "1",
+      "issues": [
+        "multiple_question_commands",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\biology\\papacambridge-254ceede9381__question-paper__cambridge-a-level-biology-2018-march-question-paper-9700-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0223",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Business",
+      "year": 2022,
+      "questionNumber": "3(b)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\business\\papacambridge-28a936577ed2__question-paper__cambridge-a-level-business-2022-march-question-paper-9609-m22-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0226",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "questionNumber": "23(g)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-2924043cc5ca__question-paper__cambridge-a-level-chemistry-2020-march-question-paper-9701-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0228",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "questionNumber": "6",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-2924043cc5ca__question-paper__cambridge-a-level-chemistry-2020-march-question-paper-9701-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0229",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "questionNumber": "13",
+      "issues": [
+        "contains_following_question_label",
+        "reference_table_snippet",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-2924043cc5ca__question-paper__cambridge-a-level-chemistry-2020-march-question-paper-9701-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0230",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "questionNumber": "1",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-2924043cc5ca__question-paper__cambridge-a-level-chemistry-2020-march-question-paper-9701-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0231",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "questionNumber": "14",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-2924043cc5ca__question-paper__cambridge-a-level-chemistry-2020-march-question-paper-9701-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0232",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Chemistry",
+      "year": 2020,
+      "questionNumber": "16",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\chemistry\\papacambridge-2924043cc5ca__question-paper__cambridge-a-level-chemistry-2020-march-question-paper-9701-m20-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0233",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "2",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0234",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "3",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0239",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "12(a)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0240",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "12(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0241",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "33(c)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0244",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "18(a)",
+      "issues": [
+        "possible_raw_fraction_notation",
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0248",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2019,
+      "questionNumber": "21(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-313fce26fbd0__question-paper__cambridge-igcse-mathematics-2019-may-june-question-paper-0444-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0249",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2017,
+      "questionNumber": "6(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-33372ce5671f__question-paper__cambridge-a-level-english-2017-june-question-paper-9695-s17-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0250",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2017,
+      "questionNumber": "3(a)",
+      "issues": [
+        "multiple_question_commands",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-33372ce5671f__question-paper__cambridge-a-level-english-2017-june-question-paper-9695-s17-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0251",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2017,
+      "questionNumber": "1(a)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-33372ce5671f__question-paper__cambridge-a-level-english-2017-june-question-paper-9695-s17-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0252",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "English",
+      "year": 2017,
+      "questionNumber": "1(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\english\\papacambridge-33372ce5671f__question-paper__cambridge-a-level-english-2017-june-question-paper-9695-s17-qp-31-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0253",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Accounting",
+      "year": 2025,
+      "questionNumber": "9",
+      "issues": [
+        "multiple_mcq_blocks",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\accounting\\papacambridge-359b59fcdf7c__question-paper__cambridge-a-level-accounting-2025-march-question-paper-9706-m25-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0254",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Accounting",
+      "year": 2025,
+      "questionNumber": "5",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\accounting\\papacambridge-359b59fcdf7c__question-paper__cambridge-a-level-accounting-2025-march-question-paper-9706-m25-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0255",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Accounting",
+      "year": 2025,
+      "questionNumber": "7",
+      "issues": [
+        "multiple_mcq_blocks",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\accounting\\papacambridge-359b59fcdf7c__question-paper__cambridge-a-level-accounting-2025-march-question-paper-9706-m25-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0256",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Accounting",
+      "year": 2025,
+      "questionNumber": "2",
+      "issues": [
+        "multiple_mcq_blocks",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\accounting\\papacambridge-359b59fcdf7c__question-paper__cambridge-a-level-accounting-2025-march-question-paper-9706-m25-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0260",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "3",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0261",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "2",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0263",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "5",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0264",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "7",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0265",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "8(b)",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0268",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "13",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0269",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Mathematics",
+      "year": 2023,
+      "questionNumber": "15",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\mathematics\\papacambridge-35f50e881abe__question-paper__cambridge-igcse-mathematics-2023-may-june-question-paper-0444-s23-qp-21-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0270",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2018,
+      "questionNumber": "2(d)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-38db990cd0fa__question-paper__cambridge-o-level-business-2018-may-june-question-paper-7115-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0271",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2018,
+      "questionNumber": "4(d)",
+      "issues": [
+        "missing_question_signal",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-38db990cd0fa__question-paper__cambridge-o-level-business-2018-may-june-question-paper-7115-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0272",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2018,
+      "questionNumber": "7",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-38db990cd0fa__question-paper__cambridge-o-level-business-2018-may-june-question-paper-7115-s18-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0275",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2022,
+      "questionNumber": "1(c)",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-39b556252805__question-paper__cambridge-o-level-business-2022-oct-nov-question-paper-7115-w22-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0276",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Business",
+      "year": 2022,
+      "questionNumber": "1(d)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\business\\papacambridge-39b556252805__question-paper__cambridge-o-level-business-2022-oct-nov-question-paper-7115-w22-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0278",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "9",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0281",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "1(i)(i)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0283",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "6(b)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0285",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "4(c)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0288",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "6(c)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0289",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "6(d)",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0292",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "7(a)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0293",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2019,
+      "questionNumber": "7(b)",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-39f94eaf4174__question-paper__cambridge-igcse-computer-science-2019-march-question-paper-0478-m19-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0297",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "2",
+      "issues": [
+        "possible_broken_integral_symbol",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\physics\\papacambridge-3b5be3eb1d5e__question-paper__cambridge-a-level-physics-2018-march-question-paper-9702-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0298",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "8",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\physics\\papacambridge-3b5be3eb1d5e__question-paper__cambridge-a-level-physics-2018-march-question-paper-9702-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0299",
+      "board": "Cambridge",
+      "level": "A Level",
+      "subject": "Physics",
+      "year": 2018,
+      "questionNumber": "1",
+      "issues": [
+        "question_contains_solution_language",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\a-level\\physics\\papacambridge-3b5be3eb1d5e__question-paper__cambridge-a-level-physics-2018-march-question-paper-9702-m18-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0300",
+      "board": "Cambridge",
+      "level": "O Level",
+      "subject": "Biology",
+      "year": 2016,
+      "questionNumber": "13",
+      "issues": [
+        "continuation_marker_present",
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\o-level\\biology\\papacambridge-3c85f3bec22c__question-paper__cambridge-o-level-biology-2016-june-question-paper-5090-s16-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0304",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2019,
+      "questionNumber": "5",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\english\\papacambridge-3dff954a5767__question-paper__cambridge-igcse-english-2019-may-june-question-paper-0511-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0306",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "English",
+      "year": 2019,
+      "questionNumber": "9(c)",
+      "issues": [
+        "missing_question_signal"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\english\\papacambridge-3dff954a5767__question-paper__cambridge-igcse-english-2019-may-june-question-paper-0511-s19-qp-11-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0312",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "6",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-3e153a73698d__question-paper__cambridge-igcse-computer-science-2017-march-question-paper-0478-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "medium",
+      "id": "qbank_question_compiled_0313",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "7",
+      "issues": [
+        "high_ocr_noise"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-3e153a73698d__question-paper__cambridge-igcse-computer-science-2017-march-question-paper-0478-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0316",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "2(c)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-3e153a73698d__question-paper__cambridge-igcse-computer-science-2017-march-question-paper-0478-m17-qp-12-pdf.pdf"
+    },
+    {
+      "type": "low_confidence_question",
+      "priority": "high",
+      "id": "qbank_question_compiled_0317",
+      "board": "Cambridge",
+      "level": "IGCSE",
+      "subject": "Computer Science",
+      "year": 2017,
+      "questionNumber": "2(b)",
+      "issues": [
+        "question_contains_solution_language"
+      ],
+      "sourceFile": "C:\\Users\\User\\scholorhaab\\data\\qbank_collection\\downloaded_pdfs\\cambridge\\igcse\\computer-science\\papacambridge-3e153a73698d__question-paper__cambridge-igcse-computer-science-2017-march-question-paper-0478-m17-qp-12-pdf.pdf"
+    }
+  ]
+}

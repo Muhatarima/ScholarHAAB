@@ -1,0 +1,10 @@
+
+> scholorhaab@0.1.0 start
+> next start --port 3029
+
+▲ Next.js 16.1.6
+- Local:         http://localhost:3029
+- Network:       http://192.168.0.101:3029
+
+✓ Starting...
+✓ Ready in 917ms

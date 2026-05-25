@@ -1,0 +1,13 @@
+{
+  "phase": "database_setup",
+  "status": "manual_sql_required",
+  "schema_path": "C:\\Users\\User\\scholorhaab\\scholarhaaab-pipeline\\scripts\\schema.sql",
+  "executed_via_psql": false,
+  "message": "SUPABASE_DB_URL/DATABASE_URL not set; wrote SQL for Supabase SQL Editor instead.",
+  "table_checks": {
+    "past_papers": "not_checked_invalid_supabase_client: Invalid API key",
+    "questions": "not_checked_invalid_supabase_client: Invalid API key",
+    "pipeline_logs": "not_checked_invalid_supabase_client: Invalid API key"
+  },
+  "created_at": "2026-05-18T03:38:20.042672+00:00"
+}

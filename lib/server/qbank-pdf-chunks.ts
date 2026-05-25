@@ -40,32 +40,96 @@ export type QbankPdfChunkMatch = {
   sourceUrl: string | null
 }
 
-const CHUNK_PATH = path.join(
-  process.cwd(),
-  'data',
-  'qbank_collection',
-  'extracted_text',
-  'pdf_text_chunks.jsonl'
-)
-
 let cachedRows: QbankPdfChunkRow[] | null = null
+const QUESTION_STYLE_RESOURCE_TYPES = new Set([
+  'question_paper',
+  'mark_scheme',
+  'examiner_report',
+  'confidential_instructions',
+  'specimen_question_paper',
+  'specimen_mark_scheme',
+])
+
+function getChunkPaths() {
+  const dataDir = path.join(process.cwd(), 'data')
+  const primaryPath = path.join(dataDir, 'qbank_collection', 'extracted_text', 'pdf_text_chunks.jsonl')
+  const rootChunkPaths = fs
+    .readdirSync(dataDir)
+    .filter((file) => /^qbank_pdf_.*chunks.*\.jsonl$/i.test(file))
+    .sort()
+    .map((file) => path.join(dataDir, file))
+
+  return [primaryPath, ...rootChunkPaths].filter((filePath, index, all) => all.indexOf(filePath) === index)
+}
+
+function countPattern(text: string, pattern: RegExp) {
+  return text.match(pattern)?.length ?? 0
+}
+
+function extractionPenalty(text: string | null | undefined) {
+  const compact = String(text ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (!compact) {
+    return 999
+  }
+
+  let penalty = 0
+  penalty += countPattern(compact, /\b(?:[A-Za-z]\s+){3,}[A-Za-z]\b/g) * 18
+  penalty += countPattern(compact, /\b[A-Za-z]\s+[a-z]{1,3}\b/g) * 5
+  penalty += countPattern(compact, /[_/\\]{2,}|Â|Ã|25CBh|___/g) * 18
+  penalty += countPattern(compact, /\b[a-z]{1,2}\s+[a-z]{1,2}\s+[a-z]{1,2}\b/g) * 8
+
+  return penalty
+}
+
+function isLowQualityChunk(row: QbankPdfChunkRow) {
+  return extractionPenalty(row.content) >= 36
+}
+
+function isBoilerplateChunk(row: QbankPdfChunkRow) {
+  const normalized = String(row.content ?? '').toLowerCase()
+  return (
+    normalized.includes('official exam file indexed from the desktop folder') ||
+    normalized.startsWith('contents ') ||
+    normalized.startsWith('cambridge secondary') ||
+    normalized.includes('why choose cambridge')
+  )
+}
+
+function shouldUsePdfChunks(parsedQuery: QbankParsedQuery) {
+  return (
+    parsedQuery.intent === 'question_lookup' ||
+    (parsedQuery.intent === 'solve' && Boolean(parsedQuery.year || parsedQuery.paper))
+  )
+}
+
+function hasStrictFilters(parsedQuery: QbankParsedQuery) {
+  return Boolean(
+    parsedQuery.board || parsedQuery.level || parsedQuery.subject || parsedQuery.year || parsedQuery.paper
+  )
+}
 
 function getRows() {
   if (cachedRows) {
     return cachedRows
   }
 
-  if (!fs.existsSync(CHUNK_PATH)) {
+  const chunkPaths = getChunkPaths().filter((filePath) => fs.existsSync(filePath))
+
+  if (chunkPaths.length === 0) {
     cachedRows = []
     return cachedRows
   }
 
-  cachedRows = fs
-    .readFileSync(CHUNK_PATH, 'utf8')
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => JSON.parse(line) as QbankPdfChunkRow)
+  cachedRows = chunkPaths.flatMap((filePath) =>
+    fs
+      .readFileSync(filePath, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => JSON.parse(line) as QbankPdfChunkRow)
+  )
 
   return cachedRows
 }
@@ -124,10 +188,19 @@ function scoreRow(row: QbankPdfChunkRow, parsedQuery: QbankParsedQuery) {
     score += 6
   }
 
+  score -= Math.min(extractionPenalty(row.content), 80)
+
   return score
 }
 
 function matchesFilters(row: QbankPdfChunkRow, parsedQuery: QbankParsedQuery) {
+  if (
+    (parsedQuery.intent === 'question_lookup' || parsedQuery.intent === 'solve') &&
+    !QUESTION_STYLE_RESOURCE_TYPES.has(row.resource_type)
+  ) {
+    return false
+  }
+
   if (parsedQuery.board && !row.board.toLowerCase().includes(parsedQuery.board.toLowerCase())) {
     return false
   }
@@ -140,7 +213,7 @@ function matchesFilters(row: QbankPdfChunkRow, parsedQuery: QbankParsedQuery) {
     return false
   }
 
-  if (parsedQuery.year && row.year && row.year !== parsedQuery.year) {
+  if (parsedQuery.year && row.year !== parsedQuery.year) {
     return false
   }
 
@@ -157,7 +230,7 @@ function mapRow(row: QbankPdfChunkRow): QbankPdfChunkMatch {
     title: row.title,
     year: row.year ?? null,
     resourceType: row.resource_type,
-    content: row.content,
+    content: row.content ?? '',
     visualRich: Boolean(row.visual_rich),
     visualRisk: row.visual_risk ?? null,
     imageObjects: row.image_objects ?? 0,
@@ -167,11 +240,20 @@ function mapRow(row: QbankPdfChunkRow): QbankPdfChunkMatch {
 }
 
 export function searchQbankPdfChunks(parsedQuery: QbankParsedQuery) {
+  if (!shouldUsePdfChunks(parsedQuery)) {
+    return []
+  }
+
   const rows = getRows()
   const candidates = rows.filter((row) => matchesFilters(row, parsedQuery))
+  if (candidates.length === 0 && hasStrictFilters(parsedQuery)) {
+    return []
+  }
   const activeRows = candidates.length > 0 ? candidates : rows
 
   return activeRows
+    .filter((row) => !isLowQualityChunk(row))
+    .filter((row) => !isBoilerplateChunk(row))
     .map((row) => ({ row, score: scoreRow(row, parsedQuery) }))
     .filter((entry) => entry.score > 0)
     .sort((a, b) => b.score - a.score)

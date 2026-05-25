@@ -1,0 +1,216 @@
+{
+  "definition_recall": {
+    "count": 559,
+    "top_triggers": {
+      "state": 512,
+      "define": 45,
+      "what is meant": 16
+    },
+    "avg_marks": 2.2,
+    "subjects": {
+      "Accounting": 128,
+      "Business": 51,
+      "Computer_Science": 132,
+      "Economics": 50,
+      "English": 83,
+      "Mathematics": 37,
+      "Chemistry": 40,
+      "Physics": 17,
+      "Biology": 21
+    },
+    "example_mark_schemes": []
+  },
+  "diagram_sketch": {
+    "count": 144,
+    "top_triggers": {
+      "draw": 67,
+      "label": 64,
+      "sketch": 15,
+      "plot": 13
+    },
+    "avg_marks": 2,
+    "subjects": {
+      "Accounting": 15,
+      "Computer_Science": 21,
+      "Economics": 11,
+      "English": 17,
+      "Mathematics": 36,
+      "Biology": 6,
+      "Chemistry": 4,
+      "Physics": 34
+    },
+    "example_mark_schemes": []
+  },
+  "general": {
+    "count": 1423,
+    "top_triggers": {},
+    "avg_marks": 2.1,
+    "subjects": {
+      "Accounting": 134,
+      "Biology": 18,
+      "Business": 39,
+      "Computer_Science": 318,
+      "Economics": 139,
+      "English": 359,
+      "Mathematics": 190,
+      "Chemistry": 62,
+      "Physics": 164
+    },
+    "example_mark_schemes": [
+      {
+        "question": "© B060/0031; MARILYN SCHALLER/SCIENCE PHOTO LIBRARY; TEM of the junction of two leaf cells; www.sciencephoto.com",
+        "mark_scheme": [
+          "Correct"
+        ],
+        "marks": 0,
+        "source": "Cambridge A Level Biology 2022 May_June Paper 1 Q2"
+      }
+    ]
+  },
+  "numerical_calculation": {
+    "count": 1253,
+    "top_triggers": {
+      "find": 541,
+      "calculate": 465,
+      "compute": 343,
+      "determine": 109,
+      "work out": 50
+    },
+    "avg_marks": 2.7,
+    "subjects": {
+      "Accounting": 176,
+      "Business": 147,
+      "Computer_Science": 341,
+      "Economics": 85,
+      "English": 94,
+      "Mathematics": 397,
+      "Biology": 5,
+      "Physics": 7,
+      "Chemistry": 1
+    },
+    "example_mark_schemes": []
+  },
+  "conceptual_explanation": {
+    "count": 786,
+    "top_triggers": {
+      "explain": 598,
+      "why": 429,
+      "account for": 22,
+      "give a reason": 6,
+      "how does": 6
+    },
+    "avg_marks": 2.6,
+    "subjects": {
+      "Accounting": 61,
+      "Business": 272,
+      "Computer_Science": 85,
+      "Economics": 202,
+      "English": 137,
+      "Mathematics": 8,
+      "Physics": 5,
+      "Chemistry": 10,
+      "Biology": 6
+    },
+    "example_mark_schemes": []
+  },
+  "evaluation": {
+    "count": 123,
+    "top_triggers": {
+      "discuss": 64,
+      "assess": 29,
+      "comment on": 21,
+      "evaluate": 12,
+      "justify": 8
+    },
+    "avg_marks": 12,
+    "subjects": {
+      "Accounting": 6,
+      "Biology": 3,
+      "Business": 19,
+      "Economics": 15,
+      "English": 61,
+      "Mathematics": 4,
+      "Physics": 7,
+      "Chemistry": 7,
+      "Computer_Science": 1
+    },
+    "example_mark_schemes": []
+  },
+  "derivation_proof": {
+    "count": 132,
+    "top_triggers": {
+      "prove": 108,
+      "show that": 21,
+      "derive": 4
+    },
+    "avg_marks": 4.1,
+    "subjects": {
+      "Accounting": 8,
+      "Business": 14,
+      "Computer_Science": 15,
+      "English": 61,
+      "Mathematics": 26,
+      "Economics": 8
+    },
+    "example_mark_schemes": []
+  },
+  "description": {
+    "count": 160,
+    "top_triggers": {
+      "describe": 137,
+      "outline": 16,
+      "write about": 10
+    },
+    "avg_marks": 3.5,
+    "subjects": {
+      "Business": 10,
+      "Computer_Science": 55,
+      "Economics": 4,
+      "English": 72,
+      "Mathematics": 7,
+      "Accounting": 5,
+      "Physics": 5,
+      "Biology": 2
+    },
+    "example_mark_schemes": []
+  },
+  "comparison": {
+    "count": 106,
+    "top_triggers": {
+      "contrast": 51,
+      "compare": 48,
+      "difference between": 16,
+      "similarities": 2
+    },
+    "avg_marks": 4,
+    "subjects": {
+      "Business": 6,
+      "Computer_Science": 9,
+      "Economics": 14,
+      "English": 68,
+      "Mathematics": 4,
+      "Accounting": 1,
+      "Physics": 1,
+      "Chemistry": 1,
+      "Biology": 2
+    },
+    "example_mark_schemes": []
+  },
+  "prediction_analysis": {
+    "count": 64,
+    "top_triggers": {
+      "suggest": 51,
+      "effect of": 15,
+      "predict": 1
+    },
+    "avg_marks": 1.2,
+    "subjects": {
+      "Computer_Science": 7,
+      "Economics": 9,
+      "English": 43,
+      "Accounting": 4,
+      "Business": 1
+    },
+    "example_mark_schemes": []
+  }
+}

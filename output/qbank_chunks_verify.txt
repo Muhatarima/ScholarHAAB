@@ -1,0 +1,60 @@
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (3)
+QA Feedback Storage Table
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+1
+SELECT table_name FROM information_schema.tables WHERE table_name IN ('qbank_chunks') ORDER BY table_name;
+Results
+Explain
+Chart
+Export
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+table_name
+qbank_chunks
+
+1 row (Limited to only 100 rows)
+
+Limit results to: 100 rows
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase

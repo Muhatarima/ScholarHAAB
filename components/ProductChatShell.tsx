@@ -1,17 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
-import Blackhole from '@/components/Blackhole'
-import SessionBadge from '@/components/SessionBadge'
-import Stars from '@/components/Stars'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import RichMessageContent from '@/components/RichMessageContent'
+import StarBackdrop from '@/components/StarBackdrop'
 import type { Product, PromptMode } from '@/lib/products'
+import { createSupabaseClient } from '@/lib/supabase/clientClient'
 
 type SourceCitation = {
-  title: string
+  title?: string
+  source?: string
   url?: string | null
-  tier?: string
-  lastChecked?: string | null
+  label?: string
+  year?: number | string | null
+  paper?: string | null
 }
 
 type Message = {
@@ -23,152 +25,124 @@ type Message = {
 
 type ChatSessionSummary = {
   id: string
-  mode: PromptMode
   title: string
-  lastMessagePreview: string
-  updatedAt: string
+  lastMessagePreview?: string
+  updatedAt?: string
 }
 
 type UsageState = {
-  enabled: boolean
-  tier: string
-  dailyLimitCredits: number
-  usedCredits: number
-  remainingCredits: number
-  actionCost: number
-  nextResetLabel: string
-  nextResetIn: string
-  message?: string
+  remainingCredits?: number
+  usedCredits?: number
 }
 
-type ProductConfig = {
-  title: string
-  subtitle: string
-  placeholder: string
-  welcome: string
-  endpoint: string
-  quickPrompts: string[]
-}
+const ENDPOINT = '/api/qbank/chat'
+const SUGGESTIONS = [
+  'Explain photosynthesis',
+  'Force and motion formulas',
+  '2022 Chemistry paper questions',
+  'Test me on calculus',
+]
 
-const PRODUCT_CONFIG: Record<Product, ProductConfig> = {
-  abroad: {
-    title: 'ScholarHAAB Abroad',
-    subtitle: 'Scholarship matching, document guidance, and realistic study-abroad planning.',
-    placeholder: 'Ask about scholarships, SOP, documents, or country fit...',
-    welcome:
-      'I am your abroad consultant. Tell me your profile, target country, or scholarship goal, and I will help you plan the smartest next move.',
-    endpoint: '/api/abroad/chat',
-    quickPrompts: [
-      'Match scholarships for a 3.55 CGPA CSE student from Bangladesh.',
-      'Review what my SOP must include for Chevening-level applications.',
-      'Tell me the document checklist for a funded masters application.',
-    ],
-  },
-  qbank: {
-    title: 'ScholarHAAB QBank',
-    subtitle: 'Board-aware past-paper solving with direct and tutor modes.',
-    placeholder: 'Ask about a paper, topic, or exact question...',
-    welcome:
-      'I am your QBank tutor. Ask for a direct solution, switch to tutor mode, or ask which topics matter most for your board and year.',
-    endpoint: '/api/qbank/chat',
-    quickPrompts: [
-      '2021 physics edexl paper 1 important questions.',
-      'Important questions of vectors year wise for Edexcel A Level.',
-      'Tutor mode: teach me periodic table trends like I am weak at chemistry.',
-      'Which algebra topics repeat most often in recent O Level papers?',
-    ],
-  },
-}
+async function buildJsonAuthHeaders() {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
 
-function getDefaultMessages(product: Product): Message[] {
-  return [
-    {
-      role: 'assistant',
-      content: PRODUCT_CONFIG[product].welcome,
-    },
-  ]
-}
+  try {
+    const {
+      data: { session },
+    } = await createSupabaseClient().auth.getSession()
 
-function formatRelativeDate(value: string) {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    return ''
+    if (session?.access_token) {
+      headers.Authorization = `Bearer ${session.access_token}`
+    }
+  } catch {
+    // Demo mode can still run without a client session.
   }
 
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(date)
+  return headers
 }
 
-function formatLastChecked(value?: string | null) {
-  if (!value) {
-    return ''
-  }
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = String(reader.result || '')
+      resolve(result.includes(',') ? result.split(',')[1] ?? '' : result)
+    }
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
 
-  return `checked ${value}`
+function Logo({ compact = false }: { compact?: boolean }) {
+  return (
+    <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none' }}>
+      <span
+        style={{
+          color: '#7744aa',
+          fontFamily: 'Georgia, serif',
+          fontSize: compact ? 8 : 10,
+          fontStyle: 'italic',
+          letterSpacing: compact ? 2 : 3,
+          textTransform: 'uppercase',
+        }}
+      >
+        scholar
+      </span>
+      <span
+        style={{
+          background: 'linear-gradient(120deg,#cc88ff,#aa55ff,#8833dd)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontSize: compact ? 16 : 20,
+          fontWeight: 600,
+          letterSpacing: compact ? 1 : 2,
+          textTransform: 'uppercase',
+        }}
+      >
+        HAAB
+      </span>
+    </Link>
+  )
+}
+
+function sourceText(sources?: SourceCitation[]) {
+  const source = sources?.[0]
+  if (!source) return ''
+  return String(source.title || source.source || source.label || 'Cambridge mark scheme')
+}
+
+function formatRelativeDate(value?: string) {
+  if (!value) return ''
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return ''
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parsed)
 }
 
 export default function ProductChatShell({ product }: { product: Product }) {
-  const config = PRODUCT_CONFIG[product]
+  void product
   const bottomRef = useRef<HTMLDivElement>(null)
-
-  const [messages, setMessages] = useState<Message[]>(getDefaultMessages(product))
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [messages, setMessages] = useState<Message[]>([])
   const [sessions, setSessions] = useState<ChatSessionSummary[]>([])
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [loadingHistory, setLoadingHistory] = useState(false)
   const [mode, setMode] = useState<PromptMode>('direct')
+  const [loading, setLoading] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [usage, setUsage] = useState<UsageState | null>(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading, loadingHistory])
+  }, [messages, loading])
 
   useEffect(() => {
-    setMessages(getDefaultMessages(product))
-    setSessions([])
-    setSessionId(null)
-    setInput('')
-    setLoading(false)
-    setLoadingHistory(false)
-    setUsage(null)
-    setMode('direct')
+    void refreshSessions()
+  }, [])
 
-    void (async () => {
-      try {
-        const res = await fetch(`/api/history?product=${product}`, {
-          cache: 'no-store',
-        })
-        const data = await res.json()
-        setSessions(Array.isArray(data.sessions) ? data.sessions : [])
-      } catch {
-        setSessions([])
-      }
-    })()
-  }, [product])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    const prompt = new URLSearchParams(window.location.search).get('prompt')
-    if (!prompt) {
-      return
-    }
-
-    setInput(prompt)
-  }, [product])
-
-  const refreshSessions = async (nextProduct = product) => {
+  async function refreshSessions() {
     try {
-      const res = await fetch(`/api/history?product=${nextProduct}`, {
-        cache: 'no-store',
-      })
+      const res = await fetch('/api/history?product=qbank', { cache: 'no-store' })
       const data = await res.json()
       setSessions(Array.isArray(data.sessions) ? data.sessions : [])
     } catch {
@@ -176,872 +150,451 @@ export default function ProductChatShell({ product }: { product: Product }) {
     }
   }
 
-  const loadSession = async (nextSessionId: string) => {
-    if (loading || loadingHistory) {
-      return
-    }
-
-    setLoadingHistory(true)
-
+  async function loadSession(nextSessionId: string) {
+    if (loading) return
     try {
-      const res = await fetch(`/api/history/${nextSessionId}`, {
-        cache: 'no-store',
-      })
+      const res = await fetch(`/api/history/${nextSessionId}`, { cache: 'no-store' })
       const data = await res.json()
       const nextMessages = Array.isArray(data.messages) ? data.messages : []
-
+      setSessionId(nextSessionId)
+      setMessages(
+        nextMessages.map((entry: Message) => ({
+          id: entry.id,
+          role: entry.role,
+          content: entry.content,
+          sources: entry.sources,
+        }))
+      )
       if (data.session?.mode === 'direct' || data.session?.mode === 'tutor') {
         setMode(data.session.mode)
       }
-
-      setSessionId(nextSessionId)
-      setMessages(
-        nextMessages.length > 0
-          ? nextMessages.map((entry: Message) => ({
-              id: entry.id,
-              role: entry.role,
-              content: entry.content,
-              sources: entry.sources,
-            }))
-          : getDefaultMessages(product)
-      )
     } catch {
-      setMessages([
-        {
-          role: 'assistant',
-          content: 'Could not load that chat right now.',
-        },
-      ])
-    } finally {
-      setLoadingHistory(false)
+      setMessages([])
     }
   }
 
-  const sendMessage = async (preset?: string) => {
-    const nextMessage = (preset ?? input).trim()
-    if (!nextMessage || loading || loadingHistory) {
-      return
-    }
+  function newChat() {
+    setSessionId(null)
+    setMessages([])
+    setInput('')
+    setSelectedFiles([])
+    setMode('direct')
+  }
 
-    setMessages((prev) => [...prev, { role: 'user', content: nextMessage }])
+  async function signOut() {
+    await createSupabaseClient().auth.signOut()
+    window.location.href = '/login'
+  }
+
+  async function sendMessage(preset?: string) {
+    const text = (preset ?? input).trim()
+    if ((!text && selectedFiles.length === 0) || loading) return
+
+    const preview = [text, ...selectedFiles.map((file) => `[${file.name}]`)].filter(Boolean).join('\n')
+    setMessages((current) => [...current, { role: 'user', content: preview || '📎' }])
     setInput('')
     setLoading(true)
 
     try {
-      const res = await fetch(config.endpoint, {
+      const files = await Promise.all(
+        selectedFiles.map(async (file) => ({
+          base64: await readFileAsBase64(file),
+          type: file.type || null,
+          name: file.name,
+        }))
+      )
+      const res = await fetch(ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await buildJsonAuthHeaders(),
         body: JSON.stringify({
-          message: nextMessage,
+          message: text,
           mode,
           sessionId,
+          files,
         }),
       })
       const data = await res.json()
-
-      if (data.usage) {
-        setUsage(data.usage)
-      }
-
-      if (typeof data.sessionId === 'string') {
-        setSessionId(data.sessionId)
-      }
-
-      setMessages((prev) => [
-        ...prev,
+      if (typeof data.sessionId === 'string') setSessionId(data.sessionId)
+      if (data.usage) setUsage(data.usage)
+      setMessages((current) => [
+        ...current,
         {
           role: 'assistant',
-          content:
-            data.answer ||
-            data.error ||
-            'Something went wrong. Please try again.',
-          sources: Array.isArray(data.sources) ? data.sources : undefined,
+          content: data.answer || data.response || data.error || 'Try again.',
+          sources: Array.isArray(data.sources)
+            ? data.sources
+            : data.truth?.source
+              ? [{ title: String(data.truth.source) }]
+              : undefined,
         },
       ])
-
+      setSelectedFiles([])
       void refreshSessions()
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: 'Connection failed. Please try again.',
-        },
-      ])
+      setMessages((current) => [...current, { role: 'assistant', content: 'Try again.' }])
     } finally {
       setLoading(false)
     }
   }
 
-  const handleNewChat = () => {
-    setSessionId(null)
-    setMessages(getDefaultMessages(product))
-    setInput('')
-    setMode('direct')
-  }
+  const credits = usage?.remainingCredits ?? usage?.usedCredits ?? 0
+  const hasMessages = messages.length > 0
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: '#00000d',
-        display: 'flex',
-        flexDirection: 'column',
-        fontFamily: 'var(--font-sans), sans-serif',
-        position: 'relative',
-      }}
-    >
-      <Stars />
-      <Blackhole />
+    <main style={styles.shell}>
+      <StarBackdrop variant="chat" />
+      <style>{`
+        @media (max-width: 760px) {
+          .shaab-sidebar { width: 62px !important; }
+          .shaab-sidebar-open { width: 218px !important; }
+          .shaab-session-list { display: none !important; }
+          .shaab-main { margin-left: 62px !important; }
+          .shaab-composer { left: 72px !important; width: calc(100vw - 84px) !important; }
+        }
+      `}</style>
 
-      <nav
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          padding: '14px 28px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 20,
-          borderBottom: '1px solid rgba(140,80,255,0.1)',
-          background: 'rgba(0,0,13,0.85)',
-          backdropFilter: 'blur(10px)',
-          gap: '16px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <Link
-            href="/"
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '2px',
-              textDecoration: 'none',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '10px',
-                fontWeight: 400,
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
-                color: '#7744aa',
-                fontFamily: 'Georgia, serif',
-                fontStyle: 'italic',
-              }}
-            >
-              scholar
-            </span>
-            <span
-              style={{
-                fontSize: '20px',
-                fontWeight: 600,
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                background: 'linear-gradient(120deg,#cc88ff,#aa55ff,#8833dd)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              HAAB
-            </span>
-          </Link>
+      <aside className={sidebarOpen ? 'shaab-sidebar shaab-sidebar-open' : 'shaab-sidebar'} style={styles.sidebar(sidebarOpen)}>
+        <button type="button" onClick={() => setSidebarOpen((value) => !value)} style={styles.logoButton}>
+          <Logo compact={!sidebarOpen} />
+        </button>
 
-          <button
-            onClick={handleNewChat}
-            title="New chat"
-            style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: '50%',
-              border: '1px solid rgba(170,85,255,0.3)',
-              background: 'transparent',
-              color: '#aa55ff',
-              cursor: 'pointer',
-              fontSize: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 10px 2px #7733cc44',
-            }}
-          >
-            +
-          </button>
+        <button type="button" onClick={newChat} style={styles.newChat}>
+          {sidebarOpen ? 'New chat +' : '+'}
+        </button>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              padding: '4px',
-              borderRadius: '999px',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(170,85,255,0.14)',
-            }}
-          >
-            {([
-              ['abroad', '/abroad', 'Abroad'],
-              ['qbank', '/qbank', 'QBank'],
-            ] as const).map(([key, href, label]) => {
-              const active = product === key
-              return (
-                <Link
-                  key={key}
-                  href={href}
-                  style={{
-                    padding: '8px 12px',
-                    borderRadius: '999px',
-                    fontSize: '12px',
-                    color: active ? '#fff' : '#8D8DB5',
-                    textDecoration: 'none',
-                    background: active ? 'linear-gradient(130deg,#7733cc,#aa55ff)' : 'transparent',
-                  }}
-                >
-                  {label}
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-          {product === 'qbank' && (
-            <>
-              <Link
-                href="/qbank/search"
-                style={{
-                  fontSize: '12px',
-                  color: '#6be4ff',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(107,228,255,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(107,228,255,0.06)',
-                }}
-              >
-                Search workbench
-              </Link>
-              <Link
-                href="/qbank/concepts"
-                style={{
-                  fontSize: '12px',
-                  color: '#93c5fd',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(147,197,253,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(147,197,253,0.06)',
-                }}
-              >
-                Concepts
-              </Link>
-            </>
-          )}
-
-          {product === 'abroad' && (
-            <>
-              <Link
-                href="/abroad/search"
-                style={{
-                  fontSize: '12px',
-                  color: '#85efac',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(133,239,172,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(133,239,172,0.06)',
-                }}
-              >
-                Scholarship workbench
-              </Link>
-              <Link
-                href="/abroad/guidance"
-                style={{
-                  fontSize: '12px',
-                  color: '#7dd3fc',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(125,211,252,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(125,211,252,0.06)',
-                }}
-              >
-                Guidance workbench
-              </Link>
-              <Link
-                href="/abroad/review"
-                style={{
-                  fontSize: '12px',
-                  color: '#fcd34d',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(252,211,77,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(252,211,77,0.06)',
-                }}
-              >
-                Document review
-              </Link>
-              <Link
-                href="/abroad/document-check"
-                style={{
-                  fontSize: '12px',
-                  color: '#f0abfc',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(240,171,252,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(240,171,252,0.06)',
-                }}
-              >
-                Document check
-              </Link>
-              <Link
-                href="/abroad/planner"
-                style={{
-                  fontSize: '12px',
-                  color: '#bef264',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(190,242,100,0.22)',
-                  padding: '8px 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(190,242,100,0.06)',
-                }}
-              >
-                Budget planner
-              </Link>
-            </>
-          )}
-
-          {product === 'qbank' && (
-            <div
-              style={{
-                display: 'flex',
-                gap: '8px',
-                padding: '4px',
-                borderRadius: '999px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(170,85,255,0.14)',
-              }}
-            >
-              {(['direct', 'tutor'] as const).map((option) => {
-                const active = mode === option
-                return (
-                  <button
-                    key={option}
-                    onClick={() => setMode(option)}
-                    style={{
-                      padding: '8px 12px',
-                      borderRadius: '999px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      color: active ? '#fff' : '#8D8DB5',
-                      background: active ? 'linear-gradient(130deg,#7733cc,#aa55ff)' : 'transparent',
-                    }}
-                  >
-                    {option === 'direct' ? 'Direct mode' : 'Tutor mode'}
-                  </button>
-                )
-              })}
-            </div>
-          )}
-
-          {usage && (
-            <div
-              style={{
-                fontSize: '12px',
-                color: '#9A9ABE',
-                border: '1px solid rgba(170,85,255,0.16)',
-                padding: '8px 12px',
-                borderRadius: '999px',
-                background: 'rgba(255,255,255,0.03)',
-              }}
-            >
-              {usage.tier} | {usage.remainingCredits}/{usage.dailyLimitCredits} credits left
-            </div>
-          )}
-
-          <SessionBadge compact />
-
-          <Link
-            href="/chat"
-            style={{
-              fontSize: '12px',
-              color: '#AA66FF',
-              textDecoration: 'none',
-              border: '1px solid rgba(170,85,255,0.2)',
-              padding: '8px 14px',
-              borderRadius: '999px',
-            }}
-          >
-            Switch workspace
-          </Link>
-        </div>
-      </nav>
-
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '108px 20px 190px',
-          maxWidth: '860px',
-          width: '100%',
-          margin: '0 auto',
-          zIndex: 10,
-          position: 'relative',
-        }}
-      >
-        <header style={{ marginBottom: '28px' }}>
-          <p
-            style={{
-              fontSize: '12px',
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              color: '#9A6CFF',
-              marginBottom: '10px',
-            }}
-          >
-            {config.title}
-          </p>
-          <h1
-            style={{
-              fontSize: 'clamp(28px, 4vw, 46px)',
-              lineHeight: 1.05,
-              fontWeight: 500,
-              marginBottom: '12px',
-            }}
-          >
-            {product === 'abroad' ? 'Scholarship consultant workspace' : 'Past-paper tutor workspace'}
-          </h1>
-          <p
-            style={{
-              color: '#77779A',
-              lineHeight: 1.8,
-              maxWidth: '680px',
-              fontSize: '14px',
-            }}
-          >
-            {config.subtitle}
-          </p>
-
-          {product === 'qbank' && (
-            <div
-              style={{
-                marginTop: '16px',
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-              }}
-            >
-              <Link
-                href="/qbank/search"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 16px',
-                  borderRadius: '999px',
-                  textDecoration: 'none',
-                  color: '#04101b',
-                  background: 'linear-gradient(120deg,#7ce7ff,#46c9ff)',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                }}
-              >
-                Search year-wise papers
-              </Link>
-              <div
-                style={{
-                  padding: '10px 14px',
-                  borderRadius: '999px',
-                  border: '1px solid rgba(107,228,255,0.18)',
-                  color: '#9fdfff',
-                  background: 'rgba(107,228,255,0.05)',
-                  fontSize: '12px',
-                }}
-              >
-                Best for prompts like `2021 physics edexl` or `important vector questions`
-              </div>
-            </div>
-          )}
-        </header>
-
-        <div
-          style={{
-            display: 'flex',
-            gap: '10px',
-            flexWrap: 'wrap',
-            marginBottom: '24px',
-          }}
-        >
-          {usage && (
-            <div
-              style={{
-                width: '100%',
-                borderRadius: '18px',
-                padding: '12px 14px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(170,85,255,0.12)',
-                color: '#A7A7CB',
-                fontSize: '12px',
-                lineHeight: 1.6,
-              }}
-            >
-              {usage.enabled
-                ? `${usage.tier} plan | ${usage.remainingCredits}/${usage.dailyLimitCredits} credits left today | last action cost ${usage.actionCost} | resets ${usage.nextResetIn} at ${usage.nextResetLabel}`
-                : usage.message}
-            </div>
-          )}
-
-          {sessions.length > 0 && (
-            <div
-              style={{
-                width: '100%',
-                display: 'grid',
-                gap: '8px',
-                marginBottom: '4px',
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '11px',
-                  letterSpacing: '2px',
-                  textTransform: 'uppercase',
-                  color: '#6E6E98',
-                }}
-              >
-                Recent chats
-              </p>
-              <div
-                style={{
-                  display: 'grid',
-                  gap: '8px',
-                }}
-              >
-                {sessions.slice(0, 6).map((session) => {
-                  const active = session.id === sessionId
-                  return (
-                    <button
-                      key={session.id}
-                      onClick={() => loadSession(session.id)}
-                      style={{
-                        textAlign: 'left',
-                        borderRadius: '16px',
-                        border: active
-                          ? '1px solid rgba(170,85,255,0.34)'
-                          : '1px solid rgba(170,85,255,0.12)',
-                        background: active
-                          ? 'rgba(130,70,220,0.14)'
-                          : 'rgba(255,255,255,0.025)',
-                        color: '#D4D4F4',
-                        padding: '12px 14px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          gap: '10px',
-                          marginBottom: '6px',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: '13px',
-                            fontWeight: 500,
-                            color: '#F1E8FF',
-                          }}
-                        >
-                          {session.title}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: '10px',
-                            color: '#8F8FB5',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {formatRelativeDate(session.updatedAt)}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          gap: '10px',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: 1.5,
-                            color: '#9A9ABE',
-                          }}
-                        >
-                          {session.lastMessagePreview || 'Open this chat'}
-                        </span>
-                        {product === 'qbank' && (
-                          <span
-                            style={{
-                              fontSize: '10px',
-                              textTransform: 'uppercase',
-                              letterSpacing: '1px',
-                              color: '#9A9ABE',
-                            }}
-                          >
-                            {session.mode}
-                          </span>
-                        )}
-                      </div>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {config.quickPrompts.map((prompt) => (
-            <button
-              key={prompt}
-              onClick={() => sendMessage(prompt)}
-              style={{
-                borderRadius: '999px',
-                border: '1px solid rgba(170,85,255,0.18)',
-                background: 'rgba(255,255,255,0.03)',
-                color: '#B7B7D7',
-                fontSize: '12px',
-                lineHeight: 1.4,
-                padding: '10px 14px',
-                cursor: 'pointer',
-              }}
-            >
-              {prompt}
+        <div className="shaab-session-list" style={styles.sessions}>
+          {sessions.slice(0, 12).map((session) => (
+            <button key={session.id} type="button" onClick={() => void loadSession(session.id)} style={styles.sessionButton}>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {session.title || session.lastMessagePreview || 'Chat'}
+              </span>
+              <span style={{ color: '#77779d', fontSize: 11 }}>{formatRelativeDate(session.updatedAt)}</span>
             </button>
           ))}
         </div>
 
-        {messages.map((message, index) => (
-          <div
-            key={message.id ?? `${message.role}-${index}`}
-            style={{
-              display: 'flex',
-              justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
-              marginBottom: '16px',
-            }}
-          >
-            <div style={{ maxWidth: '78%' }}>
-              <div
-                style={{
-                  padding: '14px 18px',
-                  borderRadius:
-                    message.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                  background:
-                    message.role === 'user'
-                      ? 'linear-gradient(130deg,#7733cc,#aa55ff)'
-                      : 'rgba(255,255,255,0.04)',
-                  border:
-                    message.role === 'assistant'
-                      ? '1px solid rgba(170,85,255,0.1)'
-                      : 'none',
-                  color: message.role === 'user' ? '#fff' : '#D3D3F2',
-                  fontSize: '14px',
-                  lineHeight: 1.75,
-                  whiteSpace: 'pre-wrap',
-                }}
-              >
-                {message.content}
-              </div>
-
-              {message.role === 'assistant' && message.sources && message.sources.length > 0 && (
-                <div
-                  style={{
-                    marginTop: '8px',
-                    borderRadius: '14px',
-                    border: '1px solid rgba(170,85,255,0.12)',
-                    background: 'rgba(255,255,255,0.025)',
-                    padding: '10px 12px',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '10px',
-                      letterSpacing: '2px',
-                      textTransform: 'uppercase',
-                      color: '#7B7BA4',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Sources
-                  </div>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gap: '8px',
-                    }}
-                  >
-                    {message.sources.slice(0, 3).map((source, sourceIndex) => (
-                      <div key={`${source.title}-${sourceIndex}`}>
-                        {source.url ? (
-                          <a
-                            href={source.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            style={{
-                              fontSize: '12px',
-                              color: '#CBA8FF',
-                              textDecoration: 'none',
-                            }}
-                          >
-                            {source.title}
-                          </a>
-                        ) : (
-                          <div
-                            style={{
-                              fontSize: '12px',
-                              color: '#CBA8FF',
-                            }}
-                          >
-                            {source.title}
-                          </div>
-                        )}
-                        <div
-                          style={{
-                            marginTop: '3px',
-                            fontSize: '11px',
-                            color: '#8B8BAD',
-                          }}
-                        >
-                          {[source.tier, formatLastChecked(source.lastChecked)].filter(Boolean).join(' | ')}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-
-        {loadingHistory && (
-          <div
-            style={{
-              marginBottom: '16px',
-              color: '#9A9ABE',
-              fontSize: '12px',
-            }}
-          >
-            Loading chat history...
-          </div>
-        )}
-
-        {loading && (
-          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px' }}>
-            <div
-              style={{
-                padding: '14px 18px',
-                borderRadius: '18px 18px 18px 4px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(170,85,255,0.1)',
-                color: '#B57BFF',
-                fontSize: '20px',
-              }}
-            >
-              ...
-            </div>
-          </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      <div
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: '16px 20px 24px',
-          background: 'linear-gradient(to top, #00000d 60%, transparent)',
-          zIndex: 20,
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '860px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'flex-end',
-            gap: '10px',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(170,85,255,0.15)',
-            borderRadius: '20px',
-            padding: '10px 12px',
-          }}
-        >
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                void sendMessage()
-              }
-            }}
-            placeholder={config.placeholder}
-            rows={1}
-            style={{
-              flex: 1,
-              background: 'transparent',
-              border: 'none',
-              color: '#E8E8FF',
-              fontSize: '14px',
-              outline: 'none',
-              resize: 'none',
-              lineHeight: 1.6,
-              padding: '6px 4px',
-              fontFamily: 'inherit',
-            }}
-          />
-
-          <button
-            onClick={() => void sendMessage()}
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              border: 'none',
-              cursor: 'pointer',
-              flexShrink: 0,
-              background: 'linear-gradient(130deg,#7733cc,#aa55ff)',
-              boxShadow: '0 0 16px 4px #7733cc88',
-              animation: 'pulseGlow 2.8s ease-in-out infinite',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: '16px',
-            }}
-          >
-            &gt;
+        <div style={styles.sidebarBottom}>
+          <Link href="/dashboard" style={styles.iconLink} title="Dashboard">
+            📊
+          </Link>
+          <Link href="/exam-prep" style={styles.iconLink} title="Exam Mode">
+            🎯
+          </Link>
+          <button type="button" onClick={() => void signOut()} style={styles.iconButton} title="Profile">
+            👤
           </button>
         </div>
+      </aside>
 
-        <p
-          style={{
-            textAlign: 'center',
-            fontSize: '11px',
-            color: '#31314A',
-            marginTop: '10px',
-          }}
-        >
-          ScholarHAAB - built for BD students
-        </p>
-      </div>
-    </div>
+      <section className="shaab-main" style={styles.main(sidebarOpen)}>
+        <header style={styles.topbar}>
+          <div style={styles.modeTabs}>
+            {(['direct', 'tutor'] as PromptMode[]).map((item) => (
+              <button key={item} type="button" onClick={() => setMode(item)} style={styles.modeTab(mode === item)}>
+                {item === 'direct' ? 'Direct' : 'Tutor'}
+              </button>
+            ))}
+          </div>
+          <div style={styles.credit}>{credits}</div>
+        </header>
+
+        {!hasMessages ? (
+          <div style={styles.empty}>
+            <h1 style={styles.emptyTitle}>What are you studying?</h1>
+            <div style={styles.chips}>
+              {SUGGESTIONS.map((suggestion) => (
+                <button key={suggestion} type="button" onClick={() => void sendMessage(suggestion)} style={styles.chip}>
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div style={styles.history}>
+            {messages.map((message, index) => {
+              const isUser = message.role === 'user'
+              const citation = sourceText(message.sources)
+              return (
+                <div key={`${message.role}-${index}-${message.id ?? ''}`} style={styles.messageRow(isUser)}>
+                  <div style={isUser ? styles.userBubble : styles.aiText}>
+                    <RichMessageContent content={message.content} />
+                    {!isUser && citation ? <div style={styles.source}>{citation}</div> : null}
+                  </div>
+                </div>
+              )
+            })}
+            {loading ? (
+              <div style={styles.messageRow(false)}>
+                <div style={styles.aiText}>...</div>
+              </div>
+            ) : null}
+            <div ref={bottomRef} />
+          </div>
+        )}
+      </section>
+
+      <form
+        className="shaab-composer"
+        onSubmit={(event) => {
+          event.preventDefault()
+          void sendMessage()
+        }}
+        style={styles.composer(sidebarOpen)}
+      >
+        <input
+          ref={fileRef}
+          type="file"
+          multiple
+          onChange={(event) => setSelectedFiles(Array.from(event.target.files ?? []).slice(0, 4))}
+          style={{ display: 'none' }}
+        />
+        <button type="button" onClick={() => fileRef.current?.click()} style={styles.attach}>
+          📎
+        </button>
+        <input
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
+          placeholder={selectedFiles[0] ? selectedFiles.map((file) => file.name).join(', ') : 'Type anything...'}
+          style={styles.input}
+        />
+        <button type="submit" disabled={loading} style={styles.send}>
+          →
+        </button>
+      </form>
+    </main>
   )
+}
+
+const styles = {
+  shell: {
+    minHeight: '100vh',
+    background: '#00000d',
+    color: '#E8E8FF',
+    fontFamily: 'var(--font-sans), sans-serif',
+    overflow: 'hidden',
+    position: 'relative',
+  } satisfies CSSProperties,
+  sidebar: (open: boolean) =>
+    ({
+      position: 'fixed',
+      inset: '0 auto 0 0',
+      zIndex: 30,
+      width: open ? 252 : 74,
+      background: 'rgba(8,7,22,0.96)',
+      borderRight: '1px solid rgba(170,85,255,0.1)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14,
+      padding: 14,
+      transition: 'width 160ms ease',
+    }) satisfies CSSProperties,
+  logoButton: {
+    border: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+    padding: 0,
+    textAlign: 'left',
+  } satisfies CSSProperties,
+  newChat: {
+    border: '1px solid rgba(170,85,255,0.18)',
+    borderRadius: 14,
+    background: 'rgba(255,255,255,0.04)',
+    color: '#E8E8FF',
+    cursor: 'pointer',
+    fontSize: 13,
+    padding: '11px 12px',
+    textAlign: 'left',
+  } satisfies CSSProperties,
+  sessions: {
+    display: 'grid',
+    gap: 6,
+    overflow: 'auto',
+  } satisfies CSSProperties,
+  sessionButton: {
+    border: 'none',
+    borderRadius: 12,
+    background: 'transparent',
+    color: '#c9c5e8',
+    cursor: 'pointer',
+    display: 'grid',
+    gap: 3,
+    fontSize: 13,
+    padding: '9px 10px',
+    textAlign: 'left',
+  } satisfies CSSProperties,
+  sidebarBottom: {
+    marginTop: 'auto',
+    display: 'grid',
+    gap: 8,
+  } satisfies CSSProperties,
+  iconLink: {
+    borderRadius: 14,
+    color: '#E8E8FF',
+    display: 'grid',
+    fontSize: 20,
+    height: 44,
+    placeItems: 'center',
+    textDecoration: 'none',
+  } satisfies CSSProperties,
+  iconButton: {
+    border: 'none',
+    borderRadius: 14,
+    background: 'transparent',
+    color: '#E8E8FF',
+    cursor: 'pointer',
+    fontSize: 20,
+    height: 44,
+  } satisfies CSSProperties,
+  main: (open: boolean) =>
+    ({
+      minHeight: '100vh',
+      marginLeft: open ? 252 : 74,
+      padding: '64px clamp(18px, 5vw, 72px) 116px',
+      position: 'relative',
+      transition: 'margin-left 160ms ease',
+      zIndex: 1,
+    }) satisfies CSSProperties,
+  topbar: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+    height: 54,
+    display: 'grid',
+    placeItems: 'center',
+    pointerEvents: 'none',
+  } satisfies CSSProperties,
+  modeTabs: {
+    display: 'inline-flex',
+    gap: 10,
+    pointerEvents: 'auto',
+  } satisfies CSSProperties,
+  modeTab: (active: boolean) =>
+    ({
+      border: 'none',
+      background: 'transparent',
+      color: active ? '#E8E8FF' : '#77779d',
+      cursor: 'pointer',
+      fontSize: 13,
+      padding: 4,
+    }) satisfies CSSProperties,
+  credit: {
+    position: 'fixed',
+    top: 18,
+    right: 22,
+    color: '#9F9FC4',
+    fontSize: 12,
+    pointerEvents: 'auto',
+  } satisfies CSSProperties,
+  empty: {
+    minHeight: 'calc(100vh - 180px)',
+    display: 'grid',
+    placeContent: 'center',
+    justifyItems: 'center',
+    textAlign: 'center',
+  } satisfies CSSProperties,
+  emptyTitle: {
+    color: '#F4EEFF',
+    fontSize: 'clamp(32px, 6vw, 54px)',
+    fontWeight: 500,
+    letterSpacing: '-0.045em',
+    margin: 0,
+  } satisfies CSSProperties,
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 8,
+    justifyContent: 'center',
+    marginTop: 24,
+    maxWidth: 560,
+  } satisfies CSSProperties,
+  chip: {
+    border: '1px solid rgba(170,85,255,0.14)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#aaa6ca',
+    cursor: 'pointer',
+    fontSize: 13,
+    padding: '9px 12px',
+  } satisfies CSSProperties,
+  history: {
+    display: 'grid',
+    gap: 22,
+    maxWidth: 860,
+    margin: '0 auto',
+    width: '100%',
+  } satisfies CSSProperties,
+  messageRow: (user: boolean) =>
+    ({
+      display: 'flex',
+      justifyContent: user ? 'flex-end' : 'flex-start',
+    }) satisfies CSSProperties,
+  userBubble: {
+    maxWidth: 'min(76%, 660px)',
+    borderRadius: '20px 20px 4px 20px',
+    background: 'linear-gradient(130deg,#7c35d8,#a855f7)',
+    color: '#fff',
+    padding: '11px 15px',
+    lineHeight: 1.65,
+  } satisfies CSSProperties,
+  aiText: {
+    maxWidth: 'min(86%, 780px)',
+    color: '#E8E8FF',
+    lineHeight: 1.75,
+    paddingTop: 4,
+  } satisfies CSSProperties,
+  source: {
+    color: '#77779d',
+    fontSize: 11,
+    marginTop: 8,
+  } satisfies CSSProperties,
+  composer: (open: boolean) =>
+    ({
+      position: 'fixed',
+      zIndex: 40,
+      left: open ? 272 : 94,
+      bottom: 18,
+      width: open ? 'calc(100vw - 304px)' : 'calc(100vw - 126px)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      border: '1px solid rgba(170,85,255,0.16)',
+      borderRadius: 24,
+      background: 'rgba(12,10,28,0.96)',
+      boxShadow: '0 18px 60px rgba(0,0,0,0.34)',
+      padding: 9,
+      transition: 'left 160ms ease, width 160ms ease',
+    }) satisfies CSSProperties,
+  attach: {
+    width: 38,
+    height: 38,
+    border: 'none',
+    borderRadius: 999,
+    background: 'transparent',
+    color: '#9F9FC4',
+    cursor: 'pointer',
+    fontSize: 18,
+  } satisfies CSSProperties,
+  input: {
+    flex: 1,
+    border: 'none',
+    outline: 'none',
+    background: 'transparent',
+    color: '#E8E8FF',
+    fontSize: 15,
+    minWidth: 0,
+    padding: '10px 2px',
+  } satisfies CSSProperties,
+  send: {
+    width: 40,
+    height: 40,
+    border: 'none',
+    borderRadius: 999,
+    background: 'linear-gradient(130deg,#7733cc,#aa55ff)',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: 18,
+    fontWeight: 900,
+  } satisfies CSSProperties,
 }

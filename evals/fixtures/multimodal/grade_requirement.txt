@@ -1,0 +1,3 @@
+Minimum entry rule:
+- Physics grade must be A.
+- Chemistry grade must be B or higher.

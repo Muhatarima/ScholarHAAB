@@ -11,7 +11,7 @@ export default function Navbar() {
         top: 0,
         left: 0,
         right: 0,
-        padding: '18px 40px',
+        padding: '14px 32px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -63,14 +63,22 @@ export default function Navbar() {
         </span>
       </Link>
 
-      <ul style={{ display: 'flex', gap: '24px', listStyle: 'none', margin: 0, padding: 0 }}>
+      <ul style={{ display: 'flex', gap: '22px', listStyle: 'none', margin: 0, padding: 0 }}>
         {[
-          { href: '/abroad', label: 'Abroad' },
           { href: '/qbank', label: 'QBank' },
-          { href: '/chat', label: 'Workspace' },
+          { href: '/exam-prep', label: 'Exam Prep' },
+          { href: '/qbank/progress', label: 'Progress' },
         ].map((link) => (
           <li key={link.href}>
-            <Link href={link.href} style={{ fontSize: '13px', color: '#9999BB', textDecoration: 'none' }}>
+            <Link
+              href={link.href}
+              style={{
+                fontSize: '13px',
+                color: '#9999BB',
+                textDecoration: 'none',
+                fontWeight: 400,
+              }}
+            >
               {link.label}
             </Link>
           </li>

@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements-chroma.txt .
+RUN pip install -r requirements-chroma.txt
+
+COPY scripts/chroma_server.py scripts/
+COPY scripts/pattern_brain.py scripts/
+COPY scripts/config.py scripts/
+COPY config.py .
+COPY chromadb/ chromadb/
+COPY patterns/ patterns/
+
+ENV PORT=8001
+EXPOSE 8001
+
+CMD ["python", "scripts/chroma_server.py"]

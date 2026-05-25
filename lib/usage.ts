@@ -1,6 +1,6 @@
-import type { Product, PromptMode } from '@/lib/products'
+import type { Product, PromptMode } from './products.ts'
 
-export type Tier = 'trial' | 'pro' | 'premium'
+export type Tier = 'trial' | 'pro' | 'premium' | 'expired'
 
 export type UsageAction =
   | 'abroad_chat'
@@ -10,16 +10,33 @@ export type UsageAction =
   | 'qbank_tutor'
   | 'qbank_topic_analysis'
 
+export function getTierLabel(tier: Tier | string | null | undefined) {
+  if (tier === 'pro') {
+    return 'Pro'
+  }
+
+  if (tier === 'premium') {
+    return 'Premium Plus'
+  }
+
+  return 'No active plan'
+}
+
+export function hasPaidAccess(tier: Tier | string | null | undefined): tier is 'pro' | 'premium' {
+  return tier === 'pro' || tier === 'premium'
+}
+
 export const TIER_LIMITS: Record<Tier, { dailyCredits: number }> = {
-  trial: { dailyCredits: 12 },
-  pro: { dailyCredits: 30 },
+  trial: { dailyCredits: 0 },
+  pro: { dailyCredits: 20 },
   premium: { dailyCredits: 50 },
+  expired: { dailyCredits: 0 },
 }
 
 export const ACTION_CREDITS: Record<UsageAction, number> = {
   abroad_chat: 1,
   scholarship_match: 2,
-  abroad_document_review: 3,
+  abroad_document_review: 4,
   qbank_direct: 1,
   qbank_tutor: 2,
   qbank_topic_analysis: 2,
@@ -35,7 +52,7 @@ const QBANK_TOPIC_PATTERN =
   /\b(important topic|important topics|repeat question|repeat questions|came in|which question|which questions|topic|chapter|paper 20\d{2}|mark scheme|examiner report)\b/i
 
 export function isTier(value: unknown): value is Tier {
-  return value === 'trial' || value === 'pro' || value === 'premium'
+  return value === 'trial' || value === 'pro' || value === 'premium' || value === 'expired'
 }
 
 export function getDailyCreditLimit(tier: Tier): number {

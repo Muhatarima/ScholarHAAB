@@ -15,9 +15,7 @@ create table if not exists public.qbank_topic_map (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   fts tsvector generated always as (
-    to_tsvector(
-      'english',
-      coalesce(board, '') || ' ' ||
+    to_tsvector('english', coalesce(board, '') || ' ' ||
       coalesce(level, '') || ' ' ||
       coalesce(subject, '') || ' ' ||
       coalesce(chapter, '') || ' ' ||
@@ -47,9 +45,7 @@ create table if not exists public.qbank_questions (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   fts tsvector generated always as (
-    to_tsvector(
-      'english',
-      coalesce(board, '') || ' ' ||
+    to_tsvector('english', coalesce(board, '') || ' ' ||
       coalesce(level, '') || ' ' ||
       coalesce(subject, '') || ' ' ||
       coalesce(chapter, '') || ' ' ||

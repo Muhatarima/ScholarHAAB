@@ -1,0 +1,57 @@
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (3)
+QA Feedback Storage Table
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+3
+ORDER BY routine_name;
+Results
+Explain
+Chart
+Export
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+Success. No rows returned
+
+0 row
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase

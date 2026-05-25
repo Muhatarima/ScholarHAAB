@@ -1,0 +1,76 @@
+{
+  "generatedAt": "2026-04-10T09:16:27.757Z",
+  "totalQuestionRows": 540,
+  "strictClassifiedCount": 540,
+  "strictCoveragePercent": 100,
+  "highConfidenceCoveragePercent": 85.37,
+  "uncategorizedCount": 0,
+  "inferredCount": 449,
+  "manualReviewThreshold": 0.6,
+  "manualReviewCount": 79,
+  "bySubject": [
+    {
+      "subject": "Computer Science",
+      "total": 212,
+      "strictClassified": 212,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 100
+    },
+    {
+      "subject": "Chemistry",
+      "total": 16,
+      "strictClassified": 16,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 100
+    },
+    {
+      "subject": "English",
+      "total": 76,
+      "strictClassified": 76,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 56.58
+    },
+    {
+      "subject": "Business",
+      "total": 29,
+      "strictClassified": 29,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 89.66
+    },
+    {
+      "subject": "Biology",
+      "total": 9,
+      "strictClassified": 9,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 55.56
+    },
+    {
+      "subject": "Mathematics",
+      "total": 134,
+      "strictClassified": 134,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 88.81
+    },
+    {
+      "subject": "Physics",
+      "total": 1,
+      "strictClassified": 1,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 100
+    },
+    {
+      "subject": "Economics",
+      "total": 4,
+      "strictClassified": 4,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 75
+    },
+    {
+      "subject": "Accounting",
+      "total": 59,
+      "strictClassified": 59,
+      "strictCoveragePercent": 100,
+      "highConfidenceCoveragePercent": 61.02
+    }
+  ]
+}

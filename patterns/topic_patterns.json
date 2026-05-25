@@ -1,0 +1,2920 @@
+{
+  "Accounting_General": {
+    "total_questions": 538,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 538
+      },
+      {
+        "step": "recall",
+        "frequency": 528
+      },
+      {
+        "step": "calculate",
+        "frequency": 78
+      },
+      {
+        "step": "units",
+        "frequency": 49
+      }
+    ],
+    "command_word_distribution": {
+      "other": 360,
+      "determine": 3,
+      "identify": 31,
+      "calculate": 53,
+      "state": 40,
+      "explain": 8,
+      "derive": 1,
+      "define": 1,
+      "list": 12,
+      "name": 16,
+      "show": 7,
+      "comment": 1,
+      "draw": 1,
+      "suggest": 4
+    },
+    "difficulty_distribution": {
+      "easy": 462,
+      "medium": 73,
+      "hard": 3
+    },
+    "average_marks": 2.0,
+    "yearly_frequency": {
+      "2016": 70,
+      "2017": 26,
+      "2018": 63,
+      "2019": 60,
+      "2020": 83,
+      "2021": 91,
+      "2022": 28,
+      "2023": 73,
+      "2025": 35,
+      "2024": 9
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_ACCO_2016_FE_P1_Q7",
+        "text_preview": "The question was based on a reduction in the provision for doubtful debts. Some candidates incorrectly thought that it is the reduction in the provision that should be deducted from the trade receivab",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ACCO_2016_FE_P1_Q12",
+        "text_preview": "Candidates could have approached the given data as: Opening capital ($152 000) + Capital introduced ($14 000) + Profit for the year (required answer) – Drawings ($7900) = Closing capital ($184 000). T",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ACCO_2016_FE_P1_Q25",
+        "text_preview": "Many candidates found this question challenging. The unit cost increases as a result of the fixed element when activity decreases, as there are fewer units to spread this cost over. The level of incre",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ACCO_2016_FE_P1_Q26",
+        "text_preview": "Candidates were required to determine the cost of goods sold. A total of 3600 watches were sold, therefore the cost of goods sold was 3600 × $185 (direct material + labour costs + fixed manufacturing ",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ACCO_2016_FE_P1_Q1",
+        "text_preview": "The question concerned a limited company. Candidates were required to prepare an income statement and a statement of financial position after accounting for various adjustments. The latter parts of th",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Biology_Cell_Biology": {
+    "total_questions": 21,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 20
+      },
+      {
+        "step": "recall",
+        "frequency": 19
+      },
+      {
+        "step": "units",
+        "frequency": 4
+      },
+      {
+        "step": "reason",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 14,
+      "state": 6,
+      "describe": 1
+    },
+    "difficulty_distribution": {
+      "easy": 20,
+      "medium": 1
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2022": 2,
+      "2018": 6,
+      "2017": 3,
+      "2020": 5,
+      "2016": 1,
+      "2019": 4
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_BIOL_2022_MA_P1_Q2",
+        "text_preview": "© B060/0031; MARILYN SCHALLER/SCIENCE PHOTO LIBRARY; TEM of the junction of two leaf cells; www.sciencephoto.com",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_A_BIOL_2022_MA_P1_Q22",
+        "text_preview": "© P656/0023; BIOPHOTO ASSOCIATES/SCIENCE PHOTO LIBRARY; False-colour SEM of a group of human chromosomes; www.sciencephoto.com",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "DERIVED_papacambridge-254ceede9381_13",
+        "text_preview": "13 A active transport B endocytosis C exocytosis D phagocytosis 14 enzyme substrate enzyme/substrate complex Which state m ent explains how the substrate is able to enter the active site of the enzyme",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-254ceede9381_2",
+        "text_preview": "2 A 1 2 1 B 2 1 2 C 2 2 2 D Three parts of a chromosome and their function s are listed. P1 centromere P2 histone prot eins P3 telomere function F1 packages D N A into compact structur es F2 holds two",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-254ceede9381_3",
+        "text_preview": "3 Bacteria that infect skin wounds can become resistant to the antibiotic commonly used to kill Which state m ent explains how these bacteria could become resistant t o the antibio t ic? Exposure to t",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Biology_Plant_Biology": {
+    "total_questions": 9,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 9
+      },
+      {
+        "step": "substitute",
+        "frequency": 9
+      }
+    ],
+    "command_word_distribution": {
+      "other": 4,
+      "show": 3,
+      "identify": 1,
+      "state": 1
+    },
+    "difficulty_distribution": {
+      "easy": 6,
+      "medium": 3
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2022": 1,
+      "2016": 3,
+      "2020": 1,
+      "2018": 1,
+      "2019": 3
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_BIOL_2022_MA_P1_Q31",
+        "text_preview": "© C011/5248; DR KEITH WHEELER/SCIENCE PHOTO LIBRARY; Oleander leaf, light micrograph; www.sciencephoto.com Permission to reproduce items where third-party owned material protected by copyright is incl",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "DERIVED_papacambridge-20edbac53918_3",
+        "text_preview": "3 Translation will be inhibited. The diagrams show transverse sections of parts of a plant. If bacteria are treated with both drugs, what will be the immediate effects? A 1, 2 and 3 B 1 and 2 only C 1",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "DERIVED_papacambridge-20edbac53918_24",
+        "text_preview": "24 A Water moves through the cell walls. B Water moves through the cytoplasm. C Water moves through the plasmodesmata. D Water moves through the vacuoles. © UCLES 2016 9700/12/F/M/16 25 9 [Turn over 2",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "DERIVED_papacambridge-50a4dd60c0c9_12",
+        "text_preview": "12 A student drew a diagram to show the substances used and produced in photosynthesis in a leaf . 5 [Turn over 12 1 + 2 are used by the leaf 3 + 4 are produced by the leaf Which row shows the co rrec",
+        "marks": 0,
+        "year": 2020
+      },
+      {
+        "id": "DERIVED_papacambridge-78b71ffb74a5_5",
+        "text_preview": "5 The diagra m represents a cross-se ction of part of a leaf as seen using a microscop e. Where does translocat i o n (move m en t of sucrose and amino acids) occur? 3 [Turn over 5 CDBA The diagra m s",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Business_General": {
+    "total_questions": 559,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 559
+      },
+      {
+        "step": "recall",
+        "frequency": 557
+      },
+      {
+        "step": "units",
+        "frequency": 89
+      },
+      {
+        "step": "calculate",
+        "frequency": 27
+      }
+    ],
+    "command_word_distribution": {
+      "define": 29,
+      "other": 361,
+      "discuss": 7,
+      "explain": 46,
+      "show": 9,
+      "analyse": 14,
+      "identify": 44,
+      "outline": 5,
+      "describe": 3,
+      "suggest": 2,
+      "compare": 1,
+      "calculate": 12,
+      "evaluate": 5,
+      "prove": 2,
+      "list": 1,
+      "name": 3,
+      "state": 10,
+      "assess": 1,
+      "justify": 4
+    },
+    "difficulty_distribution": {
+      "easy": 457,
+      "hard": 34,
+      "medium": 68
+    },
+    "average_marks": 5.9,
+    "yearly_frequency": {
+      "2016": 99,
+      "2017": 57,
+      "2018": 56,
+      "2019": 48,
+      "2020": 47,
+      "2021": 79,
+      "2022": 51,
+      "2023": 71,
+      "2025": 27,
+      "2024": 24
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_BUSI_2016_MA_P1_Q1",
+        "text_preview": "(a) Most candidates were able to define strategy and tactics in terms of setting broad long term objectives and then taking decisions or making policies to achieve or implement those objectives. (b) M",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_BUSI_2016_MA_P1_Q2",
+        "text_preview": "(a) A majority of responses did not demonstarte knowledge of marginal costs as the additional cost of producing one more unit of output. This is a key financial concept and was expected to be well und",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_BUSI_2016_MA_P1_Q3",
+        "text_preview": "Candidates were more confident with this question. The term was generally accurately defined and many possible consequences of high labour turnover were identified and explained. Strong perceptive ans",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_BUSI_2016_MA_P1_Q4",
+        "text_preview": "(a) Inventory management was generally well understood although some answers did not fully define the term in terms of appropriate stock levels and did not include the word ‘management’ in this term. ",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_BUSI_2016_MA_P1_Q5",
+        "text_preview": "(a) This was a popular option question. Most candidates had a basic understanding of equality and diversity, and most were able to discuss at a basic level why such policies are important. However the",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Computer_Science_General": {
+    "total_questions": 984,
+    "formula_library": [
+      "A = 1 B",
+      "A = B",
+      "C = TRUE THEN",
+      "C = TRUE THEN (b) Very few viable",
+      "D=1 will always fail resulting i",
+      "T = (NOT A OR B ) XOR ( C NAND D )",
+      "X = ( A XOR B ) AND ( B OR NOT C )",
+      "X = 1 if (B is 1 OR C is NOT 1) AN",
+      "X = A OR ( B XOR C ) ABCW orking s",
+      "x = 3 OR 4 OR 5 THEN",
+      "x = document.forms"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 984
+      },
+      {
+        "step": "recall",
+        "frequency": 945
+      },
+      {
+        "step": "units",
+        "frequency": 160
+      },
+      {
+        "step": "calculate",
+        "frequency": 24
+      }
+    ],
+    "command_word_distribution": {
+      "draw": 23,
+      "other": 641,
+      "state": 63,
+      "describe": 69,
+      "identify": 66,
+      "name": 27,
+      "list": 7,
+      "define": 9,
+      "explain": 47,
+      "show": 24,
+      "justify": 1,
+      "determine": 1,
+      "calculate": 5,
+      "compare": 1
+    },
+    "difficulty_distribution": {
+      "easy": 787,
+      "medium": 185,
+      "hard": 12
+    },
+    "average_marks": 2.7,
+    "yearly_frequency": {
+      "2017": 99,
+      "2019": 74,
+      "2020": 93,
+      "2021": 102,
+      "2022": 222,
+      "2023": 205,
+      "2016": 64,
+      "2018": 107,
+      "2025": 17,
+      "2024": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_COMP_2017_MA_P11_Q1",
+        "text_preview": "A laser beam and a rotating mirror are used to draw an image of the page on the photosensitive drum.",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_A_COMP_2017_MA_P11_Q2",
+        "text_preview": ".........................",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_A_COMP_2017_MA_P11_Q3",
+        "text_preview": "Electrostatic charge attracts toner.",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_A_COMP_2017_MA_P11_Q4",
+        "text_preview": "The charged paper is rolled against the drum.",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_A_COMP_2017_MA_P11_Q5",
+        "text_preview": ".........................",
+        "marks": 0,
+        "year": 2017
+      }
+    ]
+  },
+  "Economics_General": {
+    "total_questions": 537,
+    "formula_library": [
+      "C = 100 + 0.8Y",
+      "Q = 400 10P"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 537
+      },
+      {
+        "step": "recall",
+        "frequency": 530
+      },
+      {
+        "step": "units",
+        "frequency": 61
+      },
+      {
+        "step": "calculate",
+        "frequency": 28
+      }
+    ],
+    "command_word_distribution": {
+      "other": 430,
+      "sketch": 1,
+      "compare": 2,
+      "state": 15,
+      "comment": 6,
+      "explain": 22,
+      "draw": 1,
+      "calculate": 12,
+      "identify": 24,
+      "show": 4,
+      "determine": 1,
+      "assess": 2,
+      "define": 8,
+      "evaluate": 1,
+      "suggest": 1,
+      "outline": 1,
+      "name": 2,
+      "discuss": 1,
+      "analyse": 1,
+      "describe": 1,
+      "list": 1
+    },
+    "difficulty_distribution": {
+      "easy": 490,
+      "medium": 42,
+      "hard": 5
+    },
+    "average_marks": 1.0,
+    "yearly_frequency": {
+      "2016": 51,
+      "2017": 60,
+      "2018": 62,
+      "2019": 71,
+      "2020": 48,
+      "2021": 44,
+      "2022": 54,
+      "2023": 62,
+      "2025": 37,
+      "2024": 48
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_ECON_2016_FE_P1_Q14",
+        "text_preview": "tests the ability to interpret an unfamiliar diagram. Those who opted for B made the common mistake of confusing absolute numbers with percentage values. Option C is correct as the upward trend leadin",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ECON_2016_FE_P1_Q15",
+        "text_preview": "was done surprisingly poorly. A simple approach, if this was not known as a fact, would have been to sketch four different demand curves with the same shift in the supply curve. This would give B with",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ECON_2016_FE_P1_Q1",
+        "text_preview": "(a) Most candidates gained credit here. The majority followed the instruction to compare the trend in the price of crude oil between April 2014 and June 2014 with that between June 2014 and September ",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ECON_2016_FE_P1_Q2",
+        "text_preview": "(a) The majority of candidates showed good knowledge and understanding of merit goods and demerit goods. They made good use of appropriate examples, such as education or healthcare in the case of meri",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ECON_2016_FE_P1_Q3",
+        "text_preview": "(a) Those who attempted this question were usually able to give an accurate formula for price elasticity of supply. In addition, many went on to provide a good explanation of what was meant by supply ",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "English_General": {
+    "total_questions": 995,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 995
+      },
+      {
+        "step": "recall",
+        "frequency": 994
+      },
+      {
+        "step": "units",
+        "frequency": 47
+      },
+      {
+        "step": "calculate",
+        "frequency": 10
+      }
+    ],
+    "command_word_distribution": {
+      "other": 798,
+      "comment": 68,
+      "discuss": 48,
+      "show": 11,
+      "list": 1,
+      "analyse": 11,
+      "describe": 17,
+      "explain": 10,
+      "identify": 15,
+      "prove": 1,
+      "name": 3,
+      "determine": 1,
+      "compare": 11
+    },
+    "difficulty_distribution": {
+      "easy": 881,
+      "hard": 61,
+      "medium": 53
+    },
+    "average_marks": 1.5,
+    "yearly_frequency": {
+      "2016": 67,
+      "2017": 71,
+      "2018": 85,
+      "2019": 88,
+      "2020": 147,
+      "2021": 159,
+      "2022": 85,
+      "2023": 85,
+      "2024": 135,
+      "2025": 73
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_ENGL_2016_MA_P1_Q1",
+        "text_preview": "Ted Hughes: Selected Poems (a) Markedly fewer candidates attempted this question than the accompanying question on ‘Harvest Moon’. In a large number of cases, candidates did not pay enough attention t",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ENGL_2016_MA_P1_Q2",
+        "text_preview": "Wilfred Owen: Selected Poems (a) A successful response to this question depended to a large degree on the appropriate choice of poems. A number of candidates fell back on Owen’s more traditional war p",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ENGL_2016_MA_P1_Q3",
+        "text_preview": "Songs of Ourselves (a) The poems in the selection offer a wide range of significant experiences, but most candidates who responded to this question chose to write about love and unrequited love in par",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ENGL_2016_MA_P1_Q4",
+        "text_preview": "Jhumpa Lahiri: The Namesake (a) The question on marriage was very successful, producing many carefully judged and organised responses. While there were answers which summarised key marriages in the no",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_ENGL_2016_MA_P1_Q5",
+        "text_preview": "Edith Wharton: The House of Mirth (a) Some less secure responses to this question opted for character study, summarising Selden’s involvement in the novel without paying due attention to the wording o",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Mathematics_General": {
+    "total_questions": 133,
+    "formula_library": [
+      "T = 13",
+      "k = 5 rather than 5"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 133
+      },
+      {
+        "step": "recall",
+        "frequency": 125
+      },
+      {
+        "step": "calculate",
+        "frequency": 41
+      },
+      {
+        "step": "units",
+        "frequency": 18
+      }
+    ],
+    "command_word_distribution": {
+      "other": 108,
+      "evaluate": 1,
+      "show": 8,
+      "calculate": 4,
+      "list": 2,
+      "name": 1,
+      "sketch": 2,
+      "draw": 4,
+      "estimate": 1,
+      "state": 2
+    },
+    "difficulty_distribution": {
+      "easy": 110,
+      "hard": 1,
+      "medium": 22
+    },
+    "average_marks": 2.0,
+    "yearly_frequency": {
+      "2016": 9,
+      "2018": 19,
+      "2019": 19,
+      "2020": 3,
+      "2021": 21,
+      "2022": 15,
+      "2025": 6,
+      "2017": 15,
+      "2023": 22,
+      "2024": 4
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q1",
+        "text_preview": "This question was generally well answered by most candidates. Some candidates struggled with minus signs and either made both terms positive or both terms negative. Some candidates seemed unfamiliar w",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q1",
+        "text_preview": "Most candidates made use of algebraic long division as was intended. Problems occurred when attempting to deal with the lack of a term in x , which subsequently lead to errors in the quotient. Correct",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2018_FE_P1_Q4",
+        "text_preview": "1ln 12.5 e 2 a a − = + , such as ( ) (",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_A_MATH_2018_FE_P1_Q4",
+        "text_preview": "1 f ln 12.5 e 2 a a a − = − + or ( ) (",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_A_MATH_2019_FE_P1_Q1",
+        "text_preview": "− = − were invariably more successful at obtaining the correct result without error than those who used the alternative n n p(1",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Mathematics_Algebra": {
+    "total_questions": 117,
+    "formula_library": [
+      "A = 3",
+      "B = 15 and C",
+      "B = 6 or 16 by not appreciating th",
+      "C = 4",
+      "D = 0",
+      "N = 900 2 1 0 12 0 12 e e . . t t",
+      "P = Fv. Occasionally",
+      "T = 1 3 4037/11/M/J/24",
+      "V = 3 4 r 3 3 1 W rite 4 3 as a de",
+      "V = r 2 h V olume",
+      "a = 3",
+      "a = 3 (ii)(a) 2x2",
+      "b = 2  International Advanced Subs",
+      "b = 2 and almost never 1 a",
+      "c = + . y",
+      "c = + for",
+      "c = 0",
+      "d = 4 instead of",
+      "d = 7",
+      "h = 0.125. Many candidates showed",
+      "h = 0.125. The more common approac",
+      "k = 1 at the start of this questio",
+      "k = 10. Question 7 (a) Most candid",
+      "k = 120",
+      "k = 3. Question 25 Most candidates",
+      "k = 30. A few candidates complicat",
+      "n = 30 into their answer for part",
+      "n = an + ( n 1)an",
+      "n = dt or t",
+      "p = + +",
+      "p = + + to start the solution",
+      "p = 0.62 and then multiply by 100",
+      "p = x + y and t",
+      "s = (u + v)t and multiplying by t",
+      "v = 2s",
+      "v = 2s t but then went wrong with",
+      "w = 5 and p",
+      "w = x and eliminate w by substitut",
+      "x = . (e) Few fully correct answer",
+      "x = ..............................",
+      "x = 0 to obtain y",
+      "x = 0. Most then selected the appr",
+      "x = 1 and x",
+      "x = 1 to the graph often identifie",
+      "x = 1.7 and x",
+      "x = 12 . x -6 -4 -3 -2 -1 1 2 3 4",
+      "x = 12 for x 6 1 G G - - and x 1 6",
+      "x = 2 3",
+      "x = 2 which gained no credit. (iii",
+      "x = 2 y y +",
+      "x = 2(x + 3).  International Gener",
+      "x = 2. With the substitution metho",
+      "x = 2x + 3 rather than 4x",
+      "x = 3",
+      "x = 3 into p(x) and p",
+      "x = 3d + 10. Of those who realised",
+      "x = 4y 3 was substituted correctly",
+      "x = 5 and x",
+      "x = 5. Many candidates who had rea",
+      "x = 50 leads to x",
+      "x = 50 which leads to a negative v",
+      "x = d",
+      "x = often left their final answer",
+      "x = y",
+      "x =1 and f(1) and between 1.5 and",
+      "y = 1 or found the area of the sha",
+      "y = 2 3",
+      "y = 2 k x",
+      "y = 2.6 or just the value written",
+      "y = 3 2",
+      "y = 33 rather than 11 33 y",
+      "y = 39 and then used substitution",
+      "y = 39 and x",
+      "y = 3x + 2 (2x",
+      "y = 3x + 2 2xy",
+      "y = 9 k or y",
+      "y = ax + b",
+      "y = g(x) has a maximum at the poin",
+      "y = kw and k x",
+      "y = p is a tangent to the curve si",
+      "y = x + 4",
+      "y = x + 4 and occasionally y"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 117
+      },
+      {
+        "step": "substitute",
+        "frequency": 117
+      },
+      {
+        "step": "calculate",
+        "frequency": 28
+      }
+    ],
+    "command_word_distribution": {
+      "other": 103,
+      "state": 2,
+      "show": 8,
+      "identify": 1,
+      "calculate": 2,
+      "list": 1
+    },
+    "difficulty_distribution": {
+      "easy": 103,
+      "medium": 14
+    },
+    "average_marks": 2.3,
+    "yearly_frequency": {
+      "2016": 12,
+      "2019": 12,
+      "2020": 19,
+      "2021": 19,
+      "2022": 14,
+      "2023": 13,
+      "2025": 18,
+      "2017": 4,
+      "2018": 3,
+      "2024": 3
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q2",
+        "text_preview": "A large majority of candidates realised the need to integrate but many weaker candidates used the equation of a line formula and received no credit. Some candidates forgot to use + c after integrating",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q4",
+        "text_preview": "There was a mixed response to part (a) of this question. Many candidates knew how to solve the equation but did not give an exact answer as requested in the question. Others were unsure how to start o",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q8",
+        "text_preview": "Many almost completely correct answers were given to this question but weaker candidates often made no progress in either part. In part (i) many of them failed to substitute –2 and –3 into the origina",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q2",
+        "text_preview": "Most candidates attempted to solve the problem by squaring both sides of the given inequality, with subsequent work leading to the correct critical values. Obtaining the correct range for x was seldom",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q3",
+        "text_preview": "Whilst most candidates were able to deal with the simplification of 2lnx to 2 lnx , very few recognised the need to use the addition rule for 2 logarithms and were unable then to obtain the required 3",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Mathematics_Trigonometry": {
+    "total_questions": 315,
+    "formula_library": [
+      "A = 1 + cot2 A Formulae for",
+      "A = 1 sec2 A",
+      "A = 2. Question 4 Unfortunately",
+      "A = b sin B",
+      "F = 0.4 R. Some candidates used th",
+      "F = 1350 N. Candidates then had to",
+      "F = 25 cos 30 and resolving forces",
+      "F = 5cos",
+      "F = P/v shows that the driving for",
+      "F = and the average velocity 15 v",
+      "K = 0.018 and went on to state 0.0",
+      "K = 0.018. (ii) Candidates who wer",
+      "K = 1.8 was obtained. Some candida",
+      "N = KE gain by P + WD by T. This e",
+      "P = 242 5 (i) In this question one",
+      "P = 4.34 3 (i) A significant numbe",
+      "P = 40",
+      "P = 5x + ky Given that the value o",
+      "P = 8.75 (ii) Coefficient of Frict",
+      "P = Fv . (c) Many good answers wer",
+      "P = Fv but this required finding t",
+      "P = Fv in order to find the rate a",
+      "P = Fv to find the greatest power",
+      "P = Fv to obtain a speed of 7.5 m",
+      "P = Fv where P is the given power",
+      "P = v",
+      "R = ( ) 12 cos 0.395",
+      "R = 0.6 (iii)b Maximum T",
+      "R = 13. (b) Most candidates scored",
+      "R = 2g cos 30. (b) The approach us",
+      "R = 4g",
+      "R = 5 g. Newton",
+      "R = 5g",
+      "R = 8. The required coefficient of",
+      "T = 1 3 4037/11/M/J/21",
+      "T = 1 3 4037/11/M/J/23",
+      "T = 1 3 4037/12/O/N/22",
+      "T = 1050 N  International Advanced",
+      "T = 3.2 N 2 Again most candidates",
+      "T = 3.21 N. The work-energy equati",
+      "V = 2 V olume",
+      "V = 25 and by dividing tan",
+      "V = 7.21 m 1 s",
+      "V = 9 2 /2. Using the vertical mot",
+      "V = r",
+      "X = 4) or P(X",
+      "Y=10. Having found that the firs",
+      "Y=60 correctly",
+      "a = 0 and v",
+      "a = 0. If the force in the tow-bar",
+      "a = 1 8",
+      "a = 2 and s",
+      "a = 4 ms",
+      "a = 6 .",
+      "a = 6 ms",
+      "a = 63",
+      "a=1 and a",
+      "b = 2 3",
+      "b = 3 and a + b + c",
+      "b = 4",
+      "b = 59",
+      "b = 59 Question 16 Almost all cand",
+      "b = ad + c . (b) Many candidates f",
+      "c = +",
+      "c = 0 (rather than the correct val",
+      "c = 1) and on occasion incorrectly",
+      "c = 14",
+      "c = ab box and recalculate a new v",
+      "d = . (i) Find the value of x y d",
+      "d = 0.4 and so AP",
+      "f = + +",
+      "g = 10 and it has been noted that",
+      "g = 10.  International Advanced Su",
+      "g = 10. Finally the three times fo",
+      "g = 2 + ^ h and ln x x h ^ h",
+      "g=10 is now being used by most c",
+      "h = .",
+      "h = 0.775",
+      "h = 18)",
+      "h = 8",
+      "i = + .",
+      "i = - Write down the possible valu",
+      "i = 3 arg 1 4 . Likewise",
+      "i = 6 r .",
+      "i = find y in terms of x.",
+      "j = a p b q",
+      "k = 1 (ii) f2",
+      "k = 15 (b) 1",
+      "k = 18/15. Others followed a simil",
+      "k = 2 but used a long",
+      "k = 2 by incorrect methods",
+      "k = 2c. Again",
+      "k = 4 with their answer to part (a",
+      "k = 4. Some candidates attached th",
+      "k = 6 Question 21 (a) (i) Candidat",
+      "l = 32",
+      "m = . (c) Most candidates were abl",
+      "m = 280 m  International Advanced",
+      "m = 3. Answers",
+      "m = 3.6 and proceeded form there.",
+      "m = 4 (b)(i) k",
+      "m = 70 m  International Advanced L",
+      "n = 1.70 and A",
+      "n = 2 into the given expression to",
+      "n = 24. Answers",
+      "n = 42",
+      "p = 0 and p",
+      "p = 0 as they did not use the tota",
+      "p = 150 and p",
+      "p = 3 and q",
+      "p = 4 3 + + is exactly divisible b",
+      "p = 4t + 3",
+      "p = 5 and q",
+      "p = 7. Only a few candidates spoil",
+      "p = 8 Question 7 (a) Candidates we",
+      "p = 8 q",
+      "p = and being unsure how to procee",
+      "q = k 5",
+      "q= 0 (b)(iii) p",
+      "q= 4  Ordinary Level 4024 Mathema",
+      "q=p could be made. A quicker and",
+      "r = 2 2",
+      "r = 5i +3j + k +",
+      "r = b l for y 0 2 G G r radians",
+      "s = (u + v)/2",
+      "s = 0",
+      "s = 1.44 using the equation v2",
+      "s = 15",
+      "s = 16 to find V. Some tried to us",
+      "s = 17.5 and the acceleration a",
+      "s = 2 and t",
+      "s = 2 and that at t",
+      "s = 2.4 and so the distance travel",
+      "s = 20 at t",
+      "s = 20. Care must be taken when us",
+      "s = 200",
+      "s = 200 and a",
+      "s = 280 (answer to part (ii))",
+      "s = 9cos60",
+      "s = ut +",
+      "s = ut + 1 2 at2",
+      "t = 0",
+      "t = 0 and t",
+      "t = 0 to t",
+      "t = 0.9. Finally by using horizont",
+      "t = 1",
+      "t = 1 4 T. (b) (i) Some good candi",
+      "t = 1 to produce two correct equat",
+      "t = 1.5 and is again at O at time",
+      "t = 1.5 and t",
+      "t = 1.5. This meant that they were",
+      "t = 10",
+      "t = 10 and t",
+      "t = 10 to t",
+      "t = 13 Question 2 (a) Candidates w",
+      "t = 13 and t",
+      "t = 2. Some did gain a mark for co",
+      "t = 2. This means that in order to",
+      "t = 20 all shown correctly on the",
+      "t = 20 and t",
+      "t = 20 in to the expression found.",
+      "t = 20 is",
+      "t = 30 the velocity of the particl",
+      "t = 35 .",
+      "t = 4. A common incorrect answer w",
+      "t = 40 .",
+      "t = 6",
+      "t = 6 and t",
+      "t = 6 must be used in the expressi",
+      "t = 6 to t",
+      "t = 6. Most candidates found the v",
+      "t = 6. This requires differentiati",
+      "t = 600",
+      "t = 8. From this point the candida",
+      "t = 9. (b) Again",
+      "t = s/d to evaluate the time taken",
+      "t = tan x to show that the equatio",
+      "u = 0",
+      "u = 0 and a",
+      "u = 0 and s",
+      "u = 0 and t",
+      "u = 0. (b) In this part of the que",
+      "u = 20",
+      "u = 22 is given",
+      "u = 22 rather than u",
+      "u = 4.5",
+      "u = 40 and a",
+      "u = x2 + 9",
+      "v = 0",
+      "v = 0. (b) In order to find the ve",
+      "v = 0.775 (ii) 45",
+      "v = 18 (b) 345 m Question 19 (a) M",
+      "v = 2",
+      "v = 2.4",
+      "v = 4",
+      "v = 4 + 0.2t. To find the required",
+      "v = 4 and v",
+      "v = 6",
+      "v = 6. Some candidates used 25 or",
+      "v = P/F to find the speed in ms",
+      "v = u + at and so the value of a c",
+      "v = u + at with v",
+      "v = u + at. Alternatively",
+      "v = x + iy and w",
+      "w = 2",
+      "w = 7 d",
+      "w = a + ib and then take real and",
+      "w = x + iy and w*",
+      "x = (3y",
+      "x = (a) Find an expression for f(",
+      "x = . Candidates who instead chose",
+      "x = . y x 5 0 5",
+      "x = ..............................",
+      "x = 0",
+      "x = 0 .",
+      "x = 0 Show each stage of your work",
+      "x = 0 and arrived at x",
+      "x = 0 and x",
+      "x = 0 can be written in the form 5",
+      "x = 0 has only one real solution.",
+      "x = 0 has only one solution and st",
+      "x = 0 into their gradient function",
+      "x = 0.4",
+      "x = 0.5",
+      "x = 0.5 and x",
+      "x = 1 (iii) Enlargement",
+      "x = 1 4 and those who chose a lowe",
+      "x = 1 and x",
+      "x = 1 but also some seen at x",
+      "x = 1 into the equation of the gra",
+      "x = 1 or elsewhere",
+      "x = 1 this was all that some attem",
+      "x = 1 to find the gradient at the",
+      "x = 1. (ii) Having drawn a tangent",
+      "x = 1. Regardless of the shaded ga",
+      "x = 1.5  International General Cer",
+      "x = 1.5 (ii) Rotation",
+      "x = 1.5. Most errors involved misr",
+      "x = 1.6",
+      "x = 1.77. Answers",
+      "x = 10. (b) Many correct answers w",
+      "x = 10.5 or 18. Other errors occur",
+      "x = 16 . (b) Most candidates under",
+      "x = 2",
+      "x = 2 .",
+      "x = 2 1 ln (2 ln ) x x + + (ii) x",
+      "x = 2 and x",
+      "x = 2 on the x-axis. Simply plotti",
+      "x = 2. (ii) Some candidates drew a",
+      "x = 2. Others had scales on both a",
+      "x = 2.5",
+      "x = 2.54 Question 7 This question",
+      "x = 21",
+      "x = 210",
+      "x = 3",
+      "x = 3 (b) 5 3 2",
+      "x = 3 2 2 y",
+      "x = 3 confined to the first quadra",
+      "x = 3 met",
+      "x = 3.6",
+      "x = 30",
+      "x = 3a and 2 a",
+      "x = 3y",
+      "x = 4 for x 5 1 1 G - - . (iii) So",
+      "x = 5",
+      "x = 50 or 26",
+      "x = 52 but were then unable to pro",
+      "x = 6. (b) Plotting of the points",
+      "x = 6. The more able candidates kn",
+      "x = 60 (b) n",
+      "x = 7",
+      "x = 9 into the given equation was",
+      "x = as their starting point. (b) F",
+      "x = rather than y",
+      "x = where ( ) f x x",
+      "x = x2",
+      "y = (b) 2 1 Question 13 (a) Almost",
+      "y = (x",
+      "y = + + 21 6 7 2 x x was seen. (b)",
+      "y = + 2 3 x then 3",
+      "y = ....................... becaus",
+      "y = ..............................",
+      "y = 0",
+      "y = 0 but the other well below y",
+      "y = 0 in the equation but that dep",
+      "y = 0 was the starting point. Corr",
+      "y = 0.",
+      "y = 0. (b) (i) This part which req",
+      "y = 0.5 or y",
+      "y = 1 4 x 2x . If candidates succe",
+      "y = 1 or reflection in x",
+      "y = 1.2 were usually able to read",
+      "y = 1.5 or 1.5 being common errors",
+      "y = 1.5. (ii) Candidates also resp",
+      "y = 10 and shaded the small triang",
+      "y = 10 were seen that crossed the",
+      "y = 2",
+      "y = 2 correctly although a few dre",
+      "y = 2 cos 3x",
+      "y = 2 or a line through (0",
+      "y = 2. A correct graph should have",
+      "y = 21 or having drawn the correct",
+      "y = 2x",
+      "y = 2x + 1 intersected.  Ordinary",
+      "y = 2x + 3 (b) p",
+      "y = 3",
+      "y = 3 2 x",
+      "y = 3 and",
+      "y = 3 instead of the line x",
+      "y = 3 into 2 5 y + x",
+      "y = 3 into the given equation was",
+      "y = 4 .",
+      "y = 4. Question 3 (a) Many candida",
+      "y = 4. The substitution method was",
+      "y = 5 + 4 tan2 x 3 J L KK N P OO 2",
+      "y = 5 and x",
+      "y = 5 was commonly seen as was y",
+      "y = 5 was seen but not frequently.",
+      "y = 6 x",
+      "y = 6. Then there is the issue of",
+      "y = 8 R 4 Figure 3 Figure 3 shows",
+      "y = 9 drawn. Others gave a correct",
+      "y = 9 or y",
+      "y = a. Other common incorrect answ",
+      "y = cos",
+      "y = cos x and then reciprocate thi",
+      "y = f x and ( ) y x f 1",
+      "y = f x to give the correct equati",
+      "y = f(",
+      "y = f(x)",
+      "y = f(x) x Figure 2 Figure 2 shows",
+      "y = k . Some candidates tried to u",
+      "y = k and often chose a correct pa",
+      "y = k or 2 x y",
+      "y = kx",
+      "y = kx2 and reached the correct an",
+      "y = mx + c",
+      "y = mx + c and y",
+      "y = mx + c appeared to be more cha",
+      "y = mx + c. (b) The correct answer",
+      "y = mx + c. Of those identifying t",
+      "y = sec x challenging. Few candida",
+      "y = sin x or y",
+      "y = tan x. Some attempts at the co",
+      "y = x (d) Rectangle at (",
+      "y = x + 2 then x",
+      "y = x + 3 was the equation of AB a",
+      "y = x .",
+      "y = x and most used this to draw t",
+      "y = x drawn (d)",
+      "y = x or y-axis were given. Some c",
+      "y = x scored full marks",
+      "y = x the required result was foun",
+      "y = x. Some were only partly succe",
+      "z = 1 3",
+      "z = 2 tan",
+      "z = 2x"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 315
+      },
+      {
+        "step": "recall",
+        "frequency": 300
+      },
+      {
+        "step": "calculate",
+        "frequency": 76
+      },
+      {
+        "step": "units",
+        "frequency": 33
+      }
+    ],
+    "command_word_distribution": {
+      "other": 271,
+      "deduce": 2,
+      "state": 3,
+      "identify": 2,
+      "sketch": 6,
+      "determine": 4,
+      "show": 9,
+      "draw": 5,
+      "prove": 2,
+      "calculate": 2,
+      "list": 2,
+      "explain": 3,
+      "name": 1,
+      "estimate": 1,
+      "describe": 2
+    },
+    "difficulty_distribution": {
+      "easy": 282,
+      "medium": 28,
+      "hard": 5
+    },
+    "average_marks": 3.1,
+    "yearly_frequency": {
+      "2016": 50,
+      "2017": 18,
+      "2018": 21,
+      "2019": 21,
+      "2020": 39,
+      "2021": 42,
+      "2022": 44,
+      "2023": 35,
+      "2025": 37,
+      "2024": 8
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q3",
+        "text_preview": "The majority of candidates gained full marks on this question however some weaker candidates struggled to interpret the given information and were unable to form the required equations. Answer: 93  In",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q5",
+        "text_preview": "Many candidates scored full marks on this question but weaker candidates were sometimes confused by the information presented and seemed unsure of what was expected from them. A sketch may well have h",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "text_preview": "This question proved to be one of the more difficult ones on the paper. In part (i) the expected method was to find the length of CA and then deduce that CP was 3 5 of CA. Many candidates struggled wi",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q9",
+        "text_preview": "Part (a) was generally well done but part (b) proved to be a significant challenge even for many good candidates. In part (i) the vast majority were able to use the angles in a triangle adding up to 1",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q10",
+        "text_preview": "This question was generally very well done with many candidates scoring full marks. In part (i) a number of candidates failed to realise the significance of the words ‘write down’ and spent a signific",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Mathematics_Calculus": {
+    "total_questions": 41,
+    "formula_library": [
+      "P = 4(.00) m 1 s",
+      "a = 0 due to the challenge of deal",
+      "a = 0. Most candidates made an att",
+      "a = 10t",
+      "g = 10 as instructed on the front",
+      "k = 40 (ii) Candidates needed to p",
+      "q = 2 and q",
+      "r = 2. The candidates who used n n",
+      "t = 0 and t",
+      "t = 0 to t",
+      "t = 1",
+      "t = 1 up to t",
+      "t = 1. Answer",
+      "t = 2 and taking a value of v",
+      "t = 20. Most candidates scored 2 o",
+      "t = 4 and t",
+      "t = 4 not the distance travelled d",
+      "t = 4 or at t",
+      "t = 4 to t",
+      "t = 4. Many wrongly showed this as",
+      "v = f(x) and not 2 v",
+      "x = 0 (Maximum)",
+      "x = 1",
+      "x = 1 (Minimum) Question 5 (i) The",
+      "x = 4.16",
+      "x = 9 after the first integration",
+      "y = 9 to find the second constant"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 41
+      },
+      {
+        "step": "substitute",
+        "frequency": 41
+      },
+      {
+        "step": "calculate",
+        "frequency": 9
+      }
+    ],
+    "command_word_distribution": {
+      "other": 39,
+      "determine": 2
+    },
+    "difficulty_distribution": {
+      "easy": 39,
+      "hard": 1,
+      "medium": 1
+    },
+    "average_marks": 8.0,
+    "yearly_frequency": {
+      "2016": 6,
+      "2019": 6,
+      "2020": 6,
+      "2021": 4,
+      "2022": 8,
+      "2023": 4,
+      "2025": 3,
+      "2024": 2,
+      "2017": 2
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q6",
+        "text_preview": "The majority of candidates scored very well on this question although weaker ones struggled in part (i) as they were unaware of the formulae for the volume and surface area of a cylinder. In part (ii)",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "text_preview": "(i) Most candidates recognised the need to differentiate the given equation implicitly, however some failed to deal with 24 correctly whilst other introduced a spurious d d y x into their equation. Ma",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "text_preview": "(i) Separation of variables was required in order to make any progress with this question. However, the candidates who managed to undertake this often experienced difficulty with the integration of 1 ",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "text_preview": "(i) This part was correctly found by many who realised that they had to use the fact that the velocity is continuous either at t = 4 or at t = 14 to find the value of k. Answer: k = 40 (ii) Candidates",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q6",
+        "text_preview": "(i) This part of the question was usually well done. (ii) Most candidates attempted to integrate to find v. Some candidates arrived at v = f(x) and not 2 v = f(x). (iii) The value of x, where P comes ",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Mathematics_Statistics_and_Probability": {
+    "total_questions": 49,
+    "formula_library": [
+      "P = 300x + 600y subject to 11x + 1",
+      "X = +",
+      "X = 0",
+      "X = 0) from the table. A small num",
+      "X = 2) often omitted other possibl",
+      "X = 3)",
+      "X = 3) in their expression",
+      "X=x) 2/30 5/30 4/30 13/30 6/30",
+      "a = 5",
+      "b = 0 Question 12 (a) This part wa",
+      "y = 2z (b) Explain what this const",
+      "y = 2z reduces the problem to the"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 49
+      },
+      {
+        "step": "recall",
+        "frequency": 47
+      },
+      {
+        "step": "calculate",
+        "frequency": 17
+      },
+      {
+        "step": "units",
+        "frequency": 4
+      }
+    ],
+    "command_word_distribution": {
+      "show": 1,
+      "other": 45,
+      "sketch": 1,
+      "identify": 1,
+      "estimate": 1
+    },
+    "difficulty_distribution": {
+      "medium": 1,
+      "easy": 48
+    },
+    "average_marks": 1.5,
+    "yearly_frequency": {
+      "2016": 8,
+      "2017": 3,
+      "2020": 7,
+      "2021": 8,
+      "2022": 8,
+      "2023": 8,
+      "2025": 5,
+      "2018": 2
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q3",
+        "text_preview": "Candidates should be aware that not all dice have 6 sides, as a number of solutions were presented which ignored the 7 and 8. It was unfortunate that a few candidates did not show any workings in this",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q6",
+        "text_preview": "The context of this question was accessible by all but the weakest candidates. A common error was to use the values for males and females inconsistently through the question. (i) The majority of candi",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "text_preview": "(i) Many good solutions contained a sketch of the normal distribution to clarify the information contained within the question. Candidates should be aware that the tables provided include critical val",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q1",
+        "text_preview": "This was not a well attempted question. Candidates who successfully found E(X) and E(Y) usually went on to successfully find E(X+Y). However, Var(X) and Var(Y) were not always correctly found, and eve",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q2",
+        "text_preview": "Candidates were required to set up their Null and Alternative Hypotheses; this was omitted by some candidates. The probability of 18, 19 or 20 hits should then have been calculated using the parameter",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Mathematics_Geometry_and_Vectors": {
+    "total_questions": 34,
+    "formula_library": [
+      "A = 2 rh Surface area",
+      "A = 4 r 2 V olume",
+      "C = 2 r Lateral surface area",
+      "V = 3 4 r 3 3 1 W rite 4 3 as a de",
+      "V = Al V olume",
+      "V = r 2 h V olume",
+      "k = 2 or because they multiplied 3",
+      "x = 0. (ii) This part was often om"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 34
+      },
+      {
+        "step": "recall",
+        "frequency": 30
+      },
+      {
+        "step": "calculate",
+        "frequency": 11
+      },
+      {
+        "step": "units",
+        "frequency": 8
+      }
+    ],
+    "command_word_distribution": {
+      "describe": 1,
+      "other": 25,
+      "state": 1,
+      "sketch": 3,
+      "calculate": 1,
+      "draw": 1,
+      "show": 2
+    },
+    "difficulty_distribution": {
+      "medium": 4,
+      "easy": 30
+    },
+    "average_marks": 2.0,
+    "yearly_frequency": {
+      "2020": 2,
+      "2022": 8,
+      "2016": 1,
+      "2019": 11,
+      "2021": 7,
+      "2017": 2,
+      "2023": 3
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q2",
+        "text_preview": "In order to fully describe the two transformations, it was necessary to state the type of each of them and not their effect on the coordinates of f(x). The best answers referred to the movement relati",
+        "marks": 0,
+        "year": 2020
+      },
+      {
+        "id": "CAM_A_MATH_2022_FE_P1_Q5",
+        "text_preview": "(a) The required form was often quoted correctly but sometimes confused with the form 2 2( ) x a b − + . However, most answers gained some credit. An area candidates can improve on is reducing the amo",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_A_MATH_2022_FE_P1_Q8",
+        "text_preview": "(a) The algebraic requirements for this part were well understood with a majority of candidates answering this question correctly. A few errors such as taking a negative square root or interchanging t",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_MATH_2016_MA_P1_Q7",
+        "text_preview": "A small number of candidates found the area of wood removed rather than the area of wood remaining. Answer: 12 Question 15 (a) This part was generally well done. Some candidates found 8 = k4² but did ",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_MATH_2019_MA_P1_Q2",
+        "text_preview": "(c) (i) Many candidates described the transformation correctly. A common error was omitting to state the mirror line or to state it incorrectly as x = 0. (ii) This part was often omitted. Incorrect an",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Mathematics_Sequences_and_Series": {
+    "total_questions": 20,
+    "formula_library": [
+      "c = 0",
+      "n = +",
+      "n = + - ( )",
+      "n = - J L KK N P OO Arithmetic ser",
+      "n = - e o Arithmetic series ( ) u"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 20
+      },
+      {
+        "step": "substitute",
+        "frequency": 20
+      },
+      {
+        "step": "calculate",
+        "frequency": 6
+      }
+    ],
+    "command_word_distribution": {
+      "other": 19,
+      "show": 1
+    },
+    "difficulty_distribution": {
+      "easy": 17,
+      "medium": 3
+    },
+    "average_marks": 3.0,
+    "yearly_frequency": {
+      "2020": 2,
+      "2021": 2,
+      "2022": 7,
+      "2025": 1,
+      "2016": 1,
+      "2019": 1,
+      "2023": 4,
+      "2024": 2
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q8",
+        "text_preview": "(a) This part was almost always answered correctly. (b) Candidates who identified that the nth terms of an arithmetic progression and a geometric progression were required usually quoted and used the ",
+        "marks": 0,
+        "year": 2020
+      },
+      {
+        "id": "CAM_A_MATH_2021_FE_P1_Q9",
+        "text_preview": "(a) (i) Most candidates were able to write down the sum to infinity of a geometric progression and use the given information to find the common ratio. Aware of the answer, many went on to find the sec",
+        "marks": 0,
+        "year": 2021
+      },
+      {
+        "id": "CAM_A_MATH_2022_FE_P1_Q4",
+        "text_preview": "The two equations linking the given terms were nearly always quoted correctly. The algebra involved in the elimination from these of r or a and d was completed correctly in the better answers. Sign an",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_A_MATH_2025_FE_P1_Q5",
+        "text_preview": "Many candidates scored no marks for this question because they started by evaluating S150 and S400. As highlighted in the General Comments, candidates are advised to read the question carefully before",
+        "marks": 0,
+        "year": 2025
+      },
+      {
+        "id": "CAM_O_MATH_2016_MA_P1_Q2",
+        "text_preview": "A few used the wrong relationship and thought that y was proportional to x or inversely proportional to x². (b) About half of the candidates realised that if q is doubled then p is halved. Many double",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Biology_General": {
+    "total_questions": 18,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 18
+      },
+      {
+        "step": "recall",
+        "frequency": 17
+      },
+      {
+        "step": "units",
+        "frequency": 2
+      }
+    ],
+    "command_word_distribution": {
+      "other": 15,
+      "sketch": 1,
+      "state": 2
+    },
+    "difficulty_distribution": {
+      "easy": 18
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2017": 3,
+      "2018": 9,
+      "2025": 1,
+      "2020": 2,
+      "2019": 3
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_BIOL_2017_FE_P1_Q1",
+        "text_preview": "Each candidate should be provided with: (i) four potato sticks in a covered Petri dish (ii) one large test-tube containing 25 cm3 of 0.50 M sucrose solution labelled A (iii) one large test-tube contai",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_BIOL_2017_FE_P1_Q2",
+        "text_preview": "(i) one large insect-pollinated flower with half of the petals removed on one side, so that the reproductive organs are clearly visible. (ii) a hand lens at least ×6 magnification (iii) a ruler scaled",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_BIOL_2017_FE_P1_Q2",
+        "text_preview": "results: Please provide a sketch or photograph of one of the flowers provided to candidates. 4 A plan of work benches, giving details of the candidate numbers of the places occupied by the candidates ",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_BIOL_2018_FE_P1_Q1",
+        "text_preview": "Each candidate should be provided with: (i) two celery stalks (Apium graveolens) of the same length (approximately 15–20 cm), with no leaves and of approximately the same width (ii) two 100 cm3 beaker",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_BIOL_2018_FE_P1_Q2",
+        "text_preview": "(i) a 30 cm ruler with a mm scale The Supervisor (not the Invigilator) should carry out the practical aspects of Question 1 and record their results in the space provided in the Supervisor’s Report. T",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Chemistry_General": {
+    "total_questions": 13,
+    "formula_library": [
+      "o = 23 kJ mol"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 13
+      },
+      {
+        "step": "substitute",
+        "frequency": 13
+      },
+      {
+        "step": "units",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 11,
+      "show": 1,
+      "explain": 1
+    },
+    "difficulty_distribution": {
+      "easy": 11,
+      "medium": 2
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2022": 5,
+      "2018": 3,
+      "2016": 1,
+      "2017": 1,
+      "2020": 2,
+      "2019": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_CHEM_2022_FE_P1_Q1",
+        "text_preview": "[MH] a tube or weighing boat containing 1.5 g of anhydrous lithium chloride 1 1.5 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_CHEM_2022_FE_P1_Q1",
+        "text_preview": "[MH] a tube or weighing boat containing 2.0 g of anhydrous lithium chloride 1 2.0 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_CHEM_2022_FE_P1_Q1",
+        "text_preview": "[MH] a tube or weighing boat containing 2.5 g of anhydrous lithium chloride 1 2.5 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_CHEM_2022_FE_P1_Q1",
+        "text_preview": "[MH] a tube or weighing boat containing 3.0 g of anhydrous lithium chloride 1 3.0 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_CHEM_2022_FE_P1_Q1",
+        "text_preview": "[MH] a tube or weighing boat containing 4.0 g of anhydrous lithium chloride 1 4.0 g of anhydrous lithium chloride for",
+        "marks": 0,
+        "year": 2022
+      }
+    ]
+  },
+  "Chemistry_Equilibrium": {
+    "total_questions": 11,
+    "formula_library": [
+      "G = DUHIRUPHG",
+      "G = DUHVKRZQ 100 50 0 transmittanc",
+      "H = 196 kJ / mol A 2 B C D 3"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 11
+      },
+      {
+        "step": "substitute",
+        "frequency": 11
+      }
+    ],
+    "command_word_distribution": {
+      "other": 10,
+      "state": 1
+    },
+    "difficulty_distribution": {
+      "easy": 11
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2022": 2,
+      "2025": 1,
+      "2017": 2,
+      "2018": 1,
+      "2016": 3,
+      "2023": 1,
+      "2021": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_CHEM_2022_FE_P1_Q1",
+        "text_preview": "50 cm3 measuring cylinder 1 stirring thermometer, –10 °C to +110 °C with 1 °C graduations 1 100 cm3 beaker 1 stop‑clock or timer which can measure to an accuracy of 1 s 1 access to water and distilled",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_CHEM_2025_MA_P1_Q1",
+        "text_preview": "A 1.0 g 1.0 g of calcium carbonate powder The powder should be weighed and placed in a suitable container such as a weighing bottle. It must not be provided in a 250 cm3 beaker. 0.250 mol / dm3 hydroc",
+        "marks": 0,
+        "year": 2025
+      },
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_6",
+        "text_preview": "6 What is the rate of reaction over the first 100 se conds? 2.96 3.00 4.00 8.00 Which state m ent about sulfuric a c id is correct? Sulfuric acid is used as a bleach. in food preservation. s the rate ",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_3",
+        "text_preview": "3 A to D correct correct correct correct 1 , 2 and 3 are 1 and 2 only are 2 and 3 only are 1 only is No other combination of statements is used a s a correct resp onse. Use of the Data Booklet may be ",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-094343f10dc1_7",
+        "text_preview": "7 A Both graphite and diamond have giant molecular structures. B carbon dioxide and no other products. C Graphite and diamond have different melting points. D Graphite conducts electricity, whereas di",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Chemistry_Atomic_Structure": {
+    "total_questions": 55,
+    "formula_library": [
+      "D = 2 1 H",
+      "H = +92 kJ mol 1 S T U Which state",
+      "H = 134 kJ mol 1 H",
+      "O = 16 8 O",
+      "o = 23 kJ mol"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 55
+      },
+      {
+        "step": "substitute",
+        "frequency": 55
+      },
+      {
+        "step": "units",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 40,
+      "state": 7,
+      "name": 7,
+      "show": 1
+    },
+    "difficulty_distribution": {
+      "easy": 54,
+      "medium": 1
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2025": 2,
+      "2017": 9,
+      "2016": 7,
+      "2023": 1,
+      "2019": 12,
+      "2020": 9,
+      "2018": 8,
+      "2022": 6,
+      "2021": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_CHEM_2025_MA_P1_Q1",
+        "text_preview": "1 × 250 cm3 beaker 1 × 100 cm3 measuring cylinder 1 × stirring rod 1 × marker suitable for labelling glassware 1 × 25 cm3 volumetric pipette 1 × pipette filler 1 × 50 cm3 burette 1 × stand 1 × burette",
+        "marks": 0,
+        "year": 2025
+      },
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_5",
+        "text_preview": "5 Which subst ance has a giant covale nt structure and contain s atoms of more than one element? diamond graphite methane sand Which state m ent correctly explains why chlorine, C , at 40 C diffuse s ",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_17",
+        "text_preview": "17 The formation of liquid water from h y drogen and oxygen ma y occur in th ree stages. 2 4H(g) + 2O(g) O(g) 2H O(l) Which stage s would be exothermic? 1, 2 and 3 1 and 2 only 2 and 3 only 2 only The",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_19",
+        "text_preview": "19 Which state m ent is correct? Q is a metal. Q is more reactive than T. R is more reactive than Z. T and Z are in the same period. ABCD © UCLES 201 7 5070/11/M/J/17 The diagra m shows part of the Pe",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_15",
+        "text_preview": "15 Permission to re pr oduce i t em s w here third - par ty o w ned material pr o t ecte d by copy right is i n cluded has been sough t an d clear ed w here possible. Ev er y reasona ble effor t has b",
+        "marks": 0,
+        "year": 2017
+      }
+    ]
+  },
+  "Chemistry_Organic_Chemistry": {
+    "total_questions": 21,
+    "formula_library": [
+      "C=O a nd C N are present. Neithe",
+      "C=O nor C N are present. C",
+      "C=O. A section of a polymer c ha"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 21
+      },
+      {
+        "step": "substitute",
+        "frequency": 21
+      },
+      {
+        "step": "units",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 18,
+      "state": 3
+    },
+    "difficulty_distribution": {
+      "easy": 21
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2025": 2,
+      "2017": 3,
+      "2018": 5,
+      "2023": 1,
+      "2019": 5,
+      "2016": 1,
+      "2020": 4
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_CHEM_2025_MA_P1_Q2",
+        "text_preview": "6 × test-tubes 1 × stopper to fit test-tubes 1 × test-tube rack 1 × test-tube holder (suitable for holding a boiling tube) 2 × boiling tubes 1 × wash bottle containing distilled water 1 × Bunsen burne",
+        "marks": 0,
+        "year": 2025
+      },
+      {
+        "id": "CAM_O_CHEM_2025_MA_P1_Q2",
+        "text_preview": "W 15 cm3 1 mol / dm3 aqueous potassium iodide Dissolve 16.6 g of potassium iodide in each 100 cm3 of solution. [O] [MH] [N] X 15 cm3 1 mol / dm3 aqueous zinc nitrate Dissolve 29.8 g of hydrated zinc n",
+        "marks": 0,
+        "year": 2025
+      },
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_1",
+        "text_preview": "1 Mult iple Ch oice Ma y / June 20 17 1 hour Additional Ma terials: Multiple Ch oi ce Answe r Sheet Soft clean erase r Soft pencil (type B or HB is reco mmen d e d ) 5070/11 REA D THES E INSTRU CT ION",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_21",
+        "text_preview": "21 An organic ion containin g a carbon a t om with a negative charge is called a carbanion. An organic ion containin g a carbon a t om with a positive char ge is called a carbocatio n. n organic ion c",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_5",
+        "text_preview": "5 Poly(ethene) and PVC a r e examples of addition polymers. Which state m ents are correct? On combustion, PVC can produce carbon monoxide, carbon dioxide and hydrogen chloride. When poly(ethene) is b",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Physics_Thermal_Physics": {
+    "total_questions": 34,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 34
+      },
+      {
+        "step": "substitute",
+        "frequency": 34
+      }
+    ],
+    "command_word_distribution": {
+      "other": 33,
+      "describe": 1
+    },
+    "difficulty_distribution": {
+      "easy": 33,
+      "medium": 1
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2016": 1,
+      "2017": 3,
+      "2018": 7,
+      "2019": 4,
+      "2020": 5,
+      "2021": 3,
+      "2022": 5,
+      "2023": 1,
+      "2025": 4,
+      "2024": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q1",
+        "text_preview": "Each block should be approximately 10 cm long. The width and thickness must be greater than the diameter of the boiling tube.",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_PHYS_2017_FE_P1_Q1",
+        "text_preview": "The apparatus should be supplied to candidates as shown in Fig. 1.1. boiling tube beaker stand boss clamp thermometer Fig. 1.1",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_PHYS_2017_FE_P1_Q2",
+        "text_preview": "Very hot water is to be available for each candidate throughout the experiment. This water should be maintained at an approximately constant temperature between 80 °C and 95 °C. Each candidate will re",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_PHYS_2018_FE_P1_Q1",
+        "text_preview": "The thermometer, clamp, boss and stand are to be set up for candidates as shown in Fig. 3.1. The thermometer bulb must be well below the 100 cm3 level of the beaker. Candidates must be able easily and",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2018_FE_P1_Q3",
+        "text_preview": "Hot water is to be available for each candidate throughout the experiment. The hot water should be maintained at an approximately constant temperature between 80 °C and 100 °C. Each candidate will req",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Physics_Electricity": {
+    "total_questions": 69,
+    "formula_library": [
+      "E = I",
+      "E = Q",
+      "P = I",
+      "Q = I",
+      "V = I"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 69
+      },
+      {
+        "step": "substitute",
+        "frequency": 69
+      },
+      {
+        "step": "calculate",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 67,
+      "determine": 1,
+      "state": 1
+    },
+    "difficulty_distribution": {
+      "easy": 68,
+      "medium": 1
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2016": 6,
+      "2017": 5,
+      "2018": 11,
+      "2019": 12,
+      "2020": 7,
+      "2021": 11,
+      "2022": 3,
+      "2023": 2,
+      "2024": 7,
+      "2025": 5
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q2",
+        "text_preview": "Spare boiling tubes should be available. Action at changeover Check that the apparatus is ready for the next candidate. 4 0625/52/CI/F/M/16 © UCLES 2016 Question 2 Items to be supplied by the Centre (",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q1",
+        "text_preview": "The resistance wire is to be fixed to the metre rule or wooden strip in such a way as to allow candidates to connect a crocodile clip to points between 10 cm and 90 cm from the left-hand end of the wi",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q2",
+        "text_preview": "The circuit is to be set up for candidates as shown in Fig. 2.1, with the crocodile clip connected to the resistance wire. The position of the crocodile clip is not important. power supply A V resista",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q3",
+        "text_preview": "When the crocodile clip is connected to the maximum length of the resistance wire, the reading on the voltmeter should be at least 2.2 V. If cells are used, they must remain adequately charged through",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q5",
+        "text_preview": "Spare resistors, leads, crocodile clips and meters should be available. Action at changeover Ensure that the circuit is connected as shown in Fig. 2.1 and check that the circuit is working. Switch the",
+        "marks": 0,
+        "year": 2016
+      }
+    ]
+  },
+  "Physics_General": {
+    "total_questions": 56,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 56
+      },
+      {
+        "step": "substitute",
+        "frequency": 56
+      },
+      {
+        "step": "calculate",
+        "frequency": 2
+      },
+      {
+        "step": "units",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 52,
+      "name": 1,
+      "explain": 1,
+      "determine": 2
+    },
+    "difficulty_distribution": {
+      "easy": 53,
+      "medium": 3
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2016": 1,
+      "2018": 10,
+      "2019": 8,
+      "2020": 6,
+      "2021": 8,
+      "2022": 9,
+      "2023": 1,
+      "2024": 2,
+      "2025": 11
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_PHYS_2016_FE_P1_Q4",
+        "text_preview": "Either analogue or digital meters are suitable. Any variable settings should be set by the Supervisor and fixed, e.g. taped.",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "CAM_O_PHYS_2018_FE_P1_Q2",
+        "text_preview": "If the beaker does not have volume markings, the 200 cm3 and 100 cm3 levels must be indicated on the beaker.",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2018_MA_P1_Q1",
+        "text_preview": "Supervisors should stretch any new spring by approximately 10 cm, two or three times, when setting up the experiment initially.",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2018_MA_P1_Q3",
+        "text_preview": "A suitable rod is the rod of another retort stand held in the boss. The boss should be fixed tightly to the rod so that it does not rotate when the spring is pulled, as shown in Fig. 1.1.",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2018_MA_P1_Q3",
+        "text_preview": "10.0 g of sodium chloride should be dissolved in 250 cm3 of water. The solution will be re-used but it may be necessary to have extra in case of spillages.",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Physics_Optics": {
+    "total_questions": 10,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 10
+      },
+      {
+        "step": "substitute",
+        "frequency": 10
+      }
+    ],
+    "command_word_distribution": {
+      "other": 10
+    },
+    "difficulty_distribution": {
+      "easy": 10
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2017": 2,
+      "2020": 1,
+      "2022": 3,
+      "2023": 1,
+      "2024": 2,
+      "2025": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_PHYS_2017_FE_P1_Q4",
+        "text_preview": "Either analogue or digital meters are suitable. Any variable settings should be set by the Supervisor and fixed, e.g. taped. Spare meters should be available. Action at changeover Ensure that the circ",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_PHYS_2017_FE_P1_Q2",
+        "text_preview": "The lamp filament, the centre of the hole which forms the object and the centre of the lens in its holder, must all be the same height above the bench.",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_PHYS_2020_MA_P1_Q2",
+        "text_preview": "Object A may be made using a piece of rigid white card approximately 15 cm × 10 cm. Five horizontal parallel lines, 5.0 mm apart, should be marked on the card using a fine tipped (0.5 mm) pen. The cen",
+        "marks": 0,
+        "year": 2020
+      },
+      {
+        "id": "CAM_O_PHYS_2022_MA_P1_Q4",
+        "text_preview": "The supervisor should set up the apparatus as shown in Fig. 3.1. Action at changeover The supervisor must ensure that the circuit is in the configuration shown in Fig. 3.1. The LDR and the LED must be",
+        "marks": 0,
+        "year": 2022
+      },
+      {
+        "id": "CAM_O_PHYS_2022_MA_P1_Q1",
+        "text_preview": "The lens must be mounted on one of the slotted masses using a small piece of adhesive putty (e.g. Blu-tack or Patafix). The screen must be placed by the 0 cm mark of the metre rule, and the cross-wire",
+        "marks": 0,
+        "year": 2022
+      }
+    ]
+  },
+  "Physics_Waves": {
+    "total_questions": 27,
+    "formula_library": [
+      "T = 1 sin sin angle of incidence a",
+      "n = 1",
+      "r = sin sin sin critical angle ref",
+      "v = f"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 27
+      },
+      {
+        "step": "substitute",
+        "frequency": 27
+      },
+      {
+        "step": "calculate",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 19,
+      "list": 1,
+      "state": 4,
+      "show": 1,
+      "determine": 1,
+      "describe": 1
+    },
+    "difficulty_distribution": {
+      "easy": 24,
+      "medium": 3
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2017": 2,
+      "2018": 4,
+      "2019": 5,
+      "2021": 3,
+      "2022": 4,
+      "2024": 3,
+      "2025": 2,
+      "2020": 1,
+      "2023": 2,
+      "2016": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_PHYS_2017_FE_P1_Q3",
+        "text_preview": "The apparatus should be situated away from direct sunlight. adhesive tape translucent paper card",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "CAM_O_PHYS_2018_MA_P1_Q3",
+        "text_preview": "A piece of aluminium foil 4 cm × 8 cm should be rolled around a cylinder (e.g. a pencil) that is slightly wider than the thermometer. The tube of aluminium should be pinched at one end. The thermomete",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2019_FE_P1_Q2",
+        "text_preview": "The lamp, set behind the screen must be capable of projecting a ray of light at least 20 cm long, across the surface of the paper, before and after reflection by the upright plane mirror.",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "CAM_O_PHYS_2021_FE_P1_Q1",
+        "text_preview": "Cup A must be of a type more suitable for cold drinks, made from plastic or thin card. However, it must be capable of containing very hot water without distorting. Cup B must be of a type used for hot",
+        "marks": 0,
+        "year": 2021
+      },
+      {
+        "id": "CAM_O_PHYS_2022_FE_P1_Q5",
+        "text_preview": "The load W must be able to rest on the metre rule, supported and horizontal, without toppling. The load can be slightly wider than the metre rule.",
+        "marks": 0,
+        "year": 2022
+      }
+    ]
+  },
+  "Physics_Forces_and_Motion": {
+    "total_questions": 38,
+    "formula_library": [
+      "A = 10 MARKS 8 *P60480A0824* SECTI",
+      "A = pressure temperature p T p T 1",
+      "F = m",
+      "W = m",
+      "g = constant pressure",
+      "p = h",
+      "p = m",
+      "t = mass volume"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "substitute",
+        "frequency": 38
+      },
+      {
+        "step": "recall",
+        "frequency": 37
+      },
+      {
+        "step": "units",
+        "frequency": 2
+      }
+    ],
+    "command_word_distribution": {
+      "other": 33,
+      "state": 3,
+      "show": 1,
+      "compare": 1
+    },
+    "difficulty_distribution": {
+      "easy": 36,
+      "medium": 2
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2018": 5,
+      "2019": 8,
+      "2020": 7,
+      "2021": 7,
+      "2022": 2,
+      "2024": 5,
+      "2025": 3,
+      "2017": 1
+    },
+    "sample_questions": [
+      {
+        "id": "CAM_O_PHYS_2018_MA_P1_Q2",
+        "text_preview": "The string should be approximately 30 cm long, 1.5 mm wide and made of cotton or nylon. The string should be strong enough to support a 2 kg load without stretching or breaking. One end of the string ",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2018_MA_P1_Q4",
+        "text_preview": "The G-Clamp should be used to fix the stand to the bench or a heavy weight should be placed on the base of the stand so that the stand does not tip over when the force is applied.",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "CAM_O_PHYS_2019_MA_P1_Q1",
+        "text_preview": "The pendulum should be set up for the candidates as shown in Fig. 1.1. The end of the thread should be held in a split cork and held vertically in the clamp. The centre of the split cork should be app",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "CAM_O_PHYS_2019_MA_P1_Q3",
+        "text_preview": "A digital multimeter is suitable. The supervisor must ensure that the meter is set to the 0 – 20 V range. The range switch and other unused terminals must be taped over to prevent candidates changing ",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "CAM_O_PHYS_2019_MA_P1_Q4",
+        "text_preview": "Candidates will use the wire hook to suspend the 200 g mass from the L-shaped beam. A suitable hook may be made using a large steel paper clip, as shown in Fig. 3.5. It must be possible to suspend a 2",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Biology_Genetics": {
+    "total_questions": 4,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 4
+      },
+      {
+        "step": "substitute",
+        "frequency": 4
+      }
+    ],
+    "command_word_distribution": {
+      "other": 4
+    },
+    "difficulty_distribution": {
+      "easy": 4
+    },
+    "average_marks": 1.0,
+    "yearly_frequency": {
+      "2025": 1,
+      "2018": 2,
+      "2019": 1
+    },
+    "sample_questions": [
+      {
+        "id": "EDE_A_BIOL_2025_MA_P1_Q3",
+        "text_preview": "The oxygen in a water molecule has a small negative charge and the hydrogen atoms each have a small positive charge. (1) A 1 and 2 only B 1 and 3 only C 2 and 3 only D 1, 2 and 3 (b) The table shows s",
+        "marks": 1,
+        "year": 2025
+      },
+      {
+        "id": "DERIVED_papacambridge-78b71ffb74a5_16",
+        "text_preview": "16 Permission to re pr oduce i t em s w here third - par ty o w ned material pr o t ecte d by copy right is i n cluded has been sough t an d clear ed w here possible. Ev er y reasona ble effor t has b",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-85613cff5374_1",
+        "text_preview": "1 A 1 : 2 B 1 : 3 C 3 : 1 D © UCLES 201 9 5090/11/M/J/19 Which row shows the se x chromoso mes when parents have a baby boy? in the egg cell in the sperm cell in the zygote 15 38 X X XX A X Y XY B Y X",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "DERIVED_papacambridge-9e05c0801b45_25",
+        "text_preview": "25 The table shows the percentage of pregnancies in four groups of women. Each group used a different method of contr a ception. method of contraception percentage of 11 [Turn over 25 pregnancies the ",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Physics_Mechanics": {
+    "total_questions": 5,
+    "formula_library": [
+      "W = F"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 5
+      },
+      {
+        "step": "substitute",
+        "frequency": 5
+      }
+    ],
+    "command_word_distribution": {
+      "other": 5
+    },
+    "difficulty_distribution": {
+      "easy": 5
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2024": 1,
+      "2018": 1,
+      "2019": 3
+    },
+    "sample_questions": [
+      {
+        "id": "EDE_O_PHYS_2024_MA_P1_Q4",
+        "text_preview": "Energy resources and energy transfers efficiency = work done = force × distance moved W = F × d gravitational potential energy = mass × gravitational field strength × height GPE = m × g × h kinetic en",
+        "marks": 0,
+        "year": 2024
+      },
+      {
+        "id": "DERIVED_papacambridge-3b5be3eb1d5e_1",
+        "text_preview": "1 Mult iple Ch oice Februa r y /Ma rch 201 8 1 hour 15 minute s Additional Ma terials: Multiple Ch oi ce Answe r Sheet Soft clean erase r Soft pencil (type B or HB is reco mmen d e d ) PHYSICS 9702/12",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-61697a41f23f_11",
+        "text_preview": "11 A garden table weighs 60 N and has a top surface of ar ea 2.0 . I t is rain ing and the rain produces a pressure of 4.0 on the table. Ignoring the pressure of t he atmosphere, what is the force exe",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "DERIVED_papacambridge-8d07fc680fbf_2",
+        "text_preview": "2 The electric motor being used to sup p ly the power to lift the container is using a curr ent of 240 at a potentia l difference of 2200 What is the efficiency of the system? 8.1% 8.5% 48% 83% 3 2 U ",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "DERIVED_papacambridge-8d07fc680fbf_1",
+        "text_preview": "1 Mult iple Ch oice Februa r y /Ma rch 201 9 1 hour 15 minute s Additional Ma terials: Multiple Ch oi ce Answe r Sheet Soft clean erase r Soft pencil (type B or HB is reco mmen d e d ) PHYSICS 9702/12",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Chemistry_Kinetics": {
+    "total_questions": 13,
+    "formula_library": [
+      "H = 196 kJ / mol What would decrea"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 13
+      },
+      {
+        "step": "substitute",
+        "frequency": 13
+      }
+    ],
+    "command_word_distribution": {
+      "other": 12,
+      "state": 1
+    },
+    "difficulty_distribution": {
+      "easy": 13
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2017": 3,
+      "2018": 4,
+      "2023": 2,
+      "2016": 1,
+      "2019": 2,
+      "2022": 1
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_2",
+        "text_preview": "2 ABCD 18 2 2 (g) addition of more oxyge n an increase in pressure an increase in temperature removal of sulfur trioxide from the reaction cham ber 2SO 3 (g) ' H = 196 kJ / mol What would decrease the",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_1",
+        "text_preview": "1 Which conditions of pressure and te mperature favour the re verse pressure temperature reaction? A high high B high low C low high D low low Which state m ent about the effect of a catalyst o n a re",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_12",
+        "text_preview": "12 To av oid the issu e of di sclo sure o f ans w e r-relate d in formation to candid a tes, al l copy right acknow ledgements are reprodu ced onl ine in the Cam b ridge Inte rnati onal Ex ami nation ",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-10e9cc10ed47_4",
+        "text_preview": "4 A Cyclohexene, C 6 H 10 , 8 & / ( 6 29 P shape 1 planar A 2 planar B 1 non-planar C 2 non-planar D 10 B B B In Group 2 of the Periodic T able, the properties of the elements and their compounds show",
+        "marks": 0,
+        "year": 2023
+      },
+      {
+        "id": "DERIVED_papacambridge-10e9cc10ed47_3",
+        "text_preview": "3 A 4 BBBA student carries out four experiments to investigate the rate of reaction between 3.0 g of and hydrochloric acid. (s) + 2HC (aq) + CO (g) + H calcium carbonate CaCO 3 l (aq) CaC l 2 2 2 O(l)",
+        "marks": 0,
+        "year": 2023
+      }
+    ]
+  },
+  "Chemistry_Electrochemistry": {
+    "total_questions": 2,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 2
+      },
+      {
+        "step": "substitute",
+        "frequency": 2
+      }
+    ],
+    "command_word_distribution": {
+      "other": 2
+    },
+    "difficulty_distribution": {
+      "easy": 2
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2017": 1,
+      "2018": 1
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-00417bbde227_3",
+        "text_preview": "3 Which type of reaction occurs in the extraction of each of these metals fr om their ore? decomposition by heat electrolysis precipitation reduction After the collapse of a river bridge, a new car wa",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-4e21e2d08263_8",
+        "text_preview": "8 A r ? average mass of naturally occurring atoms of an element mass of one atom of 12 C A × 12 average mass of naturally occurring atoms of an element mass of one atom of 12 C × 12 B average mass of ",
+        "marks": 0,
+        "year": 2018
+      }
+    ]
+  },
+  "Chemistry_Energetics": {
+    "total_questions": 6,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 6
+      },
+      {
+        "step": "substitute",
+        "frequency": 6
+      },
+      {
+        "step": "calculate",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "calculate": 1,
+      "other": 3,
+      "state": 1,
+      "show": 1
+    },
+    "difficulty_distribution": {
+      "medium": 2,
+      "easy": 4
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2018": 1,
+      "2016": 1,
+      "2019": 3,
+      "2017": 1
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-060d03538613_8(g)",
+        "text_preview": "(g) 2H O(g) 2H Hess Law and bond ene rgy data can be used to calculate th e enthalpy change of a r e action. Bromoethan e, CH Br What is the enthalpy change for this reaction? 2 1 O 2 o H 2 O(l) C 2 (",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-094343f10dc1_1",
+        "text_preview": "1 A A l 2 O 3 B CO 2 C Na 2 O D SO 2 2 colour? red litmus blue litmus ammonia red litmus blue litmus chlorine red litmus blue litmus hydrogen chloride red litmus blue litmus oxygen AB CD Dissolve it i",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "DERIVED_papacambridge-13095b120234_9",
+        "text_preview": "9 The equatio n for a chemical react i on is shown. A ll substa nce s are in their standard st ates. Xe F Xe O + 6HF Which state m ent describes the stan dard enthalp y change of reaction for t h is r",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "DERIVED_papacambridge-454411357396_6",
+        "text_preview": "6 Which gas sample contains the fewest molecules? A 1.00 dm 3 of carbon dioxide at 27 ° C and 2.0 kPa B 1.00 dm 3 of hydrogen at 100 ° C and 2.0 kPa C 1.00 dm 3 of nitrogen at 300 ° C and 4.0 kPa D 1.",
+        "marks": 0,
+        "year": 2017
+      },
+      {
+        "id": "DERIVED_papacambridge-6cd3d36b315d_3",
+        "text_preview": "3 Which row is correct? WXYAXYWBCYWXYXWD © UCLES 201 9 5070/11/M/J/19 The equatio n s show fou r reversible reactions. For which reaction wou l d the equilibrium mo ve to the right for both an increas",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Chemistry_Chemical_Bonding": {
+    "total_questions": 4,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 4
+      },
+      {
+        "step": "substitute",
+        "frequency": 4
+      }
+    ],
+    "command_word_distribution": {
+      "other": 2,
+      "state": 2
+    },
+    "difficulty_distribution": {
+      "easy": 4
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2016": 1,
+      "2020": 1,
+      "2018": 1,
+      "2022": 1
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-094343f10dc1_10",
+        "text_preview": "10 Which uses for sulfuric acid are correct? ABCD 11 in water and contain 2 bonds. Which words correctly complete gaps 1 and 2? A insoluble covalent B insoluble ionic C soluble covalent D soluble ioni",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "DERIVED_papacambridge-2924043cc5ca_14",
+        "text_preview": "14 A to D correct correct correct correct 1 , 2 and 3 are 1 and 2 only are 2 and 3 only are 1 only is No other combination of statements is used a s a correct resp onse. Which compounds will pr oduce ",
+        "marks": 0,
+        "year": 2020
+      },
+      {
+        "id": "DERIVED_papacambridge-489e2489dcbb_4",
+        "text_preview": "4 A o Cu 2+ B 2+ + 2e o Cu C 2H 2 O + Cu 2+ + 2e o Cu(OH) 2 2 D 4 2 + 4H + + 2e o 2 SO 4 + H 2 8 2 H 6 , and ammonia, NH 3 , are covalent compounds. HC HHCHHHN HH H Which state m ents are correct?",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-870bc0b4c85d_10",
+        "text_preview": "10 Elements X and Y react to form co mpound XY. Element Y has more e l ectrons in it s outer shell than element X . Co mpou nd X Y cond ucts ele c tricity in the molten state. Which row correctly sta ",
+        "marks": 0,
+        "year": 2022
+      }
+    ]
+  },
+  "Biology_Human_Biology": {
+    "total_questions": 8,
+    "formula_library": [
+      "B = yes C"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 8
+      },
+      {
+        "step": "substitute",
+        "frequency": 8
+      }
+    ],
+    "command_word_distribution": {
+      "show": 2,
+      "other": 5,
+      "state": 1
+    },
+    "difficulty_distribution": {
+      "medium": 2,
+      "easy": 6
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2016": 2,
+      "2018": 2,
+      "2019": 1,
+      "2017": 2,
+      "2020": 1
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-20edbac53918_12",
+        "text_preview": "12 The graphs show the effects of temperature and pH on enzyme activity. 5 [Turn over 12 rate of reaction rate of reaction Q P R temperature pH S At P, hydrogen bonds are formed between enzyme and sub",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "DERIVED_papacambridge-254ceede9381_4",
+        "text_preview": "4 Which prop erties of wat e r are important for tran sport in xylem? 1 cohesion 2 adhesion 3 high energy requirement for evaporation 4 good solvent properties 1, 2 and 4 1 and 4 only 2, 3 and 4 2 and",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-3c85f3bec22c_13",
+        "text_preview": "13 At which labelled point is the pressure highest? DCBA capillary tissue fluid The diagram shows arteries and veins in the human forearm. 14 vein artery Which statements apply to a vein in the human ",
+        "marks": 0,
+        "year": 2016
+      },
+      {
+        "id": "DERIVED_papacambridge-78b71ffb74a5_2",
+        "text_preview": "2 A heart brain intestine liver B kidney heart C D lung heart Which word equation de scribes the r e spiration th at occurs in an athlete s muscle cells the carbon dioxide + water glucose + oxygen glu",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-85613cff5374_15",
+        "text_preview": "15 A B organ organ blood away from organ organ organ blood away from organ pulmonary artery heart pulmonary vein pulmonary artery heart pulmonary vein hepatic portal vein liver hepatic vein hepatic ve",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Biology_Ecology": {
+    "total_questions": 3,
+    "formula_library": [
+      "B = yes C"
+    ],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 3
+      },
+      {
+        "step": "substitute",
+        "frequency": 3
+      }
+    ],
+    "command_word_distribution": {
+      "other": 1,
+      "state": 2
+    },
+    "difficulty_distribution": {
+      "easy": 3
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2018": 1,
+      "2019": 2
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-78b71ffb74a5_21",
+        "text_preview": "21 The diagra m shows a section throu g h an eye. Which part is the recept or for the stimulus that results in a change in the size of the pupil? 9 [Turn over 21 ABDC The diagra m shows the brain in v",
+        "marks": 0,
+        "year": 2018
+      },
+      {
+        "id": "DERIVED_papacambridge-85613cff5374_25",
+        "text_preview": "25 Which state m ents about the use of h e roin are co rrect? addiction o c curs as higher an d higher dose s are needed to g e t everybod y who takes a dos e of heroin beco mes an addict user can sur",
+        "marks": 0,
+        "year": 2019
+      },
+      {
+        "id": "DERIVED_papacambridge-85613cff5374_4",
+        "text_preview": "4 Which state m ent about enzymes is correct? All enzymes are made of protein. Enzy mes are biologica l cataly sts. Enzymes are destroyed during the r eaction they are involved in. Most human enzymes ",
+        "marks": 0,
+        "year": 2019
+      }
+    ]
+  },
+  "Physics_Nuclear_Physics": {
+    "total_questions": 1,
+    "formula_library": [],
+    "common_solving_steps": [
+      {
+        "step": "recall",
+        "frequency": 1
+      },
+      {
+        "step": "substitute",
+        "frequency": 1
+      }
+    ],
+    "command_word_distribution": {
+      "other": 1
+    },
+    "difficulty_distribution": {
+      "easy": 1
+    },
+    "average_marks": 0,
+    "yearly_frequency": {
+      "2023": 1
+    },
+    "sample_questions": [
+      {
+        "id": "DERIVED_papacambridge-940c553ebb1d_3",
+        "text_preview": "3 The proton number is 26. 1 and 2 1 and 3 2 and 3 3 only What is an a r tificia l source of backgro und radiatio n? X -ray machines in hosp i tals radon gas fr om rocks cosmic rays from the Su n plan",
+        "marks": 0,
+        "year": 2023
+      }
+    ]
+  }
+}

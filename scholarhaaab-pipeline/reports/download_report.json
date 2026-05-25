@@ -1,0 +1,20 @@
+{
+  "total_attempted": 2,
+  "total_success": 2,
+  "total_failed": 0,
+  "success_rate": "100.00%",
+  "by_board": {
+    "cambridge": 2
+  },
+  "by_level": {
+    "o-level": 2
+  },
+  "by_subject": {
+    "cambridge o-level Physics": 2
+  },
+  "years_covered": [
+    2014
+  ],
+  "failed_list": [],
+  "created_at": "2026-05-18T03:50:10.761570+00:00"
+}

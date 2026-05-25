@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "files": 1,
+  "passed": 66,
+  "failed": 0,
+  "auto_fixed": 0,
+  "needs_manual_review": 0,
+  "manual_review_pct": 0.0,
+  "warning_counts": {
+    "marks": 66,
+    "mark_scheme": 3
+  },
+  "created_at": "2026-05-18T03:51:03.231880+00:00"
+}

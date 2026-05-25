@@ -1,0 +1,680 @@
+{
+  "rate_equation": {
+    "count": 64,
+    "subjects": {
+      "Business": 5,
+      "Mathematics": 58,
+      "Chemistry": 1
+    },
+    "topics": {
+      "General": 5,
+      "Algebra": 6,
+      "Trigonometry": 45,
+      "Calculus": 4,
+      "Statistics_and_Probability": 3,
+      "Kinetics": 1
+    },
+    "years": {
+      "2016": 7,
+      "2017": 4,
+      "2019": 5,
+      "2022": 9,
+      "2023": 12,
+      "2018": 4,
+      "2020": 7,
+      "2021": 8,
+      "2025": 8
+    },
+    "examples": [
+      {
+        "id": "CAM_A_BUSI_2016_MA_P1_Q4",
+        "preview": "(a) Candidates found this to be a highly accessible question. Most candidates gained full marks for the calculations. (i) Most candidates stated the r",
+        "year": 2016,
+        "source": "Cambridge A Level Business 2016 May_June Paper 1 Q4"
+      },
+      {
+        "id": "CAM_A_BUSI_2017_FE_P1_Q2",
+        "preview": "Many candidates gained full marks on this question with accurate calculations of net present value (NPV) and the new gearing ratio. The majority of ca",
+        "year": 2017,
+        "source": "Cambridge A Level Business 2017 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "id": "CAM_A_BUSI_2019_FE_P1_Q2",
+        "preview": "Candidates showed improvement in answering this CPA question compared to last March. However, marks awarded suggest that interpreting networks remains",
+        "year": 2019,
+        "source": "Cambridge A Level Business 2019 Feb_Mar Paper 1 Q2"
+      }
+    ]
+  },
+  "sin_rule": {
+    "count": 23,
+    "subjects": {
+      "Business": 3,
+      "Mathematics": 19,
+      "Accounting": 1
+    },
+    "topics": {
+      "General": 4,
+      "Trigonometry": 19
+    },
+    "years": {
+      "2017": 5,
+      "2020": 3,
+      "2021": 4,
+      "2023": 2,
+      "2025": 2,
+      "2019": 3,
+      "2016": 1,
+      "2018": 2,
+      "2022": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_BUSI_2017_FE_P1_Q2",
+        "preview": "(a) (i) ‘Profit margin’ is the syllabus term that has replaced ‘net profit margin’ and should be taught as such. As this is a fairly new change to the",
+        "year": 2017,
+        "source": "Cambridge A Level Business 2017 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "id": "CAM_A_BUSI_2020_FE_P1_Q1",
+        "preview": "(a) (i) Most candidates provided a good answer to this question and understood that job production involved ‘one-off’ customisable products and servic",
+        "year": 2020,
+        "source": "Cambridge A Level Business 2020 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_MATH_2021_FE_P1_Q8",
+        "preview": "(a) The majority of candidates knew to multiply the numerator and denominator by 3 – i, and showed all their working, see Key messages. However, many ",
+        "year": 2021,
+        "source": "Cambridge A Level Mathematics 2021 Feb_Mar Paper 1 Q8"
+      }
+    ]
+  },
+  "PE=mgh": {
+    "count": 10,
+    "subjects": {
+      "Business": 2,
+      "Mathematics": 5,
+      "English": 1,
+      "Physics": 2
+    },
+    "topics": {
+      "General": 3,
+      "Trigonometry": 5,
+      "Mechanics": 2
+    },
+    "years": {
+      "2020": 2,
+      "2018": 1,
+      "2021": 2,
+      "2022": 2,
+      "2025": 1,
+      "2024": 1,
+      "2019": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_BUSI_2020_FE_P1_Q1",
+        "preview": "Most candidates defined interest rates as the cost of borrowing and many recognised that interest rate changes are used by government to control aggre",
+        "year": 2020,
+        "source": "Cambridge A Level Business 2020 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_MATH_2018_FE_P1_Q4",
+        "preview": "1 f ln 12.5 e 2 a a a − = + − . Substitution of both a=1 and a=1.5 into either equation will result in a change of sign between the two values obtaine",
+        "year": 2018,
+        "source": "Cambridge A Level Mathematics 2018 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q3",
+        "preview": "(a) This question was well answered by most candidates. The initial kinetic energy must be evaluated and an expression formed for the gain in potentia",
+        "year": 2020,
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q3"
+      }
+    ]
+  },
+  "normal_dist": {
+    "count": 60,
+    "subjects": {
+      "Business": 6,
+      "Economics": 2,
+      "Mathematics": 43,
+      "Computer_Science": 4,
+      "English": 5
+    },
+    "topics": {
+      "General": 17,
+      "Trigonometry": 24,
+      "Calculus": 2,
+      "Statistics_and_Probability": 13,
+      "Algebra": 4
+    },
+    "years": {
+      "2025": 11,
+      "2017": 4,
+      "2018": 3,
+      "2016": 9,
+      "2020": 6,
+      "2021": 6,
+      "2022": 12,
+      "2023": 5,
+      "2019": 2,
+      "2024": 2
+    },
+    "examples": [
+      {
+        "id": "CAM_A_BUSI_2025_FE_P1_Q1",
+        "preview": "(a) (i) The command word ‘identify’ should signal to a candidate that a brief, factual answer is required. In this question, the knowledge was one met",
+        "year": 2025,
+        "source": "Cambridge A Level Business 2025 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_ECON_2017_FE_P1_Q1",
+        "preview": "(a) (i) Many candidates correctly stated that the country that had the greatest deficit on its balance of trade in goods with Vietnam was the United S",
+        "year": 2017,
+        "source": "Cambridge A Level Economics 2017 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_ECON_2018_FE_P1_Q1",
+        "preview": "(a) Most candidates were able to draw a diagram of a production possibility curve. Most chose to illustrate the expected changes in the Venezuelan eco",
+        "year": 2018,
+        "source": "Cambridge A Level Economics 2018 Feb_Mar Paper 1 Q1"
+      }
+    ]
+  },
+  "enthalpy_hess": {
+    "count": 2,
+    "subjects": {
+      "English": 1,
+      "Chemistry": 1
+    },
+    "topics": {
+      "General": 1,
+      "Energetics": 1
+    },
+    "years": {
+      "2024": 1,
+      "2018": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_ENGL_2024_MA_P1_Q2",
+        "preview": "A number of option (b) essays on the poetry texts in this session started without any consideration of the terms of the question or in some cases any ",
+        "year": 2024,
+        "source": "Cambridge A Level English 2024 May_June Paper 1 Q2"
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_8(g)",
+        "preview": "(g) 2H O(g) 2H Hess Law and bond ene rgy data can be used to calculate th e enthalpy change of a r e action. Bromoethan e, CH Br What is the enthalpy ",
+        "year": 2018,
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      }
+    ]
+  },
+  "quadratic": {
+    "count": 78,
+    "subjects": {
+      "Mathematics": 78
+    },
+    "topics": {
+      "Algebra": 35,
+      "Trigonometry": 32,
+      "Calculus": 5,
+      "Statistics_and_Probability": 1,
+      "Sequences_and_Series": 5
+    },
+    "years": {
+      "2016": 10,
+      "2018": 4,
+      "2019": 7,
+      "2020": 12,
+      "2021": 14,
+      "2022": 9,
+      "2023": 8,
+      "2025": 8,
+      "2017": 5,
+      "2024": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q3",
+        "preview": "Whilst most candidates were able to deal with the simplification of 2lnx to 2 lnx , very few recognised the need to use the addition rule for 2 logari",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q3"
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q8",
+        "preview": "(i) Very well done by the great majority of candidates, recognising the need to obtain both of the terms on the left hand side of the identity in term",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q8"
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q1",
+        "preview": "The solution to this question required, (i) application of the laws of logarithms for product/quotient and power, (ii) reduction of a logarithmic equa",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q1"
+      }
+    ]
+  },
+  "F=ma": {
+    "count": 17,
+    "subjects": {
+      "Mathematics": 16,
+      "Physics": 1
+    },
+    "topics": {
+      "Trigonometry": 16,
+      "Forces_and_Motion": 1
+    },
+    "years": {
+      "2016": 4,
+      "2018": 2,
+      "2020": 2,
+      "2021": 4,
+      "2022": 2,
+      "2023": 1,
+      "2025": 1,
+      "2024": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q1",
+        "preview": "Since it is not given in the question that acceleration is constant, the best approach here was to use the Work/Energy principle. Most candidates corr",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q4",
+        "preview": "(i) Most candidates resolved horizontally to find that F = 5cosα. It was then necessary to resolve vertically to find R from the equation R + 5sinα = ",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q5",
+        "preview": "(i) The most straightforward approach to finding the acceleration in this part of the question is to apply Newton’s second law to the system of car an",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q5"
+      }
+    ]
+  },
+  "KE=0.5mv2": {
+    "count": 8,
+    "subjects": {
+      "Mathematics": 4,
+      "Physics": 3,
+      "Biology": 1
+    },
+    "topics": {
+      "Trigonometry": 4,
+      "Mechanics": 1,
+      "Human_Biology": 1,
+      "Forces_and_Motion": 2
+    },
+    "years": {
+      "2016": 2,
+      "2018": 1,
+      "2020": 1,
+      "2021": 2,
+      "2024": 1,
+      "2019": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q1",
+        "preview": "Since it is not given in the question that acceleration is constant, the best approach here was to use the Work/Energy principle. Most candidates corr",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_MATH_2018_FE_P1_Q4",
+        "preview": "1 f ln 12.5 e 2 a a a − = + − . Substitution of both a=1 and a=1.5 into either equation will result in a change of sign between the two values obtaine",
+        "year": 2018,
+        "source": "Cambridge A Level Mathematics 2018 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q3",
+        "preview": "(a) This question was well answered by most candidates. The initial kinetic energy must be evaluated and an expression formed for the gain in potentia",
+        "year": 2020,
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q3"
+      }
+    ]
+  },
+  "a=(v-u)/t": {
+    "count": 22,
+    "subjects": {
+      "Mathematics": 21,
+      "Physics": 1
+    },
+    "topics": {
+      "Trigonometry": 17,
+      "Calculus": 3,
+      "Forces_and_Motion": 1,
+      "General": 1
+    },
+    "years": {
+      "2016": 4,
+      "2018": 1,
+      "2021": 4,
+      "2022": 5,
+      "2023": 3,
+      "2025": 3,
+      "2019": 1,
+      "2020": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q5",
+        "preview": "(i) The most straightforward approach to finding the acceleration in this part of the question is to apply Newton’s second law to the system of car an",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q5"
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q6",
+        "preview": "(i) This question was well done by many candidates. Horizontal resolution of forces acting on A is needed and vertical resolution of forces acting on ",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q6"
+      },
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "preview": "(i) This part was correctly found by many who realised that they had to use the fact that the velocity is continuous either at t = 4 or at t = 14 to f",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      }
+    ]
+  },
+  "integration_by_parts": {
+    "count": 8,
+    "subjects": {
+      "Mathematics": 8
+    },
+    "topics": {
+      "Calculus": 3,
+      "Trigonometry": 5
+    },
+    "years": {
+      "2016": 1,
+      "2018": 1,
+      "2020": 1,
+      "2023": 3,
+      "2025": 1,
+      "2022": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2016_FE_P1_Q7",
+        "preview": "Many candidates used integration for some parts of this question, rather than using the symmetry of the given diagram. These candidates were often abl",
+        "year": 2016,
+        "source": "Cambridge A Level Mathematics 2016 Feb_Mar Paper 1 Q7"
+      },
+      {
+        "id": "CAM_A_MATH_2018_FE_P1_Q4",
+        "preview": "1 f ln 12.5 e 2 a a a − = + − . Substitution of both a=1 and a=1.5 into either equation will result in a change of sign between the two values obtaine",
+        "year": 2018,
+        "source": "Cambridge A Level Mathematics 2018 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q4",
+        "preview": "Several different errors were seen in candidate responses to this question. Some candidates were able to correctly establish just the first integratio",
+        "year": 2020,
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q4"
+      }
+    ]
+  },
+  "chain_rule": {
+    "count": 10,
+    "subjects": {
+      "Mathematics": 10
+    },
+    "topics": {
+      "Trigonometry": 8,
+      "Calculus": 2
+    },
+    "years": {
+      "2018": 1,
+      "2019": 1,
+      "2020": 2,
+      "2021": 3,
+      "2022": 3
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2018_FE_P1_Q4",
+        "preview": "1 f ln 12.5 e 2 a a a − = + − . Substitution of both a=1 and a=1.5 into either equation will result in a change of sign between the two values obtaine",
+        "year": 2018,
+        "source": "Cambridge A Level Mathematics 2018 Feb_Mar Paper 1 Q4"
+      },
+      {
+        "id": "CAM_A_MATH_2019_FE_P1_Q2",
+        "preview": "2) x − + , 0 < gf(x) < 2 3 Question 9 In both parts answers unsupported by detailed working gained very little or no credit (i) This part was accessib",
+        "year": 2019,
+        "source": "Cambridge A Level Mathematics 2019 Feb_Mar Paper 1 Q2"
+      },
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q4",
+        "preview": "There were many completely correct answers to this question. The use of the chain rule with the correct interpretation of the given information was wi",
+        "year": 2020,
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q4"
+      }
+    ]
+  },
+  "p=mv": {
+    "count": 7,
+    "subjects": {
+      "Mathematics": 5,
+      "Physics": 2
+    },
+    "topics": {
+      "Trigonometry": 4,
+      "Algebra": 1,
+      "Forces_and_Motion": 1,
+      "Waves": 1
+    },
+    "years": {
+      "2020": 1,
+      "2021": 1,
+      "2022": 1,
+      "2023": 1,
+      "2025": 1,
+      "2024": 2
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2020_FE_P1_Q6",
+        "preview": "(a) In order to determine the force in the tow-bar, the best approach is to consider the motion of the trailer. The only forces acting on the trailer ",
+        "year": 2020,
+        "source": "Cambridge A Level Mathematics 2020 Feb_Mar Paper 1 Q6"
+      },
+      {
+        "id": "CAM_A_MATH_2021_FE_P1_Q1",
+        "preview": "This question was completed successfully by many candidates. The definition of momentum was known by almost all candidates. However, an error that was",
+        "year": 2021,
+        "source": "Cambridge A Level Mathematics 2021 Feb_Mar Paper 1 Q1"
+      },
+      {
+        "id": "CAM_A_MATH_2022_FE_P1_Q7",
+        "preview": "(a) This question involves an exact given answer. In order to achieve this value correctly use must be made of the given exact angle property but the ",
+        "year": 2022,
+        "source": "Cambridge A Level Mathematics 2022 Feb_Mar Paper 1 Q7"
+      }
+    ]
+  },
+  "cos_rule": {
+    "count": 19,
+    "subjects": {
+      "Mathematics": 19
+    },
+    "topics": {
+      "Trigonometry": 19
+    },
+    "years": {
+      "2021": 4,
+      "2023": 2,
+      "2025": 2,
+      "2016": 1,
+      "2017": 4,
+      "2018": 2,
+      "2019": 2,
+      "2020": 1,
+      "2022": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_A_MATH_2021_FE_P1_Q8",
+        "preview": "(a) The majority of candidates knew to multiply the numerator and denominator by 3 – i, and showed all their working, see Key messages. However, many ",
+        "year": 2021,
+        "source": "Cambridge A Level Mathematics 2021 Feb_Mar Paper 1 Q8"
+      },
+      {
+        "id": "CAM_A_MATH_2023_FE_P1_Q9",
+        "preview": "Question 7 (a) This was a well answered question with both the relationship between tangent and sine and cosine, and the trigonometric identity 2 2 si",
+        "year": 2023,
+        "source": "Cambridge A Level Mathematics 2023 Feb_Mar Paper 1 Q9"
+      },
+      {
+        "id": "CAM_A_MATH_2025_FE_P1_Q4",
+        "preview": "(a) The majority of candidates scored full marks on this question. Candidates usually found AB by the cosine rule, or 1 2 AB using the trigonometric f",
+        "year": 2025,
+        "source": "Cambridge A Level Mathematics 2025 Feb_Mar Paper 1 Q4"
+      }
+    ]
+  },
+  "PV=nRT": {
+    "count": 1,
+    "subjects": {
+      "English": 1
+    },
+    "topics": {
+      "General": 1
+    },
+    "years": {
+      "2025": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_O_ENGL_2025_MA_P1_Q28",
+        "preview": "and 30 were not as well understood. In Question 28 distracting statements B and D were occasionally given in error. Less successful candidates were po",
+        "year": 2025,
+        "source": "Cambridge O Level English 2025 May_June Paper 1 Q28"
+      }
+    ]
+  },
+  "V=IR": {
+    "count": 2,
+    "subjects": {
+      "Physics": 2
+    },
+    "topics": {
+      "Electricity": 2
+    },
+    "years": {
+      "2023": 1,
+      "2024": 1
+    },
+    "examples": [
+      {
+        "id": "CAM_O_PHYS_2023_MA_P1_Q2",
+        "preview": "Items to be supplied by the centre (per set of apparatus unless otherwise specified) (i) A resistance wire approximately 1 m in length, labelled resis",
+        "year": 2023,
+        "source": "Cambridge O Level Physics 2023 May_June Paper 1 Q2"
+      },
+      {
+        "id": "EDE_O_PHYS_2024_MA_P1_Q2",
+        "preview": "Electricity power = current × voltage P = I × V energy transferred = current × voltage × time E = I × V × t voltage = current × resistance V = I × R c",
+        "year": 2024,
+        "source": "Edexcel O Level Physics 2024 May_June Paper 1 Q2"
+      }
+    ]
+  },
+  "pH=-log": {
+    "count": 19,
+    "subjects": {
+      "Biology": 4,
+      "Chemistry": 15
+    },
+    "topics": {
+      "Genetics": 1,
+      "Organic_Chemistry": 4,
+      "Kinetics": 2,
+      "Equilibrium": 1,
+      "Energetics": 2,
+      "Atomic_Structure": 6,
+      "Human_Biology": 1,
+      "Cell_Biology": 2
+    },
+    "years": {
+      "2025": 1,
+      "2018": 4,
+      "2016": 4,
+      "2019": 4,
+      "2020": 3,
+      "2017": 2,
+      "2022": 1
+    },
+    "examples": [
+      {
+        "id": "EDE_A_BIOL_2025_MA_P1_Q3",
+        "preview": "The oxygen in a water molecule has a small negative charge and the hydrogen atoms each have a small positive charge. (1) A 1 and 2 only B 1 and 3 only",
+        "year": 2025,
+        "source": "Edexcel A Level Biology 2025 May_June Paper 1 Q3"
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_21",
+        "preview": "21 An organic ion containin g a carbon a t om with a negative charge is called a carbanion. An organic ion containin g a carbon a t om with a positive",
+        "year": 2018,
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      },
+      {
+        "id": "DERIVED_papacambridge-060d03538613_5",
+        "preview": "5 Poly(ethene) and PVC a r e examples of addition polymers. Which state m ents are correct? On combustion, PVC can produce carbon monoxide, carbon dio",
+        "year": 2018,
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9701_m18_qp_12.pdf"
+      }
+    ]
+  },
+  "P=IV": {
+    "count": 1,
+    "subjects": {
+      "Physics": 1
+    },
+    "topics": {
+      "Electricity": 1
+    },
+    "years": {
+      "2024": 1
+    },
+    "examples": [
+      {
+        "id": "EDE_O_PHYS_2024_MA_P1_Q2",
+        "preview": "Electricity power = current × voltage P = I × V energy transferred = current × voltage × time E = I × V × t voltage = current × resistance V = I × R c",
+        "year": 2024,
+        "source": "Edexcel O Level Physics 2024 May_June Paper 1 Q2"
+      }
+    ]
+  },
+  "v=fλ": {
+    "count": 2,
+    "subjects": {
+      "Physics": 2
+    },
+    "topics": {
+      "Waves": 2
+    },
+    "years": {
+      "2024": 1,
+      "2021": 1
+    },
+    "examples": [
+      {
+        "id": "EDE_O_PHYS_2024_MA_P1_Q3",
+        "preview": "Waves wave speed = frequency × wavelength v = f × λ frequency = refractive index = distance moved time taken change in velocity time taken a v u t � �",
+        "year": 2024,
+        "source": "Edexcel O Level Physics 2024 May_June Paper 1 Q3"
+      },
+      {
+        "id": "DERIVED_papacambridge-46751ad42aa5_5",
+        "preview": "5 Two waves, P and Q, meet at a poin t X and superpose. Initially, the two waves meet at X in phase (zer o phase diff erence) so t hat the resul t ant",
+        "year": 2021,
+        "source": "https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/9702_m21_qp_12.pdf"
+      }
+    ]
+  }
+}

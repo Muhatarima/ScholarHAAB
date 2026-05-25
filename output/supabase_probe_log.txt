@@ -1,0 +1,9 @@
+start
+launching
+launched
+navigated
+{
+  "url": "https://supabase.com/dashboard/project/hvjludqdnhmdekcnnmiy/sql/f6ab85c7-8c32-48b3-8dab-5b9a062addd7",
+  "title": "App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase",
+  "bodyPreview": "Muhatarima's Org\nFREE\nScholarHAAB\nmain\nPRODUCTION\nConnect\nFeedback\n\nSearch...\n\nK\nProject Overview\nTable Editor\nSQL Editor\nDatabase\nAuthentication\nStorage\nEdge Functions\nRealtime\nAdvisors\nObservability\nLogs\nIntegrations\nProject Settings\nSQL Editor\nSearch queries\nSHARED\nFAVORITES\nPRIVATE (2)\nApp schema for usage, chat, subscriptions, RAG and QBank\nUser profile onboarding trigger\nCOMMUNITY\nTemplates\nQuickstarts\nView running queries\nUser profile onboarding trigger\nApp schema for usage, chat, subscri"
+}

@@ -120,6 +120,13 @@ type SearchResponse = {
     officialHttpStatus: number | null
     publicListingUrls: string[]
     supportSourceUrls: string[]
+    mirrorProvider: string | null
+    mirrorPageUrl: string | null
+    mirrorPageTitle: string | null
+    mirrorPageDescription: string | null
+    mirrorEvidenceType: 'exact_file_name' | 'subject_year_support_page' | null
+    mirrorSupportConfidence: 'high' | 'medium' | 'low' | null
+    mirrorFileNames: string[]
     recoveryStatus: 'external_access_blocked'
     note: string
   }>
@@ -912,13 +919,26 @@ export function QbankSearchWorkbench() {
                           </p>
                         </div>
                         <span className="rounded-full border border-rose-300/20 px-2 py-1 text-[11px] uppercase tracking-[0.16em] text-rose-100/80">
-                          blocked
+                          {item.mirrorPageUrl ? 'mirror support' : 'blocked'}
                         </span>
                       </div>
                       <p className="mt-2 text-sm text-white/70">
                         Official file exists but is externally blocked
                         {item.officialHttpStatus ? ` (HTTP ${item.officialHttpStatus})` : ''}.
                       </p>
+                      {item.mirrorPageUrl ? (
+                        <p className="mt-2 text-xs text-cyan-100/80">
+                          {item.mirrorProvider || 'Mirror'} page found
+                          {item.mirrorEvidenceType === 'exact_file_name'
+                            ? ' with matching file-name evidence.'
+                            : ' for the same subject/year range.'}
+                        </p>
+                      ) : null}
+                      {item.mirrorFileNames.length ? (
+                        <p className="mt-2 text-xs text-white/55">
+                          Mirror files: {item.mirrorFileNames.slice(0, 3).join(', ')}
+                        </p>
+                      ) : null}
                       <div className="mt-3 flex flex-wrap gap-2">
                         {item.officialUrl ? (
                           <a
@@ -938,6 +958,16 @@ export function QbankSearchWorkbench() {
                             className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/75 transition hover:border-cyan-300/50 hover:text-cyan-100"
                           >
                             Official page
+                          </a>
+                        ) : null}
+                        {item.mirrorPageUrl ? (
+                          <a
+                            href={item.mirrorPageUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="rounded-full border border-cyan-300/25 px-3 py-1.5 text-xs text-cyan-100 transition hover:border-cyan-300/50"
+                          >
+                            Mirror page
                           </a>
                         ) : null}
                         {item.publicListingUrls[0] ? (

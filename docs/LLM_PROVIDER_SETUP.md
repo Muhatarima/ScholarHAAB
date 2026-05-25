@@ -71,3 +71,10 @@ The app is already designed to reduce cost by:
 - keeping provider logic centralized
 
 Do not increase token budgets globally unless quality truly requires it.
+
+## Fallback Behavior
+
+- normal text chat already falls through the configured provider order
+- multipart chat now does too
+- if Gemini fails on a file-backed request, backup text providers can still answer from the extracted text and prompt when available
+- image-only or PDF-only requests still work best on Gemini because the backup providers do not receive the raw inline file parts

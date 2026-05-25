@@ -33,7 +33,7 @@ type DailyUsageRow = {
   actions_count: number
 }
 
-type UsagePreview =
+export type UsagePreview =
   | {
       enabled: true
       allowed: boolean
@@ -160,7 +160,19 @@ function resolveTierFromCookie(rawTier: string | undefined): Tier {
     return rawTier
   }
 
-  return 'trial'
+  return 'expired'
+}
+
+function isDemoMode() {
+  return (
+    process.env.NODE_ENV !== 'production' ||
+    process.env.NEXT_PUBLIC_DEMO_MODE === 'true' ||
+    process.env.DEMO_MODE === 'true'
+  )
+}
+
+function applyDemoTier(tier: Tier): Tier {
+  return isDemoMode() ? 'premium' : tier
 }
 
 async function readDailyUsage(viewerKey: string, usageDate: string): Promise<DailyUsageRow | null> {
@@ -189,6 +201,32 @@ export function getViewerSession(input: { viewerCookie?: string; tierCookie?: st
   }
 }
 
+export function createBypassedUsagePreview({
+  tier,
+  product,
+  mode,
+  message,
+  reason = 'Usage limits bypassed for explicit eval mode.',
+}: {
+  tier: Tier
+  product: Product
+  mode: PromptMode
+  message: string
+  reason?: string
+}): UsagePreview {
+  const action = resolveUsageAction(product, mode, message)
+  const effectiveTier = applyDemoTier(tier)
+  const summary = getUsageSummary(effectiveTier, 0, action)
+
+  return {
+    enabled: false,
+    allowed: true,
+    ...summary,
+    ...getResetInfo(new Date()),
+    message: reason,
+  }
+}
+
 export async function previewUsage({
   viewerKey,
   tier,
@@ -196,16 +234,17 @@ export async function previewUsage({
   mode,
   message,
 }: PreviewParams): Promise<UsagePreview> {
+  const effectiveTier = applyDemoTier(tier)
   const action = resolveUsageAction(product, mode, message)
   const now = new Date()
   const usageDate = getUsageDateString(now, APP_TIMEZONE)
-  const dailyLimitCredits = getDailyCreditLimit(tier)
+  const dailyLimitCredits = getDailyCreditLimit(effectiveTier)
   const resetInfo = getResetInfo(now)
 
   try {
     const row = await readDailyUsage(viewerKey, usageDate)
     const usedCredits = row?.credits_used ?? 0
-    const summary = getUsageSummary(tier, usedCredits, action)
+    const summary = getUsageSummary(effectiveTier, usedCredits, action)
 
     if (usedCredits + getActionCreditCost(action) > dailyLimitCredits) {
       return {
@@ -227,7 +266,7 @@ export async function previewUsage({
     }
   } catch (error) {
     if (isMissingUsageTableError(error)) {
-      const summary = getUsageSummary(tier, 0, action)
+      const summary = getUsageSummary(effectiveTier, 0, action)
       return {
         enabled: false,
         allowed: true,
@@ -249,9 +288,10 @@ export async function commitUsage({
   message,
   usageDate,
 }: CommitParams): Promise<UsagePreview> {
+  const effectiveTier = applyDemoTier(tier)
   const action = resolveUsageAction(product, mode, message)
   const actionCost = getActionCreditCost(action)
-  const dailyLimitCredits = getDailyCreditLimit(tier)
+  const dailyLimitCredits = getDailyCreditLimit(effectiveTier)
   const resetInfo = getResetInfo(new Date())
 
   try {
@@ -259,7 +299,7 @@ export async function commitUsage({
     const usedCredits = existing?.credits_used ?? 0
 
     if (usedCredits + actionCost > dailyLimitCredits) {
-      const summary = getUsageSummary(tier, usedCredits, action)
+      const summary = getUsageSummary(effectiveTier, usedCredits, action)
       return {
         enabled: true,
         allowed: false,
@@ -271,25 +311,32 @@ export async function commitUsage({
     }
 
     const supabaseAdmin = getSupabaseAdmin()
-    const { error } = await supabaseAdmin.from('daily_usage').upsert(
-      {
-        viewer_key: viewerKey,
-        usage_date: usageDate,
-        tier,
-        credits_used: usedCredits + actionCost,
-        actions_count: (existing?.actions_count ?? 0) + 1,
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: 'viewer_key,usage_date',
-      }
-    )
+    
+    // Leverage the atomic SQL RPC to completely prevent concurrency cheating
+    const { data: finalUsedCredits, error } = await supabaseAdmin.rpc('commit_usage_atomic', {
+      p_viewer_key: viewerKey,
+      p_usage_date: usageDate,
+      p_tier: effectiveTier,
+      p_cost: actionCost,
+      p_daily_limit: dailyLimitCredits
+    })
 
     if (error) {
+      if (error.message?.includes('Daily limit reached')) {
+        const summary = getUsageSummary(effectiveTier, dailyLimitCredits, action)
+        return {
+          enabled: true,
+          allowed: false,
+          usageDate,
+          ...summary,
+          ...resetInfo,
+          message: buildLimitMessage(dailyLimitCredits, resetInfo),
+        }
+      }
       throw error
     }
 
-    const summary = getUsageSummary(tier, usedCredits + actionCost, action)
+    const summary = getUsageSummary(effectiveTier, finalUsedCredits as number, action)
     return {
       enabled: true,
       allowed: true,
@@ -299,7 +346,7 @@ export async function commitUsage({
     }
   } catch (error) {
     if (isMissingUsageTableError(error)) {
-      const summary = getUsageSummary(tier, 0, action)
+      const summary = getUsageSummary(effectiveTier, 0, action)
       return {
         enabled: false,
         allowed: true,

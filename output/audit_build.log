@@ -1,0 +1,85 @@
+
+> scholorhaab@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 19.0s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/51) ...
+  Generating static pages using 7 workers (12/51) 
+  Generating static pages using 7 workers (25/51) 
+  Generating static pages using 7 workers (38/51) 
+✓ Generating static pages using 7 workers (51/51) in 1066.2ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /abroad
+├ ○ /abroad/document-check
+├ ○ /abroad/guidance
+├ ○ /abroad/guides
+├ ƒ /abroad/guides/[slug]
+├ ○ /abroad/planner
+├ ○ /abroad/review
+├ ○ /abroad/search
+├ ○ /admin
+├ ƒ /api/abroad/chat
+├ ƒ /api/abroad/document-check
+├ ƒ /api/abroad/guidance-search
+├ ƒ /api/abroad/planner
+├ ƒ /api/abroad/review
+├ ƒ /api/abroad/search
+├ ƒ /api/abroad/stats
+├ ƒ /api/admin/stats
+├ ƒ /api/chat
+├ ƒ /api/cron/improvement-digest
+├ ƒ /api/cron/scholarship-deadlines
+├ ƒ /api/cron/trial-nudge
+├ ƒ /api/feedback
+├ ƒ /api/health
+├ ƒ /api/health/ai
+├ ƒ /api/history
+├ ƒ /api/history/[sessionId]
+├ ƒ /api/me
+├ ƒ /api/payment/initiate
+├ ƒ /api/payment/ipn
+├ ƒ /api/payment/success
+├ ƒ /api/profile
+├ ƒ /api/qbank/catalog
+├ ƒ /api/qbank/chat
+├ ƒ /api/qbank/collection-status
+├ ƒ /api/qbank/concept-search
+├ ƒ /api/qbank/paper-search
+├ ƒ /api/qbank/question-search
+├ ƒ /api/qbank/search
+├ ƒ /api/qbank/source-search
+├ ƒ /api/qbank/stats
+├ ƒ /api/qbank/topic-search
+├ ƒ /api/scholarship-alerts
+├ ○ /auth
+├ ○ /chat
+├ ○ /dashboard
+├ ○ /manifest.webmanifest
+├ ○ /onboarding
+├ ○ /pricing
+├ ○ /qbank
+├ ○ /qbank/collection
+├ ○ /qbank/concepts
+├ ○ /qbank/progress
+├ ○ /qbank/search
+├ ○ /qbank/topics
+├ ƒ /qbank/topics/[slug]
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

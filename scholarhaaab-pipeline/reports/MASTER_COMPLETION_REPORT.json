@@ -1,0 +1,103 @@
+﻿{
+    "status":  "BLOCKED_NOT_COMPLETE",
+    "completed_phases":  [
+                             "Phase 1 environment structure and import verification",
+                             "Phase 2 schema SQL generation",
+                             "Phase 3 downloader implementation and 2-file QP/MS smoke download",
+                             "Phase 4 extractor implementation and smoke extraction",
+                             "Phase 5 validator implementation and smoke validation",
+                             "Phase 7 app RAG search/solver implementation",
+                             "Phase 9 API wiring and app build verification"
+                         ],
+    "blocked_phases":  [
+                           "Phase 2 live Supabase DDL execution blocked: SUPABASE_DB_URL/DATABASE_URL not set and Python Supabase key rejected",
+                           "Phase 3 full corpus download not run in this turn: smoke only, full target requires long-running job",
+                           "Phase 6 ingestion blocked: OPENAI_API_KEY missing/placeholder for embedding generation",
+                           "Phase 8 final DB verification blocked: Supabase client rejected available key as invalid"
+                       ],
+    "smoke_download":  {
+                           "total_attempted":  2,
+                           "total_success":  2,
+                           "total_failed":  0,
+                           "success_rate":  "100.00%",
+                           "by_board":  {
+                                            "cambridge":  2
+                                        },
+                           "by_level":  {
+                                            "o-level":  2
+                                        },
+                           "by_subject":  {
+                                              "cambridge o-level Physics":  2
+                                          },
+                           "years_covered":  [
+                                                 2014
+                                             ],
+                           "failed_list":  [
+
+                                           ],
+                           "created_at":  "2026-05-18T03:50:10.761570+00:00"
+                       },
+    "smoke_extraction":  {
+                             "total_pdfs":  1,
+                             "total_questions_extracted":  66,
+                             "per_subject":  {
+                                                 "cambridge O Level Physics":  66
+                                             },
+                             "errors":  [
+
+                                        ],
+                             "created_at":  "2026-05-18T03:51:02.941540+00:00"
+                         },
+    "smoke_validation":  {
+                             "status":  "pass",
+                             "files":  1,
+                             "passed":  66,
+                             "failed":  0,
+                             "auto_fixed":  0,
+                             "needs_manual_review":  0,
+                             "manual_review_pct":  0.0,
+                             "warning_counts":  {
+                                                    "marks":  66,
+                                                    "mark_scheme":  3
+                                                },
+                             "created_at":  "2026-05-18T03:51:03.231880+00:00"
+                         },
+    "ingestion":  {
+                      "status":  "BLOCKED",
+                      "blocked_reason":  "Missing valid OPENAI_API_KEY for embeddings.",
+                      "total_questions":  1,
+                      "total_ingested":  0,
+                      "total_failed":  0,
+                      "success_rate_pct":  0,
+                      "created_at":  "2026-05-18T03:52:02.524877+00:00"
+                  },
+    "final_verification":  {
+                               "status":  "BLOCKED",
+                               "blocked_reason":  "Supabase client failed: Invalid API key",
+                               "tests":  [
+                                             {
+                                                 "name":  "database_connection",
+                                                 "pass":  false,
+                                                 "reason":  "Invalid API key"
+                                             }
+                                         ],
+                               "all_tests_passed":  false,
+                               "completion_date":  "2026-05-18T03:52:18.300243+00:00"
+                           },
+    "app_checks":  {
+                       "build":  "PASS",
+                       "typescript":  "PASS",
+                       "new_routes":  [
+                                          "/api/questions/search",
+                                          "/api/tutor/chat"
+                                      ]
+                   },
+    "required_next_actions":  [
+                                  "Set a valid SUPABASE_DB_URL or run scholarhaaab-pipeline/scripts/schema.sql in Supabase SQL Editor",
+                                  "Set valid SUPABASE_URL and SUPABASE_KEY/SUPABASE_SERVICE_ROLE_KEY for Python pipeline verification/ingestion",
+                                  "Set valid OPENAI_API_KEY for text-embedding-3-small embeddings",
+                                  "Run python scholarhaaab-pipeline/scripts/downloader.py for the full corpus as a long-running job",
+                                  "Run extractor, validator, ingestor, then final_verify.py until FINAL_VERIFICATION_REPORT.json passes all tests"
+                              ],
+    "completion_date":  "2026-05-18T03:54:29.9625553Z"
+}

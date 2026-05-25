@@ -1,0 +1,89 @@
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (2)
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+                                                              p_user_id UUID, p_amount INTEGER, p_reason TEXT
+                                                              ) RETURNS void LANGUAGE plpgsql AS $$
+                                                              DECLARE new_balance INTEGER;
+                                                              BEGIN
+                                                                UPDATE user_profiles
+                                                                  SET credits_left = credits_left + p_amount
+                                                                    WHERE id = p_user_id
+                                                                      RETURNING credits_left INTO new_balance;
+                                                                        INSERT INTO credit_ledger(user_id, delta, reason, 
+                                                                        balance)
+                                                                          VALUES(p_user_id, p_amount, p_reason, new_balance);
+                                                                          END; $$;
+)
+1
+2
+3
+4
+CREATE TABLE IF NOT EXISTS qa_feedback (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      query        TEXT NOT NULL,
+        response     TEXT NOT NULL,
+Results
+Explain
+Chart
+Export
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+Error: Failed to run sql query: ERROR: 42601: syntax error at or near ")" LINE 57: ) ^
+
+Debug with Assistant
+
+0 row
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase

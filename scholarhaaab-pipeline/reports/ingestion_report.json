@@ -1,0 +1,9 @@
+{
+  "status": "BLOCKED",
+  "blocked_reason": "Missing valid OPENAI_API_KEY for embeddings.",
+  "total_questions": 1,
+  "total_ingested": 0,
+  "total_failed": 0,
+  "success_rate_pct": 0,
+  "created_at": "2026-05-18T03:52:02.524877+00:00"
+}

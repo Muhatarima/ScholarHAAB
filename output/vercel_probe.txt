@@ -1,0 +1,21 @@
+URL: https://vercel.com/login?next=%2Fdashboard
+TITLE: Login – Vercel
+BODY:
+Skip to content
+
+Sign Up
+
+Log in to Vercel
+Last Used
+Continue with Email
+Continue with Google
+Continue with GitHub
+Continue with Apple
+Continue with SAML SSO
+Continue with Passkey
+Show other options
+
+Don't have an account? Sign Up
+
+Terms
+Privacy Policy

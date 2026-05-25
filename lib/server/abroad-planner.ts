@@ -124,3 +124,19 @@ export function buildAbroadPlan(query: string) {
       'Treat part-time work as support money, not the main survival plan for visa or first-month budgeting.',
   }
 }
+
+export function getAbroadPlannerStats() {
+  const rows = getRows()
+
+  return {
+    totalCities: rows.length,
+    byCountry: Object.fromEntries(
+      Object.entries(
+        rows.reduce<Record<string, number>>((acc, row) => {
+          acc[row.country] = (acc[row.country] ?? 0) + 1
+          return acc
+        }, {})
+      ).sort((a, b) => b[1] - a[1])
+    ),
+  }
+}

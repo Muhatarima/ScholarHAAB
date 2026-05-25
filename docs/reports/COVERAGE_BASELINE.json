@@ -1,0 +1,51 @@
+{
+  "generatedAt": "2026-04-10T09:16:26.974Z",
+  "verifiedCoveragePercent": 100,
+  "rawTargetSlotCoveragePercent": 84.23,
+  "totalTargetResources": 1230,
+  "actionableTargetResources": 1036,
+  "indexedResources": 1036,
+  "excludedWindowResources": 104,
+  "optionalResources": 60,
+  "blockedResources": 21,
+  "unresolvedResources": 0,
+  "notYetPublished": 9,
+  "duplicateGroups": 0,
+  "lowConfidenceRows": 727,
+  "unansweredQuestions": 1029,
+  "partialExtractionRows": 554,
+  "formulaIssueRows": 114,
+  "pageOrderIssueRows": 0,
+  "byExam": [
+    {
+      "examSystem": "Cambridge IGCSE",
+      "totalResources": 270,
+      "indexedResources": 270,
+      "verifiedCoveragePercent": 100
+    },
+    {
+      "examSystem": "Cambridge A Level",
+      "totalResources": 270,
+      "indexedResources": 264,
+      "verifiedCoveragePercent": 97.78
+    },
+    {
+      "examSystem": "Cambridge O Level",
+      "totalResources": 270,
+      "indexedResources": 244,
+      "verifiedCoveragePercent": 90.37
+    },
+    {
+      "examSystem": "Edexcel A Level",
+      "totalResources": 180,
+      "indexedResources": 115,
+      "verifiedCoveragePercent": 63.89
+    },
+    {
+      "examSystem": "Edexcel IGCSE",
+      "totalResources": 240,
+      "indexedResources": 143,
+      "verifiedCoveragePercent": 59.58
+    }
+  ]
+}

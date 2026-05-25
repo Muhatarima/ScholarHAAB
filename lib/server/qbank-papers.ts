@@ -140,6 +140,10 @@ function scorePaper(row: QbankPaperRow, parsedQuery: QbankParsedQuery) {
     score += 6
   }
 
+  if (parsedQuery.paper && row.paper.toLowerCase() === parsedQuery.paper.toLowerCase()) {
+    score += 10
+  }
+
   if (parsedQuery.subject && row.subject.toLowerCase().includes(parsedQuery.subject.toLowerCase())) {
     score += 4
   }
@@ -150,6 +154,14 @@ function scorePaper(row: QbankPaperRow, parsedQuery: QbankParsedQuery) {
 
   if (parsedQuery.topicHints.some((topic) => haystack.includes(topic))) {
     score += 5
+  }
+
+  if (/\b(important|repeat|focus)\b/.test(parsedQuery.normalized) && (row.focus_topics?.length ?? 0) > 0) {
+    score += 8
+  }
+
+  if (/^official pdf paper$/i.test(row.paper) && (row.focus_topics?.length ?? 0) === 0) {
+    score -= 10
   }
 
   return score

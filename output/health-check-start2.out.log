@@ -1,0 +1,16 @@
+
+> scholorhaab@0.1.0 start
+> next start --port 3032
+
+▲ Next.js 16.1.6
+- Local:         http://localhost:3032
+- Network:       http://192.168.0.101:3032
+
+✓ Starting...
+✓ Ready in 1202ms
+{"timestamp":"2026-03-29T15:49:31.001Z","level":"info","message":"external_call_completed","request_id":"665cee96-bef1-470f-925c-2be6c7beabc3","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/profiles","duration_ms":893,"status_code":200}
+{"timestamp":"2026-03-29T15:49:31.152Z","level":"info","message":"external_call_completed","request_id":"da2fecc3-6195-45cc-a0fb-fe392866aad3","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/answer_cache","duration_ms":146,"status_code":200}
+{"timestamp":"2026-03-29T15:49:31.291Z","level":"info","message":"external_call_completed","request_id":"1fc63e2c-2f67-405a-baf9-82813a127128","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/llm_usage","duration_ms":138,"status_code":200}
+{"timestamp":"2026-03-29T15:49:31.491Z","level":"info","message":"external_call_completed","request_id":"512221cf-9d0b-4b6d-88cb-998b91f4d9d4","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/profiles","duration_ms":89,"status_code":200}
+{"timestamp":"2026-03-29T15:49:31.630Z","level":"info","message":"external_call_completed","request_id":"bcb20287-4ffd-421d-8808-e7020875f678","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/answer_cache","duration_ms":137,"status_code":200}
+{"timestamp":"2026-03-29T15:49:31.717Z","level":"info","message":"external_call_completed","request_id":"1017331e-6186-44b8-80a5-cc1fc680efa4","service":"supabase","operation":"supabase_admin_request","target":"https://hvjludqdnhmdekcnnmiy.supabase.co/rest/v1/llm_usage","duration_ms":85,"status_code":200}

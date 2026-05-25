@@ -149,11 +149,33 @@ export function runDocumentChecklist(summary: string) {
   const normalized = normalize(summary)
   const issues: Array<{ label: string; severity: 'high' | 'medium' | 'low'; detail: string }> = []
   const nextSteps: string[] = []
+  const hasPassportRecordPair =
+    normalized.includes('passport') &&
+    (normalized.includes('transcript') ||
+      normalized.includes('academic record') ||
+      normalized.includes('academic file') ||
+      normalized.includes('certificate'))
+  const hasNameMismatchSignal =
+    normalized.includes('mismatch') ||
+    normalized.includes('different name') ||
+    normalized.includes('name mismatch') ||
+    normalized.includes('names are different') ||
+    normalized.includes('name are different') ||
+    (normalized.includes('passport name') &&
+      normalized.includes('transcript name') &&
+      normalized.includes('different')) ||
+    /\bmd\b/.test(normalized)
+  const hasMissingAcademicRecord =
+    normalized.includes('missing semester') ||
+    normalized.includes('missing marksheet') ||
+    normalized.includes('one semester missing') ||
+    normalized.includes('semester marksheet') ||
+    normalized.includes('marksheet is missing') ||
+    normalized.includes('transcript is incomplete') ||
+    normalized.includes('incomplete transcript') ||
+    (normalized.includes('consolidated transcript') && normalized.includes('incomplete'))
 
-  if (
-    (normalized.includes('passport') && normalized.includes('transcript')) &&
-    (normalized.includes('mismatch') || normalized.includes('different name') || normalized.includes('md.'))
-  ) {
+  if (hasPassportRecordPair && hasNameMismatchSignal) {
     issues.push({
       label: 'Name consistency risk',
       severity: 'high',
@@ -162,7 +184,7 @@ export function runDocumentChecklist(summary: string) {
     nextSteps.push('Prepare an affidavit or official supporting explanation for name variation.')
   }
 
-  if (normalized.includes('missing semester') || normalized.includes('missing marksheet') || normalized.includes('one semester missing')) {
+  if (hasMissingAcademicRecord) {
     issues.push({
       label: 'Missing academic record',
       severity: 'high',
@@ -210,5 +232,30 @@ export function runDocumentChecklist(summary: string) {
   return {
     issues,
     nextSteps: nextSteps.slice(0, 4),
+  }
+}
+
+export function getAbroadDocumentCaseStats() {
+  const rows = getRows()
+
+  return {
+    total: rows.length,
+    byRubric: Object.fromEntries(
+      Object.entries(
+        rows.reduce<Record<string, number>>((acc, row) => {
+          acc[row.rubricType] = (acc[row.rubricType] ?? 0) + 1
+          return acc
+        }, {})
+      ).sort((a, b) => b[1] - a[1])
+    ),
+    byQualityBand: Object.fromEntries(
+      Object.entries(
+        rows.reduce<Record<string, number>>((acc, row) => {
+          const key = row.qualityBand || 'unknown'
+          acc[key] = (acc[key] ?? 0) + 1
+          return acc
+        }, {})
+      ).sort((a, b) => b[1] - a[1])
+    ),
   }
 }

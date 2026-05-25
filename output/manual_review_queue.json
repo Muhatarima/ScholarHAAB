@@ -1,0 +1,718 @@
+{
+  "generatedAt": "2026-04-10T09:16:27.757Z",
+  "total": 79,
+  "threshold": 0.6,
+  "rows": [
+    {
+      "id": "qbank_question_compiled_0195",
+      "subject": "Biology",
+      "predictedTopic": "General Biology",
+      "predictedSubtopic": "Mixed concept application",
+      "confidence": 0.38,
+      "classifierRule": "Biology:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0203",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0307",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0385",
+      "subject": "Business",
+      "predictedTopic": "Business Concepts",
+      "predictedSubtopic": "Structured response and application",
+      "confidence": 0.4,
+      "classifierRule": "Business:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0391",
+      "subject": "Biology",
+      "predictedTopic": "General Biology",
+      "predictedSubtopic": "Mixed concept application",
+      "confidence": 0.38,
+      "classifierRule": "Biology:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0430",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0432",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0444",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0461",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0464",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0594",
+      "subject": "Mathematics",
+      "predictedTopic": "Page 11 of 25 A quadratic inequality can also be solved using a sign diagram which indicates whether the graph is positive or negative in ea",
+      "predictedSubtopic": "Page 11 of 25 A quadratic inequality can also be solved using a sign diagram which indicates whether the graph is positive or negative in ea",
+      "confidence": 0.58,
+      "classifierRule": "Mathematics:source_cluster:Page 11 of 25 A quadratic inequality can also be solved using a sign diagram which indicates whether the graph is positive or negative in ea",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0651",
+      "subject": "Economics",
+      "predictedTopic": "Economic Analysis",
+      "predictedSubtopic": "Core concepts and policy reasoning",
+      "confidence": 0.4,
+      "classifierRule": "Economics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0678",
+      "subject": "Business",
+      "predictedTopic": "Marketing",
+      "predictedSubtopic": "Marketing mix",
+      "confidence": 0.58,
+      "classifierRule": "Business:source_cluster:Marketing",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0731",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0734",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0736",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0738",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0742",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0746",
+      "subject": "Accounting",
+      "predictedTopic": "Company Accounts",
+      "predictedSubtopic": "Limited companies",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Company Accounts",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0750",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0751",
+      "subject": "Accounting",
+      "predictedTopic": "Non-profit Accounts",
+      "predictedSubtopic": "Subscriptions and income/expenditure",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Non-profit Accounts",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0755",
+      "subject": "Accounting",
+      "predictedTopic": "Non-profit Accounts",
+      "predictedSubtopic": "Subscriptions and income/expenditure",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Non-profit Accounts",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0756",
+      "subject": "Accounting",
+      "predictedTopic": "Non-profit Accounts",
+      "predictedSubtopic": "Subscriptions and income/expenditure",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Non-profit Accounts",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0757",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0758",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0760",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0768",
+      "subject": "Accounting",
+      "predictedTopic": "Ledger and Double Entry",
+      "predictedSubtopic": "Double Entry",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Ledger and Double Entry",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0770",
+      "subject": "Accounting",
+      "predictedTopic": "Ledger and Double Entry",
+      "predictedSubtopic": "Double Entry",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Ledger and Double Entry",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0773",
+      "subject": "Accounting",
+      "predictedTopic": "Error Correction",
+      "predictedSubtopic": "Types of errors and suspense",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:fallback_errors",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0780",
+      "subject": "Accounting",
+      "predictedTopic": "Ledger and Double Entry",
+      "predictedSubtopic": "Double Entry",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Ledger and Double Entry",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0790",
+      "subject": "Accounting",
+      "predictedTopic": "Cash Book and Petty Cash",
+      "predictedSubtopic": "Imprest system",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Cash Book and Petty Cash",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0795",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0798",
+      "subject": "Accounting",
+      "predictedTopic": "Ledger and Double Entry",
+      "predictedSubtopic": "Double Entry",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Ledger and Double Entry",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0836",
+      "subject": "Biology",
+      "predictedTopic": "General Biology",
+      "predictedSubtopic": "Mixed concept application",
+      "confidence": 0.38,
+      "classifierRule": "Biology:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0842",
+      "subject": "English",
+      "predictedTopic": "Poetry",
+      "predictedSubtopic": "Comparative analysis",
+      "confidence": 0.58,
+      "classifierRule": "English:fallback_poetry",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0905",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0911",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1018",
+      "subject": "Mathematics",
+      "predictedTopic": "Page 13 of 25 To sketch a circle: Step 1: Find the radius and centre from the equation. Step 2: Mark the centre. Step 3: Use the radius to m",
+      "predictedSubtopic": "Step 1: Find the radius and centre from the equation. Step 2: Mark the centre. Step 3: Use the radius to m",
+      "confidence": 0.58,
+      "classifierRule": "Mathematics:source_cluster:Page 13 of 25 To sketch a circle: Step 1: Find the radius and centre from the equation. Step 2: Mark the centre. Step 3: Use the radius to m",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1057",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1061",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1062",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1063",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1064",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1065",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1066",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1068",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1069",
+      "subject": "English",
+      "predictedTopic": "Language Analysis",
+      "predictedSubtopic": "Inference and comments",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Language Analysis",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1070",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1074",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1086",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1087",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1090",
+      "subject": "Mathematics",
+      "predictedTopic": "Development of practical skills in physics Introduction Physics can be thought of as being composed of two separate but highly connected are",
+      "predictedSubtopic": "Development of practical skills in physics Introduction Physics can be thought of as being composed of two separate but highly connected are",
+      "confidence": 0.58,
+      "classifierRule": "Mathematics:source_cluster:Development of practical skills in physics Introduction Physics can be thought of as being composed of two separate but highly connected are",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1092",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1093",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1094",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1095",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1096",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1097",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Short-answer comprehension",
+      "confidence": 0.4,
+      "classifierRule": "English:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1098",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1099",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1100",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1101",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1102",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1105",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1106",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1107",
+      "subject": "English",
+      "predictedTopic": "Reading Comprehension",
+      "predictedSubtopic": "Factual retrieval",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Reading Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1146",
+      "subject": "Biology",
+      "predictedTopic": "General Biology",
+      "predictedSubtopic": "Mixed concept application",
+      "confidence": 0.38,
+      "classifierRule": "Biology:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1150",
+      "subject": "Business",
+      "predictedTopic": "Business Concepts",
+      "predictedSubtopic": "Structured response and application",
+      "confidence": 0.4,
+      "classifierRule": "Business:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1225",
+      "subject": "English",
+      "predictedTopic": "Comprehension",
+      "predictedSubtopic": "Comprehension",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1226",
+      "subject": "English",
+      "predictedTopic": "Comprehension",
+      "predictedSubtopic": "Comprehension",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1227",
+      "subject": "English",
+      "predictedTopic": "Comprehension",
+      "predictedSubtopic": "Comprehension",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1228",
+      "subject": "English",
+      "predictedTopic": "Comprehension",
+      "predictedSubtopic": "Comprehension",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1230",
+      "subject": "English",
+      "predictedTopic": "Comprehension",
+      "predictedSubtopic": "Comprehension",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_1232",
+      "subject": "English",
+      "predictedTopic": "Comprehension",
+      "predictedSubtopic": "Comprehension",
+      "confidence": 0.58,
+      "classifierRule": "English:source_cluster:Comprehension",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0438",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0548",
+      "subject": "Accounting",
+      "predictedTopic": "Ledger and Double Entry",
+      "predictedSubtopic": "Double Entry",
+      "confidence": 0.58,
+      "classifierRule": "Accounting:source_cluster:Ledger and Double Entry",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0554",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0584",
+      "subject": "Mathematics",
+      "predictedTopic": "Problem Solving",
+      "predictedSubtopic": "Mixed mathematical skills",
+      "confidence": 0.38,
+      "classifierRule": "Mathematics:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    },
+    {
+      "id": "qbank_question_compiled_0774",
+      "subject": "Accounting",
+      "predictedTopic": "Accounting Principles",
+      "predictedSubtopic": "Core concepts and application",
+      "confidence": 0.4,
+      "classifierRule": "Accounting:subject_fallback",
+      "reason": "below_manual_review_threshold"
+    }
+  ]
+}

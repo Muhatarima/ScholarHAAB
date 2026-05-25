@@ -1,0 +1,814 @@
+[
+  {
+    "id": "academic_math_derivative",
+    "category": "academic_qa",
+    "severity": "high",
+    "failureCategory": "missed_retrieval_or_direct_route",
+    "notes": "Direct math questions should bypass retrieval and stay concise.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "differentiate y=sinx",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "differentiate y=sinx"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["cos x", "cos(x)"],
+      "mustNotContain": ["Closest official", "Next step", "year-paper code"],
+      "expectRetrieval": false,
+      "maxLatencyMs": 1200
+    }
+  },
+  {
+    "id": "academic_integration_by_parts",
+    "category": "academic_qa",
+    "severity": "high",
+    "failureCategory": "grounding_or_math_reasoning",
+    "notes": "Formula explainer should be direct and accurate.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "what is integration by parts",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "what is integration by parts"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["uv", "∫ u", "formula"],
+      "mustNotContain": ["Closest official", "Next step"],
+      "expectRetrieval": false,
+      "maxLatencyMs": 1500
+    }
+  },
+  {
+    "id": "academic_topic_chemistry",
+    "category": "academic_qa",
+    "severity": "high",
+    "failureCategory": "wrong_retrieval_or_topic_confusion",
+    "notes": "Topic ranking should be retrieved, grounded, and free from OCR noise.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "which topic repeats most in chemistry",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "which topic repeats most in chemistry"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["organic", "equilibrium", "electrolysis", "bonding"],
+      "mustNotContain": ["Closest official", "Next step", "question paper"],
+      "minLength": 120,
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["qbank_repeat_group", "qbank_compiled_topic", "qbank_concept_db"]
+    }
+  },
+  {
+    "id": "academic_paper_cambridge_chem_2019_p2",
+    "category": "academic_qa",
+    "severity": "high",
+    "failureCategory": "paper_or_year_confusion",
+    "notes": "Paper-specific search should keep board, subject, year, and paper aligned.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "cambridge o level chemistry 2019 paper 2",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "cambridge o level chemistry 2019 paper 2"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["Cambridge", "Chemistry", "2019"],
+      "mustNotContain": ["Closest official", "Next step"],
+      "expectRetrieval": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "level": "O Level",
+        "subject": "Chemistry",
+        "year": 2019,
+        "paper": "paper 2"
+      },
+      "expectedSourceTiersAnyOf": ["qbank_paper_db", "qbank_paper_pair", "qbank_exact_answer", "qbank_partial_answer"]
+    }
+  },
+  {
+    "id": "academic_paper_edexcel_physics_2021",
+    "category": "academic_qa",
+    "severity": "medium",
+    "failureCategory": "board_or_subject_confusion",
+    "notes": "Edexcel paper queries should not drift into Cambridge content.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "2021 physics edexcel paper 1 important questions",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "2021 physics edexcel paper 1 important questions"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["Edexcel", "Physics", "2021"],
+      "mustNotContain": ["Chemistry 2017", "Closest official"],
+      "expectRetrieval": true,
+      "debugPromptChunkCountMin": 4,
+      "expectedParsed": {
+        "board": "Edexcel",
+        "subject": "Physics",
+        "year": 2021
+      }
+    }
+  },
+  {
+    "id": "academic_board_typo_cambrige",
+    "category": "academic_qa",
+    "severity": "high",
+    "failureCategory": "board_confusion",
+    "notes": "Common board typos should still map to the correct parser intent.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "cambrige o level chem 2019 p2 important questions",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "cambrige o level chem 2019 p2 important questions"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["Cambridge", "Chemistry", "2019"],
+      "expectRetrieval": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "level": "O Level",
+        "subject": "Chemistry",
+        "year": 2019
+      }
+    }
+  },
+  {
+    "id": "academic_ambiguous_paper_clarify",
+    "category": "abstention",
+    "severity": "high",
+    "failureCategory": "should_ask_clarification",
+    "notes": "Ambiguous paper requests should ask for the missing board/year instead of guessing.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "paper 2 chemistry important questions",
+        "mode": "direct"
+      }
+    },
+    "expectations": {
+      "shouldAskClarification": true,
+      "clarificationAnyOf": ["board", "year", "which board", "which year"]
+    }
+  },
+  {
+    "id": "academic_future_paper_abstain",
+    "category": "abstention",
+    "severity": "high",
+    "failureCategory": "should_abstain",
+    "notes": "Future or unsupported paper requests should not be fabricated.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "cambridge o level chemistry 2035 paper 2",
+        "mode": "direct"
+      }
+    },
+    "expectations": {
+      "shouldAbstain": true,
+      "abstainAnyOf": ["do not have", "not yet", "not published", "cannot verify", "need the board, year, and paper"],
+      "mustNotContain": ["Question:", "Solution:"]
+    }
+  },
+  {
+    "id": "logic_reasoning_deduction",
+    "category": "reasoning",
+    "severity": "medium",
+    "failureCategory": "logic_chain_break",
+    "notes": "Pure reasoning questions should stay correct without fake retrieval.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "If all mammals are animals and all dogs are mammals, are dogs animals? Explain briefly.",
+        "mode": "direct"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["yes", "dogs are animals", "therefore"],
+      "mustNotContain": ["Closest official", "Next step"],
+      "expectRetrieval": false
+    }
+  },
+  {
+    "id": "academic_mixed_language_follows_subject",
+    "category": "robustness",
+    "severity": "medium",
+    "failureCategory": "mixed_language_or_parser_break",
+    "notes": "Mixed Bangla-English phrasing should still keep board and subject stable.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "cambridge o level chemistry 2019 paper 2 important gula bolo",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "cambridge o level chemistry 2019 paper 2 important gula bolo"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["Cambridge", "Chemistry", "2019"],
+      "expectRetrieval": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "subject": "Chemistry",
+        "year": 2019
+      }
+    }
+  },
+  {
+    "id": "coverage_biology_cambridge",
+    "category": "academic_coverage",
+    "severity": "medium",
+    "failureCategory": "missing_subject_coverage",
+    "notes": "Biology should have retrievable topic coverage.",
+    "request": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "most important topics in biology cambridge"
+      }
+    },
+    "expectations": {
+      "expectInspectMatches": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "subject": "Biology"
+      }
+    }
+  },
+  {
+    "id": "coverage_economics_cambridge",
+    "category": "academic_coverage",
+    "severity": "medium",
+    "failureCategory": "missing_subject_coverage",
+    "notes": "Economics should have retrievable topic coverage.",
+    "request": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "most important topics in economics cambridge"
+      }
+    },
+    "expectations": {
+      "expectInspectMatches": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "subject": "Economics"
+      }
+    }
+  },
+  {
+    "id": "coverage_accounting_cambridge",
+    "category": "academic_coverage",
+    "severity": "medium",
+    "failureCategory": "missing_subject_coverage",
+    "notes": "Accounting should have retrievable paper/topic coverage.",
+    "request": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "important accounting topics cambridge a level"
+      }
+    },
+    "expectations": {
+      "expectInspectMatches": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "subject": "Accounting"
+      }
+    }
+  },
+  {
+    "id": "coverage_computer_science_cambridge",
+    "category": "academic_coverage",
+    "severity": "medium",
+    "failureCategory": "missing_subject_coverage",
+    "notes": "Computer Science should have retrievable topic coverage.",
+    "request": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "most important topics in computer science cambridge"
+      }
+    },
+    "expectations": {
+      "expectInspectMatches": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "subject": "Computer Science"
+      }
+    }
+  },
+  {
+    "id": "coverage_english_cambridge",
+    "category": "academic_coverage",
+    "severity": "medium",
+    "failureCategory": "missing_subject_coverage",
+    "notes": "English should have at least some retrievable topic or source coverage.",
+    "request": {
+      "endpoint": "/api/qbank/search",
+      "body": {
+        "query": "important english topics cambridge o level"
+      }
+    },
+    "expectations": {
+      "expectInspectMatches": true,
+      "expectedParsed": {
+        "board": "Cambridge",
+        "subject": "English"
+      }
+    }
+  },
+  {
+    "id": "scholarship_match_australia_cse",
+    "category": "scholarship_qa",
+    "severity": "high",
+    "failureCategory": "eligibility_or_filter_bug",
+    "notes": "Scholarship matching should preserve country, degree, field, and funding signals.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "Fully funded masters scholarship in Australia for CSE student from Bangladesh",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/abroad/search",
+      "body": {
+        "query": "Fully funded masters scholarship in Australia for CSE student from Bangladesh"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["Australia", "Masters", "Computer Science", "CSE"],
+      "mustNotContain": ["Not detected", "Country: Not detected"],
+      "expectRetrieval": true,
+      "expectedParsed": {
+        "jurisdiction": "Australia",
+        "degreeLevel": "Masters",
+        "field": "Computer Science",
+        "fundingNeed": "full"
+      },
+      "expectDisplaySources": true
+    }
+  },
+  {
+    "id": "scholarship_deadline_aauw",
+    "category": "scholarship_qa",
+    "severity": "high",
+    "failureCategory": "deadline_or_grounding_bug",
+    "notes": "Deadline answers should use stored values but keep official-source caution.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "What is the deadline for AAUW International Fellowship?",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/abroad/search",
+      "body": {
+        "query": "What is the deadline for AAUW International Fellowship?"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["Nov 15", "official website", "confirm on the official"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["tier0_structured_match"]
+    }
+  },
+  {
+    "id": "scholarship_followup_shortlist",
+    "category": "scholarship_qa",
+    "severity": "medium",
+    "failureCategory": "follow_up_context_loss",
+    "notes": "Follow-up shortlist requests should continue from the earlier profile.",
+    "setup": [
+      {
+        "endpoint": "/api/abroad/chat",
+        "body": {
+          "message": "I am a Bangladeshi CSE student with 3.55 CGPA, low budget, and I want fully funded masters options in Australia or Europe.",
+          "mode": "direct"
+        }
+      }
+    ],
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "useSessionIdFromLastSetup": true,
+      "body": {
+        "message": "anything else i mean i wanna shortlist many as per my requirements",
+        "mode": "direct"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["shortlist", "1.", "2.", "<scholarships>"],
+      "mustNotContain": ["Best grounded match", "tier0_", "Guidance sample"],
+      "minLength": 80
+    }
+  },
+  {
+    "id": "scholarship_unsupported_abstain",
+    "category": "abstention",
+    "severity": "high",
+    "failureCategory": "should_abstain",
+    "notes": "Unsupported scholarship searches should not fabricate matches.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "Fully funded dentistry scholarship in Atlantis for Bangladeshi student",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/abroad/search",
+      "body": {
+        "query": "Fully funded dentistry scholarship in Atlantis for Bangladeshi student"
+      }
+    },
+    "expectations": {
+      "shouldAbstain": true,
+      "abstainAnyOf": ["don't have", "not any verified", "check the official website", "matching this exactly"],
+      "mustNotContain": ["Australia", "Canada", "Japan"]
+    }
+  },
+  {
+    "id": "visa_guidance_germany_funds",
+    "category": "visa_qa",
+    "severity": "high",
+    "failureCategory": "wrong_guidance_retrieval",
+    "notes": "Visa/proof-of-funds guidance should be practical and grounded.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "For Germany student visa, what matters for proof of funds?",
+        "mode": "direct"
+      }
+    },
+    "inspect": {
+      "endpoint": "/api/abroad/guidance-search",
+      "body": {
+        "query": "For Germany student visa, what matters for proof of funds?"
+      }
+    },
+    "expectations": {
+      "mustContainOneOf": ["proof of funds", "bank", "visa", "official"],
+      "expectRetrieval": true,
+      "expectDisplaySources": true
+    }
+  },
+  {
+    "id": "guidance_search_uk_visa",
+    "category": "visa_qa",
+    "severity": "medium",
+    "failureCategory": "metadata_filter_or_guidance_gap",
+    "notes": "Guidance search should surface UK visa/proof-of-funds material.",
+    "request": {
+      "endpoint": "/api/abroad/guidance-search",
+      "body": {
+        "query": "UK student visa proof of funds checklist"
+      }
+    },
+    "expectations": {
+      "expectInspectMatches": true,
+      "expectedParsed": {
+        "jurisdiction": "uk"
+      }
+    }
+  },
+  {
+    "id": "document_check_name_mismatch",
+    "category": "document_qa",
+    "severity": "high",
+    "failureCategory": "document_logic_bug",
+    "notes": "Document-check route should catch passport/transcript name mismatches.",
+    "request": {
+      "endpoint": "/api/abroad/document-check",
+      "body": {
+        "summary": "My passport name and transcript name are different, and the transcript still uses Md. on some pages."
+      }
+    },
+    "expectations": {
+      "jsonAssertions": [
+        { "path": "issues[0].label", "contains": "Name consistency risk" },
+        { "path": "issues[0].severity", "equals": "high" }
+      ]
+    }
+  },
+  {
+    "id": "document_check_missing_semester",
+    "category": "document_qa",
+    "severity": "high",
+    "failureCategory": "document_logic_bug",
+    "notes": "Missing semester records should be flagged as a major issue.",
+    "request": {
+      "endpoint": "/api/abroad/document-check",
+      "body": {
+        "summary": "One semester marksheet is missing from my academic file and the consolidated transcript is incomplete."
+      }
+    },
+    "expectations": {
+      "jsonAssertions": [
+        { "path": "issues[0].label", "contains": "Missing academic record" },
+        { "path": "issues[0].severity", "equals": "high" }
+      ]
+    }
+  },
+  {
+    "id": "planner_berlin_budget",
+    "category": "living_qa",
+    "severity": "medium",
+    "failureCategory": "living_cost_guidance_bug",
+    "notes": "Planner should return Berlin costs and a realistic arrival buffer.",
+    "request": {
+      "endpoint": "/api/abroad/planner",
+      "body": {
+        "query": "I got admitted in Berlin and need a student budget and visa plan."
+      }
+    },
+    "expectations": {
+      "jsonAssertions": [
+        { "path": "cityMatch.city", "equals": "Berlin" },
+        { "path": "cityMatch.country", "equals": "Germany" },
+        { "path": "arrivalBufferUsd", "min": 3000 }
+      ]
+    }
+  },
+  {
+    "id": "planner_unknown_city_safe",
+    "category": "robustness",
+    "severity": "low",
+    "failureCategory": "edge_case_handling",
+    "notes": "Planner should stay safe and structured for unsupported cities.",
+    "request": {
+      "endpoint": "/api/abroad/planner",
+      "body": {
+        "query": "I want a study abroad plan for a very cheap city in Narnia."
+      }
+    },
+    "expectations": {
+      "jsonAssertions": [
+        { "path": "cityMatch", "equals": null },
+        { "path": "arrivalBufferUsd", "equals": 2500 }
+      ]
+    }
+  },
+  {
+    "id": "multimodal_pdf_missing_document",
+    "category": "multimodal_qa",
+    "severity": "high",
+    "failureCategory": "wrong_extraction_or_file_grounding",
+    "notes": "PDF uploads should stay grounded to the uploaded file and identify the missing document clearly.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "From this PDF, which document is missing when the file is incomplete?",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/visa_steps.pdf",
+          "mimeType": "application/pdf",
+          "name": "visa_steps.pdf"
+        }
+      ]
+    },
+    "expectations": {
+      "mustContain": ["bank statement"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_chunk"],
+      "expectDisplaySources": true,
+      "debugPromptChunkCountMin": 1
+    }
+  },
+  {
+    "id": "multimodal_docx_scholarship_profile",
+    "category": "multimodal_qa",
+    "severity": "high",
+    "failureCategory": "uploaded_file_overridden_by_corpus",
+    "notes": "Document-grounded scholarship reads should not be replaced by unrelated database matches.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "Read this document and tell me the scholarship name, country, and whether it is fully funded.",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/scholarship_profile.docx",
+          "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "name": "scholarship_profile.docx"
+        }
+      ]
+    },
+    "expectations": {
+      "mustContain": ["MEXT", "Japan"],
+      "mustContainOneOf": ["fully funded", "tuition, stipend, and airfare"],
+      "mustNotContain": ["Shandong", "ETH Zurich", "Commonwealth"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_chunk"],
+      "expectDisplaySources": true,
+      "debugPromptChunkCountMin": 1
+    }
+  },
+  {
+    "id": "multimodal_mixed_grade_rule",
+    "category": "multimodal_qa",
+    "severity": "high",
+    "failureCategory": "mixed_file_reasoning_break",
+    "notes": "Mixed image plus text uploads should keep both pieces of evidence in play.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "Using both files, does the student meet the minimum entry rule? Explain briefly.",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/marksheet.svg",
+          "mimeType": "image/svg+xml",
+          "name": "marksheet.svg"
+        },
+        {
+          "path": "evals/fixtures/multimodal/grade_requirement.txt",
+          "mimeType": "text/plain",
+          "name": "grade_requirement.txt"
+        }
+      ]
+    },
+    "expectations": {
+      "mustContainOneOf": ["Final answer: Yes", "meets the minimum entry rule"],
+      "mustContain": ["Physics", "Chemistry"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_chunk"],
+      "expectDisplaySources": true,
+      "debugPromptChunkCountMin": 2
+    }
+  },
+  {
+    "id": "multimodal_image_only_grades",
+    "category": "multimodal_qa",
+    "severity": "medium",
+    "failureCategory": "visual_evidence_not_used",
+    "notes": "A single uploaded image should still produce a grounded answer with visible grades and citations.",
+    "request": {
+      "endpoint": "/api/qbank/chat",
+      "body": {
+        "message": "What grades can you reliably read from this uploaded image?",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/marksheet.svg",
+          "mimeType": "image/svg+xml",
+          "name": "marksheet.svg"
+        }
+      ]
+    },
+    "expectations": {
+      "mustContain": ["Physics: A", "Chemistry: B"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_chunk"],
+      "expectDisplaySources": true,
+      "debugPromptChunkCountMin": 1
+    }
+  },
+  {
+    "id": "multimodal_multi_pdf_combined",
+    "category": "multimodal_qa",
+    "severity": "high",
+    "failureCategory": "multi_file_reasoning_break",
+    "notes": "When one uploaded PDF is readable and another is unreadable, the answer should combine both facts instead of collapsing to a generic warning.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "From these two uploaded PDFs, tell me which file is unreadable and what missing document is mentioned in the readable one.",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/visa_steps.pdf",
+          "mimeType": "application/pdf",
+          "name": "visa_steps.pdf"
+        },
+        {
+          "path": "evals/fixtures/multimodal/scan_only.pdf",
+          "mimeType": "application/pdf",
+          "name": "scan_only.pdf"
+        }
+      ]
+    },
+    "expectations": {
+      "mustContain": ["scan_only.pdf", "bank statement"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_chunk"],
+      "expectDisplaySources": true,
+      "debugPromptChunkCountMin": 2
+    }
+  },
+  {
+    "id": "multimodal_blank_scan_abstain",
+    "category": "abstention",
+    "severity": "high",
+    "failureCategory": "ocr_or_scan_abstention",
+    "notes": "Unreadable scans should trigger a clear abstention instead of a fabricated answer.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "What can you reliably read from this scan?",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/scan_only.pdf",
+          "mimeType": "application/pdf",
+          "name": "scan_only.pdf"
+        }
+      ]
+    },
+    "expectations": {
+      "shouldAbstain": true,
+      "abstainAnyOf": ["could not extract", "cannot reliably read", "clearer scan", "not enough readable text"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_warning"]
+    }
+  },
+  {
+    "id": "multimodal_ocr_noise_documents",
+    "category": "robustness",
+    "severity": "medium",
+    "failureCategory": "ocr_corruption_or_irrelevant_answer",
+    "notes": "Noisy OCR uploads should still extract obvious document names without drifting into unrelated guidance.",
+    "request": {
+      "endpoint": "/api/abroad/chat",
+      "body": {
+        "message": "This OCR text is messy. List the documents it mentions only if you can read them reliably.",
+        "mode": "direct"
+      },
+      "files": [
+        {
+          "path": "evals/fixtures/multimodal/ocr_noise.txt",
+          "mimeType": "text/plain",
+          "name": "ocr_noise.txt"
+        }
+      ]
+    },
+    "expectations": {
+      "mustContain": ["passport", "bank statement"],
+      "mustContainOneOf": ["offer letter", "TB certificate"],
+      "mustNotContain": ["Canada", "scholarship"],
+      "expectRetrieval": true,
+      "expectedSourceTiersAnyOf": ["uploaded_file_chunk"],
+      "expectDisplaySources": true
+    }
+  },
+  {
+    "id": "deployment_health_smoke",
+    "category": "deployment_smoke",
+    "severity": "high",
+    "failureCategory": "deployment_config_issue",
+    "notes": "Health endpoint should stay reachable during eval runs.",
+    "request": {
+      "endpoint": "/api/health"
+    },
+    "expectations": {
+      "allowedStatuses": [200, 503]
+    }
+  }
+]

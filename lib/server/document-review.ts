@@ -1,3 +1,6 @@
+import { generateResponse } from '@/lib/ai-service'
+import { createRequestId, logError } from '@/lib/server/logger'
+
 export type ReviewDocumentType = 'sop' | 'lor' | 'cv'
 
 export type ReviewIssue = {
@@ -15,6 +18,11 @@ export type DocumentReviewResult = {
   documentType: ReviewDocumentType
   score: number
   verdict: 'strong' | 'promising' | 'weak'
+  outlook?: {
+    currentReadiness: string
+    improvedReadiness: string
+    message: string
+  }
   strengths: ReviewStrength[]
   issues: ReviewIssue[]
   nextSteps: string[]
@@ -54,7 +62,7 @@ function buildVerdict(score: number): DocumentReviewResult['verdict'] {
   return 'weak'
 }
 
-export function reviewDocument(documentType: ReviewDocumentType, content: string): DocumentReviewResult {
+function reviewDocumentFallback(documentType: ReviewDocumentType, content: string): DocumentReviewResult {
   const normalized = normalize(content)
   const wordCount = normalized.split(' ').filter(Boolean).length
   const paragraphs = content.split(/\n\s*\n/).filter((entry) => entry.trim().length > 0).length
@@ -157,8 +165,69 @@ export function reviewDocument(documentType: ReviewDocumentType, content: string
     documentType,
     score,
     verdict: buildVerdict(score),
+    outlook: {
+      currentReadiness: 'Needs revision',
+      improvedReadiness: score >= 58 ? 'Competitive with stronger evidence' : 'Much stronger after revision',
+      message:
+        'This is a document-quality outlook, not an admission guarantee. The fastest gain will come from stronger evidence, cleaner structure, and clearer fit.'
+    },
     strengths: strengths.slice(0, 4),
     issues: issues.slice(0, 5),
     nextSteps: nextSteps.slice(0, 4),
+  }
+}
+
+export async function reviewDocument(documentType: ReviewDocumentType, content: string): Promise<DocumentReviewResult> {
+  const requestId = createRequestId()
+  const trimmedContent = content.trim()
+
+  if (!trimmedContent) {
+    return reviewDocumentFallback(documentType, content)
+  }
+
+  const prompt = `
+You are the ScholarHAAB Document Evaluator.
+Analyze this ${documentType.toUpperCase()} based on these dimensions:
+For SOP: Opening hook, research narrative depth, quantified achievements, scholarship fit, Bangladesh return impact, future goals specificity, language quality.
+For LOR: Specificity, relative ranking, recommender credibility, quantified outcomes, enthusiasm.
+For CV / Resume: Relevance, achievement framing, gaps, formatting, impact quantification.
+
+Respond ONLY in valid JSON matching this exact schema:
+{
+  "documentType": "${documentType}",
+  "score": number (0-100),
+  "verdict": "strong" | "promising" | "weak",
+  "outlook": {
+    "currentReadiness": "Needs revision" | "Usable with fixes" | "Competitive",
+    "improvedReadiness": "Usable with fixes" | "Competitive" | "Strongly competitive",
+    "message": "Brief honest outlook without fake percentages."
+  },
+  "strengths": [{ "label": "Short String", "detail": "Details" }, ...upto 4],
+  "issues": [{ "label": "Short String", "severity": "high" | "medium" | "low", "detail": "Details" }, ...upto 5],
+  "nextSteps": ["String step 1", ...upto 4]
+}
+
+Document Content:
+${trimmedContent.substring(0, 5000)}
+`
+  try {
+    const raw = await generateResponse(
+      prompt,
+      'You are an explicit JSON API responding ONLY in pure JSON with no markdown blocks or backticks.',
+      {
+        maxTokens: 800,
+        requestId,
+        operation: 'document_review',
+      }
+    )
+    const cleaned = raw.replace(/^```[a-z]*\n/i, '').replace(/\n```$/m, '').trim()
+    const parsed = JSON.parse(cleaned) as DocumentReviewResult
+    return parsed
+  } catch (error) {
+    logError('document_review_failed', error, {
+      request_id: requestId,
+      document_type: documentType,
+    })
+    return reviewDocumentFallback(documentType, content)
   }
 }

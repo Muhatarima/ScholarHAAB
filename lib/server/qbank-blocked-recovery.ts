@@ -26,6 +26,24 @@ type BlockedRecoveryRow = {
   note: string
 }
 
+type MirrorRecoveryRow = {
+  id: string
+  targetId: string
+  board: string
+  level: string
+  subject: string
+  year: number | null
+  resourceType: string
+  provider: string
+  mirrorPageUrl: string | null
+  mirrorPageTitle: string | null
+  mirrorPageDescription: string | null
+  mirrorEvidenceType: 'exact_file_name' | 'subject_year_support_page'
+  mirrorSupportConfidence: 'high' | 'medium' | 'low'
+  mirrorFileNames?: string[]
+  note: string
+}
+
 export type QbankBlockedRecoveryMatch = {
   id: string
   targetId: string
@@ -40,6 +58,13 @@ export type QbankBlockedRecoveryMatch = {
   officialHttpStatus: number | null
   publicListingUrls: string[]
   supportSourceUrls: string[]
+  mirrorProvider: string | null
+  mirrorPageUrl: string | null
+  mirrorPageTitle: string | null
+  mirrorPageDescription: string | null
+  mirrorEvidenceType: 'exact_file_name' | 'subject_year_support_page' | null
+  mirrorSupportConfidence: 'high' | 'medium' | 'low' | null
+  mirrorFileNames: string[]
   recoveryStatus: 'external_access_blocked'
   note: string
 }
@@ -50,6 +75,13 @@ const BLOCKED_RECOVERY_PATH = path.join(
   'qbank_collection',
   'blocked_recovery',
   'blocked_recovery_manifest.jsonl'
+)
+const MIRROR_RECOVERY_PATH = path.join(
+  process.cwd(),
+  'data',
+  'qbank_collection',
+  'kingsbridge_mirror',
+  'mirror_recovery_manifest.jsonl'
 )
 
 function readJsonl<T>(filePath: string) {
@@ -66,7 +98,23 @@ function readJsonl<T>(filePath: string) {
 }
 
 function getRows() {
-  return readJsonl<BlockedRecoveryRow>(BLOCKED_RECOVERY_PATH)
+  const blockedRows = readJsonl<BlockedRecoveryRow>(BLOCKED_RECOVERY_PATH)
+  const mirrorRows = readJsonl<MirrorRecoveryRow>(MIRROR_RECOVERY_PATH)
+  const mirrorByTargetId = new Map(mirrorRows.map((row) => [row.targetId, row]))
+
+  return blockedRows.map((row) => {
+    const mirror = mirrorByTargetId.get(row.targetId)
+    return {
+      ...row,
+      mirrorProvider: mirror?.provider ?? null,
+      mirrorPageUrl: mirror?.mirrorPageUrl ?? null,
+      mirrorPageTitle: mirror?.mirrorPageTitle ?? null,
+      mirrorPageDescription: mirror?.mirrorPageDescription ?? null,
+      mirrorEvidenceType: mirror?.mirrorEvidenceType ?? null,
+      mirrorSupportConfidence: mirror?.mirrorSupportConfidence ?? null,
+      mirrorFileNames: mirror?.mirrorFileNames ?? [],
+    }
+  })
 }
 
 function matchesParsedQuery(row: BlockedRecoveryRow, parsedQuery: QbankParsedQuery) {
@@ -103,6 +151,8 @@ function scoreRow(row: BlockedRecoveryRow, parsedQuery: QbankParsedQuery) {
   if (row.exactFilename && parsedQuery.normalized.includes(row.exactFilename.toLowerCase())) score += 12
   if (row.resourceType === 'question_paper') score += 4
   if (row.resourceType === 'mark_scheme') score += 3
+  if ((row as BlockedRecoveryRow & { mirrorPageUrl?: string | null }).mirrorPageUrl) score += 6
+  if ((row as BlockedRecoveryRow & { mirrorEvidenceType?: string | null }).mirrorEvidenceType === 'exact_file_name') score += 8
 
   return score
 }
@@ -129,6 +179,21 @@ export function searchQbankBlockedRecovery(parsedQuery: QbankParsedQuery) {
         officialHttpStatus: entry.row.officialHttpStatus,
         publicListingUrls: (entry.row.publicListingReferences ?? []).map((item) => item.url),
         supportSourceUrls: entry.row.supportSourceUrls ?? [],
+        mirrorProvider: (entry.row as BlockedRecoveryRow & { mirrorProvider?: string | null }).mirrorProvider ?? null,
+        mirrorPageUrl: (entry.row as BlockedRecoveryRow & { mirrorPageUrl?: string | null }).mirrorPageUrl ?? null,
+        mirrorPageTitle: (entry.row as BlockedRecoveryRow & { mirrorPageTitle?: string | null }).mirrorPageTitle ?? null,
+        mirrorPageDescription:
+          (entry.row as BlockedRecoveryRow & { mirrorPageDescription?: string | null }).mirrorPageDescription ??
+          null,
+        mirrorEvidenceType:
+          (entry.row as BlockedRecoveryRow & {
+            mirrorEvidenceType?: 'exact_file_name' | 'subject_year_support_page' | null
+          }).mirrorEvidenceType ?? null,
+        mirrorSupportConfidence:
+          (entry.row as BlockedRecoveryRow & { mirrorSupportConfidence?: 'high' | 'medium' | 'low' | null })
+            .mirrorSupportConfidence ?? null,
+        mirrorFileNames:
+          (entry.row as BlockedRecoveryRow & { mirrorFileNames?: string[] }).mirrorFileNames ?? [],
         recoveryStatus: entry.row.recoveryStatus,
         note: entry.row.note,
       })

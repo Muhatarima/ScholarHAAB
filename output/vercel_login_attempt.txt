@@ -1,0 +1,20 @@
+URL: https://github.com/login?client_id=Iv1.9d7d662ea00b8481&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DIv1.9d7d662ea00b8481%26scope%3Dread%253Auser%252Cuser%253Aemail%26state%3D9e55044125e0ce4edb34c3d8a091bd35a8d8b503aa3bc016c9661f2e3de68c0fa782c09622be43a08009495bf975fb2c23aa1019477461abe6fce17732fdb88eb63304055dca79fd7687f05061fd5aeb308f982a3d3d5dac76e3c0f003c5f2f8db92f9395b2450db04107ddbba7e15e5fdd1504441ac34ce1cfdf059eb32b5e9e8dafc72f0b779580090637951c6a52456632d4b8894db3f421782663674658a411519d444875c8072492994cfb4d0d425720f44b3093d1a2a798ce3717a88d68514d87bd56db94e74a661036b75f80b8c2d2beabf84b83f560c94bb5a1024c92e48e36bbebbf35675f9abcdb770ebd0faf1fd461361a2b6721b4f02ff9fa99473b7a58751726367b72801fcc2b6ff4dfd43d8f901a3bbded16c992f945ecf9650dd0ff82972a8c7dfbcda848886
+TITLE: Sign in to GitHub · GitHub
+BODY:
+Skip to content
+
+Sign in to GitHub
+to continue to Vercel
+
+Username or email address
+Password
+Forgot password?
+
+New to GitHub? Create an account
+
+Terms
+Privacy
+Docs
+Contact GitHub Support
+Manage cookies
+Do not share my personal information

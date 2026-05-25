@@ -1,0 +1,90 @@
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (2)
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      query        TEXT NOT NULL,
+        response     TEXT NOT NULL,
+          category     TEXT,
+            issue_type   TEXT,
+              auto_score   INTEGER,
+                user_flagged BOOLEAN DEFAULT FALSE,
+                  helpful      BOOLEAN DEFAULT FALSE,
+                    session_id   TEXT,
+                      created_at   TIMESTAMPTZ DEFAULT NOW(),
+                        fixed        BOOLEAN DEFAULT FALSE
+                        );
+)
+1
+2
+3
+4
+CREATE TABLE IF NOT EXISTS qa_feedback (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      query        TEXT NOT NULL,
+        response     TEXT NOT NULL,
+Results
+Explain
+Chart
+Export
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+Error: Failed to run sql query: ERROR: 42601: syntax error at or near ")" LINE 14: ) ^
+
+Debug with Assistant
+
+0 row
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase

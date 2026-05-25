@@ -1,0 +1,82 @@
+Muhatarima's Org
+FREE
+ScholarHAAB
+main
+PRODUCTION
+Connect
+Feedback
+
+Search...
+
+K
+Project Overview
+Table Editor
+SQL Editor
+Database
+Authentication
+Storage
+Edge Functions
+Realtime
+Advisors
+Observability
+Logs
+Integrations
+Project Settings
+SQL Editor
+Search queries
+SHARED
+FAVORITES
+PRIVATE (2)
+App schema for usage, chat, subscriptions, RAG and QBank
+User profile onboarding trigger
+COMMUNITY
+Templates
+Quickstarts
+View running queries
+User profile onboarding trigger
+App schema for usage, chat, subscriptions, RAG and QBank
+44
+45
+46
+47
+48
+49
+50
+51
+                                                              )
+                                                                VALUES (p_date, p_provider, p_model, p_input_tokens, 
+                                                                p_output_tokens, 1, p_cost)
+                                                                  ON CONFLICT (date, provider, model) DO UPDATE SET
+                                                                      input_tokens       = llm_usage.input_tokens + 
+                                                                      p_input_tokens,
+                                                                          output_tokens      = llm_usage.output_tokens + 
+                                                                          p_output_tokens,
+                                                                              call_count         = llm_usage.call_count + 1,
+                                                                                  estimated_cost_usd = llm_usage.
+                                                                                  estimated_cost_usd + p_cost;
+                                                                                  END; $$;
+3
+4
+5
+6
+CREATE TABLE IF NOT EXISTS llm_usage (
+  id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    date               DATE NOT NULL DEFAULT CURRENT_DATE,
+      provider           TEXT NOT NULL,
+Results
+Explain
+Chart
+Export
+Source
+Primary Database
+Role
+postgres
+Run
+
+CTRL
+
+Success. No rows returned
+
+0 row
+
+App schema for usage, chat, subscriptions, RAG and QBank | SQL Editor | ScholarHAAB | Muhatarima's Org | Supabase

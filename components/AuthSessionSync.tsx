@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '@/lib/auth-constants'
 import { getBrowserSupabase } from '@/lib/browser-supabase'
 
@@ -30,13 +31,13 @@ export default function AuthSessionSync() {
   useEffect(() => {
     const supabase = getBrowserSupabase()
 
-    void supabase.auth.getSession().then(({ data }) => {
+    void supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
       syncSessionCookies(data.session?.access_token, data.session?.refresh_token)
     })
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       syncSessionCookies(session?.access_token, session?.refresh_token)
     })
 
