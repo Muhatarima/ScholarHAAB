@@ -14,10 +14,10 @@ type Message = {
 type ExamPrepMode = 'start' | 'chat'
 
 const quickActions = [
-  { label: '⏭ Skip', message: 'skip' },
-  { label: '🔢 Formula', message: 'formula' },
-  { label: '📝 Question', message: 'question' },
-  { label: '📋 Summary', message: 'summary' },
+  { label: 'Skip', message: 'skip' },
+  { label: 'Formula', message: 'formula' },
+  { label: 'Question', message: 'question' },
+  { label: 'Summary', message: 'summary' },
 ]
 
 async function buildJsonAuthHeaders() {
@@ -36,24 +36,6 @@ async function buildJsonAuthHeaders() {
   }
 
   return headers
-}
-
-function analysisMessage(topic: string) {
-  return [
-    `📊 ${topic} — Past Paper Analysis`,
-    '',
-    '🔴 Must know (appeared 8+ times):',
-    '· Definitions',
-    '· Calculations',
-    '',
-    '🟡 Important (appeared 4-7 times):',
-    '· Explanations',
-    '',
-    '🟢 Good to know:',
-    '· Graphs',
-    '',
-    'Where do you want to start?',
-  ].join('\n')
 }
 
 function Logo() {
@@ -85,6 +67,21 @@ function Logo() {
         HAAB
       </span>
     </Link>
+  )
+}
+
+function AttachIcon() {
+  return (
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M8.4 12.7l5.7-5.7a3.2 3.2 0 014.5 4.5l-7.1 7.1a4.7 4.7 0 01-6.6-6.6l7.7-7.7"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path d="M10.3 14.6l5.4-5.4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+    </svg>
   )
 }
 
@@ -123,7 +120,7 @@ function ExamPrepInner() {
       setLoading(true)
       await new Promise((resolve) => setTimeout(resolve, 1200))
       setStarted(true)
-      setMessages([{ role: 'assistant', content: analysisMessage(activeTopic) }])
+      setMessages([{ role: 'assistant', content: '' }])
     } else {
       setMessages((prev) => [...prev, { role: 'user', content: userText }, { role: 'assistant', content: '' }])
     }
@@ -153,17 +150,13 @@ function ExamPrepInner() {
 
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
-      let assistantText = mode === 'start' ? analysisMessage(activeTopic) : ''
+      let assistantText = ''
 
       while (true) {
         const { value, done } = await reader.read()
         if (done) break
         const chunk = decoder.decode(value, { stream: true })
-        if (mode === 'start') {
-          assistantText = analysisMessage(activeTopic)
-        } else {
-          assistantText += chunk
-        }
+        assistantText += chunk
         setMessages((prev) => {
           const next = [...prev]
           if (mode === 'start') {
@@ -178,7 +171,7 @@ function ExamPrepInner() {
       if (mode === 'chat') {
         setMessages((prev) => {
           const next = [...prev]
-          next[next.length - 1] = { role: 'assistant', content: 'Try again.' }
+          next[next.length - 1] = { role: 'assistant', content: 'Connection issue. Send the exam topic once more.' }
           return next
         })
       }
@@ -196,12 +189,16 @@ function ExamPrepInner() {
             .exam-composer { left: 74px !important; right: 12px !important; }
             .exam-actions { left: 74px !important; right: 12px !important; }
           }
+          .exam-select option {
+            background: #0a0718;
+            color: #f4eeff;
+          }
         `}</style>
         <Logo />
         <section style={styles.setup}>
           <h1 style={styles.setupTitle}>What&apos;s your exam?</h1>
           <div className="exam-setup-inputs" style={styles.setupInputs}>
-            <select value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
+            <select className="exam-select" value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
               <option>Physics</option>
               <option>Chemistry</option>
               <option>Mathematics</option>
@@ -210,7 +207,7 @@ function ExamPrepInner() {
               <option>Accounting</option>
             </select>
             <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Chapter/Topic" style={styles.field} />
-            <select value={level} onChange={(event) => setLevel(event.target.value)} style={styles.field}>
+            <select className="exam-select" value={level} onChange={(event) => setLevel(event.target.value)} style={styles.field}>
               <option>A Level</option>
               <option>O Level</option>
               <option>IGCSE</option>
@@ -242,14 +239,6 @@ function ExamPrepInner() {
         <button type="button" onClick={() => setStarted(false)} style={styles.sideButton}>
           +
         </button>
-        <div style={{ marginTop: 'auto', display: 'grid', gap: 8 }}>
-          <Link href="/dashboard" style={styles.iconLink}>
-            📊
-          </Link>
-          <Link href="/qbank" style={styles.iconLink}>
-            💬
-          </Link>
-        </div>
       </aside>
 
       <section style={styles.chatMain}>
@@ -285,7 +274,7 @@ function ExamPrepInner() {
         className="exam-composer"
       >
         <button type="button" style={styles.attach}>
-          📎
+          <AttachIcon />
         </button>
         <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Type anything..." style={styles.input} />
         <button type="submit" disabled={loading} style={styles.send}>
@@ -342,6 +331,7 @@ const styles = {
     borderRadius: 16,
     background: 'rgba(255,255,255,0.04)',
     color: '#E8E8FF',
+    colorScheme: 'dark',
     outline: 'none',
     padding: '14px 14px',
     fontSize: 14,
@@ -395,14 +385,6 @@ const styles = {
     color: '#E8E8FF',
     cursor: 'pointer',
     height: 42,
-  } satisfies CSSProperties,
-  iconLink: {
-    display: 'grid',
-    placeItems: 'center',
-    color: '#E8E8FF',
-    fontSize: 20,
-    height: 44,
-    textDecoration: 'none',
   } satisfies CSSProperties,
   chatMain: {
     marginLeft: 74,
@@ -474,6 +456,8 @@ const styles = {
     borderRadius: 999,
     background: 'transparent',
     color: '#9F9FC4',
+    display: 'grid',
+    placeItems: 'center',
     fontSize: 18,
   } satisfies CSSProperties,
   input: {

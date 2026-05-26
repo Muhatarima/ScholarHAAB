@@ -172,7 +172,6 @@ export default function AuthPage({ action, mode, nextPath, oauthAction }: AuthPa
   })
   const next = nextPath ?? '/qbank'
   const linkHref = mode === 'signup' ? `/login?next=${encodeURIComponent(next)}` : `/signup?next=${encodeURIComponent(next)}`
-  const title = mode === 'signup' ? 'ENTER THE VOID' : 'WELCOME BACK'
 
   return (
     <main
@@ -197,17 +196,6 @@ export default function AuthPage({ action, mode, nextPath, oauthAction }: AuthPa
       <section className="auth-panel" style={{ position: 'relative', zIndex: 2, width: 'min(100%, 450px)', display: 'grid', gap: 20 }}>
         <div style={{ textAlign: 'center', display: 'grid', gap: 8, justifyItems: 'center' }}>
           <Logo />
-          <div
-            style={{
-              color: '#F8F4FF',
-              fontSize: 17,
-              fontWeight: 800,
-              letterSpacing: 5,
-              textTransform: 'uppercase',
-            }}
-          >
-            {title}
-          </div>
         </div>
 
         <form action={formAction} style={{ display: 'grid', gap: 12 }}>

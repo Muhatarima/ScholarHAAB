@@ -265,7 +265,8 @@ function renderStructuredText(text: string, keyBase: string) {
 export default function RichMessageContent({ content }: { content: string }) {
   const subject = inferSubject(content)
   const diagramType = matchDiagramType(content, subject)
-  const shouldRenderDiagram = DIAGRAM_HINT_PATTERN.test(content) && diagramType !== 'unknown'
+  const isPlanningMessage = /Past Paper Analysis|Night Before|HIGH PRIORITY|MEDIUM PRIORITY|LOW PRIORITY/i.test(content)
+  const shouldRenderDiagram = !isPlanningMessage && DIAGRAM_HINT_PATTERN.test(content) && diagramType !== 'unknown'
 
   return (
     <>

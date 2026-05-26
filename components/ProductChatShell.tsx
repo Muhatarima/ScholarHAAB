@@ -41,7 +41,7 @@ type FilePreview = {
   url?: string
 }
 
-type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
+type ThemeIconName = 'file' | 'attach'
 
 const ENDPOINT = '/api/qbank/chat'
 const SUGGESTIONS = [
@@ -142,24 +142,6 @@ function ThemeIcon({ name, size = 20 }: { name: ThemeIconName; size?: number }) 
 
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      {name === 'dashboard' ? (
-        <>
-          <path {...common} d="M4 13.5h6.5V20H4zM13.5 4H20v16h-6.5zM4 4h6.5v6.5H4z" />
-          <path {...common} d="M6.5 17h1.8M16 8h1.8M16 12h1.8" />
-        </>
-      ) : null}
-      {name === 'exam' ? (
-        <>
-          <path {...common} d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.3 6.1-.9z" />
-          <path {...common} d="M12 8.2v4.2l2.6 1.5" />
-        </>
-      ) : null}
-      {name === 'logout' ? (
-        <>
-          <path {...common} d="M9.5 4.5H6.8A2.3 2.3 0 004.5 6.8v10.4a2.3 2.3 0 002.3 2.3h2.7" />
-          <path {...common} d="M13 8l4 4-4 4M17 12H8" />
-        </>
-      ) : null}
       {name === 'file' ? (
         <>
           <path {...common} d="M7 3.8h6.2L18 8.6v11.6H7z" />
@@ -278,11 +260,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
     updateSelectedFiles(selectedFiles.filter((_, currentIndex) => currentIndex !== index))
   }
 
-  async function signOut() {
-    await createSupabaseClient().auth.signOut()
-    window.location.href = '/login'
-  }
-
   async function sendMessage(preset?: string) {
     const text = (preset ?? input).trim()
     if ((!text && selectedFiles.length === 0) || loading) return
@@ -317,7 +294,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
         ...current,
         {
           role: 'assistant',
-          content: data.answer || data.response || data.error || 'Try again.',
+          content: data.answer || data.response || data.error || 'Connection issue. Send the question once more.',
           sources: Array.isArray(data.sources)
             ? data.sources
             : data.truth?.source
@@ -328,7 +305,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
       updateSelectedFiles([])
       void refreshSessions()
     } catch {
-      setMessages((current) => [...current, { role: 'assistant', content: 'Try again.' }])
+      setMessages((current) => [...current, { role: 'assistant', content: 'Connection issue. Send the question once more.' }])
     } finally {
       setLoading(false)
     }
@@ -393,17 +370,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
           ))}
         </div>
 
-        <div style={styles.sidebarBottom}>
-          <Link href="/dashboard" style={styles.iconLink} title="Dashboard">
-            <ThemeIcon name="dashboard" />
-          </Link>
-          <Link href="/exam-prep" style={styles.iconLink} title="Exam Mode">
-            <ThemeIcon name="exam" />
-          </Link>
-          <button type="button" onClick={() => void signOut()} style={styles.iconButton} title="Logout">
-            <ThemeIcon name="logout" />
-          </button>
-        </div>
       </aside>
 
       <section className="shaab-main" style={styles.main(sidebarOpen)}>
@@ -645,29 +611,6 @@ const styles = {
     fontSize: 13,
     padding: '9px 10px',
     textAlign: 'left',
-  } satisfies CSSProperties,
-  sidebarBottom: {
-    marginTop: 'auto',
-    display: 'grid',
-    gap: 8,
-  } satisfies CSSProperties,
-  iconLink: {
-    borderRadius: 14,
-    color: '#b975ff',
-    display: 'grid',
-    fontSize: 20,
-    height: 44,
-    placeItems: 'center',
-    textDecoration: 'none',
-  } satisfies CSSProperties,
-  iconButton: {
-    border: 'none',
-    borderRadius: 14,
-    background: 'transparent',
-    color: '#b975ff',
-    cursor: 'pointer',
-    fontSize: 20,
-    height: 44,
   } satisfies CSSProperties,
   main: (open: boolean) =>
     ({

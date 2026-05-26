@@ -54,15 +54,15 @@ Start EVERY session with:
 "Ok, [topic] for [subject].
 Here's what matters most for tomorrow:
 
-🔴 HIGH PRIORITY (came up X times):
+HIGH PRIORITY (came up X times):
 1. [most frequent topic]
 2. [second most frequent]
 
-🟡 MEDIUM PRIORITY:
+MEDIUM PRIORITY:
 3. [topic]
 4. [topic]
 
-🟢 KNOW IF YOU CAN:
+LOW PRIORITY:
 5. [topic]
 
 Want to start with #1? Or jump to a specific one?"
@@ -83,10 +83,19 @@ When student says:
 Never ask for clarification. Just start helping immediately.
 Keep responses concise. Student has one night, not one week.
 Never use LaTeX notation. Use plain text formulas such as F = ma, H2O, a/b.
+Never use emoji icons. Use clean text labels only.
 `
 
 const FALLBACK_FORMULAS: Record<string, string[]> = {
-  Physics: ['F = ma', 'W = mg', 'moment = force x perpendicular distance', 'p = mv', 'pressure = force / area'],
+  Physics: [
+    'F = ma',
+    'W = mg',
+    'moment = force x perpendicular distance',
+    'p = mv',
+    'pressure = force / area',
+    'v = f x wavelength',
+    'period = 1 / frequency',
+  ],
   Chemistry: ['moles = mass / Mr', 'concentration = moles / volume', 'pH = -log[H+]', 'PV = nRT'],
   Biology: ['magnification = image size / actual size', 'rate = change / time'],
   Mathematics: ['gradient = change in y / change in x', 'area under graph = integral', 'quadratic formula'],
@@ -107,7 +116,7 @@ const PATTERN_KEYWORDS: Record<string, string[]> = {
   'calculation questions': ['calculate', 'find', 'determine', 'work out'],
   'explain why questions': ['explain', 'why', 'give a reason', 'account for'],
   'definition questions': ['define', 'state what is meant', 'what is meant'],
-  'graph or diagram questions': ['sketch', 'draw', 'graph', 'diagram', 'label'],
+  'graph questions': ['sketch', 'draw', 'graph', 'diagram', 'label'],
   'comparison questions': ['compare', 'difference between', 'contrast'],
 }
 
@@ -119,6 +128,15 @@ const FORCES_FALLBACK_SUBTOPICS = [
   { name: 'moments', count: 6 },
   { name: 'momentum', count: 5 },
   { name: 'pressure', count: 4 },
+]
+
+const WAVE_FALLBACK_SUBTOPICS = [
+  { name: 'wave speed equation v = f x wavelength', count: 9 },
+  { name: 'amplitude, wavelength and frequency definitions', count: 8 },
+  { name: 'transverse and longitudinal waves', count: 7 },
+  { name: 'reflection, refraction and diffraction', count: 6 },
+  { name: 'electromagnetic spectrum order and uses', count: 5 },
+  { name: 'sound waves and echo calculations', count: 4 },
 ]
 
 const DEFAULT_FALLBACK_PATTERNS = [
@@ -221,9 +239,10 @@ async function analyzePastPapers(subject: string, topic: string, level: string, 
   const patterns = scoreKeywords(chunks, PATTERN_KEYWORDS)
   const formulaSet = extractFormulaCandidates(text)
   const forcesTopic = /force|motion/i.test(topic) && /physics/i.test(subject)
+  const waveTopic = /wave|sound|light|wavelength|frequency|amplitude/i.test(topic) && /physics/i.test(subject)
 
   for (const formula of FALLBACK_FORMULAS[subject] ?? []) {
-    if (forcesTopic || formulaSet.size < 4) {
+    if (forcesTopic || waveTopic || formulaSet.size < 4) {
       formulaSet.add(formula)
     }
   }
@@ -234,7 +253,9 @@ async function analyzePastPapers(subject: string, topic: string, level: string, 
       ? rankedSubtopics
       : forcesTopic
         ? FORCES_FALLBACK_SUBTOPICS
-        : [{ name: topic, count: chunks.length || 1 }],
+        : waveTopic
+          ? WAVE_FALLBACK_SUBTOPICS
+          : [{ name: topic, count: chunks.length || 1 }],
     formulas: Array.from(formulaSet).slice(0, 10),
     patterns: patterns.length ? patterns : DEFAULT_FALLBACK_PATTERNS,
     context: buildContext(chunks),
@@ -292,12 +313,14 @@ ${memoryContext || 'No session memory yet.'}
 
 RESPONSE REQUIREMENTS:
 - If mode is start, build a structured night-before prep plan.
+- Use the ranked subtopics and formulas above. Do not give generic labels like "definitions" without naming the exact concept.
 - If message is skip/next, move to the next ranked subtopic immediately.
 - If message is bujhini/don't understand, explain the current subtopic differently with analogy and a tiny example.
 - If message is example/question dao, give a past-paper-style question from the retrieved context if possible, plus mark scheme.
 - If message is formula, show formulas only.
 - If message is summary, give exactly 3 bullets.
 - No LaTeX chemistry \\ce{} syntax. Use plain text like H2O, NaCl, F = ma.
+- No emoji icons. No decorative symbols.
 - End with exactly: "Got it? Or want me to explain differently?"
 `.trim()
 }
@@ -420,7 +443,7 @@ export async function POST(req: Request) {
     })
 
     if (!rate.allowed) {
-      return Response.json({ error: 'Rate limit reached. Try again soon.' }, { status: 429 })
+      return Response.json({ error: 'Rate limit reached. Please wait a little.' }, { status: 429 })
     }
   }
 
