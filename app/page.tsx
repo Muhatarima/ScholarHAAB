@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { signOut } from '@/app/auth/actions'
 import { buildMetadata } from '@/lib/seo'
 import { getAuthenticatedUser } from '@/lib/supabase/serverClient'
 
@@ -32,9 +33,28 @@ const cards = [
   },
 ]
 
+const navLinkStyle = {
+  color: '#9999BB',
+  fontSize: 13,
+  padding: '9px 0',
+  textDecoration: 'none',
+} as const
+
+const navButtonStyle = {
+  border: '1px solid rgba(170,85,255,0.34)',
+  borderRadius: 999,
+  background: 'transparent',
+  color: '#E8E8FF',
+  cursor: 'pointer',
+  fontFamily: 'inherit',
+  fontSize: 13,
+  padding: '9px 14px',
+  textDecoration: 'none',
+} as const
+
 function Logo() {
   return (
-    <Link href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
+    <Link className="landing-logo" href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
       <svg width="154" height="54" viewBox="0 0 154 54" role="img" aria-label="ScholarHAAB">
         <defs>
           <linearGradient id="haabGradient" x1="0" x2="1" y1="0" y2="1">
@@ -226,7 +246,10 @@ export default async function Home() {
         }
         @media (max-width: 520px) {
           .landing-shell { width: min(100% - 24px, 1180px) !important; padding-top: 74px !important; }
-          .nav-link-solver { display: none !important; }
+          .landing-nav { align-items: flex-start !important; gap: 10px !important; padding: 12px 14px !important; }
+          .landing-logo svg { width: 126px !important; height: 44px !important; }
+          .landing-nav-actions { width: 100% !important; justify-content: center !important; gap: 8px !important; flex-wrap: wrap !important; }
+          .landing-nav-link, .landing-nav-button { font-size: 12px !important; padding: 8px 10px !important; }
           .landing-card-title { font-size: 18px !important; }
           .landing-card-copy { font-size: 12px !important; line-height: 1.45 !important; }
         }
@@ -235,12 +258,15 @@ export default async function Home() {
       <Blackhole />
 
       <nav
+        className="landing-nav"
         style={{
           position: 'relative',
           zIndex: 2,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: 18,
+          flexWrap: 'wrap',
           padding: '14px clamp(10px, 4vw, 36px)',
           borderBottom: '1px solid rgba(140,80,255,0.1)',
           background: 'rgba(0,0,13,0.42)',
@@ -248,23 +274,29 @@ export default async function Home() {
         }}
       >
         <Logo />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <Link className="nav-link-solver" href="/qbank" style={{ color: '#9999BB', fontSize: 13, textDecoration: 'none' }}>
-            Solver
-          </Link>
-          <Link
-            href="/login?next=/qbank"
-            style={{
-              border: '1px solid rgba(170,85,255,0.34)',
-              borderRadius: 999,
-              color: '#E8E8FF',
-              fontSize: 13,
-              padding: '9px 14px',
-              textDecoration: 'none',
-            }}
-          >
-            Sign in
-          </Link>
+        <div className="landing-nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          {user ? (
+            <>
+              <Link className="landing-nav-link" href="/qbank" style={navLinkStyle}>
+                Solver
+              </Link>
+              <Link className="landing-nav-link" href="/dashboard" style={navLinkStyle}>
+                Dashboard
+              </Link>
+              <Link className="landing-nav-link" href="/exam-prep" style={navLinkStyle}>
+                Exam Mode
+              </Link>
+              <form action={signOut}>
+                <button className="landing-nav-button" type="submit" style={navButtonStyle}>
+                  Logout
+                </button>
+              </form>
+            </>
+          ) : (
+            <Link className="landing-nav-button" href="/login?next=/qbank" style={navButtonStyle}>
+              Sign in
+            </Link>
+          )}
         </div>
       </nav>
 

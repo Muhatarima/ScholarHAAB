@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import RichMessageContent from '@/components/RichMessageContent'
 import StarBackdrop from '@/components/StarBackdrop'
 import type { Product, PromptMode } from '@/lib/products'
@@ -146,7 +146,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
   void product
   const bottomRef = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [sessions, setSessions] = useState<ChatSessionSummary[]>([])
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -154,7 +153,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
   const [mode, setMode] = useState<PromptMode>('direct')
   const [loading, setLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [filePreviews, setFilePreviews] = useState<FilePreview[]>([])
   const [usage, setUsage] = useState<UsageState | null>(null)
@@ -214,7 +212,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
     setInput('')
     updateSelectedFiles([])
     setMode('direct')
-    setMobileDrawerOpen(false)
   }
 
   function updateSelectedFiles(files: File[]) {
@@ -232,30 +229,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
 
   function removeSelectedFile(index: number) {
     updateSelectedFiles(selectedFiles.filter((_, currentIndex) => currentIndex !== index))
-  }
-
-  function handleTouchStart(event: TouchEvent<HTMLElement>) {
-    const touch = event.touches[0]
-    if (!touch) return
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY }
-  }
-
-  function handleTouchEnd(event: TouchEvent<HTMLElement>) {
-    const start = touchStartRef.current
-    const touch = event.changedTouches[0]
-    touchStartRef.current = null
-    if (!start || !touch) return
-
-    const dx = touch.clientX - start.x
-    const dy = touch.clientY - start.y
-    if (Math.abs(dx) < 70 || Math.abs(dy) > 55) return
-
-    if (start.x < 34 && dx > 0) {
-      setMobileDrawerOpen(true)
-    }
-    if (mobileDrawerOpen && dx < 0) {
-      setMobileDrawerOpen(false)
-    }
   }
 
   async function signOut() {
@@ -318,17 +291,14 @@ export default function ProductChatShell({ product }: { product: Product }) {
   const hasMessages = messages.length > 0
 
   return (
-    <main style={styles.shell} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <main style={styles.shell}>
       <StarBackdrop variant="chat" />
       <style>{`
         .mobile-chat-logo,
-        .mobile-new-chat,
-        .mobile-actions,
-        .mobile-drawer,
-        .mobile-drawer-overlay {
+        .mobile-new-chat {
           display: none;
         }
-        @media (max-width: 760px) {
+        @media (max-width: 900px) {
           .shaab-sidebar {
             display: none !important;
           }
@@ -353,66 +323,8 @@ export default function ProductChatShell({ product }: { product: Product }) {
             display: inline-grid !important;
             place-items: center;
           }
-          .mobile-actions {
-            display: grid !important;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-          .mobile-drawer {
-            display: flex !important;
-          }
-          .mobile-drawer-overlay {
-            display: block !important;
-          }
         }
       `}</style>
-
-      <button
-        type="button"
-        aria-label="Close chat menu"
-        className="mobile-drawer-overlay"
-        onClick={() => setMobileDrawerOpen(false)}
-        style={styles.mobileDrawerOverlay(mobileDrawerOpen)}
-      />
-      <aside className="mobile-drawer" style={styles.mobileDrawer(mobileDrawerOpen)}>
-        <div style={styles.mobileDrawerHeader}>
-          <Logo compact />
-          <button type="button" onClick={() => setMobileDrawerOpen(false)} style={styles.drawerClose}>
-            ×
-          </button>
-        </div>
-        <button type="button" onClick={newChat} style={styles.drawerPrimary}>
-          New chat +
-        </button>
-        <div style={styles.drawerSessions}>
-          {sessions.slice(0, 10).map((session) => (
-            <button
-              key={session.id}
-              type="button"
-              onClick={() => {
-                setMobileDrawerOpen(false)
-                void loadSession(session.id)
-              }}
-              style={styles.sessionButton}
-            >
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {session.title || session.lastMessagePreview || 'Chat'}
-              </span>
-              <span style={{ color: '#77779d', fontSize: 11 }}>{formatRelativeDate(session.updatedAt)}</span>
-            </button>
-          ))}
-        </div>
-        <div style={styles.drawerActions}>
-          <Link href="/dashboard" style={styles.drawerAction}>
-            📊 Dashboard
-          </Link>
-          <Link href="/exam-prep" style={styles.drawerAction}>
-            🎯 Night before exam
-          </Link>
-          <button type="button" onClick={() => void signOut()} style={styles.drawerAction}>
-            👤 Profile
-          </button>
-        </div>
-      </aside>
 
       <aside className={sidebarOpen ? 'shaab-sidebar shaab-sidebar-open' : 'shaab-sidebar'} style={styles.sidebar(sidebarOpen)}>
         <button type="button" onClick={() => setSidebarOpen((value) => !value)} style={styles.logoButton}>
@@ -448,15 +360,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
       </aside>
 
       <section className="shaab-main" style={styles.main(sidebarOpen)}>
-        <button
-          type="button"
-          className="mobile-chat-logo"
-          onClick={() => setMobileDrawerOpen(true)}
-          style={styles.mobileLogoButton}
-          aria-label="Open chats"
-        >
+        <div className="mobile-chat-logo" style={styles.mobileLogoButton}>
           <LogoSvg compact />
-        </button>
+        </div>
         <header style={styles.topbar}>
           <div style={styles.modeTabs}>
             {(['direct', 'tutor'] as PromptMode[]).map((item) => (
@@ -480,24 +386,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
                   {suggestion}
                 </button>
               ))}
-            </div>
-            <div className="mobile-actions" style={styles.mobileActions}>
-              <button type="button" onClick={newChat} style={styles.mobileActionCard}>
-                <span style={styles.mobileActionIcon}>+</span>
-                <span>New chat</span>
-              </button>
-              <Link href="/dashboard" style={styles.mobileActionCard}>
-                <span style={styles.mobileActionIcon}>📊</span>
-                <span>Dashboard</span>
-              </Link>
-              <Link href="/exam-prep" style={styles.mobileActionCard}>
-                <span style={styles.mobileActionIcon}>🎯</span>
-                <span>Night before exam</span>
-              </Link>
-              <button type="button" onClick={() => void signOut()} style={styles.mobileActionCard}>
-                <span style={styles.mobileActionIcon}>👤</span>
-                <span>Profile</span>
-              </button>
             </div>
           </div>
         ) : (
