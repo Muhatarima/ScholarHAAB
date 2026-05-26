@@ -1,0 +1,16 @@
+# Local data and generated intelligence assets are not deploy artifacts.
+data/
+chromadb/
+scholarhaaab-intelligence/
+scripts/
+reports/
+eval/
+output/
+extracted/
+
+# Heavy generated files.
+*.jsonl
+*.sqlite3
+*.db
+*.bin
+*.pdf

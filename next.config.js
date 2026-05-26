@@ -2,6 +2,18 @@
 const nextConfig = {
   output: 'standalone',
   outputFileTracingRoot: __dirname,
+  outputFileTracingExcludes: {
+    '/**': [
+      'data/**/*',
+      'chromadb/**/*',
+      'scholarhaaab-intelligence/**/*',
+      'scripts/**/*',
+      'reports/**/*',
+      'eval/**/*',
+      'output/**/*',
+      'extracted/**/*',
+    ],
+  },
   transpilePackages: ['katex', 'react-katex'],
   serverExternalPackages: ['@supabase/supabase-js'],
 

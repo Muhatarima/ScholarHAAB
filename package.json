@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "build": "next build --webpack && node tools/strip-next-traces.mjs",
     "start": "next start",
     "lint": "eslint",
     "rebuild:qbank-concepts": "node scripts/rebuild_qbank_concept_index.mjs",
