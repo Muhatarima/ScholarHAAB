@@ -4,7 +4,6 @@ import PwaRegister from '@/components/PwaRegister'
 import PageViewTracker from '@/components/analytics/PageViewTracker'
 import OfflineBanner from '@/components/ui/OfflineBanner'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
-import { validateEnv } from '@/lib/env'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo'
 import 'katex/dist/katex.min.css'
 import './globals.css'
@@ -45,8 +44,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  validateEnv()
-
   return (
     <html lang="en">
       <body>
