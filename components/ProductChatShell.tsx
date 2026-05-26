@@ -41,7 +41,7 @@ type FilePreview = {
   url?: string
 }
 
-type ThemeIconName = 'file' | 'attach'
+type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
 
 const ENDPOINT = '/api/qbank/chat'
 const SUGGESTIONS = [
@@ -142,6 +142,24 @@ function ThemeIcon({ name, size = 20 }: { name: ThemeIconName; size?: number }) 
 
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      {name === 'dashboard' ? (
+        <>
+          <path {...common} d="M4 13.5h6.5V20H4zM13.5 4H20v16h-6.5zM4 4h6.5v6.5H4z" />
+          <path {...common} d="M6.5 17h1.8M16 8h1.8M16 12h1.8" />
+        </>
+      ) : null}
+      {name === 'exam' ? (
+        <>
+          <path {...common} d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.3 6.1-.9z" />
+          <path {...common} d="M12 8.2v4.2l2.6 1.5" />
+        </>
+      ) : null}
+      {name === 'logout' ? (
+        <>
+          <path {...common} d="M9.5 4.5H6.8A2.3 2.3 0 004.5 6.8v10.4a2.3 2.3 0 002.3 2.3h2.7" />
+          <path {...common} d="M13 8l4 4-4 4M17 12H8" />
+        </>
+      ) : null}
       {name === 'file' ? (
         <>
           <path {...common} d="M7 3.8h6.2L18 8.6v11.6H7z" />
@@ -260,6 +278,11 @@ export default function ProductChatShell({ product }: { product: Product }) {
     updateSelectedFiles(selectedFiles.filter((_, currentIndex) => currentIndex !== index))
   }
 
+  async function signOut() {
+    await createSupabaseClient().auth.signOut()
+    window.location.href = '/login'
+  }
+
   async function sendMessage(preset?: string) {
     const text = (preset ?? input).trim()
     if ((!text && selectedFiles.length === 0) || loading) return
@@ -347,6 +370,14 @@ export default function ProductChatShell({ product }: { product: Product }) {
             display: inline-grid !important;
             place-items: center;
           }
+          .shaab-top-nav {
+            right: 12px !important;
+            gap: 5px !important;
+          }
+          .shaab-top-nav-link {
+            height: 30px !important;
+            width: 30px !important;
+          }
         }
       `}</style>
 
@@ -387,7 +418,18 @@ export default function ProductChatShell({ product }: { product: Product }) {
           <button type="button" onClick={newChat} className="mobile-new-chat" style={styles.mobileNewChat} title="New chat">
             +
           </button>
-          <div style={styles.credit}>{credits}</div>
+          <nav className="shaab-top-nav" style={styles.topNav} aria-label="App navigation">
+            <span style={styles.credit}>{credits}</span>
+            <Link className="shaab-top-nav-link" href="/dashboard" style={styles.topNavLink} title="Dashboard" aria-label="Dashboard">
+              <ThemeIcon name="dashboard" size={17} />
+            </Link>
+            <Link className="shaab-top-nav-link" href="/exam-prep" style={styles.topNavLink} title="Exam Mode" aria-label="Exam Mode">
+              <ThemeIcon name="exam" size={17} />
+            </Link>
+            <button className="shaab-top-nav-link" type="button" onClick={() => void signOut()} style={styles.topNavButton} title="Logout" aria-label="Logout">
+              <ThemeIcon name="logout" size={17} />
+            </button>
+          </nav>
         </header>
 
         {!hasMessages ? (
@@ -646,13 +688,42 @@ const styles = {
       fontSize: 13,
       padding: 4,
     }) satisfies CSSProperties,
-  credit: {
+  topNav: {
     position: 'fixed',
-    top: 18,
+    top: 11,
     right: 22,
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 8,
+    pointerEvents: 'auto',
+  } satisfies CSSProperties,
+  credit: {
     color: '#9F9FC4',
     fontSize: 12,
-    pointerEvents: 'auto',
+    minWidth: 16,
+    textAlign: 'center',
+  } satisfies CSSProperties,
+  topNavLink: {
+    width: 34,
+    height: 34,
+    border: '1px solid rgba(170,85,255,0.16)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#b975ff',
+    display: 'grid',
+    placeItems: 'center',
+    textDecoration: 'none',
+  } satisfies CSSProperties,
+  topNavButton: {
+    width: 34,
+    height: 34,
+    border: '1px solid rgba(170,85,255,0.16)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#b975ff',
+    cursor: 'pointer',
+    display: 'grid',
+    placeItems: 'center',
   } satisfies CSSProperties,
   mobileNewChat: {
     position: 'fixed',

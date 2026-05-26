@@ -85,6 +85,39 @@ function AttachIcon() {
   )
 }
 
+function NavIcon({ name }: { name: 'dashboard' | 'solver' | 'logout' }) {
+  const common = {
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    strokeWidth: 1.8,
+  }
+
+  return (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24">
+      {name === 'dashboard' ? (
+        <>
+          <path {...common} d="M4 13.5h6.5V20H4zM13.5 4H20v16h-6.5zM4 4h6.5v6.5H4z" />
+          <path {...common} d="M6.5 17h1.8M16 8h1.8M16 12h1.8" />
+        </>
+      ) : null}
+      {name === 'solver' ? (
+        <>
+          <path {...common} d="M5 5.5h14v9.2H8.6L5 18.5z" />
+          <path {...common} d="M8.5 9h7M8.5 12h4.8" />
+        </>
+      ) : null}
+      {name === 'logout' ? (
+        <>
+          <path {...common} d="M9.5 4.5H6.8A2.3 2.3 0 004.5 6.8v10.4a2.3 2.3 0 002.3 2.3h2.7" />
+          <path {...common} d="M13 8l4 4-4 4M17 12H8" />
+        </>
+      ) : null}
+    </svg>
+  )
+}
+
 function ExamPrepInner() {
   const bottomRef = useRef<HTMLDivElement>(null)
   const [subject, setSubject] = useState('Physics')
@@ -107,6 +140,11 @@ function ExamPrepInner() {
     setTopic(params.get('topic') || '')
     setLevel(params.get('level') || 'A Level')
   }, [])
+
+  async function signOut() {
+    await createSupabaseClient().auth.signOut()
+    window.location.href = '/login'
+  }
 
   async function streamExamPrep(nextMessage: string, mode: ExamPrepMode) {
     if (loading) return
@@ -240,6 +278,17 @@ function ExamPrepInner() {
           +
         </button>
       </aside>
+      <nav style={styles.topNav} aria-label="App navigation">
+        <Link href="/dashboard" style={styles.navIcon} aria-label="Dashboard" title="Dashboard">
+          <NavIcon name="dashboard" />
+        </Link>
+        <Link href="/qbank" style={styles.navIcon} aria-label="Solver" title="Solver">
+          <NavIcon name="solver" />
+        </Link>
+        <button type="button" onClick={() => void signOut()} style={styles.navButton} aria-label="Logout" title="Logout">
+          <NavIcon name="logout" />
+        </button>
+      </nav>
 
       <section style={styles.chatMain}>
         <div style={styles.history}>
@@ -248,7 +297,7 @@ function ExamPrepInner() {
             return (
               <div key={`${message.role}-${index}`} style={styles.messageRow(isUser)}>
                 <div style={isUser ? styles.userBubble : styles.aiText}>
-                  <RichMessageContent content={message.content || '...'} />
+                  <RichMessageContent content={message.content || '...'} suppressDiagrams />
                 </div>
               </div>
             )
@@ -385,6 +434,36 @@ const styles = {
     color: '#E8E8FF',
     cursor: 'pointer',
     height: 42,
+  } satisfies CSSProperties,
+  topNav: {
+    position: 'fixed',
+    top: 12,
+    right: 18,
+    zIndex: 45,
+    display: 'inline-flex',
+    gap: 8,
+  } satisfies CSSProperties,
+  navIcon: {
+    width: 34,
+    height: 34,
+    border: '1px solid rgba(170,85,255,0.16)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#b975ff',
+    display: 'grid',
+    placeItems: 'center',
+    textDecoration: 'none',
+  } satisfies CSSProperties,
+  navButton: {
+    width: 34,
+    height: 34,
+    border: '1px solid rgba(170,85,255,0.16)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#b975ff',
+    cursor: 'pointer',
+    display: 'grid',
+    placeItems: 'center',
   } satisfies CSSProperties,
   chatMain: {
     marginLeft: 74,

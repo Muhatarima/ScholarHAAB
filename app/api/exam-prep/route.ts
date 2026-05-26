@@ -391,6 +391,21 @@ function textStream(text: string) {
   })
 }
 
+function isExamPrepCommand(message: string) {
+  const normalized = normalizeText(message)
+  return /^(skip|next|formula|formulas|question|questions|summary|summarise|summarize|test me|quiz me)$/.test(normalized)
+}
+
+function normalizeExamPrepCommand(message: string) {
+  const normalized = normalizeText(message)
+  if (/^questions?$/.test(normalized)) return 'give me a past-paper-style question'
+  if (/^formulas?$/.test(normalized)) return 'show the key formulas'
+  if (/^(summary|summari[sz]e)$/.test(normalized)) return 'summarise this exam topic'
+  if (/^skip|next$/.test(normalized)) return 'skip to the next important subtopic'
+  if (/^test me|quiz me$/.test(normalized)) return 'test me with an exam question'
+  return message
+}
+
 async function geminiStream(prompt: string, fallback: string) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
@@ -454,10 +469,11 @@ export async function POST(req: Request) {
   const mode = asMode(body.mode)
   const rawMessage = asString(body.message, mode === 'start' ? `Start ${topic}` : 'summary')
   const history = asHistory(body.history)
-  const understood = await understandMessage(rawMessage, history as UnderstandingMessage[])
-  const message = understood.cleanMessage
+  const examCommand = mode === 'chat' && isExamPrepCommand(rawMessage)
+  const understood = examCommand ? null : await understandMessage(rawMessage, history as UnderstandingMessage[])
+  const message = examCommand ? normalizeExamPrepCommand(rawMessage) : understood?.cleanMessage || rawMessage
 
-  if (!understood.shouldRunRag || (understood.intent === 'confused' && mode !== 'start')) {
+  if (understood && (!understood.shouldRunRag || (understood.intent === 'confused' && mode !== 'start'))) {
     return new Response(textStream(formatUnderstandingResponse(understood)), {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
