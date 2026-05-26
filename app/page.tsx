@@ -35,21 +35,21 @@ const cards = [
 function Logo() {
   return (
     <Link href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-      <svg width="184" height="48" viewBox="0 0 184 48" role="img" aria-label="ScholarHAAB">
+      <svg width="198" height="46" viewBox="0 0 198 46" role="img" aria-label="ScholarHAAB">
         <defs>
           <linearGradient id="haabGradient" x1="0" x2="1" y1="0" y2="1">
             <stop offset="0%" stopColor="#f7edff" />
             <stop offset="48%" stopColor="#c989ff" />
             <stop offset="100%" stopColor="#8b3ee6" />
           </linearGradient>
-          <path id="scholarCurve" d="M 18 31 C 52 8, 96 8, 132 30" />
+          <path id="scholarCurve" d="M 14 25 C 42 14, 78 14, 108 25" />
         </defs>
         <text
           fill="#9f5df7"
           fontFamily="Georgia, serif"
-          fontSize="12"
+          fontSize="10"
           fontStyle="italic"
-          letterSpacing="5"
+          letterSpacing="4"
           opacity="0.9"
         >
           <textPath href="#scholarCurve" startOffset="0%">
@@ -57,11 +57,11 @@ function Logo() {
           </textPath>
         </text>
         <text
-          x="72"
-          y="33"
+          x="92"
+          y="31"
           fill="url(#haabGradient)"
           fontFamily="var(--font-sans), sans-serif"
-          fontSize="29"
+          fontSize="28"
           fontWeight="800"
           letterSpacing="3"
         >
@@ -244,13 +244,12 @@ export default async function Home() {
           position: 'relative',
           zIndex: 2,
           flex: 1,
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(320px, 440px)',
-          alignItems: 'start',
-          gap: 'clamp(28px, 6vw, 92px)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(30px, 5vw, 54px)',
           width: 'min(1180px, calc(100vw - 40px))',
           margin: '0 auto',
-          padding: '112px 0 72px',
+          padding: '108px 0 72px',
         }}
       >
         <div>
@@ -279,7 +278,9 @@ export default async function Home() {
           <h1
             className="hero-title"
             style={{
-              color: '#fbf9ff',
+              background: 'linear-gradient(112deg,#ffffff 0%,#f2e8ff 38%,#c78bff 67%,#8f3dff 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
               fontSize: 'clamp(54px, 9vw, 112px)',
               fontWeight: 500,
               letterSpacing: '-0.07em',
@@ -316,7 +317,9 @@ export default async function Home() {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
             gap: 14,
-            marginTop: 'clamp(82px, 15vh, 148px)',
+            marginLeft: 'auto',
+            maxWidth: 560,
+            width: 'min(100%, 560px)',
           }}
         >
           {cards.map((card) => (
