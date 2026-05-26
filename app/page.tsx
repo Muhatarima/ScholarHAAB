@@ -34,23 +34,78 @@ const cards = [
 ]
 
 const navLinkStyle = {
+  alignItems: 'center',
   color: '#9999BB',
+  display: 'inline-flex',
   fontSize: 13,
+  gap: 7,
   padding: '9px 0',
   textDecoration: 'none',
+  whiteSpace: 'nowrap',
 } as const
 
 const navButtonStyle = {
+  alignItems: 'center',
   border: '1px solid rgba(170,85,255,0.34)',
   borderRadius: 999,
   background: 'transparent',
   color: '#E8E8FF',
   cursor: 'pointer',
+  display: 'inline-flex',
   fontFamily: 'inherit',
   fontSize: 13,
+  gap: 7,
   padding: '9px 14px',
   textDecoration: 'none',
+  whiteSpace: 'nowrap',
 } as const
+
+type NavIconName = 'solver' | 'dashboard' | 'exam' | 'logout' | 'signin'
+
+function NavIcon({ name }: { name: NavIconName }) {
+  const common = {
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    strokeWidth: 1.8,
+  }
+
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#b975ff', flexShrink: 0 }}>
+      {name === 'solver' ? (
+        <>
+          <path {...common} d="M5 6.2h14M5 12h8.5M5 17.8h5.5" />
+          <path {...common} d="M16.3 14.2l1.7 1.7 3-3" />
+        </>
+      ) : null}
+      {name === 'dashboard' ? (
+        <>
+          <path {...common} d="M4 13.5h6.5V20H4zM13.5 4H20v16h-6.5zM4 4h6.5v6.5H4z" />
+          <path {...common} d="M6.5 17h1.8M16 8h1.8M16 12h1.8" />
+        </>
+      ) : null}
+      {name === 'exam' ? (
+        <>
+          <path {...common} d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.3 6.1-.9z" />
+          <path {...common} d="M12 8.2v4.2l2.6 1.5" />
+        </>
+      ) : null}
+      {name === 'logout' ? (
+        <>
+          <path {...common} d="M9.5 4.5H6.8A2.3 2.3 0 004.5 6.8v10.4a2.3 2.3 0 002.3 2.3h2.7" />
+          <path {...common} d="M13 8l4 4-4 4M17 12H8" />
+        </>
+      ) : null}
+      {name === 'signin' ? (
+        <>
+          <path {...common} d="M14.5 4.5h2.7a2.3 2.3 0 012.3 2.3v10.4a2.3 2.3 0 01-2.3 2.3h-2.7" />
+          <path {...common} d="M11 8l4 4-4 4M15 12H4.5" />
+        </>
+      ) : null}
+    </svg>
+  )
+}
 
 function Logo() {
   return (
@@ -278,22 +333,27 @@ export default async function Home() {
           {user ? (
             <>
               <Link className="landing-nav-link" href="/qbank" style={navLinkStyle}>
+                <NavIcon name="solver" />
                 Solver
               </Link>
               <Link className="landing-nav-link" href="/dashboard" style={navLinkStyle}>
+                <NavIcon name="dashboard" />
                 Dashboard
               </Link>
               <Link className="landing-nav-link" href="/exam-prep" style={navLinkStyle}>
+                <NavIcon name="exam" />
                 Exam Mode
               </Link>
               <form action={signOut}>
                 <button className="landing-nav-button" type="submit" style={navButtonStyle}>
+                  <NavIcon name="logout" />
                   Logout
                 </button>
               </form>
             </>
           ) : (
             <Link className="landing-nav-button" href="/login?next=/qbank" style={navButtonStyle}>
+              <NavIcon name="signin" />
               Sign in
             </Link>
           )}

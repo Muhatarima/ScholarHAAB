@@ -41,6 +41,8 @@ type FilePreview = {
   url?: string
 }
 
+type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
+
 const ENDPOINT = '/api/qbank/chat'
 const SUGGESTIONS = [
   'Explain photosynthesis',
@@ -126,6 +128,51 @@ function Logo({ compact = false }: { compact?: boolean }) {
     <Link href="/" style={{ display: 'inline-flex', lineHeight: 0, textDecoration: 'none' }} aria-label="ScholarHAAB home">
       <LogoSvg compact={compact} />
     </Link>
+  )
+}
+
+function ThemeIcon({ name, size = 20 }: { name: ThemeIconName; size?: number }) {
+  const common = {
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    strokeWidth: 1.8,
+  }
+
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      {name === 'dashboard' ? (
+        <>
+          <path {...common} d="M4 13.5h6.5V20H4zM13.5 4H20v16h-6.5zM4 4h6.5v6.5H4z" />
+          <path {...common} d="M6.5 17h1.8M16 8h1.8M16 12h1.8" />
+        </>
+      ) : null}
+      {name === 'exam' ? (
+        <>
+          <path {...common} d="M12 3.5l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.3 6.1-.9z" />
+          <path {...common} d="M12 8.2v4.2l2.6 1.5" />
+        </>
+      ) : null}
+      {name === 'logout' ? (
+        <>
+          <path {...common} d="M9.5 4.5H6.8A2.3 2.3 0 004.5 6.8v10.4a2.3 2.3 0 002.3 2.3h2.7" />
+          <path {...common} d="M13 8l4 4-4 4M17 12H8" />
+        </>
+      ) : null}
+      {name === 'file' ? (
+        <>
+          <path {...common} d="M7 3.8h6.2L18 8.6v11.6H7z" />
+          <path {...common} d="M13 4v5h5M9.8 13h5M9.8 16h3.5" />
+        </>
+      ) : null}
+      {name === 'attach' ? (
+        <>
+          <path {...common} d="M8.4 12.7l5.7-5.7a3.2 3.2 0 014.5 4.5l-7.1 7.1a4.7 4.7 0 01-6.6-6.6l7.7-7.7" />
+          <path {...common} d="M10.3 14.6l5.4-5.4" />
+        </>
+      ) : null}
+    </svg>
   )
 }
 
@@ -241,7 +288,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
     if ((!text && selectedFiles.length === 0) || loading) return
 
     const preview = [text, ...selectedFiles.map((file) => `[${file.name}]`)].filter(Boolean).join('\n')
-    setMessages((current) => [...current, { role: 'user', content: preview || '📎' }])
+    setMessages((current) => [...current, { role: 'user', content: preview || '[Attachment]' }])
     setInput('')
     setLoading(true)
 
@@ -348,13 +395,13 @@ export default function ProductChatShell({ product }: { product: Product }) {
 
         <div style={styles.sidebarBottom}>
           <Link href="/dashboard" style={styles.iconLink} title="Dashboard">
-            📊
+            <ThemeIcon name="dashboard" />
           </Link>
           <Link href="/exam-prep" style={styles.iconLink} title="Exam Mode">
-            🎯
+            <ThemeIcon name="exam" />
           </Link>
-          <button type="button" onClick={() => void signOut()} style={styles.iconButton} title="Profile">
-            👤
+          <button type="button" onClick={() => void signOut()} style={styles.iconButton} title="Logout">
+            <ThemeIcon name="logout" />
           </button>
         </div>
       </aside>
@@ -427,7 +474,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
                 {preview.url ? (
                   <img src={preview.url} alt="" style={styles.attachmentThumb} />
                 ) : (
-                  <span style={styles.attachmentFileIcon}>📄</span>
+                  <span style={styles.attachmentFileIcon}>
+                    <ThemeIcon name="file" size={18} />
+                  </span>
                 )}
                 <span style={styles.attachmentName}>{preview.name}</span>
                 <button type="button" onClick={() => removeSelectedFile(index)} style={styles.attachmentRemove} aria-label={`Remove ${preview.name}`}>
@@ -447,7 +496,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
         />
         <div style={styles.composerRow}>
           <button type="button" onClick={() => fileRef.current?.click()} style={styles.attach} aria-label="Upload photo or PDF">
-            📎
+            <ThemeIcon name="attach" />
           </button>
           <input
             value={input}
@@ -604,7 +653,7 @@ const styles = {
   } satisfies CSSProperties,
   iconLink: {
     borderRadius: 14,
-    color: '#E8E8FF',
+    color: '#b975ff',
     display: 'grid',
     fontSize: 20,
     height: 44,
@@ -615,7 +664,7 @@ const styles = {
     border: 'none',
     borderRadius: 14,
     background: 'transparent',
-    color: '#E8E8FF',
+    color: '#b975ff',
     cursor: 'pointer',
     fontSize: 20,
     height: 44,
@@ -825,6 +874,7 @@ const styles = {
     height: 38,
     borderRadius: 10,
     background: 'rgba(170,85,255,0.12)',
+    color: '#b975ff',
   } satisfies CSSProperties,
   attachmentName: {
     flex: 1,
@@ -853,7 +903,7 @@ const styles = {
     border: 'none',
     borderRadius: 999,
     background: 'transparent',
-    color: '#9F9FC4',
+    color: '#b975ff',
     cursor: 'pointer',
     fontSize: 18,
   } satisfies CSSProperties,
