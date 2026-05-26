@@ -74,33 +74,45 @@ function readFileAsBase64(file: File): Promise<string> {
 }
 
 function Logo({ compact = false }: { compact?: boolean }) {
+  const curveId = compact ? 'chatScholarCurveCompact' : 'chatScholarCurveFull'
+  const gradientId = compact ? 'chatHaabGradientCompact' : 'chatHaabGradientFull'
+
   return (
-    <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none' }}>
-      <span
-        style={{
-          color: '#7744aa',
-          fontFamily: 'Georgia, serif',
-          fontSize: compact ? 8 : 10,
-          fontStyle: 'italic',
-          letterSpacing: compact ? 2 : 3,
-          textTransform: 'uppercase',
-        }}
-      >
-        scholar
-      </span>
-      <span
-        style={{
-          background: 'linear-gradient(120deg,#cc88ff,#aa55ff,#8833dd)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          fontSize: compact ? 16 : 20,
-          fontWeight: 600,
-          letterSpacing: compact ? 1 : 2,
-          textTransform: 'uppercase',
-        }}
-      >
-        HAAB
-      </span>
+    <Link href="/" style={{ display: 'inline-flex', lineHeight: 0, textDecoration: 'none' }} aria-label="ScholarHAAB home">
+      <svg width={compact ? 104 : 136} height={compact ? 42 : 54} viewBox="0 0 136 54" role="img" aria-hidden="true">
+        <defs>
+          <linearGradient id={gradientId} x1="24" x2="112" y1="18" y2="48" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#d7a0ff" />
+            <stop offset="0.52" stopColor="#b867ff" />
+            <stop offset="1" stopColor="#8f38f0" />
+          </linearGradient>
+          <path id={curveId} d="M 18 23 Q 68 4 118 23" />
+        </defs>
+        <text
+          fill="#9f5df7"
+          fontFamily="Georgia, serif"
+          fontSize={compact ? 10 : 11}
+          fontStyle="italic"
+          letterSpacing={compact ? 4 : 5}
+          opacity="0.92"
+        >
+          <textPath href={`#${curveId}`} startOffset="50%" textAnchor="middle">
+            SCHOLAR
+          </textPath>
+        </text>
+        <text
+          x="68"
+          y="45"
+          fill={`url(#${gradientId})`}
+          fontFamily="var(--font-sans), sans-serif"
+          fontSize={compact ? 28 : 31}
+          fontWeight="800"
+          letterSpacing={compact ? 3 : 4}
+          textAnchor="middle"
+        >
+          HAAB
+        </text>
+      </svg>
     </Link>
   )
 }
@@ -244,12 +256,40 @@ export default function ProductChatShell({ product }: { product: Product }) {
     <main style={styles.shell}>
       <StarBackdrop variant="chat" />
       <style>{`
+        .mobile-chat-logo,
+        .mobile-new-chat,
+        .mobile-actions {
+          display: none;
+        }
         @media (max-width: 760px) {
-          .shaab-sidebar { width: 62px !important; }
-          .shaab-sidebar-open { width: 218px !important; }
-          .shaab-session-list { display: none !important; }
-          .shaab-main { margin-left: 62px !important; }
-          .shaab-composer { left: 72px !important; width: calc(100vw - 84px) !important; }
+          .shaab-sidebar {
+            display: none !important;
+          }
+          .shaab-main {
+            margin-left: 0 !important;
+            padding: 76px 18px 118px !important;
+          }
+          .shaab-composer {
+            left: 16px !important;
+            right: 16px !important;
+            width: auto !important;
+            bottom: 14px !important;
+          }
+          .mobile-chat-logo {
+            display: block !important;
+            position: fixed;
+            top: 17px;
+            left: 18px;
+            z-index: 25;
+          }
+          .mobile-new-chat {
+            display: inline-grid !important;
+            place-items: center;
+          }
+          .mobile-actions {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
       `}</style>
 
@@ -287,6 +327,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
       </aside>
 
       <section className="shaab-main" style={styles.main(sidebarOpen)}>
+        <div className="mobile-chat-logo">
+          <Logo compact />
+        </div>
         <header style={styles.topbar}>
           <div style={styles.modeTabs}>
             {(['direct', 'tutor'] as PromptMode[]).map((item) => (
@@ -295,6 +338,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
               </button>
             ))}
           </div>
+          <button type="button" onClick={newChat} className="mobile-new-chat" style={styles.mobileNewChat} title="New chat">
+            +
+          </button>
           <div style={styles.credit}>{credits}</div>
         </header>
 
@@ -307,6 +353,24 @@ export default function ProductChatShell({ product }: { product: Product }) {
                   {suggestion}
                 </button>
               ))}
+            </div>
+            <div className="mobile-actions" style={styles.mobileActions}>
+              <button type="button" onClick={newChat} style={styles.mobileActionCard}>
+                <span style={styles.mobileActionIcon}>+</span>
+                <span>New chat</span>
+              </button>
+              <Link href="/dashboard" style={styles.mobileActionCard}>
+                <span style={styles.mobileActionIcon}>📊</span>
+                <span>Dashboard</span>
+              </Link>
+              <Link href="/exam-prep" style={styles.mobileActionCard}>
+                <span style={styles.mobileActionIcon}>🎯</span>
+                <span>Exam mode</span>
+              </Link>
+              <button type="button" onClick={() => void signOut()} style={styles.mobileActionCard}>
+                <span style={styles.mobileActionIcon}>👤</span>
+                <span>Profile</span>
+              </button>
             </div>
           </div>
         ) : (
@@ -487,6 +551,22 @@ const styles = {
     fontSize: 12,
     pointerEvents: 'auto',
   } satisfies CSSProperties,
+  mobileNewChat: {
+    position: 'fixed',
+    top: 11,
+    right: 54,
+    zIndex: 25,
+    width: 32,
+    height: 32,
+    border: '1px solid rgba(170,85,255,0.18)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.04)',
+    color: '#E8E8FF',
+    cursor: 'pointer',
+    fontSize: 18,
+    lineHeight: 1,
+    pointerEvents: 'auto',
+  } satisfies CSSProperties,
   empty: {
     minHeight: 'calc(100vh - 180px)',
     display: 'grid',
@@ -517,6 +597,34 @@ const styles = {
     cursor: 'pointer',
     fontSize: 13,
     padding: '9px 12px',
+  } satisfies CSSProperties,
+  mobileActions: {
+    gap: 10,
+    marginTop: 18,
+    width: 'min(100%, 360px)',
+  } satisfies CSSProperties,
+  mobileActionCard: {
+    alignItems: 'center',
+    border: '1px solid rgba(170,85,255,0.14)',
+    borderRadius: 18,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#d8d2f2',
+    cursor: 'pointer',
+    display: 'flex',
+    gap: 9,
+    minHeight: 48,
+    padding: '11px 12px',
+    textAlign: 'left',
+    textDecoration: 'none',
+    fontFamily: 'inherit',
+    fontSize: 13,
+  } satisfies CSSProperties,
+  mobileActionIcon: {
+    display: 'inline-grid',
+    placeItems: 'center',
+    width: 22,
+    color: '#ba7cff',
+    fontSize: 17,
   } satisfies CSSProperties,
   history: {
     display: 'grid',
