@@ -34,32 +34,40 @@ const cards = [
 
 function Logo() {
   return (
-    <Link href="/" style={{ display: 'flex', alignItems: 'baseline', gap: 6, textDecoration: 'none' }}>
-      <span
-        style={{
-          color: '#7744aa',
-          fontFamily: 'Georgia, serif',
-          fontSize: 11,
-          fontStyle: 'italic',
-          letterSpacing: 3,
-          textTransform: 'uppercase',
-        }}
-      >
-        SCHOLAR
-      </span>
-      <span
-        style={{
-          background: 'linear-gradient(120deg,#cc88ff,#aa55ff,#8833dd)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          fontSize: 24,
-          fontWeight: 600,
-          letterSpacing: 2,
-          textTransform: 'uppercase',
-        }}
-      >
-        HAAB
-      </span>
+    <Link href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
+      <svg width="184" height="48" viewBox="0 0 184 48" role="img" aria-label="ScholarHAAB">
+        <defs>
+          <linearGradient id="haabGradient" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="#f7edff" />
+            <stop offset="48%" stopColor="#c989ff" />
+            <stop offset="100%" stopColor="#8b3ee6" />
+          </linearGradient>
+          <path id="scholarCurve" d="M 18 31 C 52 8, 96 8, 132 30" />
+        </defs>
+        <text
+          fill="#9f5df7"
+          fontFamily="Georgia, serif"
+          fontSize="12"
+          fontStyle="italic"
+          letterSpacing="5"
+          opacity="0.9"
+        >
+          <textPath href="#scholarCurve" startOffset="0%">
+            SCHOLAR
+          </textPath>
+        </text>
+        <text
+          x="72"
+          y="33"
+          fill="url(#haabGradient)"
+          fontFamily="var(--font-sans), sans-serif"
+          fontSize="29"
+          fontWeight="800"
+          letterSpacing="3"
+        >
+          HAAB
+        </text>
+      </svg>
     </Link>
   )
 }
@@ -181,7 +189,16 @@ export default async function Home() {
         }
         @media (max-width: 900px) {
           .landing-grid { grid-template-columns: 1fr !important; }
-          .card-grid { grid-template-columns: 1fr !important; }
+          .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; margin-top: 34px !important; }
+          .blackhole { right: -136px !important; top: 36% !important; transform: translateY(-50%) scale(0.72) !important; opacity: 0.82; }
+          .hero-title { font-size: clamp(54px, 17vw, 84px) !important; line-height: 0.94 !important; letter-spacing: -0.075em !important; }
+          .landing-card { min-height: 148px !important; padding: 15px !important; border-radius: 20px !important; }
+        }
+        @media (max-width: 520px) {
+          .landing-shell { width: min(100% - 24px, 1180px) !important; padding-top: 74px !important; }
+          .nav-link-solver { display: none !important; }
+          .landing-card-title { font-size: 18px !important; }
+          .landing-card-copy { font-size: 12px !important; line-height: 1.45 !important; }
         }
       `}</style>
       <Stars />
@@ -194,7 +211,7 @@ export default async function Home() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '18px clamp(18px, 4vw, 36px)',
+          padding: '14px clamp(10px, 4vw, 36px)',
           borderBottom: '1px solid rgba(140,80,255,0.1)',
           background: 'rgba(0,0,13,0.42)',
           backdropFilter: 'blur(12px)',
@@ -202,7 +219,7 @@ export default async function Home() {
       >
         <Logo />
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <Link href="/qbank" style={{ color: '#9999BB', fontSize: 13, textDecoration: 'none' }}>
+          <Link className="nav-link-solver" href="/qbank" style={{ color: '#9999BB', fontSize: 13, textDecoration: 'none' }}>
             Solver
           </Link>
           <Link
@@ -222,18 +239,18 @@ export default async function Home() {
       </nav>
 
       <section
-        className="landing-grid"
+        className="landing-grid landing-shell"
         style={{
           position: 'relative',
           zIndex: 2,
           flex: 1,
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 1fr) minmax(320px, 440px)',
-          alignItems: 'center',
+          alignItems: 'start',
           gap: 'clamp(28px, 6vw, 92px)',
           width: 'min(1180px, calc(100vw - 40px))',
           margin: '0 auto',
-          padding: '54px 0 64px',
+          padding: '112px 0 72px',
         }}
       >
         <div>
@@ -260,16 +277,16 @@ export default async function Home() {
             — PAST PAPER SOLVER ENGINE —
           </div>
           <h1
+            className="hero-title"
             style={{
-              background: 'linear-gradient(118deg,#ffffff 0%,#f4eeff 38%,#c88cff 72%,#ffffff 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: '#fbf9ff',
               fontSize: 'clamp(54px, 9vw, 112px)',
               fontWeight: 500,
               letterSpacing: '-0.07em',
               lineHeight: 0.88,
-              margin: 0,
+              margin: '0 0 38px',
               maxWidth: 760,
+              textShadow: '0 0 42px rgba(210,165,255,0.16)',
             }}
           >
             Beyond borders. <br />
@@ -299,10 +316,12 @@ export default async function Home() {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
             gap: 14,
+            marginTop: 'clamp(82px, 15vh, 148px)',
           }}
         >
           {cards.map((card) => (
             <article
+              className="landing-card"
               key={card.label}
               style={{
                 minHeight: 188,
@@ -328,10 +347,10 @@ export default async function Home() {
                 {card.label}
               </span>
               <div>
-                <h2 style={{ color: '#F4EEFF', fontSize: 22, lineHeight: 1.1, margin: '0 0 10px' }}>
+                <h2 className="landing-card-title" style={{ color: '#F4EEFF', fontSize: 22, lineHeight: 1.1, margin: '0 0 10px' }}>
                   {card.title}
                 </h2>
-                <p style={{ color: '#9F9FC4', fontSize: 13, lineHeight: 1.6, margin: 0 }}>{card.description}</p>
+                <p className="landing-card-copy" style={{ color: '#9F9FC4', fontSize: 13, lineHeight: 1.6, margin: 0 }}>{card.description}</p>
               </div>
             </article>
           ))}

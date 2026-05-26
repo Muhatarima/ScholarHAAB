@@ -15,32 +15,40 @@ type AuthPageProps = {
 
 function Logo() {
   return (
-    <Link href="/" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, textDecoration: 'none' }}>
-      <span
-        style={{
-          color: '#7744aa',
-          fontFamily: 'Georgia, serif',
-          fontSize: 11,
-          fontStyle: 'italic',
-          letterSpacing: 3,
-          textTransform: 'uppercase',
-        }}
-      >
-        scholar
-      </span>
-      <span
-        style={{
-          background: 'linear-gradient(120deg,#cc88ff,#aa55ff,#8833dd)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          fontSize: 24,
-          fontWeight: 600,
-          letterSpacing: 2,
-          textTransform: 'uppercase',
-        }}
-      >
-        HAAB
-      </span>
+    <Link href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
+      <svg width="188" height="54" viewBox="0 0 188 54" role="img" aria-label="ScholarHAAB">
+        <defs>
+          <linearGradient id="authHaabGradient" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="#f7edff" />
+            <stop offset="48%" stopColor="#c989ff" />
+            <stop offset="100%" stopColor="#8b3ee6" />
+          </linearGradient>
+          <path id="authScholarCurve" d="M 20 34 C 54 9, 100 9, 136 32" />
+        </defs>
+        <text
+          fill="#9f5df7"
+          fontFamily="Georgia, serif"
+          fontSize="12"
+          fontStyle="italic"
+          letterSpacing="5"
+          opacity="0.9"
+        >
+          <textPath href="#authScholarCurve" startOffset="0%">
+            SCHOLAR
+          </textPath>
+        </text>
+        <text
+          x="75"
+          y="36"
+          fill="url(#authHaabGradient)"
+          fontFamily="var(--font-sans), sans-serif"
+          fontSize="30"
+          fontWeight="800"
+          letterSpacing="3"
+        >
+          HAAB
+        </text>
+      </svg>
     </Link>
   )
 }
@@ -72,20 +80,26 @@ function SubmitButton() {
 
 function Field({
   autoComplete,
+  minLength,
   name,
   placeholder,
+  required = true,
   type = 'text',
 }: {
   autoComplete?: string
+  minLength?: number
   name: string
   placeholder: string
+  required?: boolean
   type?: string
 }) {
   return (
     <input
       autoComplete={autoComplete}
+      minLength={minLength}
       name={name}
       placeholder={placeholder}
+      required={required}
       type={type}
       style={{
         width: '100%',
@@ -102,13 +116,62 @@ function Field({
   )
 }
 
-export default function AuthPage({ action, mode, nextPath }: AuthPageProps) {
+function GoogleButton({ oauthAction, next }: { oauthAction?: (formData: FormData) => Promise<void>; next: string }) {
+  if (!oauthAction) {
+    return null
+  }
+
+  return (
+    <form action={oauthAction}>
+      <input type="hidden" name="next" value={next} />
+      <button
+        type="submit"
+        style={{
+          width: '100%',
+          alignItems: 'center',
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.14)',
+          borderRadius: 999,
+          color: '#F4EEFF',
+          cursor: 'pointer',
+          display: 'flex',
+          fontSize: 14,
+          fontWeight: 800,
+          gap: 10,
+          justifyContent: 'center',
+          padding: '13px 18px',
+        }}
+      >
+        <span
+          aria-hidden="true"
+          style={{
+            alignItems: 'center',
+            background: '#fff',
+            borderRadius: '50%',
+            color: '#111',
+            display: 'inline-flex',
+            fontWeight: 900,
+            height: 22,
+            justifyContent: 'center',
+            width: 22,
+          }}
+        >
+          G
+        </span>
+        Continue with Google
+      </button>
+    </form>
+  )
+}
+
+export default function AuthPage({ action, mode, nextPath, oauthAction }: AuthPageProps) {
   const [state, formAction] = useActionState(action, {
     error: null,
     message: null,
   })
   const next = nextPath ?? '/qbank'
   const linkHref = mode === 'signup' ? `/login?next=${encodeURIComponent(next)}` : `/signup?next=${encodeURIComponent(next)}`
+  const title = mode === 'signup' ? 'ENTER THE VOID' : 'WELCOME BACK'
 
   return (
     <main
@@ -123,10 +186,27 @@ export default function AuthPage({ action, mode, nextPath }: AuthPageProps) {
         position: 'relative',
       }}
     >
+      <style>{`
+        @media (max-width: 560px) {
+          .auth-panel { width: min(100%, 390px) !important; gap: 18px !important; }
+          .auth-panel input { border-radius: 20px !important; font-size: 16px !important; padding: 17px 18px !important; }
+        }
+      `}</style>
       <StarBackdrop variant="auth" />
-      <section style={{ position: 'relative', zIndex: 2, width: 'min(100%, 360px)', display: 'grid', gap: 22 }}>
-        <div style={{ textAlign: 'center' }}>
+      <section className="auth-panel" style={{ position: 'relative', zIndex: 2, width: 'min(100%, 450px)', display: 'grid', gap: 20 }}>
+        <div style={{ textAlign: 'center', display: 'grid', gap: 8, justifyItems: 'center' }}>
           <Logo />
+          <div
+            style={{
+              color: '#F8F4FF',
+              fontSize: 17,
+              fontWeight: 800,
+              letterSpacing: 5,
+              textTransform: 'uppercase',
+            }}
+          >
+            {title}
+          </div>
         </div>
 
         <form action={formAction} style={{ display: 'grid', gap: 12 }}>
@@ -135,6 +215,7 @@ export default function AuthPage({ action, mode, nextPath }: AuthPageProps) {
           <Field autoComplete="email" name="email" placeholder="Email" type="email" />
           <Field
             autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+            minLength={8}
             name="password"
             placeholder="Password"
             type="password"
@@ -145,6 +226,14 @@ export default function AuthPage({ action, mode, nextPath }: AuthPageProps) {
 
           <SubmitButton />
         </form>
+
+        <div style={{ alignItems: 'center', color: '#6f6890', display: 'grid', fontSize: 11, gap: 10, gridTemplateColumns: '1fr auto 1fr', letterSpacing: 2, textTransform: 'uppercase' }}>
+          <span style={{ height: 1, background: 'rgba(170,85,255,0.18)' }} />
+          or
+          <span style={{ height: 1, background: 'rgba(170,85,255,0.18)' }} />
+        </div>
+
+        <GoogleButton oauthAction={oauthAction} next={next} />
 
         <Link href={linkHref} style={{ color: '#9F9FC4', fontSize: 14, textAlign: 'center', textDecoration: 'none' }}>
           {mode === 'signup' ? 'Sign in' : 'New? Create account'}
