@@ -16,35 +16,36 @@ type AuthPageProps = {
 function Logo() {
   return (
     <Link href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-      <svg width="188" height="54" viewBox="0 0 188 54" role="img" aria-label="ScholarHAAB">
+      <svg width="164" height="62" viewBox="0 0 164 62" role="img" aria-label="ScholarHAAB">
         <defs>
           <linearGradient id="authHaabGradient" x1="0" x2="1" y1="0" y2="1">
             <stop offset="0%" stopColor="#f7edff" />
             <stop offset="48%" stopColor="#c989ff" />
             <stop offset="100%" stopColor="#8b3ee6" />
           </linearGradient>
-          <path id="authScholarCurve" d="M 20 34 C 54 9, 100 9, 136 32" />
+          <path id="authScholarCurve" d="M 24 25 Q 82 2 140 25" />
         </defs>
         <text
           fill="#9f5df7"
           fontFamily="Georgia, serif"
-          fontSize="12"
+          fontSize="11"
           fontStyle="italic"
           letterSpacing="5"
           opacity="0.9"
         >
-          <textPath href="#authScholarCurve" startOffset="0%">
+          <textPath href="#authScholarCurve" startOffset="50%" textAnchor="middle">
             SCHOLAR
           </textPath>
         </text>
         <text
-          x="75"
-          y="36"
+          x="82"
+          y="48"
           fill="url(#authHaabGradient)"
           fontFamily="var(--font-sans), sans-serif"
-          fontSize="30"
+          fontSize="33"
           fontWeight="800"
           letterSpacing="3"
+          textAnchor="middle"
         >
           HAAB
         </text>

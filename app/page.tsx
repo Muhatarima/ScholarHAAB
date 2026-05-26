@@ -35,35 +35,36 @@ const cards = [
 function Logo() {
   return (
     <Link href="/" aria-label="ScholarHAAB" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-      <svg width="198" height="46" viewBox="0 0 198 46" role="img" aria-label="ScholarHAAB">
+      <svg width="154" height="54" viewBox="0 0 154 54" role="img" aria-label="ScholarHAAB">
         <defs>
           <linearGradient id="haabGradient" x1="0" x2="1" y1="0" y2="1">
             <stop offset="0%" stopColor="#f7edff" />
             <stop offset="48%" stopColor="#c989ff" />
             <stop offset="100%" stopColor="#8b3ee6" />
           </linearGradient>
-          <path id="scholarCurve" d="M 14 25 C 42 14, 78 14, 108 25" />
+          <path id="scholarCurve" d="M 24 23 Q 77 2 130 23" />
         </defs>
         <text
           fill="#9f5df7"
           fontFamily="Georgia, serif"
-          fontSize="10"
+          fontSize="11"
           fontStyle="italic"
-          letterSpacing="4"
+          letterSpacing="5"
           opacity="0.9"
         >
-          <textPath href="#scholarCurve" startOffset="0%">
+          <textPath href="#scholarCurve" startOffset="50%" textAnchor="middle">
             SCHOLAR
           </textPath>
         </text>
         <text
-          x="92"
-          y="31"
+          x="77"
+          y="44"
           fill="url(#haabGradient)"
           fontFamily="var(--font-sans), sans-serif"
-          fontSize="28"
+          fontSize="31"
           fontWeight="800"
           letterSpacing="3"
+          textAnchor="middle"
         >
           HAAB
         </text>
