@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react'
 import RichMessageContent from '@/components/RichMessageContent'
 import StarBackdrop from '@/components/StarBackdrop'
 import type { Product, PromptMode } from '@/lib/products'
@@ -33,6 +33,12 @@ type ChatSessionSummary = {
 type UsageState = {
   remainingCredits?: number
   usedCredits?: number
+}
+
+type FilePreview = {
+  name: string
+  type: string
+  url?: string
 }
 
 const ENDPOINT = '/api/qbank/chat'
@@ -73,46 +79,52 @@ function readFileAsBase64(file: File): Promise<string> {
   })
 }
 
-function Logo({ compact = false }: { compact?: boolean }) {
+function LogoSvg({ compact = false }: { compact?: boolean }) {
   const curveId = compact ? 'chatScholarCurveCompact' : 'chatScholarCurveFull'
   const gradientId = compact ? 'chatHaabGradientCompact' : 'chatHaabGradientFull'
 
   return (
+    <svg width={compact ? 104 : 136} height={compact ? 42 : 54} viewBox="0 0 136 54" role="img" aria-hidden="true">
+      <defs>
+        <linearGradient id={gradientId} x1="24" x2="112" y1="18" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#d7a0ff" />
+          <stop offset="0.52" stopColor="#b867ff" />
+          <stop offset="1" stopColor="#8f38f0" />
+        </linearGradient>
+        <path id={curveId} d="M 18 23 Q 68 4 118 23" />
+      </defs>
+      <text
+        fill="#9f5df7"
+        fontFamily="Georgia, serif"
+        fontSize={compact ? 10 : 11}
+        fontStyle="italic"
+        letterSpacing={compact ? 4 : 5}
+        opacity="0.92"
+      >
+        <textPath href={`#${curveId}`} startOffset="50%" textAnchor="middle">
+          SCHOLAR
+        </textPath>
+      </text>
+      <text
+        x="68"
+        y="45"
+        fill={`url(#${gradientId})`}
+        fontFamily="var(--font-sans), sans-serif"
+        fontSize={compact ? 28 : 31}
+        fontWeight="800"
+        letterSpacing={compact ? 3 : 4}
+        textAnchor="middle"
+      >
+        HAAB
+      </text>
+    </svg>
+  )
+}
+
+function Logo({ compact = false }: { compact?: boolean }) {
+  return (
     <Link href="/" style={{ display: 'inline-flex', lineHeight: 0, textDecoration: 'none' }} aria-label="ScholarHAAB home">
-      <svg width={compact ? 104 : 136} height={compact ? 42 : 54} viewBox="0 0 136 54" role="img" aria-hidden="true">
-        <defs>
-          <linearGradient id={gradientId} x1="24" x2="112" y1="18" y2="48" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#d7a0ff" />
-            <stop offset="0.52" stopColor="#b867ff" />
-            <stop offset="1" stopColor="#8f38f0" />
-          </linearGradient>
-          <path id={curveId} d="M 18 23 Q 68 4 118 23" />
-        </defs>
-        <text
-          fill="#9f5df7"
-          fontFamily="Georgia, serif"
-          fontSize={compact ? 10 : 11}
-          fontStyle="italic"
-          letterSpacing={compact ? 4 : 5}
-          opacity="0.92"
-        >
-          <textPath href={`#${curveId}`} startOffset="50%" textAnchor="middle">
-            SCHOLAR
-          </textPath>
-        </text>
-        <text
-          x="68"
-          y="45"
-          fill={`url(#${gradientId})`}
-          fontFamily="var(--font-sans), sans-serif"
-          fontSize={compact ? 28 : 31}
-          fontWeight="800"
-          letterSpacing={compact ? 3 : 4}
-          textAnchor="middle"
-        >
-          HAAB
-        </text>
-      </svg>
+      <LogoSvg compact={compact} />
     </Link>
   )
 }
@@ -134,6 +146,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
   void product
   const bottomRef = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [sessions, setSessions] = useState<ChatSessionSummary[]>([])
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -141,7 +154,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
   const [mode, setMode] = useState<PromptMode>('direct')
   const [loading, setLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [filePreviews, setFilePreviews] = useState<FilePreview[]>([])
   const [usage, setUsage] = useState<UsageState | null>(null)
 
   useEffect(() => {
@@ -151,6 +166,14 @@ export default function ProductChatShell({ product }: { product: Product }) {
   useEffect(() => {
     void refreshSessions()
   }, [])
+
+  useEffect(() => {
+    return () => {
+      filePreviews.forEach((preview) => {
+        if (preview.url) URL.revokeObjectURL(preview.url)
+      })
+    }
+  }, [filePreviews])
 
   async function refreshSessions() {
     try {
@@ -189,8 +212,50 @@ export default function ProductChatShell({ product }: { product: Product }) {
     setSessionId(null)
     setMessages([])
     setInput('')
-    setSelectedFiles([])
+    updateSelectedFiles([])
     setMode('direct')
+    setMobileDrawerOpen(false)
+  }
+
+  function updateSelectedFiles(files: File[]) {
+    const nextFiles = files.slice(0, 4)
+    setSelectedFiles(nextFiles)
+    setFilePreviews(
+      nextFiles.map((file) => ({
+        name: file.name,
+        type: file.type || 'file',
+        url: file.type?.startsWith('image/') ? URL.createObjectURL(file) : undefined,
+      }))
+    )
+    if (fileRef.current) fileRef.current.value = ''
+  }
+
+  function removeSelectedFile(index: number) {
+    updateSelectedFiles(selectedFiles.filter((_, currentIndex) => currentIndex !== index))
+  }
+
+  function handleTouchStart(event: TouchEvent<HTMLElement>) {
+    const touch = event.touches[0]
+    if (!touch) return
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY }
+  }
+
+  function handleTouchEnd(event: TouchEvent<HTMLElement>) {
+    const start = touchStartRef.current
+    const touch = event.changedTouches[0]
+    touchStartRef.current = null
+    if (!start || !touch) return
+
+    const dx = touch.clientX - start.x
+    const dy = touch.clientY - start.y
+    if (Math.abs(dx) < 70 || Math.abs(dy) > 55) return
+
+    if (start.x < 34 && dx > 0) {
+      setMobileDrawerOpen(true)
+    }
+    if (mobileDrawerOpen && dx < 0) {
+      setMobileDrawerOpen(false)
+    }
   }
 
   async function signOut() {
@@ -240,7 +305,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
               : undefined,
         },
       ])
-      setSelectedFiles([])
+      updateSelectedFiles([])
       void refreshSessions()
     } catch {
       setMessages((current) => [...current, { role: 'assistant', content: 'Try again.' }])
@@ -253,12 +318,14 @@ export default function ProductChatShell({ product }: { product: Product }) {
   const hasMessages = messages.length > 0
 
   return (
-    <main style={styles.shell}>
+    <main style={styles.shell} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <StarBackdrop variant="chat" />
       <style>{`
         .mobile-chat-logo,
         .mobile-new-chat,
-        .mobile-actions {
+        .mobile-actions,
+        .mobile-drawer,
+        .mobile-drawer-overlay {
           display: none;
         }
         @media (max-width: 760px) {
@@ -290,8 +357,62 @@ export default function ProductChatShell({ product }: { product: Product }) {
             display: grid !important;
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
+          .mobile-drawer {
+            display: flex !important;
+          }
+          .mobile-drawer-overlay {
+            display: block !important;
+          }
         }
       `}</style>
+
+      <button
+        type="button"
+        aria-label="Close chat menu"
+        className="mobile-drawer-overlay"
+        onClick={() => setMobileDrawerOpen(false)}
+        style={styles.mobileDrawerOverlay(mobileDrawerOpen)}
+      />
+      <aside className="mobile-drawer" style={styles.mobileDrawer(mobileDrawerOpen)}>
+        <div style={styles.mobileDrawerHeader}>
+          <Logo compact />
+          <button type="button" onClick={() => setMobileDrawerOpen(false)} style={styles.drawerClose}>
+            ×
+          </button>
+        </div>
+        <button type="button" onClick={newChat} style={styles.drawerPrimary}>
+          New chat +
+        </button>
+        <div style={styles.drawerSessions}>
+          {sessions.slice(0, 10).map((session) => (
+            <button
+              key={session.id}
+              type="button"
+              onClick={() => {
+                setMobileDrawerOpen(false)
+                void loadSession(session.id)
+              }}
+              style={styles.sessionButton}
+            >
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {session.title || session.lastMessagePreview || 'Chat'}
+              </span>
+              <span style={{ color: '#77779d', fontSize: 11 }}>{formatRelativeDate(session.updatedAt)}</span>
+            </button>
+          ))}
+        </div>
+        <div style={styles.drawerActions}>
+          <Link href="/dashboard" style={styles.drawerAction}>
+            📊 Dashboard
+          </Link>
+          <Link href="/exam-prep" style={styles.drawerAction}>
+            🎯 Night before exam
+          </Link>
+          <button type="button" onClick={() => void signOut()} style={styles.drawerAction}>
+            👤 Profile
+          </button>
+        </div>
+      </aside>
 
       <aside className={sidebarOpen ? 'shaab-sidebar shaab-sidebar-open' : 'shaab-sidebar'} style={styles.sidebar(sidebarOpen)}>
         <button type="button" onClick={() => setSidebarOpen((value) => !value)} style={styles.logoButton}>
@@ -327,9 +448,15 @@ export default function ProductChatShell({ product }: { product: Product }) {
       </aside>
 
       <section className="shaab-main" style={styles.main(sidebarOpen)}>
-        <div className="mobile-chat-logo">
-          <Logo compact />
-        </div>
+        <button
+          type="button"
+          className="mobile-chat-logo"
+          onClick={() => setMobileDrawerOpen(true)}
+          style={styles.mobileLogoButton}
+          aria-label="Open chats"
+        >
+          <LogoSvg compact />
+        </button>
         <header style={styles.topbar}>
           <div style={styles.modeTabs}>
             {(['direct', 'tutor'] as PromptMode[]).map((item) => (
@@ -365,7 +492,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
               </Link>
               <Link href="/exam-prep" style={styles.mobileActionCard}>
                 <span style={styles.mobileActionIcon}>🎯</span>
-                <span>Exam mode</span>
+                <span>Night before exam</span>
               </Link>
               <button type="button" onClick={() => void signOut()} style={styles.mobileActionCard}>
                 <span style={styles.mobileActionIcon}>👤</span>
@@ -405,25 +532,45 @@ export default function ProductChatShell({ product }: { product: Product }) {
         }}
         style={styles.composer(sidebarOpen)}
       >
+        {filePreviews.length ? (
+          <div style={styles.attachmentTray}>
+            {filePreviews.map((preview, index) => (
+              <div key={`${preview.name}-${index}`} style={styles.attachmentPill}>
+                {preview.url ? (
+                  <img src={preview.url} alt="" style={styles.attachmentThumb} />
+                ) : (
+                  <span style={styles.attachmentFileIcon}>📄</span>
+                )}
+                <span style={styles.attachmentName}>{preview.name}</span>
+                <button type="button" onClick={() => removeSelectedFile(index)} style={styles.attachmentRemove} aria-label={`Remove ${preview.name}`}>
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : null}
         <input
           ref={fileRef}
           type="file"
+          accept="image/*,.pdf"
           multiple
-          onChange={(event) => setSelectedFiles(Array.from(event.target.files ?? []).slice(0, 4))}
+          onChange={(event) => updateSelectedFiles(Array.from(event.target.files ?? []))}
           style={{ display: 'none' }}
         />
-        <button type="button" onClick={() => fileRef.current?.click()} style={styles.attach}>
-          📎
-        </button>
-        <input
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder={selectedFiles[0] ? selectedFiles.map((file) => file.name).join(', ') : 'Type anything...'}
-          style={styles.input}
-        />
-        <button type="submit" disabled={loading} style={styles.send}>
-          →
-        </button>
+        <div style={styles.composerRow}>
+          <button type="button" onClick={() => fileRef.current?.click()} style={styles.attach} aria-label="Upload photo or PDF">
+            📎
+          </button>
+          <input
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="Type anything..."
+            style={styles.input}
+          />
+          <button type="submit" disabled={loading} style={styles.send}>
+            →
+          </button>
+        </div>
       </form>
     </main>
   )
@@ -452,6 +599,82 @@ const styles = {
       padding: 14,
       transition: 'width 160ms ease',
     }) satisfies CSSProperties,
+  mobileDrawerOverlay: (open: boolean) =>
+    ({
+      position: 'fixed',
+      inset: 0,
+      zIndex: 55,
+      border: 'none',
+      background: open ? 'rgba(0,0,13,0.48)' : 'transparent',
+      opacity: open ? 1 : 0,
+      pointerEvents: open ? 'auto' : 'none',
+      transition: 'opacity 180ms ease',
+    }) satisfies CSSProperties,
+  mobileDrawer: (open: boolean) =>
+    ({
+      position: 'fixed',
+      inset: '0 auto 0 0',
+      zIndex: 60,
+      width: 'min(82vw, 310px)',
+      background: 'rgba(8,7,22,0.98)',
+      borderRight: '1px solid rgba(170,85,255,0.16)',
+      boxShadow: '28px 0 80px rgba(0,0,0,0.42)',
+      flexDirection: 'column',
+      gap: 14,
+      padding: '16px 14px',
+      transform: open ? 'translateX(0)' : 'translateX(-104%)',
+      transition: 'transform 220ms ease',
+    }) satisfies CSSProperties,
+  mobileDrawerHeader: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+  } satisfies CSSProperties,
+  drawerClose: {
+    width: 34,
+    height: 34,
+    border: '1px solid rgba(170,85,255,0.14)',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.04)',
+    color: '#E8E8FF',
+    cursor: 'pointer',
+    fontSize: 19,
+  } satisfies CSSProperties,
+  drawerPrimary: {
+    border: '1px solid rgba(170,85,255,0.22)',
+    borderRadius: 16,
+    background: 'linear-gradient(130deg, rgba(119,51,204,0.5), rgba(170,85,255,0.28))',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: 14,
+    fontWeight: 700,
+    padding: '13px 14px',
+    textAlign: 'left',
+  } satisfies CSSProperties,
+  drawerSessions: {
+    display: 'grid',
+    gap: 6,
+    maxHeight: '42vh',
+    overflow: 'auto',
+  } satisfies CSSProperties,
+  drawerActions: {
+    display: 'grid',
+    gap: 8,
+    marginTop: 'auto',
+  } satisfies CSSProperties,
+  drawerAction: {
+    border: '1px solid rgba(170,85,255,0.12)',
+    borderRadius: 15,
+    background: 'rgba(255,255,255,0.035)',
+    color: '#d8d2f2',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    fontSize: 13,
+    padding: '12px 13px',
+    textAlign: 'left',
+    textDecoration: 'none',
+    width: '100%',
+  } satisfies CSSProperties,
   logoButton: {
     border: 'none',
     background: 'transparent',
@@ -567,6 +790,13 @@ const styles = {
     lineHeight: 1,
     pointerEvents: 'auto',
   } satisfies CSSProperties,
+  mobileLogoButton: {
+    border: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+    lineHeight: 0,
+    padding: 0,
+  } satisfies CSSProperties,
   empty: {
     minHeight: 'calc(100vh - 180px)',
     display: 'grid',
@@ -665,7 +895,8 @@ const styles = {
       bottom: 18,
       width: open ? 'calc(100vw - 304px)' : 'calc(100vw - 126px)',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'stretch',
+      flexDirection: 'column',
       gap: 8,
       border: '1px solid rgba(170,85,255,0.16)',
       borderRadius: 24,
@@ -674,6 +905,60 @@ const styles = {
       padding: 9,
       transition: 'left 160ms ease, width 160ms ease',
     }) satisfies CSSProperties,
+  attachmentTray: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 8,
+    maxHeight: 106,
+    overflow: 'auto',
+    padding: '0 4px',
+  } satisfies CSSProperties,
+  attachmentPill: {
+    alignItems: 'center',
+    border: '1px solid rgba(170,85,255,0.16)',
+    borderRadius: 15,
+    background: 'rgba(255,255,255,0.045)',
+    color: '#d8d2f2',
+    display: 'flex',
+    gap: 8,
+    maxWidth: 230,
+    padding: '6px 7px',
+  } satisfies CSSProperties,
+  attachmentThumb: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    objectFit: 'cover',
+  } satisfies CSSProperties,
+  attachmentFileIcon: {
+    display: 'grid',
+    placeItems: 'center',
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    background: 'rgba(170,85,255,0.12)',
+  } satisfies CSSProperties,
+  attachmentName: {
+    flex: 1,
+    fontSize: 12,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  } satisfies CSSProperties,
+  attachmentRemove: {
+    border: 'none',
+    borderRadius: 999,
+    background: 'rgba(255,255,255,0.08)',
+    color: '#E8E8FF',
+    cursor: 'pointer',
+    width: 24,
+    height: 24,
+  } satisfies CSSProperties,
+  composerRow: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: 8,
+  } satisfies CSSProperties,
   attach: {
     width: 38,
     height: 38,

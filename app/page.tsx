@@ -22,7 +22,7 @@ const cards = [
   },
   {
     label: 'EXAM',
-    title: 'Night before mode',
+    title: 'Night before exam',
     description: 'Topic analysis, formulas, practice questions. Exam ready.',
   },
   {
@@ -188,6 +188,35 @@ export default async function Home() {
           from { transform: translateY(-50%) rotate(10deg) rotateX(74deg) rotate(0deg); }
           to { transform: translateY(-50%) rotate(10deg) rotateX(74deg) rotate(-360deg); }
         }
+        @keyframes cardFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
+        .landing-card {
+          overflow: hidden;
+          position: relative;
+          transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        }
+        .landing-card::after {
+          content: "";
+          position: absolute;
+          inset: -40%;
+          background: linear-gradient(110deg, transparent 35%, rgba(206,154,255,0.16) 50%, transparent 65%);
+          transform: translateX(-65%) rotate(8deg);
+          transition: transform 520ms ease;
+        }
+        .landing-card:hover {
+          border-color: rgba(190,115,255,0.36) !important;
+          box-shadow: 0 24px 72px rgba(120,60,200,0.22) !important;
+          transform: translateY(-7px);
+        }
+        .landing-card:hover::after {
+          transform: translateX(65%) rotate(8deg);
+        }
+        .card-grid .landing-card:nth-child(1) { animation: cardFloat 6s ease-in-out infinite; }
+        .card-grid .landing-card:nth-child(2) { animation: cardFloat 6s ease-in-out 0.6s infinite; }
+        .card-grid .landing-card:nth-child(3) { animation: cardFloat 6s ease-in-out 1.1s infinite; }
+        .card-grid .landing-card:nth-child(4) { animation: cardFloat 6s ease-in-out 1.7s infinite; }
         @media (max-width: 900px) {
           .landing-grid { grid-template-columns: 1fr !important; }
           .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; margin-top: 34px !important; }
