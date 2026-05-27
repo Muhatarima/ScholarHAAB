@@ -45,10 +45,10 @@ type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
 
 const ENDPOINT = '/api/qbank/chat'
 const SUGGESTIONS = [
-  'Explain photosynthesis',
-  'Force and motion formulas',
-  '2022 Chemistry paper questions',
-  'Test me on calculus',
+  'Solve a 9702 momentum question',
+  'Explain electrolysis with mark scheme',
+  'Test me on A Level calculus',
+  'Analyse 2022 Chemistry paper patterns',
 ]
 
 async function buildJsonAuthHeaders() {
@@ -371,12 +371,19 @@ export default function ProductChatShell({ product }: { product: Product }) {
             place-items: center;
           }
           .shaab-top-nav {
-            right: 12px !important;
-            gap: 5px !important;
+            right: 10px !important;
+            gap: 6px !important;
           }
           .shaab-top-nav-link {
             height: 30px !important;
-            width: 30px !important;
+            padding: 0 9px !important;
+            font-size: 11px !important;
+          }
+          .shaab-top-nav-link svg {
+            display: none;
+          }
+          .shaab-credit {
+            display: none !important;
           }
         }
       `}</style>
@@ -419,15 +426,18 @@ export default function ProductChatShell({ product }: { product: Product }) {
             +
           </button>
           <nav className="shaab-top-nav" style={styles.topNav} aria-label="App navigation">
-            <span style={styles.credit}>{credits}</span>
+            <span className="shaab-credit" style={styles.credit}>Credits {credits}</span>
             <Link className="shaab-top-nav-link" href="/dashboard" style={styles.topNavLink} title="Dashboard" aria-label="Dashboard">
               <ThemeIcon name="dashboard" size={17} />
+              <span>Dashboard</span>
             </Link>
             <Link className="shaab-top-nav-link" href="/exam-prep" style={styles.topNavLink} title="Exam Mode" aria-label="Exam Mode">
               <ThemeIcon name="exam" size={17} />
+              <span>Exam Mode</span>
             </Link>
             <button className="shaab-top-nav-link" type="button" onClick={() => void signOut()} style={styles.topNavButton} title="Logout" aria-label="Logout">
               <ThemeIcon name="logout" size={17} />
+              <span>Logout</span>
             </button>
           </nav>
         </header>
@@ -704,26 +714,36 @@ const styles = {
     textAlign: 'center',
   } satisfies CSSProperties,
   topNavLink: {
-    width: 34,
+    minWidth: 34,
     height: 34,
     border: '1px solid rgba(170,85,255,0.16)',
     borderRadius: 999,
     background: 'rgba(255,255,255,0.035)',
     color: '#b975ff',
-    display: 'grid',
-    placeItems: 'center',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 7,
+    justifyContent: 'center',
+    padding: '0 12px',
     textDecoration: 'none',
+    fontSize: 12,
+    fontWeight: 700,
   } satisfies CSSProperties,
   topNavButton: {
-    width: 34,
+    minWidth: 34,
     height: 34,
     border: '1px solid rgba(170,85,255,0.16)',
     borderRadius: 999,
     background: 'rgba(255,255,255,0.035)',
     color: '#b975ff',
     cursor: 'pointer',
-    display: 'grid',
-    placeItems: 'center',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 7,
+    justifyContent: 'center',
+    padding: '0 12px',
+    fontSize: 12,
+    fontWeight: 700,
   } satisfies CSSProperties,
   mobileNewChat: {
     position: 'fixed',

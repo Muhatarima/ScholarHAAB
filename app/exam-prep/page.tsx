@@ -228,28 +228,42 @@ function ExamPrepInner() {
             .exam-actions { left: 74px !important; right: 12px !important; }
           }
           .exam-select option {
-            background: #0a0718;
-            color: #f4eeff;
+            background: #0a0718 !important;
+            color: #f4eeff !important;
           }
         `}</style>
         <Logo />
+        <nav style={styles.topNav} aria-label="App navigation">
+          <Link href="/qbank" style={styles.navIcon} aria-label="Solver" title="Solver">
+            <NavIcon name="solver" />
+            <span>Solver</span>
+          </Link>
+          <Link href="/dashboard" style={styles.navIcon} aria-label="Dashboard" title="Dashboard">
+            <NavIcon name="dashboard" />
+            <span>Dashboard</span>
+          </Link>
+          <button type="button" onClick={() => void signOut()} style={styles.navButton} aria-label="Logout" title="Logout">
+            <NavIcon name="logout" />
+            <span>Logout</span>
+          </button>
+        </nav>
         <section style={styles.setup}>
           <h1 style={styles.setupTitle}>What&apos;s your exam?</h1>
           <div className="exam-setup-inputs" style={styles.setupInputs}>
             <select className="exam-select" value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
-              <option>Physics</option>
-              <option>Chemistry</option>
-              <option>Mathematics</option>
-              <option>Biology</option>
-              <option>Economics</option>
-              <option>Accounting</option>
+              <option style={styles.option}>Physics</option>
+              <option style={styles.option}>Chemistry</option>
+              <option style={styles.option}>Mathematics</option>
+              <option style={styles.option}>Biology</option>
+              <option style={styles.option}>Economics</option>
+              <option style={styles.option}>Accounting</option>
             </select>
             <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Chapter/Topic" style={styles.field} />
             <select className="exam-select" value={level} onChange={(event) => setLevel(event.target.value)} style={styles.field}>
-              <option>A Level</option>
-              <option>O Level</option>
-              <option>IGCSE</option>
-              <option>IAL</option>
+              <option style={styles.option}>A Level</option>
+              <option style={styles.option}>O Level</option>
+              <option style={styles.option}>IGCSE</option>
+              <option style={styles.option}>IAL</option>
             </select>
           </div>
           <label style={styles.dateLine}>
@@ -281,12 +295,15 @@ function ExamPrepInner() {
       <nav style={styles.topNav} aria-label="App navigation">
         <Link href="/dashboard" style={styles.navIcon} aria-label="Dashboard" title="Dashboard">
           <NavIcon name="dashboard" />
+          <span>Dashboard</span>
         </Link>
         <Link href="/qbank" style={styles.navIcon} aria-label="Solver" title="Solver">
           <NavIcon name="solver" />
+          <span>Solver</span>
         </Link>
         <button type="button" onClick={() => void signOut()} style={styles.navButton} aria-label="Logout" title="Logout">
           <NavIcon name="logout" />
+          <span>Logout</span>
         </button>
       </nav>
 
@@ -378,12 +395,16 @@ const styles = {
     width: '100%',
     border: '1px solid rgba(170,85,255,0.16)',
     borderRadius: 16,
-    background: 'rgba(255,255,255,0.04)',
+    background: '#0a0718',
     color: '#E8E8FF',
     colorScheme: 'dark',
     outline: 'none',
     padding: '14px 14px',
     fontSize: 14,
+  } satisfies CSSProperties,
+  option: {
+    background: '#0a0718',
+    color: '#f4eeff',
   } satisfies CSSProperties,
   dateLine: {
     color: '#9F9FC4',
@@ -444,26 +465,36 @@ const styles = {
     gap: 8,
   } satisfies CSSProperties,
   navIcon: {
-    width: 34,
+    minWidth: 34,
     height: 34,
     border: '1px solid rgba(170,85,255,0.16)',
     borderRadius: 999,
     background: 'rgba(255,255,255,0.035)',
     color: '#b975ff',
-    display: 'grid',
-    placeItems: 'center',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 7,
+    justifyContent: 'center',
+    padding: '0 12px',
+    fontSize: 12,
+    fontWeight: 700,
     textDecoration: 'none',
   } satisfies CSSProperties,
   navButton: {
-    width: 34,
+    minWidth: 34,
     height: 34,
     border: '1px solid rgba(170,85,255,0.16)',
     borderRadius: 999,
     background: 'rgba(255,255,255,0.035)',
     color: '#b975ff',
     cursor: 'pointer',
-    display: 'grid',
-    placeItems: 'center',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 7,
+    justifyContent: 'center',
+    padding: '0 12px',
+    fontSize: 12,
+    fontWeight: 700,
   } satisfies CSSProperties,
   chatMain: {
     marginLeft: 74,

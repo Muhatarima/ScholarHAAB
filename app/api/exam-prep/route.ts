@@ -325,9 +325,60 @@ RESPONSE REQUIREMENTS:
 `.trim()
 }
 
-function fallbackStreamText(subject: string, topic: string, analysis: AnalyzedPrepData) {
+function fallbackStreamText(subject: string, topic: string, analysis: AnalyzedPrepData, message = '') {
   const subtopics = analysis.rankedSubtopics.map((item, index) => `${index + 1}. ${item.name}`).join('\n')
   const formulas = analysis.formulas.map((formula) => `- ${formula}`).join('\n')
+  const normalized = normalizeText(message)
+  const mainSubtopic = analysis.rankedSubtopics[0]?.name || topic
+
+  if (/question|test me|exam question|past-paper-style/.test(normalized)) {
+    return [
+      `**${subject} Exam Question: ${mainSubtopic}**`,
+      '',
+      `A student is revising ${topic}. Explain or calculate the key result for ${mainSubtopic}, showing all working and using correct exam terminology. [4 marks]`,
+      '',
+      '**Hint:** Start with the formula or definition, then connect it to the situation.',
+      '',
+      '**Mark scheme:**',
+      '- States the correct principle or formula clearly (1)',
+      '- Applies it to the named situation with correct working or reasoning (1)',
+      '- Uses accurate subject terminology and units where needed (1)',
+      '- Gives a clear final conclusion in exam style (1)',
+      '',
+      'Send your answer and I will mark it.',
+    ].join('\n')
+  }
+
+  if (/formula/.test(normalized)) {
+    return [
+      `**${subject} Formula Sheet: ${topic}**`,
+      '',
+      formulas || '- No exact formula found. Use the main formula/definition from this topic first.',
+      '',
+      'Memorise the formula, then practise one substitution question.',
+    ].join('\n')
+  }
+
+  if (/summary|summari/.test(normalized)) {
+    return [
+      `**${subject} Summary: ${topic}**`,
+      '',
+      `- Focus first on ${analysis.rankedSubtopics[0]?.name || topic}.`,
+      `- Then practise ${analysis.rankedSubtopics[1]?.name || 'one calculation question'} because it usually carries method marks.`,
+      '- Finish by writing mark-scheme keywords, not long textbook notes.',
+      '',
+      'Want a question on the top subtopic?',
+    ].join('\n')
+  }
+
+  if (/skip|next/.test(normalized)) {
+    return [
+      `Next: ${analysis.rankedSubtopics[1]?.name || mainSubtopic}.`,
+      '',
+      'Quick task: write the formula or key definition for this subtopic first.',
+    ].join('\n')
+  }
+
   return [
     `**Night Before ${subject}: ${topic}**`,
     '',
@@ -527,7 +578,7 @@ export async function POST(req: Request) {
     intentPrompt,
     memoryContext: memoryToPrompt(memory),
   })
-  const fallback = fallbackStreamText(subject, topic, analysis)
+  const fallback = fallbackStreamText(subject, topic, analysis, message)
   updateMemory(sessionKey, intent, fallback)
   const stream = await geminiStream(prompt, fallback)
 
