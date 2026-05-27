@@ -1,3 +1,6 @@
+export const runtime = 'nodejs'
+export const maxDuration = 30
+
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { searchSimilarQuestions, type SearchResult } from '@/lib/rag/ragSystem'
@@ -468,7 +471,7 @@ async function geminiStream(prompt: string, fallback: string) {
     async start(controller) {
       try {
         const genAI = new GoogleGenerativeAI(apiKey)
-        const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' })
+        const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
         const result = await model.generateContentStream({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: {
@@ -524,7 +527,7 @@ export async function POST(req: Request) {
   const understood = examCommand ? null : await understandMessage(rawMessage, history as UnderstandingMessage[])
   const message = examCommand ? normalizeExamPrepCommand(rawMessage) : understood?.cleanMessage || rawMessage
 
-  if (understood && (!understood.shouldRunRag || (understood.intent === 'confused' && mode !== 'start'))) {
+  if (understood && !understood.isAcademic && (!understood.shouldRunRag || (understood.intent === 'confused' && mode !== 'start'))) {
     return new Response(textStream(formatUnderstandingResponse(understood)), {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
@@ -535,6 +538,9 @@ export async function POST(req: Request) {
   }
 
   const sessionKey = asOptionalString(body.sessionId) ?? `${user?.id ?? 'demo'}:${subject}:${topic}`
+  if (understood?.skippedTopic) {
+    await trackSkip(user?.id ?? 'test-anonymous-user', subject, understood.skippedTopic, asOptionalString(body.sessionId))
+  }
   const intent = detectIntent(message, history)
   const searchQuery = buildSearchQuery(
     {

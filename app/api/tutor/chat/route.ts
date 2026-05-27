@@ -8,6 +8,7 @@ import { requireAuth } from '@/lib/auth/requireAuth'
 import { validateQuestion, validateSubject } from '@/lib/validation/inputValidator'
 
 export const runtime = 'nodejs'
+export const maxDuration = 30
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {

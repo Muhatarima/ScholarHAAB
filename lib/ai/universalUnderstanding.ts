@@ -42,6 +42,7 @@ export type UnderstandingResult = {
   category: UnderstandingCategory
   shouldRunRag: boolean
   specialResponse?: string
+  skippedTopic: string | null
   corrections: Array<{ from: string; to: string }>
 }
 
@@ -55,6 +56,7 @@ type GeminiUnderstanding = {
   emotionalState?: unknown
   shouldRunRAG?: unknown
   suggestedResponse?: unknown
+  skippedTopic?: unknown
 }
 
 const VALID_INTENTS = new Set<ParserIntent>([
@@ -89,12 +91,14 @@ function getGeminiKey() {
 }
 
 function buildUnderstandingPrompt(raw: string, history: Message[]) {
+  const correctedRaw = applyLocalCorrections(raw).text
   return `
 You are an intent parser for a Cambridge exam 
 tutoring app used by Bangladeshi students.
 
 Analyze this message and return JSON only.
-Message: "${raw}"
+Message: "${correctedRaw}"
+Original message: "${raw}"
 Last 3 messages context: ${JSON.stringify(history.slice(-3))}
 
 Return this exact JSON structure:
@@ -107,6 +111,7 @@ Return this exact JSON structure:
   "isAcademic": true/false,
   "emotionalState": "stressed|curious|frustrated|neutral",
   "shouldRunRAG": true/false,
+  "skippedTopic": "topic student asked to avoid or null",
   "suggestedResponse": "if off_topic or emotional, suggested brief response, else null"
 }
 
@@ -117,6 +122,7 @@ Examples:
 "hi hello" → intent: greeting, isAcademic: false
 "asdfgh" → intent: gibberish, isAcademic: false
 "black hole explain" → isAcademic: true but off syllabus, shouldRunRAG: false
+"explain reaction rates without organic chemistry" → skippedTopic: "organic chemistry", shouldRunRAG: true
 
 Return ONLY valid JSON. No explanation.
 `.trim()
@@ -145,7 +151,7 @@ async function callGeminiParser(prompt: string) {
 
   const genAI = new GoogleGenerativeAI(key)
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+    model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
   })
   const result = await model.generateContent({
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -192,6 +198,64 @@ function asNullableString(value: unknown) {
   return trimmed && trimmed !== 'null' ? trimmed : null
 }
 
+function applyLocalCorrections(raw: string) {
+  const replacements: Array<[RegExp, string]> = [
+    [/\bwaev\b/gi, 'wave'],
+    [/\bphysic\b/gi, 'physics'],
+    [/\bwerk\s+dun\b/gi, 'work done'],
+    [/\bwork\s+dun\b/gi, 'work done'],
+    [/\bphotsynthesis\b/gi, 'photosynthesis'],
+    [/\bdifferentation\b/gi, 'differentiation'],
+    [/\bnucelus\b/gi, 'nucleus'],
+    [/\belctron\b/gi, 'electron'],
+    [/\baccleration\b/gi, 'acceleration'],
+    [/\bchemestry\b/gi, 'chemistry'],
+    [/\bmathamatics\b/gi, 'mathematics'],
+    [/\bbujhina\b/gi, "don't understand"],
+    [/\bskipp\b/gi, 'skip'],
+    [/\bnxt\b/gi, 'next'],
+    [/\bwat\b/gi, 'what'],
+    [/\bhw\b/gi, 'how'],
+    [/\b(?:bcz|cz)\b/gi, 'because'],
+    [/\b(?:plz|pls)\b/gi, 'please'],
+    [/\bidk\b/gi, "I don't know"],
+    [/\b(?:omg|lol)\b/gi, ''],
+  ]
+  const corrections: Array<{ from: string; to: string }> = []
+  let text = raw
+
+  for (const [pattern, replacement] of replacements) {
+    text = text.replace(pattern, (match) => {
+      corrections.push({ from: match, to: replacement })
+      return replacement
+    })
+  }
+
+  text = text.replace(/\s+/g, ' ').trim()
+  return { text, corrections }
+}
+
+function extractSkippedTopic(raw: string) {
+  const corrected = applyLocalCorrections(raw).text
+  const patterns = [
+    /\bi\s+skipped\s+(.+?)(?:[,.!?]|$)/i,
+    /\bwithout\s+(.+?)(?:[,.!?]|$)/i,
+    /\bdon'?t\s+use\s+(.+?)(?:[,.!?]|$)/i,
+    /\bami\s+(.+?)\s+pari\s+na(?:[,.!?]|$)/i,
+    /\b(.+?)\s+skip\s+korechi(?:[,.!?]|$)/i,
+  ]
+
+  for (const pattern of patterns) {
+    const match = corrected.match(pattern)
+    const topic = match?.[1]?.trim()
+    if (topic && topic.length > 2) {
+      return topic.replace(/\bplease\b/gi, '').replace(/\s+/g, ' ').trim()
+    }
+  }
+
+  return null
+}
+
 function deriveCategory(intent: ParserIntent, isAcademic: boolean): UnderstandingCategory {
   if (intent === 'greeting') return 'greeting'
   if (intent === 'gibberish') return 'gibberish'
@@ -201,11 +265,13 @@ function deriveCategory(intent: ParserIntent, isAcademic: boolean): Understandin
 }
 
 function normalizeParsed(raw: string, parsed: GeminiUnderstanding): UnderstandingResult {
+  const local = applyLocalCorrections(raw)
   const intent = asIntent(parsed.intent)
-  const cleanMessage = asNullableString(parsed.cleanMessage) ?? raw.trim()
-  const isAcademic = typeof parsed.isAcademic === 'boolean' ? parsed.isAcademic : false
-  const shouldRunRAG = typeof parsed.shouldRunRAG === 'boolean' ? parsed.shouldRunRAG : false
+  const cleanMessage = asNullableString(parsed.cleanMessage) ?? local.text
   const suggestedResponse = asNullableString(parsed.suggestedResponse)
+  const skippedTopic = asNullableString(parsed.skippedTopic) ?? extractSkippedTopic(raw)
+  const isAcademic = skippedTopic ? true : typeof parsed.isAcademic === 'boolean' ? parsed.isAcademic : false
+  const shouldRunRAG = skippedTopic ? true : typeof parsed.shouldRunRAG === 'boolean' ? parsed.shouldRunRAG : false
   const category = deriveCategory(intent, isAcademic)
   const specialResponse =
     suggestedResponse ??
@@ -230,20 +296,98 @@ function normalizeParsed(raw: string, parsed: GeminiUnderstanding): Understandin
     category,
     shouldRunRag: shouldRunRAG,
     specialResponse,
-    corrections: cleanMessage !== raw.trim() ? [{ from: raw, to: cleanMessage }] : [],
+    skippedTopic,
+    corrections:
+      cleanMessage !== raw.trim()
+        ? [{ from: raw, to: cleanMessage }, ...local.corrections]
+        : local.corrections,
   }
 }
 
 function parserFailureResult(raw: string): UnderstandingResult {
-  const trimmed = raw.trim()
+  const local = applyLocalCorrections(raw)
+  const trimmed = local.text
   const lower = trimmed.toLowerCase()
+  const skippedTopic = extractSkippedTopic(raw)
+  const emotional = /\b(panic|fail|nervous|parbona|dar|scared|ami shesh|kal exam|exam kal|kichui janina)\b/i.test(lower)
+  if (emotional) {
+    return {
+      raw,
+      cleanMessage: trimmed,
+      correctedMessage: trimmed,
+      intent: 'emotional',
+      subject: null,
+      topic: null,
+      language: /ami|kal|dar|parbona|kichui/.test(lower) ? 'mixed' : 'english',
+      isAcademic: false,
+      emotionalState: 'stressed',
+      shouldRunRAG: false,
+      suggestedResponse: 'Nervous is normal — let’s focus on what matters. What topic first?',
+      category: 'emotional',
+      shouldRunRag: false,
+      specialResponse: 'Nervous is normal — let’s focus on what matters. What topic first?',
+      skippedTopic: null,
+      corrections: local.corrections,
+    }
+  }
+
+  if (/\b(bujhini|bujhi nai|bujhte|confus|stuck|arekbar|again)\b/i.test(lower)) {
+    return {
+      raw,
+      cleanMessage: trimmed,
+      correctedMessage: trimmed,
+      intent: 'confused',
+      subject: null,
+      topic: null,
+      language: /bujh|arekbar/.test(lower) ? 'mixed' : 'english',
+      isAcademic: false,
+      emotionalState: 'neutral',
+      shouldRunRAG: false,
+      suggestedResponse: null,
+      category: 'off_topic',
+      shouldRunRag: false,
+      specialResponse:
+        "Haan, arekbar. I'll explain it a different way: simple idea first, one tiny example, then exam wording. Which topic confused you?",
+      skippedTopic: null,
+      corrections: local.corrections,
+    }
+  }
+
+  if (/^\s*(skip|next|porer ta|pore|bad dao)\s*$/i.test(lower)) {
+    return {
+      raw,
+      cleanMessage: trimmed,
+      correctedMessage: trimmed,
+      intent: 'skip',
+      subject: null,
+      topic: null,
+      language: /porer|pore|bad dao/.test(lower) ? 'mixed' : 'english',
+      isAcademic: false,
+      emotionalState: 'neutral',
+      shouldRunRAG: false,
+      suggestedResponse: 'Ok, skipping this. Send the next topic or ask for a formula.',
+      category: 'off_topic',
+      shouldRunRag: false,
+      specialResponse: 'Ok, skipping this. Send the next topic or ask for a formula.',
+      skippedTopic: null,
+      corrections: local.corrections,
+    }
+  }
+
   const academicIntent = /\b(explain|define|calculate|solve|find|formula|state|what|why|how)\b/.test(lower)
   const academicTopic =
     /\b(newton|force|motion|work|energy|wave|photosynthesis|cell|atom|bond|equation|integral|differentiat|demand|supply)\b/.test(
       lower
     )
-  const keyboardMash = /^[a-z]{4,}$/i.test(trimmed) && !/[aeiou]{2}|(ing|tion|law|work|force)$/i.test(trimmed)
-  const shouldTreatAsAcademic = !keyboardMash && (academicIntent || academicTopic)
+  const knownAcademicTerm =
+    /\b(wave|force|work|energy|power|cell|atom|bond|rate|nucleus|electron|photosynthesis)\b/i.test(
+      trimmed
+    )
+  const keyboardMash =
+    !knownAcademicTerm &&
+    /^[a-z]{4,}$/i.test(trimmed) &&
+    !/[aeiou]{2}|(ing|tion|law|work|force)$/i.test(trimmed)
+  const shouldTreatAsAcademic = !keyboardMash && (academicIntent || academicTopic || Boolean(skippedTopic))
 
   if (shouldTreatAsAcademic) {
     return {
@@ -260,7 +404,8 @@ function parserFailureResult(raw: string): UnderstandingResult {
       suggestedResponse: null,
       category: 'academic',
       shouldRunRag: true,
-      corrections: [],
+      skippedTopic,
+      corrections: local.corrections,
     }
   }
 
@@ -279,11 +424,21 @@ function parserFailureResult(raw: string): UnderstandingResult {
     category: 'gibberish',
     shouldRunRag: false,
     specialResponse: "Didn't catch that — what topic?",
-    corrections: [],
+    skippedTopic: null,
+    corrections: local.corrections,
   }
 }
 
 export async function understandMessage(raw: string, history: Message[] = []): Promise<UnderstandingResult> {
+  const localText = applyLocalCorrections(raw).text.toLowerCase()
+  const localAcademicFastPath =
+    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|wave|newton|force|motion|reaction\s+rate|photosynthesis|string theory|without|explain|define|calculate|solve|formula|what|why|how|bujhini|bujhte|arekbar|panic|fail|nervous|skip/i.test(
+      localText
+    )
+  if (localAcademicFastPath) {
+    return parserFailureResult(raw)
+  }
+
   try {
     const text = await callGeminiParser(buildUnderstandingPrompt(raw, history))
     return normalizeParsed(raw, extractJson(text))

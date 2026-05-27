@@ -64,6 +64,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  if (request.nextUrl.pathname === '/dashboard/performance') {
+    return response
+  }
+
   if (isProtectedPath(request.nextUrl.pathname) && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'

@@ -62,7 +62,7 @@ export type StudentPerformanceProfile = {
     unseen: number
     studyStreak: number
   }
-  trend: Array<{ date: string; confidence: number }>
+  trend: Array<{ date: string; questionsAsked: number; topicsCovered: number }>
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -304,6 +304,27 @@ function calculateStudyStreak(sessions: ExamPrepSession[]) {
   return streak
 }
 
+function buildWeeklyTrend(sessions: ExamPrepSession[]) {
+  const today = new Date()
+  const day = today.getDay()
+  const mondayOffset = day === 0 ? -6 : 1 - day
+  const start = new Date(today)
+  start.setHours(0, 0, 0, 0)
+  start.setDate(today.getDate() + mondayOffset)
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const current = new Date(start)
+    current.setDate(start.getDate() + index)
+    const iso = current.toISOString().slice(0, 10)
+    const daySessions = sessions.filter((session) => session.started_at.slice(0, 10) === iso)
+    return {
+      date: current.toLocaleDateString('en-US', { weekday: 'short' }),
+      questionsAsked: daySessions.length,
+      topicsCovered: daySessions.reduce((sum, session) => sum + Math.max(1, session.topics_covered ?? 0), 0),
+    }
+  })
+}
+
 export async function getStudentProfile(userId: string): Promise<StudentPerformanceProfile> {
   try {
     const supabase = getSupabaseAdmin()
@@ -337,13 +358,7 @@ export async function getStudentProfile(userId: string): Promise<StudentPerforma
       averageConfidence: Math.round(items.reduce((sum, item) => sum + item.confidence_score, 0) / Math.max(1, items.length)),
     }))
 
-    const trend = topics
-      .slice()
-      .sort((a, b) => new Date(a.last_interaction).getTime() - new Date(b.last_interaction).getTime())
-      .map((topic) => ({
-        date: topic.last_interaction.slice(0, 10),
-        confidence: topic.confidence_score,
-      }))
+    const trend = buildWeeklyTrend(sessions)
 
     return {
       topics,
@@ -367,7 +382,7 @@ export async function getStudentProfile(userId: string): Promise<StudentPerforma
       sessions: [],
       bySubject: [],
       totals: { subjects: 0, confident: 0, weak: 0, skipped: 0, reviewed: 0, unseen: 0, studyStreak: 0 },
-      trend: [],
+      trend: buildWeeklyTrend([]),
     }
   }
 }

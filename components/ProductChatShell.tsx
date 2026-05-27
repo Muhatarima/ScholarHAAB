@@ -21,6 +21,9 @@ type Message = {
   role: 'user' | 'assistant'
   content: string
   sources?: SourceCitation[]
+  confidence?: string
+  confidenceBadge?: string
+  confidenceScore?: number
 }
 
 type ChatSessionSummary = {
@@ -182,6 +185,12 @@ function sourceText(sources?: SourceCitation[]) {
   return String(source.title || source.source || source.label || 'Cambridge mark scheme')
 }
 
+function confidenceText(confidence?: string) {
+  if (confidence === 'VERIFIED') return '✅ VERIFIED — from Cambridge/Edexcel past papers'
+  if (confidence === 'PARTIAL') return '⚠️ PARTIAL MATCH — AI reasoning applied'
+  return '🤖 AI REASONING — verify before exam'
+}
+
 function formatRelativeDate(value?: string) {
   if (!value) return ''
   const parsed = new Date(value)
@@ -243,6 +252,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
           role: entry.role,
           content: entry.content,
           sources: entry.sources,
+          confidence: entry.confidence,
+          confidenceBadge: entry.confidenceBadge,
+          confidenceScore: entry.confidenceScore,
         }))
       )
       if (data.session?.mode === 'direct' || data.session?.mode === 'tutor') {
@@ -318,6 +330,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
         {
           role: 'assistant',
           content: data.answer || data.response || data.error || 'Connection issue. Send the question once more.',
+          confidence: typeof data.confidence === 'string' ? data.confidence : undefined,
+          confidenceBadge: typeof data.confidenceBadge === 'string' ? data.confidenceBadge : undefined,
+          confidenceScore: typeof data.confidenceScore === 'number' ? data.confidenceScore : undefined,
           sources: Array.isArray(data.sources)
             ? data.sources
             : data.truth?.source
@@ -461,6 +476,12 @@ export default function ProductChatShell({ product }: { product: Product }) {
               return (
                 <div key={`${message.role}-${index}-${message.id ?? ''}`} style={styles.messageRow(isUser)}>
                   <div style={isUser ? styles.userBubble : styles.aiText}>
+                    {!isUser && (message.confidenceBadge || message.confidence) ? (
+                      <div style={styles.confidenceBadge}>
+                        {message.confidenceBadge || confidenceText(message.confidence)}
+                        {typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''}
+                      </div>
+                    ) : null}
                     <RichMessageContent content={message.content} />
                     {!isUser && citation ? <div style={styles.source}>{citation}</div> : null}
                   </div>
@@ -857,6 +878,13 @@ const styles = {
     color: '#77779d',
     fontSize: 11,
     marginTop: 8,
+  } satisfies CSSProperties,
+  confidenceBadge: {
+    color: '#cda2ff',
+    fontSize: 12,
+    fontWeight: 800,
+    letterSpacing: '0.01em',
+    marginBottom: 8,
   } satisfies CSSProperties,
   composer: (open: boolean) =>
     ({

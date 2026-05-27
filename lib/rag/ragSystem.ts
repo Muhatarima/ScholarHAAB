@@ -102,6 +102,7 @@ type SupabaseFilterBuilder = {
   eq: (column: string, value: unknown) => SupabaseFilterBuilder
   gte: (column: string, value: unknown) => SupabaseFilterBuilder
   lte: (column: string, value: unknown) => SupabaseFilterBuilder
+  ilike: (column: string, pattern: string) => SupabaseFilterBuilder
   then: PromiseLike<unknown>['then']
 }
 
@@ -413,11 +414,85 @@ async function fallbackTextSearch(
   limit: number
 ): Promise<SearchResult[]> {
   const keywordResults = await keywordSearch(query, filters, limit)
+  const looseResults = keywordResults.length ? [] : await looseKeywordSearch(query, filters, limit)
 
-  return keywordResults
+  return [...keywordResults, ...looseResults]
     .map(normalizeRow)
     .filter((result) => result.id && result.question_text)
     .slice(0, limit)
+}
+
+function looseSearchTokens(query: string) {
+  const words = cleanSearchText(query)
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((word) => !/^\d{4}$/.test(word))
+    .filter(
+      (word) =>
+        ![
+          'cambridge',
+          'edexcel',
+          'physics',
+          'chemistry',
+          'biology',
+          'mathematics',
+          'math',
+          'past',
+          'paper',
+          'question',
+          'mark',
+          'scheme',
+          'level',
+        ].includes(word)
+    )
+
+  const priority = [
+    'wave',
+    'waves',
+    'wavelength',
+    'frequency',
+    'amplitude',
+    'sound',
+    'light',
+    'force',
+    'motion',
+    'work',
+    'energy',
+    'photosynthesis',
+    'reaction',
+    'rates',
+  ]
+  const ordered = [...priority.filter((word) => words.includes(word)), ...words]
+  return Array.from(new Set(ordered)).slice(0, 5)
+}
+
+async function looseKeywordSearch(
+  query: string,
+  filters: QuestionSearchFilters,
+  limit: number
+): Promise<RawQuestionRow[]> {
+  const supabase = getSupabaseAdmin()
+  const tokens = looseSearchTokens(query)
+
+  for (const token of tokens) {
+    let looseQuery = supabase
+      .from('questions')
+      .select(QUESTION_SELECT)
+      .ilike('content', `%${token}%`)
+      .limit(limit) as unknown as SupabaseFilterBuilder
+
+    looseQuery = applySafeFilters(looseQuery, filters)
+    const { data, error } = (await looseQuery) as SupabaseQueryResult
+    if (!error && data?.length) {
+      return (data as RawQuestionRow[]).map((row, index) => ({
+        ...row,
+        similarity: Math.max(0.55, 0.78 - index * 0.025),
+      }))
+    }
+  }
+
+  return []
 }
 
 async function hybridSearch(
@@ -591,6 +666,18 @@ export async function searchSimilarQuestions(
 ): Promise<SearchResult[]> {
   const pattern = detectQueryPattern(query)
   const queryData = await expandQuery(query, pattern)
+  const textOnlyLookup =
+    typeof filters.year_from === 'number' ||
+    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|paper\s*questions?/i.test(query)
+
+  if (textOnlyLookup) {
+    const looseRows = await looseKeywordSearch(queryData.expanded, filters, limit)
+    if (looseRows.length > 0) {
+      return prioritizeSearchResults(looseRows.map(normalizeRow), limit)
+    }
+
+    return prioritizeSearchResults(await fallbackTextSearch(queryData.expanded, filters, limit), limit)
+  }
 
   try {
     const embeddings = await generateEmbeddings(queryData)

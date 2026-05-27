@@ -16,6 +16,7 @@ import { handleApiError } from '@/lib/errors/AppError'
 import { detectIntent } from '@/lib/ai/intentEngine'
 import { buildSearchQuery } from '@/lib/ai/queryBuilder'
 import { filterResponse } from '@/lib/ai/qualityFilter'
+import { trackSkip } from '@/lib/analytics/topicTracker'
 import { formatQuestionCard, generateAdaptiveQuestion } from '@/lib/ai/questionGenerator'
 import {
   formatUnderstandingResponse,
@@ -24,6 +25,7 @@ import {
 } from '@/lib/ai/universalUnderstanding'
 
 export const runtime = 'nodejs'
+export const maxDuration = 30
 export const dynamic = 'force-dynamic'
 
 function withRequestId(response: Response, requestId: string) {
@@ -142,7 +144,7 @@ export async function POST(req: Request) {
       )
     }
 
-    if (!understood.shouldRunRag || understood.intent === 'confused') {
+    if (!understood.isAcademic && (!understood.shouldRunRag || understood.intent === 'confused')) {
       const answer = filterResponse(formatUnderstandingResponse(understood))
       return withRequestId(
         Response.json({
@@ -152,6 +154,14 @@ export async function POST(req: Request) {
           understood,
         }),
         requestId
+      )
+    }
+
+    if (understood.skippedTopic) {
+      await trackSkip(
+        identity.authUserId ?? user?.id ?? 'test-anonymous-user',
+        loggedSubject ?? 'General',
+        understood.skippedTopic
       )
     }
 
@@ -207,6 +217,14 @@ export async function POST(req: Request) {
           issues: validation.issues,
           lowConfidence: verifiedContext.lowConfidence,
         }
+        payload.confidence = validation.confidence
+        payload.confidenceScore = validation.confidenceScore
+        payload.confidenceBadge =
+          validation.confidence === 'VERIFIED'
+            ? '✅ VERIFIED — from Cambridge/Edexcel past papers'
+            : validation.confidence === 'PARTIAL'
+              ? '⚠️ PARTIAL MATCH — AI reasoning applied'
+              : '🤖 AI REASONING — verify before exam'
 
         finalResponse = Response.json(payload, {
           status: response.status,

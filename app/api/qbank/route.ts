@@ -1,3 +1,6 @@
+export const runtime = 'nodejs'
+export const maxDuration = 30
+
 import { createRequestId, logError } from '@/lib/server/logger'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { handleApiError } from '@/lib/errors/AppError'
@@ -9,6 +12,7 @@ import { getHardestQuestionAnswer } from '@/lib/ai/hardestAnswerBank'
 import { filterResponse } from '@/lib/ai/qualityFilter'
 import { detectIntent, type Message } from '@/lib/ai/intentEngine'
 import { buildSearchQuery } from '@/lib/ai/queryBuilder'
+import { trackSkip } from '@/lib/analytics/topicTracker'
 import { solveQuestion } from '@/lib/rag/qbankSolver'
 import { formatQuestionCard, generateAdaptiveQuestion } from '@/lib/ai/questionGenerator'
 import {
@@ -75,7 +79,7 @@ export async function POST(req: Request) {
       return response
     }
 
-    if (!understood.shouldRunRag || understood.intent === 'confused') {
+    if (!understood.isAcademic && (!understood.shouldRunRag || understood.intent === 'confused')) {
       const answer = filterResponse(formatUnderstandingResponse(understood))
       const response = Response.json({
         answer,
@@ -87,7 +91,16 @@ export async function POST(req: Request) {
       return response
     }
 
+    if (understood.skippedTopic) {
+      await trackSkip(
+        user?.id ?? 'test-anonymous-user',
+        resolvedSubject ?? 'General',
+        understood.skippedTopic
+      )
+    }
+
     const intent = detectIntent(message, history)
+    const isPastPaperLookup = /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|paper\s*questions?|question\s*\d*/i.test(message)
     const searchQuery = buildSearchQuery(
       {
         ...intent,
@@ -103,6 +116,8 @@ export async function POST(req: Request) {
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
+        confidence: 'AI_REASONING',
+        confidenceBadge: '🤖 AI REASONING — verify before exam',
         from_cache: true,
         mode: 'hardest_answer_bank',
         intent,
@@ -117,6 +132,8 @@ export async function POST(req: Request) {
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
+        confidence: 'AI_REASONING',
+        confidenceBadge: '🤖 AI REASONING — verify before exam',
         from_cache: true,
         mode: 'deep_exam_answer_bank',
         intent,
@@ -125,12 +142,14 @@ export async function POST(req: Request) {
       response.headers.set('x-request-id', requestId)
       return response
     }
-    const conceptAnswer = getHighConfidenceConceptAnswer(message)
+    const conceptAnswer = isPastPaperLookup ? null : getHighConfidenceConceptAnswer(message)
     if (conceptAnswer) {
       const cleanedAnswer = filterResponse(conceptAnswer)
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
+        confidence: 'VERIFIED',
+        confidenceBadge: '✅ VERIFIED — from Cambridge/Edexcel past papers',
         from_cache: true,
         mode: 'concept_answer_bank',
         intent,
@@ -139,12 +158,15 @@ export async function POST(req: Request) {
       response.headers.set('x-request-id', requestId)
       return response
     }
-    const solved = await solveQuestion(user?.id ?? 'test-anonymous-user', message, resolvedSubject, history)
+    const solved = await solveQuestion(user?.id ?? 'test-anonymous-user', message, resolvedSubject, history, {
+      avoidedTopics: understood.skippedTopic ? [understood.skippedTopic] : [],
+    })
     const cleanedAnswer = filterResponse(solved.answer)
     const response = Response.json({
       answer: cleanedAnswer,
       response: cleanedAnswer,
       confidence: solved.confidence,
+      confidenceBadge: solved.confidenceBadge,
       confidenceScore: solved.confidenceScore,
       sources: solved.sources,
       subject: solved.subject,

@@ -245,7 +245,7 @@ export async function solveWithHybridIntelligence(
     try {
       const { GoogleGenerativeAI } = await import('@google/generative-ai')
       const genAI = new GoogleGenerativeAI(geminiKey)
-      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' })
+      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
       const result = await withTimeout(
         model.generateContent({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],

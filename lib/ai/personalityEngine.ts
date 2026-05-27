@@ -1,4 +1,5 @@
 import type { Intent, Message } from '@/lib/ai/intentEngine'
+import { getCambridgePatternInstruction } from '@/lib/ai/patternEngine'
 
 type RetrievedChunk = {
   text?: string
@@ -107,6 +108,12 @@ RULES YOU MUST FOLLOW:
 8. Start response with the actual answer, never with "Certainly!", "Great question!", or "Of course!".
 
 ${intentInstruction(intent)}
+
+CAMBRIDGE MARK-SCHEME STYLE:
+You are answering like a Cambridge examiner writing a mark scheme.
+Structure your answer so each point would earn marks.
+Show mark allocation [1], [2], [3] where useful.
+${getCambridgePatternInstruction([intent.type, intent.topic, intent.entities.join(' ')].filter(Boolean).join(' '))}
 
 PERSONALITY:
 - Warm, direct, alive, and exam-focused

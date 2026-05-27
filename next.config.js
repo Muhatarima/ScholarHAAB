@@ -15,7 +15,7 @@ const nextConfig = {
     ],
   },
   transpilePackages: ['katex', 'react-katex'],
-  serverExternalPackages: ['@supabase/supabase-js'],
+  serverExternalPackages: ['@supabase/supabase-js', 'sentence-transformers', '@xenova/transformers', 'onnxruntime-node'],
 
   images: {
     formats: ['image/avif', 'image/webp'],

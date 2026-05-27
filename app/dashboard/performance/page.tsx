@@ -1,11 +1,9 @@
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import AuthGuard from '@/components/auth/AuthGuard'
 import Blackhole from '@/components/Blackhole'
 import PerformanceTrendChart from '@/components/dashboard/PerformanceTrendChart'
 import Stars from '@/components/Stars'
 import { requireAuth } from '@/lib/auth/requireAuth'
-import { getStudentProfile, type TopicPerformance } from '@/lib/analytics/topicTracker'
+import { getStudentProfile, type StudentPerformanceProfile, type TopicPerformance } from '@/lib/analytics/topicTracker'
 
 function dateLabel(value: string | null | undefined) {
   if (!value) return 'Not seen yet'
@@ -41,6 +39,24 @@ function SectionCard({ children }: { children: React.ReactNode }) {
       {children}
     </section>
   )
+}
+
+function emptyPerformanceProfile(): StudentPerformanceProfile {
+  return {
+    topics: [],
+    sessions: [],
+    bySubject: [],
+    totals: {
+      subjects: 0,
+      confident: 0,
+      weak: 0,
+      skipped: 0,
+      reviewed: 0,
+      unseen: 0,
+      studyStreak: 0,
+    },
+    trend: [],
+  }
 }
 
 function StatCard({ label, value, hint }: { label: string; value: string | number; hint: string }) {
@@ -143,19 +159,14 @@ function SubjectBreakdown({
 }
 
 export default async function PerformanceDashboardPage() {
-  const { user, error } = await requireAuth()
-  if (error || !user) {
-    redirect('/login')
-  }
-
-  const profile = await getStudentProfile(user.id)
-  const weakTopics = profile.topics.filter((topic) => topic.status === 'weak')
+  const { user } = await requireAuth()
+  const profile = user ? await getStudentProfile(user.id) : emptyPerformanceProfile()
+  const weakTopics = profile.topics.filter((topic) => topic.status === 'weak' || topic.times_asked_differently >= 2)
   const skippedTopics = profile.topics.filter((topic) => topic.status === 'skipped')
   const recentSessions = profile.sessions.slice(0, 5)
   const hasAnalyticsData = profile.topics.length > 0 || recentSessions.length > 0
 
   return (
-    <AuthGuard>
       <main
         style={{
           minHeight: '100vh',
@@ -188,10 +199,10 @@ export default async function PerformanceDashboardPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 16 }}>
             <StatCard label="Subjects studied" value={profile.totals.subjects} hint="Subjects with tracked exam-prep activity." />
-            <StatCard label="Confident ✅" value={profile.totals.confident} hint="Topics you marked as understood." />
-            <StatCard label="Weak ⚠️" value={profile.totals.weak} hint="Topics where you asked for another explanation." />
-            <StatCard label="Skipped ⏭️" value={profile.totals.skipped} hint="Topics you moved past and should revisit." />
-            <StatCard label="Study streak 🔥" value={`${profile.totals.studyStreak} days`} hint="Consecutive days with exam-prep sessions." />
+            <StatCard label="Confident" value={profile.totals.confident} hint="Topics you marked as understood." />
+            <StatCard label="Weak" value={weakTopics.length} hint="Weak status or asked differently 2+ times." />
+            <StatCard label="Skipped" value={profile.totals.skipped} hint="Topics you moved past and should revisit." />
+            <StatCard label="Study streak" value={`${profile.totals.studyStreak} day streak`} hint="Consecutive days with exam-prep sessions." />
           </div>
 
           {!hasAnalyticsData ? (
@@ -238,7 +249,16 @@ export default async function PerformanceDashboardPage() {
                 If your exam is within 48 hours, cover skipped topics before starting new chapters.
               </p>
               {skippedTopics.length ? (
-                skippedTopics.map((topic) => <TopicRow key={topic.id} topic={topic} action="Cover Now" />)
+                skippedTopics.map((topic) => (
+                  <div key={topic.id}>
+                    {topic.times_skipped >= 2 ? (
+                      <div style={{ color: '#fda4af', fontSize: 12, marginBottom: -4 }}>
+                        Warning: skipped {topic.times_skipped} times
+                      </div>
+                    ) : null}
+                    <TopicRow topic={topic} action="Cover Now" />
+                  </div>
+                ))
               ) : (
                 <p style={{ color: '#9a9abe', lineHeight: 1.7 }}>No skipped topics yet. Good. Keep it that way.</p>
               )}
@@ -261,8 +281,8 @@ export default async function PerformanceDashboardPage() {
             </SectionCard>
 
             <SectionCard>
-              <div style={{ color: '#9A6CFF', fontSize: 12, letterSpacing: 2, textTransform: 'uppercase' }}>Performance trend</div>
-              <h2 style={{ margin: '8px 0 18px', fontSize: 26 }}>Confidence over time</h2>
+              <div style={{ color: '#9A6CFF', fontSize: 12, letterSpacing: 2, textTransform: 'uppercase' }}>Weekly performance</div>
+              <h2 style={{ margin: '8px 0 18px', fontSize: 26 }}>Questions and topics this week</h2>
               <PerformanceTrendChart data={profile.trend} />
             </SectionCard>
           </div>
@@ -303,6 +323,5 @@ export default async function PerformanceDashboardPage() {
           </SectionCard>
         </div>
       </main>
-    </AuthGuard>
   )
 }
