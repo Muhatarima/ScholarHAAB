@@ -34,12 +34,14 @@
     "perf:smoke": "node scripts/load_test_smoke.mjs",
     "deploy:verify": "node scripts/deploy_verify.mjs",
     "test:tutor-api-wire": "python eval/test_api_wire.py",
-    "test:auth": "node eval/test_supabase_auth.mjs"
+    "test:auth": "node eval/test_supabase_auth.mjs",
+    "mcp:supabase": "npx ts-node lib/mcp/supabase-mcp.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@supabase/ssr": "^0.10.2",
-    "@supabase/supabase-js": "^2.99.1",
+    "@supabase/supabase-js": "^2.106.2",
     "@types/katex": "^0.16.8",
     "@types/react-plotly.js": "^2.6.4",
     "@types/recharts": "^1.8.29",
