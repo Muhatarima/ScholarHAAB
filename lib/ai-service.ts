@@ -1,4 +1,5 @@
 import { fetchWithTimeout } from './server/http-client.ts'
+import { getGeminiModelCandidates } from './ai/geminiConfig.ts'
 import { checkGeminiQuota, estimateTokenCount, scheduleLLMUsageLog } from './server/llm-usage.ts'
 import { createRequestId, logError, logEvent } from './server/logger.ts'
 import {
@@ -55,7 +56,7 @@ const NO_LLM_PROVIDERS_MESSAGE =
   'NO_LLM_PROVIDERS_CONFIGURED: add at least GEMINI_API_KEY to .env.local'
 
 function getAiTimeoutMs() {
-  return Number(process.env.AI_PROVIDER_TIMEOUT_MS || process.env.EXTERNAL_CALL_TIMEOUT_MS || 20000)
+  return Number(process.env.AI_PROVIDER_TIMEOUT_MS || process.env.EXTERNAL_CALL_TIMEOUT_MS || 25_000)
 }
 
 function getDefaultStreamChunkSize() {
@@ -226,10 +227,6 @@ function estimateMultipartPromptTokens(parts: AiInputPart[], systemPrompt: strin
   return estimateTokenCount(text) + inlineAttachmentCount * 256
 }
 
-function getGeminiModel() {
-  return process.env.GEMINI_MODEL ?? 'gemini-2.0-flash'
-}
-
 function getOpenAIModel() {
   return process.env.OPENAI_MODEL ?? 'gpt-5-nano'
 }
@@ -303,37 +300,50 @@ async function callGeminiParts(
   maxTokens: number,
   requestId: string
 ) : Promise<ProviderCallResult> {
-  const model = getGeminiModel()
-  const response = await fetchWithTimeout(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ parts }],
-        generationConfig: {
-          maxOutputTokens: maxTokens,
-          temperature: DEFAULT_TEMPERATURE,
-          topP: 0.8,
-          topK: 20,
-          candidateCount: 1,
-        },
-      }),
-    },
-    { operation: 'gemini_generate_content', service: 'gemini', timeoutMs: getAiTimeoutMs(), requestId }
-  )
-  const payload = await parseResponsePayload(response, 'gemini')
-  throwIfProviderFailed('gemini', response, payload, 'Gemini request failed')
-  const text = extractGeminiText(payload)
-  const usage = (payload as { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } }).usageMetadata
+  let lastError: unknown = null
 
-  return {
-    text,
-    model,
-    inputTokens: normalizeUsageCount(usage?.promptTokenCount) ?? estimateMultipartPromptTokens(parts, systemPrompt),
-    outputTokens: normalizeUsageCount(usage?.candidatesTokenCount) ?? estimateTokenCount(text),
+  for (const model of getGeminiModelCandidates()) {
+    try {
+      const response = await fetchWithTimeout(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: [{ parts }],
+            generationConfig: {
+              maxOutputTokens: maxTokens,
+              temperature: DEFAULT_TEMPERATURE,
+              topP: 0.8,
+              topK: 20,
+              candidateCount: 1,
+            },
+          }),
+        },
+        { operation: 'gemini_generate_content', service: 'gemini', timeoutMs: getAiTimeoutMs(), requestId }
+      )
+      const payload = await parseResponsePayload(response, 'gemini')
+      throwIfProviderFailed('gemini', response, payload, 'Gemini request failed')
+      const text = extractGeminiText(payload)
+      if (!text.trim()) {
+        throw new AiProviderHttpError('gemini', 502, `${model} returned an empty response`)
+      }
+      const usage = (payload as { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } }).usageMetadata
+
+      return {
+        text,
+        model,
+        inputTokens: normalizeUsageCount(usage?.promptTokenCount) ?? estimateMultipartPromptTokens(parts, systemPrompt),
+        outputTokens: normalizeUsageCount(usage?.candidatesTokenCount) ?? estimateTokenCount(text),
+      }
+    } catch (error) {
+      lastError = error
+      console.error(`Gemini error (${model}):`, error)
+    }
   }
+
+  throw lastError instanceof Error ? lastError : new Error('Gemini request failed for all configured models')
 }
 
 async function callGemini(prompt: string, systemPrompt: string, maxTokens: number, requestId: string) {

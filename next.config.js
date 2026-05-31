@@ -15,7 +15,13 @@ const nextConfig = {
     ],
   },
   transpilePackages: ['katex', 'react-katex'],
-  serverExternalPackages: ['@supabase/supabase-js', 'sentence-transformers', '@xenova/transformers', 'onnxruntime-node'],
+  serverExternalPackages: [
+    '@google/generative-ai',
+    '@supabase/supabase-js',
+    'sentence-transformers',
+    '@xenova/transformers',
+    'onnxruntime-node',
+  ],
 
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -36,7 +42,14 @@ const nextConfig = {
         : false,
   },
 
-  webpack(config) {
+  webpack(config, { isServer }) {
+    if (isServer) {
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : [config.externals].filter(Boolean)),
+        'sentence-transformers',
+        'onnxruntime-node',
+      ]
+    }
     config.cache = false
     return config
   },

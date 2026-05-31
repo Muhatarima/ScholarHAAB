@@ -3,6 +3,7 @@ import {
   type ChunkResult,
   type IntelligentSearchResult,
 } from '@/lib/intelligence/promptBuilder'
+import { getGeminiErrorMessage, getGeminiModelCandidates, withGeminiTimeout } from '@/lib/ai/geminiConfig'
 
 export interface HybridAnswer {
   answer: string
@@ -18,7 +19,7 @@ export interface HybridAnswer {
 }
 
 const CHROMA_URL = process.env.CHROMA_SERVER_URL || process.env.NEXT_PUBLIC_CHROMA_SERVER_URL
-const GEMINI_TIMEOUT_MS = 20_000
+const GEMINI_TIMEOUT_MS = 25_000
 
 function isChunkResult(value: unknown): value is ChunkResult {
   if (!value || typeof value !== 'object') return false
@@ -245,21 +246,35 @@ export async function solveWithHybridIntelligence(
     try {
       const { GoogleGenerativeAI } = await import('@google/generative-ai')
       const genAI = new GoogleGenerativeAI(geminiKey)
-      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
-      const result = await withTimeout(
-        model.generateContent({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: {
-            maxOutputTokens: 700,
-            temperature: 0.05,
-            topP: 0.85,
-            topK: 20,
-          },
-        }),
-        GEMINI_TIMEOUT_MS
-      )
+      let lastError: unknown = null
 
-      responseText = result.response.text()
+      for (const modelName of getGeminiModelCandidates()) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName })
+          const result = await withGeminiTimeout(
+            model.generateContent({
+              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              generationConfig: {
+                maxOutputTokens: 700,
+                temperature: 0.05,
+                topP: 0.85,
+                topK: 20,
+              },
+            }),
+            GEMINI_TIMEOUT_MS
+          )
+          responseText = result.response.text()
+          if (responseText.trim()) break
+          throw new Error('Gemini returned an empty response')
+        } catch (error) {
+          lastError = error
+          console.error(`Hybrid solver Gemini error (${modelName}):`, getGeminiErrorMessage(error))
+        }
+      }
+
+      if (!responseText.trim() && lastError) {
+        console.error('Hybrid solver Gemini exhausted all models:', getGeminiErrorMessage(lastError))
+      }
     } catch (error) {
       console.error('Hybrid solver Gemini error:', error)
     }

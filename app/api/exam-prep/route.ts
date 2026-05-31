@@ -2,6 +2,7 @@ export const runtime = 'nodejs'
 export const maxDuration = 30
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { getGeminiErrorMessage, getGeminiModelCandidates, withGeminiTimeout } from '@/lib/ai/geminiConfig'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { searchSimilarQuestions, type SearchResult } from '@/lib/rag/ragSystem'
 import { checkRateLimit } from '@/lib/rateLimit/rateLimiter'
@@ -469,24 +470,48 @@ async function geminiStream(prompt: string, fallback: string) {
   const encoder = new TextEncoder()
   return new ReadableStream<Uint8Array>({
     async start(controller) {
-      try {
-        const genAI = new GoogleGenerativeAI(apiKey)
-        const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
-        const result = await model.generateContentStream({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: {
-            maxOutputTokens: 800,
-            temperature: 0.08,
-            topP: 0.85,
-            topK: 20,
-          },
-        })
+      const genAI = new GoogleGenerativeAI(apiKey)
+      let streamed = false
+      let lastError: unknown = null
 
-        for await (const chunk of result.stream) {
-          const text = filterResponse(chunk.text())
-          if (text) controller.enqueue(encoder.encode(text))
+      try {
+        for (const modelName of getGeminiModelCandidates()) {
+          try {
+            const model = genAI.getGenerativeModel({ model: modelName })
+            const result = await withGeminiTimeout(
+              model.generateContentStream({
+                contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                generationConfig: {
+                  maxOutputTokens: 800,
+                  temperature: 0.08,
+                  topP: 0.85,
+                  topK: 20,
+                },
+              })
+            )
+
+            for await (const chunk of result.stream) {
+              const text = filterResponse(chunk.text())
+              if (text) {
+                streamed = true
+                controller.enqueue(encoder.encode(text))
+              }
+            }
+
+            if (streamed) break
+            throw new Error('Gemini stream returned no text')
+          } catch (error) {
+            lastError = error
+            console.error(`Exam prep stream Gemini error (${modelName}):`, getGeminiErrorMessage(error))
+          }
         }
-      } catch {
+
+        if (!streamed) {
+          console.error('Exam prep stream exhausted Gemini models:', getGeminiErrorMessage(lastError))
+          controller.enqueue(encoder.encode(fallback))
+        }
+      } catch (error) {
+        console.error('Exam prep stream error:', error)
         controller.enqueue(encoder.encode(fallback))
       } finally {
         controller.close()

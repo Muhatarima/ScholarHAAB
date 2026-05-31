@@ -21,7 +21,7 @@ async function withTimeout<T>(fn: FetchFunction<T>, timeoutMs: number): Promise<
 export async function resilientGeminiCall(
   fn: FetchFunction<string>,
   fallback: string,
-  timeoutMs = 8000
+  timeoutMs = 25_000
 ): Promise<{ result: string; wasOffline: boolean }> {
   try {
     const result = await withTimeout(fn, timeoutMs);

@@ -22,8 +22,8 @@ const GEMINI_DAILY_CALL_LIMIT = 1400
 const GEMINI_DAILY_COST_LIMIT_USD = 5
 
 const MODEL_COST_PER_1M: Record<string, { input: number; output: number }> = {
-  'gemini-1.5-flash': { input: 0.075, output: 0.3 },
-  'gemini-2.0-flash': { input: 0.075, output: 0.3 },
+  'gemini-flash-lite-latest': { input: 0.075, output: 0.3 },
+  'gemini-flash-latest': { input: 0.075, output: 0.3 },
   'gpt-4o-mini': { input: 0.15, output: 0.6 },
   'groq-llama3': { input: 0.05, output: 0.08 },
   'llama-3.1-8b-instant': { input: 0.05, output: 0.08 },

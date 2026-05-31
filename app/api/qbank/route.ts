@@ -142,7 +142,10 @@ export async function POST(req: Request) {
       response.headers.set('x-request-id', requestId)
       return response
     }
-    const conceptAnswer = isPastPaperLookup ? null : getHighConfidenceConceptAnswer(message)
+    const conceptAnswer =
+      isPastPaperLookup || understood.intent === 'confused'
+        ? null
+        : getHighConfidenceConceptAnswer(message)
     if (conceptAnswer) {
       const cleanedAnswer = filterResponse(conceptAnswer)
       const response = Response.json({

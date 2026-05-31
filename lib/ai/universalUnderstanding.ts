@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { getGeminiErrorMessage, getGeminiModelCandidates, withGeminiTimeout } from '@/lib/ai/geminiConfig'
 
 export type Message = {
   role: 'user' | 'assistant'
@@ -150,21 +151,33 @@ async function callGeminiParser(prompt: string) {
   if (!key) throw new Error('Missing GEMINI_API_KEY')
 
   const genAI = new GoogleGenerativeAI(key)
-  const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
-  })
-  const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: {
-      maxOutputTokens: 420,
-      temperature: 0,
-      topP: 0.2,
-      topK: 1,
-      responseMimeType: 'application/json',
-    },
-  })
+  let lastError: unknown = null
 
-  return result.response.text()
+  for (const modelName of getGeminiModelCandidates()) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName })
+      const result = await withGeminiTimeout(
+        model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: {
+            maxOutputTokens: 420,
+            temperature: 0,
+            topP: 0.2,
+            topK: 1,
+            responseMimeType: 'application/json',
+          },
+        })
+      )
+      const text = result.response.text()
+      if (!text.trim()) throw new Error('Gemini parser returned an empty response')
+      return text
+    } catch (error) {
+      lastError = error
+      console.error(`Gemini parser error (${modelName}):`, getGeminiErrorMessage(error))
+    }
+  }
+
+  throw new Error(`All Gemini parser models failed: ${getGeminiErrorMessage(lastError)}`)
 }
 
 function asIntent(value: unknown): ParserIntent {
@@ -201,6 +214,8 @@ function asNullableString(value: unknown) {
 function applyLocalCorrections(raw: string) {
   const replacements: Array<[RegExp, string]> = [
     [/\bwaev\b/gi, 'wave'],
+    [/\bmoshon\b/gi, 'motion'],
+    [/\bfisiks\b/gi, 'physics'],
     [/\bphysic\b/gi, 'physics'],
     [/\bwerk\s+dun\b/gi, 'work done'],
     [/\bwork\s+dun\b/gi, 'work done'],
@@ -376,11 +391,11 @@ function parserFailureResult(raw: string): UnderstandingResult {
 
   const academicIntent = /\b(explain|define|calculate|solve|find|formula|state|what|why|how)\b/.test(lower)
   const academicTopic =
-    /\b(newton|force|motion|work|energy|wave|photosynthesis|cell|atom|bond|equation|integral|differentiat|demand|supply)\b/.test(
+    /\b(newton|force|motion|work|energy|wave|photosynthesis|cell|atom|bond|bonding|ionic|equation|integral|differentiat|quadratic|demand|supply)\b/.test(
       lower
     )
   const knownAcademicTerm =
-    /\b(wave|force|work|energy|power|cell|atom|bond|rate|nucleus|electron|photosynthesis)\b/i.test(
+    /\b(wave|force|work|energy|power|cell|atom|bond|bonding|ionic|rate|nucleus|electron|photosynthesis|quadratic)\b/i.test(
       trimmed
     )
   const keyboardMash =
@@ -395,7 +410,15 @@ function parserFailureResult(raw: string): UnderstandingResult {
       cleanMessage: trimmed,
       correctedMessage: trimmed,
       intent: academicIntent && /\b(calculate|solve|find)\b/.test(lower) ? 'solve' : 'explain',
-      subject: /\b(newton|force|motion|work|energy|wave)\b/.test(lower) ? 'Physics' : null,
+      subject: /\b(newton|force|motion|work|energy|wave)\b/.test(lower)
+        ? 'Physics'
+        : /\b(ionic|bond|bonding|atom)\b/.test(lower)
+          ? 'Chemistry'
+          : /\b(photosynthesis|cell)\b/.test(lower)
+            ? 'Biology'
+            : /\b(quadratic|integral|differentiat)\b/.test(lower)
+              ? 'Mathematics'
+              : null,
       topic: academicTopic ? trimmed : null,
       language: 'english',
       isAcademic: true,
@@ -430,9 +453,41 @@ function parserFailureResult(raw: string): UnderstandingResult {
 }
 
 export async function understandMessage(raw: string, history: Message[] = []): Promise<UnderstandingResult> {
-  const localText = applyLocalCorrections(raw).text.toLowerCase()
+  const local = applyLocalCorrections(raw)
+  const localText = local.text.toLowerCase()
+  const confusedWithHistory = /\b(bujhini|bujhi nai|bujhte|confus|stuck|arekbar|again)\b/i.test(
+    localText
+  )
+
+  if (confusedWithHistory && history.length > 0) {
+    const previousQuestion = [...history]
+      .reverse()
+      .find((entry) => entry.role === 'user' && entry.content.trim())?.content
+
+    if (previousQuestion) {
+      const previous = applyLocalCorrections(previousQuestion).text
+      return {
+        raw,
+        cleanMessage: `Re-explain in a simpler, different way: ${previous}`,
+        correctedMessage: `Re-explain in a simpler, different way: ${previous}`,
+        intent: 'confused',
+        subject: null,
+        topic: previous,
+        language: /bujh|arekbar/.test(localText) ? 'mixed' : 'english',
+        isAcademic: true,
+        emotionalState: 'neutral',
+        shouldRunRAG: true,
+        suggestedResponse: null,
+        category: 'academic',
+        shouldRunRag: true,
+        skippedTopic: null,
+        corrections: local.corrections,
+      }
+    }
+  }
+
   const localAcademicFastPath =
-    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|wave|newton|force|motion|reaction\s+rate|photosynthesis|string theory|without|explain|define|calculate|solve|formula|what|why|how|bujhini|bujhte|arekbar|panic|fail|nervous|skip/i.test(
+    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|wave|newton|force|motion|reaction\s+rate|photosynthesis|ionic|bonding|quadratic|string theory|without|explain|define|calculate|solve|formula|what|why|how|ki|bujhiye|bujhini|bujhte|arekbar|panic|fail|nervous|skip/i.test(
       localText
     )
   if (localAcademicFastPath) {

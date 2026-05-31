@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai'
 import { resilientGeminiCall } from '@/lib/api/resilientFetch'
 import { canAffordRequest, OUTPUT_CONFIG, recordUsage, truncatePrompt } from '@/lib/ai/costManager'
+import { getGeminiErrorMessage, getGeminiModelCandidates, withGeminiTimeout } from '@/lib/ai/geminiConfig'
 import { detectIntent } from '@/lib/ai/intentEngine'
 import { buildSystemPrompt } from '@/lib/ai/personalityEngine'
 import { getCambridgePatternInstruction } from '@/lib/ai/patternEngine'
@@ -238,6 +239,102 @@ function deterministicFallbackAnswer(params: {
       '',
       `Past paper reference: ${citation}`,
     ].join('\n')
+  }
+
+  if (/work done|work\s*=\s*force|work\b/.test(lower) && /physics/i.test(subject ?? message)) {
+    return [
+      badge,
+      '',
+      sourceLine,
+      excerpt ? `Relevant past-paper excerpt: ${excerpt}` : '',
+      '',
+      'Answer:',
+      'Work done is the energy transferred when a force moves an object through a distance in the direction of the force.',
+      '',
+      'Formula:',
+      'W = Fd',
+      'W = work done in joules (J), F = force in newtons (N), d = distance in metres (m).',
+      '',
+      'Cambridge mark-scheme style:',
+      'Point 1 [1]: State that work is energy transferred by a force.',
+      'Point 2 [1]: State or use W = Fd.',
+      'Point 3 [1]: Include correct unit: joule (J).',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  if (/photosynthesis/.test(lower)) {
+    return [
+      badge,
+      '',
+      sourceLine,
+      excerpt ? `Relevant past-paper excerpt: ${excerpt}` : '',
+      '',
+      'Answer:',
+      'Photosynthesis is the process where plants use light energy and chlorophyll to make glucose from carbon dioxide and water.',
+      '',
+      'Word equation:',
+      'carbon dioxide + water → glucose + oxygen',
+      '',
+      'Cambridge mark-scheme style:',
+      'Point 1 [1]: Light energy is absorbed by chlorophyll in chloroplasts.',
+      'Point 2 [1]: Carbon dioxide and water are reactants.',
+      'Point 3 [1]: Glucose and oxygen are products.',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  if (/quadratic/.test(lower)) {
+    return [
+      badge,
+      '',
+      sourceLine,
+      '',
+      'Answer:',
+      'For ax² + bx + c = 0, the quadratic formula is:',
+      'x = (-b ± √(b² - 4ac)) / 2a',
+      '',
+      'Cambridge mark-scheme style:',
+      'Step 1 [1]: Identify a, b, and c from ax² + bx + c = 0.',
+      'Step 2 [1]: Substitute into x = (-b ± √(b² - 4ac)) / 2a.',
+      'Step 3 [1]: Simplify both roots carefully.',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  if (/ionic|bonding|bond/.test(lower) && /chemistry/i.test(subject ?? message)) {
+    const reExplainMode = /re-explain|simpler|different|bujhini|again/.test(lower)
+    return [
+      badge,
+      '',
+      sourceLine,
+      excerpt ? `Relevant past-paper excerpt: ${excerpt}` : '',
+      '',
+      'Answer:',
+      reExplainMode
+        ? 'Different way: imagine the metal atom gives away an electron, and the non-metal atom accepts it. After that trade, one side becomes positive and the other becomes negative, so they stick together strongly.'
+        : 'Ionic bonding happens when electrons are transferred from a metal atom to a non-metal atom, forming oppositely charged ions that attract each other.',
+      '',
+      'Cambridge mark-scheme style:',
+      'Point 1 [1]: A metal atom loses electron(s) to form a positive ion.',
+      'Point 2 [1]: A non-metal atom gains electron(s) to form a negative ion.',
+      'Point 3 [1]: Strong electrostatic attraction holds the oppositely charged ions together.',
+      '',
+      'Examiner tip: Use the words electron transfer and electrostatic attraction.',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
   }
 
   if (/reaction rate|rates|rate of reaction/.test(lower)) {
@@ -516,6 +613,7 @@ export async function solveQuestion(
   const useFastDeterministicAnswer =
     outOfSyllabusCuriosity ||
     Boolean(options.avoidedTopics?.length) ||
+    /\bwave\s+motion\b/i.test(userMessage) ||
     /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|er\s+question|paper\s*questions?/i.test(userMessage)
 
   if (useFastDeterministicAnswer) {
@@ -547,25 +645,39 @@ export async function solveQuestion(
       }
 
       const genAI = new GoogleGenerativeAI(getGeminiKey())
-      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
-      const response = await model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
-          ...OUTPUT_CONFIG,
-          maxOutputTokens: 600,
-          temperature: 0.05,
-          topK: 20,
-        },
-        safetySettings: [
-          {
-            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-          },
-        ],
-      })
-      const text = response.response.text().trim()
-      recordUsage(Math.ceil(prompt.length / 4), Math.ceil(text.length / 4))
-      return text
+      let lastError: unknown = null
+
+      for (const modelName of getGeminiModelCandidates()) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName })
+          const response = await withGeminiTimeout(
+            model.generateContent({
+              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              generationConfig: {
+                ...OUTPUT_CONFIG,
+                maxOutputTokens: 600,
+                temperature: 0.05,
+                topK: 20,
+              },
+              safetySettings: [
+                {
+                  category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                  threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+                },
+              ],
+            })
+          )
+          const text = response.response.text().trim()
+          if (!text) throw new Error('Gemini returned an empty response')
+          recordUsage(Math.ceil(prompt.length / 4), Math.ceil(text.length / 4))
+          return text
+        } catch (error) {
+          lastError = error
+          console.error(`Gemini error (${modelName}):`, getGeminiErrorMessage(error))
+        }
+      }
+
+      throw new Error(`All Gemini models failed: ${getGeminiErrorMessage(lastError)}`)
     },
     fallbackAnswer
   )
