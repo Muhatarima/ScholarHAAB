@@ -30,6 +30,41 @@ function isMissingTable(error: unknown) {
   return code === '42P01' || code === 'PGRST205' || /schema cache|does not exist/i.test(message)
 }
 
+function isDemoUserId(userId: string) {
+  return userId === 'test-anonymous-user' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)
+}
+
+function createDemoProfile(overrides: Record<string, unknown> = {}) {
+  const setupProfile = {
+    level: 'O Level',
+    board: 'Cambridge',
+    stage: 'Class 10',
+    subjects: ['Physics', 'Chemistry'],
+    language_preference: 'Banglish',
+    explanation_style: 'Step-by-step teacher style',
+    setup_completed: true,
+    updated_at: new Date().toISOString(),
+  }
+
+  return {
+    id: 'test-anonymous-user',
+    email: null,
+    fullName: 'ScholarHAAB Demo Student',
+    preferredBoard: setupProfile.board,
+    preferredLevel: setupProfile.level,
+    preferredSubjects: setupProfile.subjects,
+    preferredLanguage: 'bn',
+    onboardingCompleted: true,
+    activeTier: 'premium',
+    activeSubscriptionStatus: 'active',
+    stage: setupProfile.stage,
+    languagePreference: setupProfile.language_preference,
+    explanationStyle: setupProfile.explanation_style,
+    setupProfile,
+    ...overrides,
+  }
+}
+
 async function loadSetupProfile(userId: string) {
   try {
     const supabase = getSupabaseAdmin()
@@ -73,6 +108,11 @@ export async function GET(req: Request) {
     const identity = await resolveRequestIdentity(cookieStore, req.headers)
     if (!identity.isAuthenticated || !identity.authUserId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: { 'x-request-id': requestId } })
+    }
+
+    if (isDemoUserId(identity.authUserId)) {
+      const profile = createDemoProfile()
+      return NextResponse.json({ success: true, profile, setupProfile: profile.setupProfile }, { headers: { 'x-request-id': requestId } })
     }
 
     const [profile, setupProfile] = await Promise.all([
@@ -141,6 +181,23 @@ export async function PUT(req: Request) {
       typeof body.onboardingCompleted === 'boolean'
         ? body.onboardingCompleted
         : Boolean(preferredBoard || preferredLevel || preferredSubjects.length || languagePreference)
+
+    if (isDemoUserId(identity.authUserId)) {
+      const profile = createDemoProfile({
+        preferredBoard: preferredBoard ?? 'Cambridge',
+        preferredLevel: preferredLevel ?? 'O Level',
+        preferredSubjects: preferredSubjects.length ? preferredSubjects : ['Physics', 'Chemistry'],
+        preferredLanguage: languagePreference === 'English' ? 'en' : 'bn',
+        onboardingCompleted,
+        stage: typeof body.stage === 'string' && body.stage.trim() ? body.stage.trim() : 'Class 10',
+        languagePreference: languagePreference ?? 'Banglish',
+        explanationStyle:
+          typeof body.explanationStyle === 'string' && body.explanationStyle.trim()
+            ? body.explanationStyle.trim()
+            : 'Step-by-step teacher style',
+      })
+      return NextResponse.json({ success: true, profile, setupProfile: profile.setupProfile }, { headers: { 'x-request-id': requestId } })
+    }
 
     if (preferredBoard || preferredLevel || preferredSubjects.length || languagePreference || typeof body.explanationStyle === 'string') {
       try {

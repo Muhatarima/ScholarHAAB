@@ -20,8 +20,8 @@ async function loadProfile(userId: string | undefined) {
   if (!isUuid(userId)) {
     return {
       preferredBoard: 'Cambridge',
-      preferredLevel: 'A Level',
-      preferredSubjects: ['Physics', 'Chemistry', 'Mathematics'],
+      preferredLevel: 'O Level',
+      preferredSubjects: ['Physics', 'Chemistry'],
     }
   }
 
@@ -30,8 +30,8 @@ async function loadProfile(userId: string | undefined) {
   } catch {
     return {
       preferredBoard: 'Cambridge',
-      preferredLevel: 'A Level',
-      preferredSubjects: ['Physics', 'Chemistry', 'Mathematics'],
+      preferredLevel: 'O Level',
+      preferredSubjects: ['Physics', 'Chemistry'],
     }
   }
 }

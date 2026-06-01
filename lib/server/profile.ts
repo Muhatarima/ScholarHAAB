@@ -52,6 +52,16 @@ function isProfileSchemaMismatchError(error: unknown) {
   return record.code === '42703' || record.code === 'PGRST204' || haystack.includes('column')
 }
 
+function isMissingOptionalRelationError(error: unknown) {
+  if (!error || typeof error !== 'object') {
+    return false
+  }
+
+  const record = error as { code?: string; message?: string; details?: string; hint?: string }
+  const haystack = [record.message, record.details, record.hint].filter(Boolean).join(' ').toLowerCase()
+  return record.code === '42P01' || record.code === 'PGRST205' || haystack.includes('schema cache')
+}
+
 function toFallbackProfileRow(userId: string, row: Record<string, unknown> | null): ProfileRow | null {
   if (!row) {
     return null
@@ -169,6 +179,9 @@ async function fetchActiveSubscription(userId: string) {
     .maybeSingle()
 
   if (error) {
+    if (isMissingOptionalRelationError(error)) {
+      return null
+    }
     throw error
   }
 
