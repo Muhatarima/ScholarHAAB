@@ -8,7 +8,7 @@ export type AuthActionState = {
   message: string | null
 }
 
-function normalizeNextPath(value: FormDataEntryValue | null, fallback = '/dashboard') {
+function normalizeNextPath(value: FormDataEntryValue | null, fallback = '/setup') {
   if (typeof value !== 'string') {
     return fallback
   }

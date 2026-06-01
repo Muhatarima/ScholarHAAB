@@ -435,7 +435,15 @@ function buildIntentAwarePrompt(
 function classifyConfidence(results: SearchResult[]) {
   const best = results[0]
   if (!best) return { label: 'AI_REASONING' as const, score: 0 }
-  if (best.similarity >= 0.8) return { label: 'VERIFIED' as const, score: Math.round(best.similarity * 100) }
+  const hasRealSource = Boolean(
+    best.source_url || (best.board && best.level && best.subject && best.year && best.question_number)
+  )
+  const hasMarkScheme = Boolean(
+    best.mark_scheme?.trim() || (Array.isArray(best.mark_scheme_points) && best.mark_scheme_points.length > 0)
+  )
+  if (best.similarity >= 0.8 && hasRealSource && hasMarkScheme) {
+    return { label: 'VERIFIED' as const, score: Math.round(best.similarity * 100) }
+  }
   if (best.similarity >= 0.5) return { label: 'PARTIAL' as const, score: Math.round(best.similarity * 100) }
   return { label: 'AI_REASONING' as const, score: Math.round(best.similarity * 100) }
 }
@@ -570,15 +578,25 @@ export async function solveQuestion(
   userMessage: string,
   subject?: string,
   history: Array<{ role: 'user' | 'assistant'; content: string }> = [],
-  options: { avoidedTopics?: string[] } = {}
+  options: {
+    avoidedTopics?: string[]
+    profileFilters?: {
+      board?: string | null
+      level?: string | null
+      subjects?: string[]
+    }
+  } = {}
 ): Promise<SolvedAnswer> {
   void studentId
-  const normalizedSubject = normalizeSubject(subject, userMessage)
+  const profileSubjects = options.profileFilters?.subjects?.filter(Boolean) ?? []
+  const normalizedSubject =
+    normalizeSubject(subject, userMessage) ??
+    (profileSubjects.length === 1 ? profileSubjects[0] : undefined)
   const year = inferYear(userMessage)
   const filters = {
     subject: normalizedSubject,
-    level: inferLevel(userMessage),
-    board: inferBoard(userMessage),
+    level: inferLevel(userMessage) ?? options.profileFilters?.level ?? undefined,
+    board: inferBoard(userMessage) ?? options.profileFilters?.board?.toLowerCase() ?? undefined,
     year_from: year,
     year_to: year,
   }

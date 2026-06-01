@@ -11,6 +11,9 @@ import StarBackground from '@/components/StarBackground'
 import WeakTopicBar from '@/components/WeakTopicBar'
 
 type DashboardApi = {
+  name?: string
+  level?: string
+  subjects?: string[]
   questionsToday?: number
   totalQuestionsAttempted: number
   overallAccuracy: number
@@ -43,22 +46,11 @@ function fallbackDashboard(): DashboardApi {
     totalQuestionsAttempted: 0,
     overallAccuracy: 0,
     accuracyTrend: [],
-    weakPoints: [
-      { subject: 'Mathematics', topic: 'Integration', accuracy: 42 },
-      { subject: 'Chemistry', topic: 'Organic Chemistry', accuracy: 35 },
-      { subject: 'Physics', topic: 'Nuclear Physics', accuracy: 48 },
-    ],
+    weakPoints: [],
     recentSessions: [],
-    syllabus: [
-      { topic: 'Integration', status: 'weak', mastery: 42 },
-      { topic: 'Organic Chemistry', status: 'skipped', mastery: 25 },
-      { topic: 'Nuclear Physics', status: 'weak', mastery: 48 },
-    ],
+    syllabus: [],
     todaysPlan: [
-      '15 min weak topic drill',
-      '10 min formula revision',
-      '30 min mini mock',
-      'Review wrong answers',
+      'Start solving questions and ScholarHAAB will detect your weak topics automatically.',
     ],
   }
 }
@@ -130,6 +122,16 @@ function DashboardInner() {
       </nav>
 
       <section style={styles.content}>
+        <section style={styles.profilePanel}>
+          <div>
+            <span style={styles.panelTitle}>Study profile</span>
+            <p style={styles.profileText}>
+              {data.level || 'Level not set'} · {(data.subjects?.length ? data.subjects : ['No subjects selected']).join(', ')}
+            </p>
+          </div>
+          <Link href="/settings/profile" style={styles.profileLink}>Edit profile</Link>
+        </section>
+
         <div className="dashboard-stats" style={styles.statsGrid}>
           <DashboardStatCard value={data.questionsToday ?? 0} label="Questions Today" />
           <DashboardStatCard value={`${Math.round(data.overallAccuracy || 0)}%`} label="Accuracy" />
@@ -180,7 +182,7 @@ function DashboardInner() {
                 />
               ))
             ) : (
-              <Empty>No weak topics yet</Empty>
+              <Empty>Start solving questions and ScholarHAAB will detect your weak topics automatically.</Empty>
             )}
           </div>
 
@@ -286,6 +288,27 @@ const styles = {
     display: 'grid',
     gap: 12,
     gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+  } satisfies CSSProperties,
+  profilePanel: {
+    alignItems: 'center',
+    background: 'rgba(255,255,255,0.035)',
+    border: '1px solid rgba(170,85,255,0.08)',
+    borderRadius: 24,
+    display: 'flex',
+    gap: 16,
+    justifyContent: 'space-between',
+    padding: 16,
+  } satisfies CSSProperties,
+  profileText: {
+    color: '#aaa6ca',
+    margin: '7px 0 0',
+  } satisfies CSSProperties,
+  profileLink: {
+    border: '1px solid rgba(170,85,255,0.16)',
+    borderRadius: 999,
+    color: '#d8b4fe',
+    padding: '9px 12px',
+    textDecoration: 'none',
   } satisfies CSSProperties,
   graph: {
     background: 'rgba(255,255,255,0.035)',

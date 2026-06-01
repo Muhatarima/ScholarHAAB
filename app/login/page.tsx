@@ -8,5 +8,5 @@ export default async function LoginPage({
 }) {
   const params = await searchParams
 
-  return <AuthPage action={signIn} mode="login" nextPath={params.next ?? '/qbank'} oauthAction={signInWithGoogle} />
+  return <AuthPage action={signIn} mode="login" nextPath={params.next ?? '/setup'} oauthAction={signInWithGoogle} />
 }

@@ -1,36 +1,50 @@
 import type { SearchResult } from '@/lib/rag/ragSystem'
 
-export type SolverConfidence = 'VERIFIED' | 'PARTIAL_MATCH' | 'AI_REASONING'
+export type RetrievalStatus = 'verified' | 'partial' | 'ai_reasoning'
 
-export function calculateConfidence(results: SearchResult[]) {
-  const best = results[0]
-  const score = best ? Math.round(best.similarity * 100) : 0
+export function hasRealSource(result: SearchResult | null | undefined) {
+  return Boolean(
+    result?.source_url ||
+      (result?.board && result?.level && result?.subject && result?.year && result?.question_number)
+  )
+}
 
-  if (score >= 80) {
+export function hasMarkScheme(result: SearchResult | null | undefined) {
+  return Boolean(
+    result?.mark_scheme?.trim() ||
+      (Array.isArray(result?.mark_scheme_points) && result.mark_scheme_points.length > 0)
+  )
+}
+
+export function calculateConfidence(result: SearchResult | null | undefined): {
+  status: RetrievalStatus
+  confidence: number
+  warning?: string
+} {
+  if (!result) {
     return {
-      badge: 'VERIFIED',
-      explanation: 'Verified from Cambridge/Edexcel past papers',
-      score,
-      status: 'VERIFIED' as SolverConfidence,
-      tone: 'green' as const,
+      status: 'ai_reasoning',
+      confidence: 0,
+      warning: 'No exact past paper match found. This is AI reasoning. Verify before exam.',
     }
   }
 
-  if (score >= 50) {
+  const confidence = Math.round(Math.max(0, Math.min(1, result.similarity || 0)) * 100)
+  if (confidence >= 80 && hasRealSource(result) && hasMarkScheme(result)) {
+    return { status: 'verified', confidence }
+  }
+
+  if (confidence >= 50 && hasRealSource(result)) {
     return {
-      badge: 'PARTIAL MATCH',
-      explanation: 'Similar past-paper context found; AI reasoning adapted',
-      score,
-      status: 'PARTIAL_MATCH' as SolverConfidence,
-      tone: 'amber' as const,
+      status: 'partial',
+      confidence,
+      warning: 'Partial past paper match found. AI reasoning is applied; verify before exam.',
     }
   }
 
   return {
-    badge: 'AI REASONING',
-    explanation: 'No exact past paper match found. Verify before exam.',
-    score,
-    status: 'AI_REASONING' as SolverConfidence,
-    tone: 'amber' as const,
+    status: 'ai_reasoning',
+    confidence,
+    warning: 'No exact past paper match found. This is AI reasoning. Verify before exam.',
   }
 }

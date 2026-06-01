@@ -326,7 +326,8 @@ export default function ProductChatShell({ product }: { product: Product }) {
           name: file.name,
         }))
       )
-      const res = await fetch(ENDPOINT, {
+      const endpoint = files.length > 0 ? ENDPOINT : '/api/solve'
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: await buildJsonAuthHeaders(),
         body: JSON.stringify({
@@ -334,6 +335,10 @@ export default function ProductChatShell({ product }: { product: Product }) {
           mode,
           sessionId,
           files,
+          history: messages.slice(-8).map((message) => ({
+            role: message.role,
+            content: message.content,
+          })),
         }),
       })
       const data = await res.json()
@@ -473,6 +478,15 @@ export default function ProductChatShell({ product }: { product: Product }) {
             <Link className="shaab-top-nav-link" href="/exam-mode" style={styles.topNavLink} title="Exam Mode" aria-label="Exam Mode">
               <ThemeIcon name="exam" size={17} />
               <span>Exam Mode</span>
+            </Link>
+            <Link className="shaab-top-nav-link" href="/mock" style={styles.topNavLink} title="Mock" aria-label="Mock">
+              <span>Mock</span>
+            </Link>
+            <Link className="shaab-top-nav-link" href="/ai-approach" style={styles.topNavLink} title="AI Approach" aria-label="AI Approach">
+              <span>AI</span>
+            </Link>
+            <Link className="shaab-top-nav-link" href="/settings/profile" style={styles.topNavLink} title="Profile settings" aria-label="Profile settings">
+              <span>Profile</span>
             </Link>
             <button className="shaab-top-nav-link" type="button" onClick={() => void signOut()} style={styles.topNavButton} title="Logout" aria-label="Logout">
               <ThemeIcon name="logout" size={17} />

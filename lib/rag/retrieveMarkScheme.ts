@@ -1,29 +1,25 @@
-import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
+import type { SearchResult } from '@/lib/rag/ragSystem'
 
 export type RetrievedMarkScheme = {
-  answerText: string
+  answerText: string | null
   markPoints: string[]
   sourcePdfUrl: string | null
 }
 
-export async function retrieveMarkScheme(questionId: string): Promise<RetrievedMarkScheme | null> {
-  try {
-    const supabase = getSupabaseAdmin()
-    const { data, error } = await supabase
-      .from('mark_schemes')
-      .select('answer_text, mark_points, source_pdf_url')
-      .eq('question_id', questionId)
-      .maybeSingle()
-
-    if (error || !data) return null
-
-    const row = data as { answer_text?: string | null; mark_points?: unknown; source_pdf_url?: string | null }
+export function retrieveMarkSchemeFromResult(result: SearchResult | null | undefined): RetrievedMarkScheme {
+  if (!result) {
     return {
-      answerText: row.answer_text ?? '',
-      markPoints: Array.isArray(row.mark_points) ? row.mark_points.filter((point): point is string => typeof point === 'string') : [],
-      sourcePdfUrl: row.source_pdf_url ?? null,
+      answerText: null,
+      markPoints: [],
+      sourcePdfUrl: null,
     }
-  } catch {
-    return null
+  }
+
+  return {
+    answerText: result.mark_scheme?.trim() || null,
+    markPoints: Array.isArray(result.mark_scheme_points)
+      ? result.mark_scheme_points.map((point) => String(point).trim()).filter(Boolean)
+      : [],
+    sourcePdfUrl: result.source_url ?? null,
   }
 }

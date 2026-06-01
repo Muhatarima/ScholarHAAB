@@ -1,8 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED_PREFIXES = ['/admin', '/chat', '/dashboard', '/exam-mode', '/exam-prep', '/progress', '/qbank', '/solver']
-const AUTH_PAGES = ['/auth', '/login', '/signup']
+const PROTECTED_PREFIXES = ['/admin', '/chat', '/dashboard', '/exam-mode', '/exam-prep', '/mock', '/progress', '/qbank', '/settings', '/setup', '/solver']
+const AUTH_PAGES = ['/auth', '/login', '/register', '/signup']
 
 function isProtectedPath(pathname: string) {
   return PROTECTED_PREFIXES.some(
@@ -91,8 +91,11 @@ export const config = {
     '/dashboard/:path*',
     '/exam-mode/:path*',
     '/exam-prep/:path*',
+    '/mock/:path*',
     '/progress/:path*',
     '/qbank/:path*',
+    '/settings/:path*',
+    '/setup/:path*',
     '/solver/:path*',
   ],
 }

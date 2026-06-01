@@ -8,14 +8,42 @@ import ChatInput from '@/components/ChatInput'
 import ExamNightCard from '@/components/ExamNightCard'
 import Logo from '@/components/Logo'
 import StarBackground from '@/components/StarBackground'
+import { BOARDS, LEVELS, SUBJECTS } from '@/lib/profile/setupOptions'
 
-const subjectDefaults: Record<string, string[]> = {
-  Physics: ['wave speed equation', 'definitions of amplitude and wavelength', 'ray diagrams', 'calculation with units'],
-  Chemistry: ['ionic structure', 'rate of reaction', 'moles calculations', 'bonding explanations'],
-  Mathematics: ['method marks', 'calculus setup', 'algebraic manipulation', 'final exact form'],
-  Biology: ['process sequence', 'keywords', 'graph interpretation', 'structure to function links'],
-  Economics: ['diagram labels', 'chain of reasoning', 'definition accuracy', 'evaluation point'],
-  Accounting: ['format', 'calculation layout', 'working notes', 'final balance'],
+type ExamPlan = {
+  meta?: {
+    subject?: string
+    level?: string
+    board?: string
+    topicFocus?: string
+    daysLeft?: number | null
+    examSoon?: boolean
+    emergencyMode?: boolean
+    dataLabel?: string
+  }
+  mostRepeatedTopics?: Array<{ topic: string; frequency?: number; yearsAppeared?: Array<string | number>; confidence?: string }>
+  highProbabilityTopics?: Array<{ topic: string; whyLikely?: string; confidence?: string }>
+  mostLikelyQuestionTypes?: Array<{ questionStyle: string; practiceRecommendation?: string }>
+  formulas?: Array<{ formula: string; whenToUse?: string; commonMistake?: string; example?: string }>
+  theoryRescue?: Array<{ topic: string; explanation: string }>
+  studyPlan?: {
+    fifteenMinutePlan?: string[]
+    thirtyMinutePractice?: string[]
+    sixtyMinuteDeepPractice?: string[]
+    doFirst?: string[]
+    skipForNow?: string[]
+  }
+  practiceQuestions?: Array<{ question: string; marks: number; markScheme: string[]; label: string }>
+  personalWeaknessBoost?: Array<{ topic: string; action: string }>
+}
+
+const localTopicDefaults: Record<string, string[]> = {
+  Physics: ['definitions and units', 'formula substitution', 'graphs', 'practical method questions'],
+  Chemistry: ['bonding keywords', 'moles calculations', 'rates graphs', 'structure and properties'],
+  Mathematics: ['method marks', 'exact form', 'algebra checks', 'calculus setup'],
+  Biology: ['process sequence', 'keywords', 'data questions', 'structure to function'],
+  Economics: ['definition accuracy', 'diagram labels', 'chain of reasoning', 'evaluation'],
+  Accounting: ['format', 'working notes', 'final balances', 'ratio interpretation'],
 }
 
 function daysUntil(date: string) {
@@ -27,40 +55,142 @@ function daysUntil(date: string) {
   return Math.ceil((parsed.getTime() - today.getTime()) / 86_400_000)
 }
 
+function buildFallbackPlan(input: {
+  subject: string
+  level: string
+  board: string
+  topic: string
+  examDate: string
+  paperType: string
+}): ExamPlan {
+  const remainingDays = daysUntil(input.examDate)
+  const baseTopics = localTopicDefaults[input.subject] ?? localTopicDefaults.Physics
+  const focus = input.topic.trim() || baseTopics[0]
+  const topics = [focus, ...baseTopics.filter((item) => item.toLowerCase() !== focus.toLowerCase())].slice(0, 4)
+
+  return {
+    meta: {
+      subject: input.subject,
+      level: input.level,
+      board: input.board,
+      topicFocus: focus,
+      daysLeft: remainingDays,
+      examSoon: remainingDays !== null && remainingDays <= 3,
+      emergencyMode: remainingDays !== null && remainingDays <= 1,
+      dataLabel: 'Prediction based on available local topic rules.',
+    },
+    mostRepeatedTopics: topics.map((topic, index) => ({
+      topic,
+      frequency: Math.max(1, 5 - index),
+      yearsAppeared: [],
+      confidence: index === 0 ? 'high' : 'medium',
+    })),
+    highProbabilityTopics: topics.slice(0, 3).map((topic) => ({
+      topic,
+      whyLikely: `High probability based on ${input.paperType || 'paper'} pattern and core ${input.subject} skills.`,
+      confidence: 'pattern-based',
+    })),
+    mostLikelyQuestionTypes: [
+      { questionStyle: 'Definition or keyword question', practiceRecommendation: 'Write exact exam words first.' },
+      { questionStyle: 'Structured calculation or explanation', practiceRecommendation: 'Show formula, substitution, answer, unit.' },
+    ],
+    formulas: [
+      {
+        formula: input.subject === 'Physics' ? 'v = fλ' : 'Use the core formula from the topic.',
+        whenToUse: 'When the question gives matching variables and asks for one missing value.',
+        commonMistake: 'Skipping units or writing only the final answer.',
+        example: 'Formula first, then substitute numbers.',
+      },
+    ],
+    theoryRescue: topics.slice(0, 2).map((topic) => ({
+      topic,
+      explanation: `Know the definition, one example, and the mark-scheme keywords for ${topic}.`,
+    })),
+    studyPlan: {
+      fifteenMinutePlan: ['Recall key definitions', 'Write formulas once', 'Solve one short question'],
+      thirtyMinutePractice: ['Do one structured question', 'Mark it strictly', 'Rewrite missing keywords'],
+      sixtyMinuteDeepPractice: ['Revise weak theory', 'Attempt mini mock', 'Review every lost mark'],
+      doFirst: topics.slice(0, 2),
+      skipForNow: ['Long textbook reading', 'Low-frequency extension notes'],
+    },
+    practiceQuestions: [
+      {
+        question: `A/O Level style ${input.subject} question on ${focus}. Show working and final exam keywords.`,
+        marks: 4,
+        markScheme: ['Correct idea or formula [1]', 'Correct application [1]', 'Clear explanation [1]', 'Unit/keyword/final statement [1]'],
+        label: 'AI-generated mock based on A/O Level pattern',
+      },
+    ],
+    personalWeaknessBoost: [{ topic: focus, action: 'Do this first, then one mark-scheme check.' }],
+  }
+}
+
 function ExamModeInner() {
   const [subject, setSubject] = useState('Physics')
   const [board, setBoard] = useState('Cambridge')
   const [level, setLevel] = useState('A Level')
   const [topic, setTopic] = useState('wave motion')
   const [examDate, setExamDate] = useState('')
+  const [paperType, setPaperType] = useState('Paper 2')
+  const [availableStudyMinutes, setAvailableStudyMinutes] = useState('60')
   const [started, setStarted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [plan, setPlan] = useState<ExamPlan | null>(null)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([])
-  const remainingDays = daysUntil(examDate)
-  const examSoon = remainingDays !== null && remainingDays <= 3
-  const important = useMemo(() => {
-    const base = subjectDefaults[subject] ?? subjectDefaults.Physics
-    const normalizedTopic = topic.trim() || 'core topic'
-    return [normalizedTopic, ...base].slice(0, 5)
-  }, [subject, topic])
+
+  const subjects = useMemo(() => Array.from(new Set([...SUBJECTS['O Level'], ...SUBJECTS['A Level']])), [])
+  const examSoon = Boolean(plan?.meta?.examSoon)
 
   async function start() {
+    setError('')
+    if (!subject || !level || !board || !examDate) {
+      setError('Subject, level, board, and exam date are required.')
+      return
+    }
+
     setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 900))
-    setStarted(true)
-    setLoading(false)
+    try {
+      const response = await fetch('/api/exam-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject,
+          level,
+          board,
+          examDate,
+          paperType,
+          topicFocus: topic,
+          availableStudyMinutes: Number(availableStudyMinutes || 60),
+        }),
+      })
+      const json = await response.json()
+      if (!response.ok) throw new Error(json.error || 'Could not generate exam plan.')
+      setPlan(json.plan ?? buildFallbackPlan({ subject, level, board, topic, examDate, paperType }))
+    } catch (err) {
+      setPlan(buildFallbackPlan({ subject, level, board, topic, examDate, paperType }))
+      setError(err instanceof Error ? `${err.message} Local fallback plan shown.` : 'Local fallback plan shown.')
+    } finally {
+      setStarted(true)
+      setLoading(false)
+    }
   }
 
   function send() {
     const text = input.trim()
-    if (!text) return
+    if (!text || !plan) return
     const lower = text.toLowerCase()
+    const firstFormula = plan.formulas?.[0]
+    const firstQuestion = plan.practiceQuestions?.[0]
+    const doFirst = plan.studyPlan?.doFirst?.slice(0, 2).join(', ') || plan.meta?.topicFocus || subject
     const reply = lower.includes('formula')
-      ? `Formula revision for ${topic}: write the formula first, define every symbol, then substitute with units.`
+      ? `${firstFormula?.formula ?? 'Formula first.'}\nUse it when: ${firstFormula?.whenToUse ?? 'the variables match the question.'}\nMistake to avoid: ${firstFormula?.commonMistake ?? 'missing units.'}`
       : lower.includes('question')
-        ? `Mini mock: A ${level} ${subject} question on ${topic}. Show method marks, final answer, and one examiner keyword. [4 marks]`
-        : `Focus answer: start with ${important[0]}, then practise one calculation and one explain question. Skip low-yield notes until the core is secure.`
+        ? `${firstQuestion?.question ?? `Try one ${subject} structured question.`}\nMarks: ${firstQuestion?.marks ?? 4}\nMark scheme: ${(firstQuestion?.markScheme ?? ['method [1]', 'answer [1]']).join('; ')}`
+        : lower.includes('summary')
+          ? `Do first: ${doFirst}. Keep it tight: definitions, formulas, one practice question, mark scheme check.`
+          : `Skip low-yield reading for now. Start with ${doFirst}, then mark one answer strictly.`
     setMessages((current) => [...current, { role: 'user', content: text }, { role: 'assistant', content: reply }])
     setInput('')
   }
@@ -69,7 +199,7 @@ function ExamModeInner() {
     <main style={styles.page}>
       <StarBackground variant="chat" />
       <style>{`
-        @media (max-width: 860px) {
+        @media (max-width: 900px) {
           .exam-mode-inputs,
           .exam-mode-cards {
             grid-template-columns: 1fr !important;
@@ -85,6 +215,7 @@ function ExamModeInner() {
         <div style={styles.links}>
           <Link href="/solver" style={styles.link}>Solver</Link>
           <Link href="/dashboard" style={styles.link}>Dashboard</Link>
+          <Link href="/mock" style={styles.link}>Mock</Link>
           <Link href="/ai-approach" style={styles.link}>AI Approach</Link>
         </div>
       </nav>
@@ -93,27 +224,25 @@ function ExamModeInner() {
         <section style={styles.setup}>
           <h1 style={styles.title}>What&apos;s your exam?</h1>
           <div className="exam-mode-inputs" style={styles.inputs}>
-            <select value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
-              {Object.keys(subjectDefaults).map((item) => <option key={item}>{item}</option>)}
+            <select value={level} onChange={(event) => setLevel(event.target.value)} style={styles.field}>
+              {LEVELS.map((item) => <option key={item}>{item}</option>)}
             </select>
             <select value={board} onChange={(event) => setBoard(event.target.value)} style={styles.field}>
-              <option>Cambridge</option>
-              <option>Edexcel</option>
+              {BOARDS.map((item) => <option key={item}>{item}</option>)}
             </select>
-            <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Chapter/Topic" style={styles.field} />
-            <select value={level} onChange={(event) => setLevel(event.target.value)} style={styles.field}>
-              <option>A Level</option>
-              <option>O Level</option>
-              <option>IAL</option>
-              <option>IGCSE</option>
+            <select value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
+              {subjects.map((item) => <option key={item}>{item}</option>)}
             </select>
+            <input value={paperType} onChange={(event) => setPaperType(event.target.value)} placeholder="Paper/component" style={styles.field} />
+            <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Optional topic/chapter" style={styles.fieldWide} />
+            <input value={availableStudyMinutes} onChange={(event) => setAvailableStudyMinutes(event.target.value)} inputMode="numeric" placeholder="Minutes today" style={styles.field} />
           </div>
           <label style={styles.dateLine}>
             Exam date
             <input type="date" value={examDate} onChange={(event) => setExamDate(event.target.value)} style={styles.dateField} />
           </label>
-          {examSoon ? <Badge tone="amber">Exam soon - focus mode enabled</Badge> : null}
-          <button type="button" onClick={() => void start()} style={styles.startButton}>
+          {error ? <div style={styles.error}>{error}</div> : null}
+          <button type="button" onClick={() => void start()} disabled={loading} style={styles.startButton}>
             {loading ? `Analysing past papers for ${topic || subject}...` : 'Analyse & Start ->'}
           </button>
         </section>
@@ -121,39 +250,59 @@ function ExamModeInner() {
         <section style={styles.workspace}>
           <div className="exam-mode-header" style={styles.headerLine}>
             <div>
-              <Badge tone={examSoon ? 'amber' : 'violet'}>{examSoon ? 'Focus mode' : 'Exam mode'}</Badge>
-              <h1 style={styles.workspaceTitle}>{topic || subject} — Past Paper Analysis</h1>
-              <p style={styles.muted}>{board} · {level} · {remainingDays === null ? 'exam date not set' : `${Math.max(0, remainingDays)} days left`}</p>
+              <Badge tone={examSoon ? 'amber' : 'violet'}>{examSoon ? 'Exam soon - focus mode enabled' : 'Exam mode'}</Badge>
+              <h1 style={styles.workspaceTitle}>{plan?.meta?.topicFocus || topic || subject} - Past Paper Analysis</h1>
+              <p style={styles.muted}>
+                {plan?.meta?.board || board} · {plan?.meta?.level || level} · {plan?.meta?.subject || subject} · {plan?.meta?.daysLeft ?? daysUntil(examDate) ?? 'date set'} days left
+              </p>
+              {plan?.meta?.dataLabel ? <p style={styles.dataLabel}>{plan.meta.dataLabel}</p> : null}
+              {error ? <p style={styles.error}>{error}</p> : null}
             </div>
             <button type="button" onClick={() => setStarted(false)} style={styles.ghostButton}>Edit exam</button>
           </div>
 
           <div className="exam-mode-cards" style={styles.cardGrid}>
-            <ExamNightCard title="Most Important Topics">
+            <ExamNightCard title="Most Repeated Topics">
               <ol style={styles.list}>
-                {important.slice(0, 4).map((item) => <li key={item}>{item}</li>)}
+                {(plan?.mostRepeatedTopics ?? []).slice(0, 5).map((item) => (
+                  <li key={item.topic}>{item.topic} {item.frequency ? `(${item.frequency}x)` : ''}</li>
+                ))}
               </ol>
+            </ExamNightCard>
+            <ExamNightCard title="High Probability Topics">
+              <ul style={styles.list}>
+                {(plan?.highProbabilityTopics ?? []).slice(0, 4).map((item) => (
+                  <li key={item.topic}>{item.topic} - {item.confidence || 'pattern-based'}</li>
+                ))}
+              </ul>
             </ExamNightCard>
             <ExamNightCard title="Formula Revision">
               <ul style={styles.list}>
-                <li>Write the formula before numbers.</li>
-                <li>Define symbols and units.</li>
-                <li>Circle the final answer with unit.</li>
+                {(plan?.formulas ?? []).slice(0, 4).map((item) => (
+                  <li key={item.formula}>{item.formula}: {item.whenToUse}</li>
+                ))}
               </ul>
             </ExamNightCard>
-            <ExamNightCard title="Practice Overview">
+            <ExamNightCard title="Practice Plan">
               <ul style={styles.list}>
-                <li>15 min weak topic drill</li>
-                <li>30 min mini mock</li>
-                <li>Review wrong answers immediately</li>
+                {(plan?.studyPlan?.fifteenMinutePlan ?? []).map((item) => <li key={item}>15 min: {item}</li>)}
+                {(plan?.studyPlan?.thirtyMinutePractice ?? []).slice(0, 2).map((item) => <li key={item}>30 min: {item}</li>)}
               </ul>
             </ExamNightCard>
-            <ExamNightCard title="Emergency Plan">
-              <ul style={styles.list}>
-                <li>Do first: {important[0]}</li>
-                <li>Then: one explain question</li>
-                <li>Skip for now: low-yield reading</li>
-              </ul>
+          </div>
+
+          <div className="exam-mode-cards" style={styles.cardGrid}>
+            <ExamNightCard title="Do First">
+              <ul style={styles.list}>{(plan?.studyPlan?.doFirst ?? []).map((item) => <li key={item}>{item}</li>)}</ul>
+            </ExamNightCard>
+            <ExamNightCard title="Skip For Now">
+              <ul style={styles.list}>{(plan?.studyPlan?.skipForNow ?? []).map((item) => <li key={item}>{item}</li>)}</ul>
+            </ExamNightCard>
+            <ExamNightCard title="Theory Rescue">
+              <ul style={styles.list}>{(plan?.theoryRescue ?? []).slice(0, 3).map((item) => <li key={item.topic}>{item.topic}: {item.explanation}</li>)}</ul>
+            </ExamNightCard>
+            <ExamNightCard title="Weakness Boost">
+              <ul style={styles.list}>{(plan?.personalWeaknessBoost ?? []).map((item) => <li key={item.topic}>{item.topic}: {item.action}</li>)}</ul>
             </ExamNightCard>
           </div>
 
@@ -227,7 +376,7 @@ const styles = {
     minHeight: 'calc(100vh - 88px)',
     padding: '32px 18px',
     position: 'relative',
-    width: 'min(920px, 100%)',
+    width: 'min(980px, 100%)',
     zIndex: 1,
   } satisfies CSSProperties,
   title: {
@@ -241,7 +390,7 @@ const styles = {
   inputs: {
     display: 'grid',
     gap: 10,
-    gridTemplateColumns: '150px 140px 1fr 130px',
+    gridTemplateColumns: 'repeat(4, minmax(130px, 1fr))',
     width: '100%',
   } satisfies CSSProperties,
   field: {
@@ -251,6 +400,17 @@ const styles = {
     color: '#f4eeff',
     colorScheme: 'dark',
     fontSize: 14,
+    outline: 'none',
+    padding: '14px',
+  } satisfies CSSProperties,
+  fieldWide: {
+    background: '#0a0718',
+    border: '1px solid rgba(170,85,255,0.18)',
+    borderRadius: 16,
+    color: '#f4eeff',
+    colorScheme: 'dark',
+    fontSize: 14,
+    gridColumn: 'span 3',
     outline: 'none',
     padding: '14px',
   } satisfies CSSProperties,
@@ -279,6 +439,11 @@ const styles = {
     fontWeight: 800,
     padding: '14px 22px',
   } satisfies CSSProperties,
+  error: {
+    color: '#fbbf24',
+    fontSize: 13,
+    margin: 0,
+  } satisfies CSSProperties,
   workspace: {
     display: 'grid',
     gap: 22,
@@ -303,6 +468,11 @@ const styles = {
   } satisfies CSSProperties,
   muted: {
     color: '#aaa6ca',
+    margin: '8px 0 0',
+  } satisfies CSSProperties,
+  dataLabel: {
+    color: '#c084fc',
+    fontSize: 13,
     margin: '8px 0 0',
   } satisfies CSSProperties,
   ghostButton: {
@@ -340,6 +510,7 @@ const styles = {
   assistant: {
     color: '#e8e8ff',
     lineHeight: 1.65,
+    whiteSpace: 'pre-wrap',
   } satisfies CSSProperties,
   userMsg: {
     background: 'linear-gradient(130deg,#7c35d8,#a855f7)',
