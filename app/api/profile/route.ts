@@ -5,6 +5,7 @@ import { getStudentProfile, upsertStudentProfile } from '@/lib/server/profile'
 import { createRequestId, logError } from '@/lib/server/logger'
 import { readJsonBody } from '@/lib/server/request-body'
 import { requireAuth } from '@/lib/auth/requireAuth'
+import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,6 +24,44 @@ function toPublicProfileErrorMessage(error: unknown, fallback: string) {
   return fallback
 }
 
+function isMissingTable(error: unknown) {
+  const code = (error as { code?: string })?.code
+  const message = String((error as { message?: string })?.message ?? '')
+  return code === '42P01' || code === 'PGRST205' || /schema cache|does not exist/i.test(message)
+}
+
+async function loadSetupProfile(userId: string) {
+  try {
+    const supabase = getSupabaseAdmin()
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('level, board, stage, subjects, language_preference, explanation_style, setup_completed, updated_at')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    if (error) throw error
+    return data as {
+      level?: string | null
+      board?: string | null
+      stage?: string | null
+      subjects?: string[] | null
+      language_preference?: string | null
+      explanation_style?: string | null
+      setup_completed?: boolean | null
+      updated_at?: string | null
+    } | null
+  } catch (error) {
+    if (!isMissingTable(error)) {
+      logError('profile_setup_load_failed', error, { route: '/api/profile' })
+    }
+    return null
+  }
+}
+
+function toLegacyLanguagePreference(value: string | null | undefined) {
+  return value === 'English' ? 'en' : 'bn'
+}
+
 export async function GET(req: Request) {
   const { error: authError } = await requireAuth(req)
   if (authError) return authError
@@ -36,8 +75,23 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: { 'x-request-id': requestId } })
     }
 
-    const profile = await getStudentProfile(identity.authUserId)
-    return NextResponse.json({ success: true, profile }, { headers: { 'x-request-id': requestId } })
+    const [profile, setupProfile] = await Promise.all([
+      getStudentProfile(identity.authUserId),
+      loadSetupProfile(identity.authUserId),
+    ])
+    const mergedProfile = {
+      ...profile,
+      preferredBoard: profile.preferredBoard ?? setupProfile?.board ?? null,
+      preferredLevel: profile.preferredLevel ?? setupProfile?.level ?? null,
+      preferredSubjects: profile.preferredSubjects.length ? profile.preferredSubjects : setupProfile?.subjects ?? [],
+      preferredLanguage: profile.preferredLanguage ?? toLegacyLanguagePreference(setupProfile?.language_preference),
+      onboardingCompleted: profile.onboardingCompleted || Boolean(setupProfile?.setup_completed),
+      stage: setupProfile?.stage ?? null,
+      languagePreference: setupProfile?.language_preference ?? (profile.preferredLanguage === 'en' ? 'English' : 'Banglish'),
+      explanationStyle: setupProfile?.explanation_style ?? 'Step-by-step teacher style',
+      setupProfile,
+    }
+    return NextResponse.json({ success: true, profile: mergedProfile, setupProfile }, { headers: { 'x-request-id': requestId } })
   } catch (error) {
     logError('profile_get_failed', error, { request_id: requestId, route: '/api/profile' })
     return NextResponse.json(
@@ -61,21 +115,77 @@ export async function PUT(req: Request) {
     }
 
     const body = await readJsonBody(req)
+    const preferredBoard = typeof body.preferredBoard === 'string'
+      ? body.preferredBoard
+      : typeof body.board === 'string'
+        ? body.board
+        : null
+    const preferredLevel = typeof body.preferredLevel === 'string'
+      ? body.preferredLevel
+      : typeof body.level === 'string'
+        ? body.level
+        : null
+    const preferredSubjects = Array.isArray(body.preferredSubjects)
+      ? body.preferredSubjects.filter((entry): entry is string => typeof entry === 'string')
+      : Array.isArray(body.subjects)
+        ? body.subjects.filter((entry): entry is string => typeof entry === 'string')
+        : []
+    const languagePreference = typeof body.languagePreference === 'string'
+      ? body.languagePreference
+      : body.preferredLanguage === 'en'
+        ? 'English'
+        : body.preferredLanguage === 'bn'
+          ? 'Banglish'
+          : null
+    const onboardingCompleted =
+      typeof body.onboardingCompleted === 'boolean'
+        ? body.onboardingCompleted
+        : Boolean(preferredBoard || preferredLevel || preferredSubjects.length || languagePreference)
+
+    if (preferredBoard || preferredLevel || preferredSubjects.length || languagePreference || typeof body.explanationStyle === 'string') {
+      try {
+        const supabase = getSupabaseAdmin()
+        await supabase.from('user_profiles').upsert(
+          {
+            user_id: identity.authUserId,
+            board: preferredBoard ?? 'Cambridge',
+            level: preferredLevel ?? 'A Level',
+            stage: typeof body.stage === 'string' && body.stage.trim() ? body.stage.trim() : null,
+            subjects: preferredSubjects,
+            language_preference: languagePreference ?? 'English',
+            explanation_style:
+              typeof body.explanationStyle === 'string' && body.explanationStyle.trim()
+                ? body.explanationStyle.trim()
+                : 'Step-by-step teacher style',
+            setup_completed: true,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'user_id' }
+        )
+      } catch (error) {
+        if (!isMissingTable(error)) throw error
+      }
+    }
+
     const profile = await upsertStudentProfile(identity.authUserId, {
       defaultProduct: 'qbank',
-      preferredBoard: typeof body.preferredBoard === 'string' ? body.preferredBoard : null,
-      preferredLevel: typeof body.preferredLevel === 'string' ? body.preferredLevel : null,
-      preferredSubjects: Array.isArray(body.preferredSubjects)
-        ? body.preferredSubjects.filter((entry): entry is string => typeof entry === 'string')
-        : [],
-      preferredLanguage: body.preferredLanguage === 'bn' ? 'bn' : 'en',
+      preferredBoard,
+      preferredLevel,
+      preferredSubjects,
+      preferredLanguage: languagePreference
+        ? languagePreference === 'English'
+          ? 'en'
+          : 'bn'
+        : body.preferredLanguage === 'bn'
+          ? 'bn'
+          : 'en',
       targetCountry: typeof body.targetCountry === 'string' ? body.targetCountry : null,
       targetDegree: typeof body.targetDegree === 'string' ? body.targetDegree : null,
       targetField: typeof body.targetField === 'string' ? body.targetField : null,
       fundingPreference: typeof body.fundingPreference === 'string' ? body.fundingPreference : null,
       nationality: typeof body.nationality === 'string' ? body.nationality : 'Bangladesh',
       wantsDeadlineAlerts: body.wantsDeadlineAlerts !== false,
-      onboardingCompleted: Boolean(body.onboardingCompleted),
+      onboardingCompleted,
     })
 
     return NextResponse.json({ success: true, profile }, { headers: { 'x-request-id': requestId } })

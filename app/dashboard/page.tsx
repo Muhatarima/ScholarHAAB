@@ -13,6 +13,7 @@ import WeakTopicBar from '@/components/WeakTopicBar'
 type DashboardApi = {
   name?: string
   level?: string
+  board?: string
   subjects?: string[]
   questionsToday?: number
   totalQuestionsAttempted: number
@@ -22,6 +23,7 @@ type DashboardApi = {
   accuracyTrend: Array<{ date: string; accuracy: number; attempts?: number }>
   weeklyData?: Array<{ day: string; questions?: number; count?: number; accuracy?: number }>
   weakPoints: Array<{ subject?: string; topic: string; accuracy?: number; timesStruggled?: number }>
+  skippedChapters?: Array<{ subject?: string; topic: string; currentTopic?: string | null; detectionCount?: number }>
   recentSessions: Array<{
     id: string
     subject: string | null
@@ -68,13 +70,13 @@ function DashboardInner() {
     void (async () => {
       try {
         const [dashboardRes, leaderboardRes] = await Promise.all([
-          fetch('/api/progress/dashboard', { cache: 'no-store' }),
+          fetch('/api/dashboard', { cache: 'no-store' }),
           fetch('/api/leaderboard?limit=6', { cache: 'no-store' }),
         ])
         const dashboardJson = await dashboardRes.json()
         const leaderboardJson = await leaderboardRes.json()
         if (!active) return
-        setData(dashboardJson.dashboard ?? fallbackDashboard())
+        setData(dashboardJson.dashboard ?? dashboardJson ?? fallbackDashboard())
         setLeaderboard(Array.isArray(leaderboardJson.leaderboard) ? leaderboardJson.leaderboard : [])
       } catch {
         if (active) setData(fallbackDashboard())
@@ -85,7 +87,13 @@ function DashboardInner() {
     }
   }, [])
 
-  const skipped = useMemo(() => data.syllabus.filter((topic) => topic.status === 'skipped'), [data.syllabus])
+  const skipped = useMemo(
+    () =>
+      data.skippedChapters?.length
+        ? data.skippedChapters.map((topic) => ({ topic: topic.topic, status: 'skipped', mastery: 0 }))
+        : data.syllabus.filter((topic) => topic.status === 'skipped'),
+    [data.skippedChapters, data.syllabus]
+  )
   const weakTopics = data.weakPoints.length
     ? data.weakPoints
     : data.syllabus

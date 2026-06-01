@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import Badge from '@/components/Badge'
 import ChatInput from '@/components/ChatInput'
@@ -133,6 +133,8 @@ function ExamModeInner() {
   const [examDate, setExamDate] = useState('')
   const [paperType, setPaperType] = useState('Paper 2')
   const [availableStudyMinutes, setAvailableStudyMinutes] = useState('60')
+  const [targetGrade, setTargetGrade] = useState('')
+  const [profileSubjects, setProfileSubjects] = useState<string[]>([])
   const [started, setStarted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -140,8 +142,39 @@ function ExamModeInner() {
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([])
 
-  const subjects = useMemo(() => Array.from(new Set([...SUBJECTS['O Level'], ...SUBJECTS['A Level']])), [])
+  const subjects = useMemo(
+    () => profileSubjects.length ? profileSubjects : Array.from(new Set([...SUBJECTS['O Level'], ...SUBJECTS['A Level']])),
+    [profileSubjects]
+  )
   const examSoon = Boolean(plan?.meta?.examSoon)
+
+  useEffect(() => {
+    let active = true
+    void (async () => {
+      try {
+        const response = await fetch('/api/profile', { cache: 'no-store' })
+        if (!response.ok) return
+        const data = await response.json()
+        const profile = data.profile as {
+          preferredLevel?: string | null
+          preferredBoard?: string | null
+          preferredSubjects?: string[]
+        } | undefined
+        if (!active || !profile) return
+        if (profile.preferredLevel === 'O Level' || profile.preferredLevel === 'A Level') setLevel(profile.preferredLevel)
+        if (profile.preferredBoard === 'Cambridge' || profile.preferredBoard === 'Edexcel') setBoard(profile.preferredBoard)
+        if (Array.isArray(profile.preferredSubjects) && profile.preferredSubjects.length) {
+          setProfileSubjects(profile.preferredSubjects)
+          setSubject(profile.preferredSubjects[0])
+        }
+      } catch {
+        // Defaults are enough for demo/dev mode.
+      }
+    })()
+    return () => {
+      active = false
+    }
+  }, [])
 
   async function start() {
     setError('')
@@ -163,6 +196,7 @@ function ExamModeInner() {
           paperType,
           topicFocus: topic,
           availableStudyMinutes: Number(availableStudyMinutes || 60),
+          targetGrade,
         }),
       })
       const json = await response.json()
@@ -236,6 +270,7 @@ function ExamModeInner() {
             <input value={paperType} onChange={(event) => setPaperType(event.target.value)} placeholder="Paper/component" style={styles.field} />
             <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Optional topic/chapter" style={styles.fieldWide} />
             <input value={availableStudyMinutes} onChange={(event) => setAvailableStudyMinutes(event.target.value)} inputMode="numeric" placeholder="Minutes today" style={styles.field} />
+            <input value={targetGrade} onChange={(event) => setTargetGrade(event.target.value)} placeholder="Target grade (optional)" style={styles.field} />
           </div>
           <label style={styles.dateLine}>
             Exam date

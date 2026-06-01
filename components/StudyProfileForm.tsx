@@ -16,6 +16,9 @@ type ProfileResponse = {
     preferredLevel?: string | null
     preferredSubjects?: string[]
     preferredLanguage?: string | null
+    stage?: string | null
+    languagePreference?: string | null
+    explanationStyle?: string | null
   }
 }
 
@@ -69,6 +72,15 @@ export default function StudyProfileForm({
         }
         if (data.profile.preferredLanguage === 'bn') {
           setLanguagePreference('Banglish')
+        }
+        if (typeof data.profile.languagePreference === 'string') {
+          setLanguagePreference(data.profile.languagePreference)
+        }
+        if (typeof data.profile.explanationStyle === 'string') {
+          setExplanationStyle(data.profile.explanationStyle)
+        }
+        if (typeof data.profile.stage === 'string') {
+          setStage(data.profile.stage)
         }
       } catch {
         // The form can still be completed from defaults.

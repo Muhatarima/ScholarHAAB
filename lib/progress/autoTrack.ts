@@ -137,5 +137,13 @@ export async function trackLearningGap(input: {
     }
   }
 
+  await trackSolvedTopic({
+    userId,
+    subject,
+    topic: skippedChapter,
+    isCorrect: false,
+    confidenceScore: 20,
+    profile,
+  })
   await trackSkip(userId, subject, skippedChapter)
 }

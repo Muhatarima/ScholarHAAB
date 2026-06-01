@@ -89,8 +89,14 @@ function detectSkippedChapter(text: string, topic: string | null) {
 export function classifyIntent(input: string): ClassifiedIntent {
   const normalized = normalizeQuery(input)
   const text = normalized.normalizedQuery.toLowerCase()
-  const subject = firstAlias(text, SUBJECT_ALIASES)
+  let subject = firstAlias(text, SUBJECT_ALIASES)
   let topic = firstAlias(text, TOPIC_ALIASES)
+  if (!subject && topic) {
+    if (['Wave Motion', 'Forces and Motion', 'Work, Energy and Power'].includes(topic)) subject = 'Physics'
+    if (['Organic Chemistry', 'Chemical Bonding', 'Rates of Reaction'].includes(topic)) subject = 'Chemistry'
+    if (topic === 'Photosynthesis') subject = 'Biology'
+    if (['Integration', 'Differentiation', 'Differential Equations'].includes(topic)) subject = 'Mathematics'
+  }
   const yearMatch = text.match(/\b(20(?:1[4-9]|2[0-6]))\b/)
   const board = /\bedexcel\b|\bpearson\b/.test(text)
     ? 'Edexcel'

@@ -31,7 +31,7 @@ const BANGLISH_REPLACEMENTS: Array<[RegExp, string]> = [
   [/\bki\b|\bকি\b/gi, 'what'],
   [/\bkeno\b|\bকেনো\b/gi, 'why'],
   [/\bkivabe\b|\bকিভাবে\b/gi, 'how'],
-  [/\bbujhte parchi na\b|\bbujhini\b|\bbujhina\b|\bbujhte partasi na\b|\bবুঝিনি\b/gi, 'do not understand'],
+  [/\bbujhte parchi na\b|\bbujhini\b|\bbujhina\b|\bbujhi na\b|\bbujhte partasi na\b|\bবুঝিনি\b/gi, 'do not understand'],
   [/\bbujhiye dao\b|\bবুঝিয়ে দাও\b/gi, 'explain please'],
   [/\barekbar\b|\bআরেকবার\b/gi, 'again'],
   [/\beasy kore bolo\b/gi, 'explain simply'],

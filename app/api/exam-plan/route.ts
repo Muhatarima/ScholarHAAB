@@ -29,6 +29,10 @@ function daysUntil(date: string) {
   return Math.ceil((target.getTime() - today.getTime()) / 86_400_000)
 }
 
+function isDemoUserId(userId: string | undefined) {
+  return !userId || userId === 'test-anonymous-user' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)
+}
+
 async function saveExamPlan(input: {
   userId: string
   level: string
@@ -173,18 +177,20 @@ export async function POST(req: Request) {
       },
     }
 
-    const sessionId = await saveExamPlan({
-      userId: user.id,
-      level,
-      board,
-      subject,
-      examDate,
-      paperType,
-      topicFocus,
-      availableStudyMinutes,
-      targetGrade,
-      plan,
-    })
+    const sessionId = isDemoUserId(user.id)
+      ? null
+      : await saveExamPlan({
+          userId: user.id,
+          level,
+          board,
+          subject,
+          examDate,
+          paperType,
+          topicFocus,
+          availableStudyMinutes,
+          targetGrade,
+          plan,
+        }).catch(() => null)
 
     return NextResponse.json({ plan, analysis, sessionId })
   } catch (error) {
