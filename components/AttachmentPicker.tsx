@@ -20,8 +20,6 @@ const DOCUMENT_ACCEPT = [
   '.csv',
   '.tsv',
   '.json',
-  '.xlsx',
-  '.xls',
   '.pptx',
   'application/pdf',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -29,8 +27,6 @@ const DOCUMENT_ACCEPT = [
   'text/markdown',
   'text/csv',
   'application/json',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 ].join(',')
 
@@ -47,13 +43,13 @@ const PRODUCT_COPY: Record<
     imageTitle: 'Photos or diagrams',
     imageCopy: 'Use screenshots, graphs, circuits, or camera photos.',
     docTitle: 'PDFs or documents',
-    docCopy: 'Upload papers, mark schemes, notes, tables, or study files.',
+    docCopy: 'Upload papers, mark schemes, notes, or study files.',
   },
   abroad: {
     imageTitle: 'Photos or diagrams',
     imageCopy: 'Use screenshots, graphs, circuits, or camera photos.',
     docTitle: 'PDFs or documents',
-    docCopy: 'Upload papers, mark schemes, notes, tables, or study files.',
+    docCopy: 'Upload papers, mark schemes, notes, or study files.',
   },
 }
 
@@ -64,10 +60,6 @@ function getAttachmentLabel(file: File) {
 
   if (file.type === 'application/pdf') {
     return 'PDF'
-  }
-
-  if (file.type.includes('spreadsheet') || /\.xlsx?$/i.test(file.name)) {
-    return 'Spreadsheet'
   }
 
   if (file.type.includes('presentation') || /\.pptx$/i.test(file.name)) {

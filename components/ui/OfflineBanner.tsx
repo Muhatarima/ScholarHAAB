@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 
 export default function OfflineBanner() {
-  const [showBanner, setShowBanner] = useState(false);
+  const [showBanner, setShowBanner] = useState(
+    typeof window !== 'undefined' ? !window.navigator.onLine : false
+  );
 
   useEffect(() => {
     const handleOnline = () => {
@@ -12,8 +14,6 @@ export default function OfflineBanner() {
     const handleOffline = () => {
       setShowBanner(true);
     };
-
-    setShowBanner(!window.navigator.onLine);
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 

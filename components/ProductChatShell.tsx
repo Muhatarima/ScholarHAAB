@@ -2,18 +2,27 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import AIReasoningBadge from '@/components/AIReasoningBadge'
 import RichMessageContent from '@/components/RichMessageContent'
+import SourceCard from '@/components/SourceCard'
 import StarBackdrop from '@/components/StarBackdrop'
+import VerifiedBadge from '@/components/VerifiedBadge'
 import type { Product, PromptMode } from '@/lib/products'
 import { createSupabaseClient } from '@/lib/supabase/clientClient'
 
 type SourceCitation = {
+  board?: string
+  level?: string
+  subject?: string
   title?: string
   source?: string
   url?: string | null
   label?: string
   year?: number | string | null
   paper?: string | null
+  question_number?: string | number | null
+  marks?: number | null
+  source_url?: string | null
 }
 
 type Message = {
@@ -24,6 +33,11 @@ type Message = {
   confidence?: string
   confidenceBadge?: string
   confidenceScore?: number
+  chapterGap?: {
+    skippedTopic?: string
+    currentTopic?: string
+    recommendation?: string
+  }
 }
 
 type ChatSessionSummary = {
@@ -48,10 +62,10 @@ type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
 
 const ENDPOINT = '/api/qbank/chat'
 const SUGGESTIONS = [
-  'Solve a 9702 momentum question',
-  'Explain electrolysis with mark scheme',
-  'Test me on A Level calculus',
-  'Analyse 2022 Chemistry paper patterns',
+  'wave motion Physics 2021',
+  'waev motion phsyics 2021',
+  'bhai integration bujhte parchi na',
+  '2022 Chemistry paper questions',
 ]
 
 async function buildJsonAuthHeaders() {
@@ -186,9 +200,9 @@ function sourceText(sources?: SourceCitation[]) {
 }
 
 function confidenceText(confidence?: string) {
-  if (confidence === 'VERIFIED') return '✅ VERIFIED — from Cambridge/Edexcel past papers'
-  if (confidence === 'PARTIAL') return '⚠️ PARTIAL MATCH — AI reasoning applied'
-  return '🤖 AI REASONING — verify before exam'
+  if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
+  if (confidence === 'PARTIAL') return 'PARTIAL MATCH - AI reasoning applied'
+  return 'AI REASONING - verify before exam'
 }
 
 function formatRelativeDate(value?: string) {
@@ -333,6 +347,16 @@ export default function ProductChatShell({ product }: { product: Product }) {
           confidence: typeof data.confidence === 'string' ? data.confidence : undefined,
           confidenceBadge: typeof data.confidenceBadge === 'string' ? data.confidenceBadge : undefined,
           confidenceScore: typeof data.confidenceScore === 'number' ? data.confidenceScore : undefined,
+          chapterGap:
+            data.chapterGap && typeof data.chapterGap === 'object'
+              ? (data.chapterGap as Message['chapterGap'])
+              : data.understood?.skippedTopic
+                ? {
+                    skippedTopic: String(data.understood.skippedTopic),
+                    currentTopic: typeof data.topic === 'string' ? data.topic : 'Current topic',
+                    recommendation: `We will avoid ${data.understood.skippedTopic} and use a simpler route first.`,
+                  }
+                : undefined,
           sources: Array.isArray(data.sources)
             ? data.sources
             : data.truth?.source
@@ -446,7 +470,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
               <ThemeIcon name="dashboard" size={17} />
               <span>Dashboard</span>
             </Link>
-            <Link className="shaab-top-nav-link" href="/exam-prep" style={styles.topNavLink} title="Exam Mode" aria-label="Exam Mode">
+            <Link className="shaab-top-nav-link" href="/exam-mode" style={styles.topNavLink} title="Exam Mode" aria-label="Exam Mode">
               <ThemeIcon name="exam" size={17} />
               <span>Exam Mode</span>
             </Link>
@@ -478,12 +502,34 @@ export default function ProductChatShell({ product }: { product: Product }) {
                   <div style={isUser ? styles.userBubble : styles.aiText}>
                     {!isUser && (message.confidenceBadge || message.confidence) ? (
                       <div style={styles.confidenceBadge}>
-                        {message.confidenceBadge || confidenceText(message.confidence)}
-                        {typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''}
+                        {message.confidence === 'VERIFIED' ? (
+                          <VerifiedBadge
+                            label={`${message.confidenceBadge || confidenceText(message.confidence)}${
+                              typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
+                            }`}
+                          />
+                        ) : (
+                          <AIReasoningBadge
+                            label={`${message.confidenceBadge || confidenceText(message.confidence)}${
+                              typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
+                            }`}
+                          />
+                        )}
+                      </div>
+                    ) : null}
+                    {!isUser && message.chapterGap ? (
+                      <div style={styles.chapterGapCard}>
+                        <div style={styles.chapterGapLabel}>Chapter Gap Detected</div>
+                        <div style={styles.chapterGapGrid}>
+                          <span>Skipped: {message.chapterGap.skippedTopic || 'tracked gap'}</span>
+                          <span>Current: {message.chapterGap.currentTopic || 'current topic'}</span>
+                          <span>{message.chapterGap.recommendation || 'Using a simpler explanation path.'}</span>
+                        </div>
                       </div>
                     ) : null}
                     <RichMessageContent content={message.content} />
-                    {!isUser && citation ? <div style={styles.source}>{citation}</div> : null}
+                    {!isUser && message.sources?.[0] ? <SourceCard source={message.sources[0]} /> : null}
+                    {!isUser && citation && !message.sources?.[0] ? <div style={styles.source}>{citation}</div> : null}
                   </div>
                 </div>
               )
@@ -885,6 +931,29 @@ const styles = {
     fontWeight: 800,
     letterSpacing: '0.01em',
     marginBottom: 8,
+  } satisfies CSSProperties,
+  chapterGapCard: {
+    background: 'rgba(245,158,11,0.1)',
+    border: '1px solid rgba(251,191,36,0.24)',
+    borderRadius: 18,
+    color: '#fde68a',
+    display: 'grid',
+    gap: 8,
+    marginBottom: 12,
+    padding: 14,
+  } satisfies CSSProperties,
+  chapterGapLabel: {
+    color: '#fcd34d',
+    fontSize: 11,
+    fontWeight: 900,
+    letterSpacing: '0.09em',
+    textTransform: 'uppercase',
+  } satisfies CSSProperties,
+  chapterGapGrid: {
+    color: '#f7e7b6',
+    display: 'grid',
+    fontSize: 13,
+    gap: 5,
   } satisfies CSSProperties,
   composer: (open: boolean) =>
     ({

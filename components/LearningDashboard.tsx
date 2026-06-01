@@ -346,7 +346,7 @@ export default function LearningDashboard({ userName }: { userName: string }) {
           </Card>
 
           <Card>
-            <h2 style={{ margin: '0 0 14px' }}>Today's focus plan</h2>
+            <h2 style={{ margin: '0 0 14px' }}>Today&apos;s focus plan</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {dashboard.todaysPlan.map((item, index) => (
                 <div key={item} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', borderRadius: '18px', background: 'rgba(255,255,255,0.04)', padding: '14px' }}>

@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     }
 
     const intent = detectIntent(message, history)
-    const isPastPaperLookup = /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|paper\s*questions?|question\s*\d*/i.test(message)
+    const isPastPaperLookup = /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|paper\s*questions?|question\s*\d*|mark\s*scheme/i.test(message)
     const searchQuery = buildSearchQuery(
       {
         ...intent,
@@ -117,7 +117,7 @@ export async function POST(req: Request) {
         answer: cleanedAnswer,
         response: cleanedAnswer,
         confidence: 'AI_REASONING',
-        confidenceBadge: '🤖 AI REASONING — verify before exam',
+        confidenceBadge: 'AI REASONING - verify before exam',
         from_cache: true,
         mode: 'hardest_answer_bank',
         intent,
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
         answer: cleanedAnswer,
         response: cleanedAnswer,
         confidence: 'AI_REASONING',
-        confidenceBadge: '🤖 AI REASONING — verify before exam',
+        confidenceBadge: 'AI REASONING - verify before exam',
         from_cache: true,
         mode: 'deep_exam_answer_bank',
         intent,
@@ -151,8 +151,8 @@ export async function POST(req: Request) {
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
-        confidence: 'VERIFIED',
-        confidenceBadge: '✅ VERIFIED — from Cambridge/Edexcel past papers',
+        confidence: 'AI_REASONING',
+        confidenceBadge: 'AI REASONING - verify before exam',
         from_cache: true,
         mode: 'concept_answer_bank',
         intent,

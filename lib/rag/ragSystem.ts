@@ -195,22 +195,27 @@ export function detectQueryPattern(query: string): Omit<QueryPattern, 'regex'> {
 }
 
 async function embedText(text: string): Promise<number[]> {
+  const apiKey = process.env.HUGGINGFACE_API_KEY?.trim()
+  if (!apiKey) {
+    throw new Error('Hugging Face embedding key missing; using text fallback')
+  }
+
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
   }
 
-  if (process.env.HUGGINGFACE_API_KEY) {
-    headers.Authorization = `Bearer ${process.env.HUGGINGFACE_API_KEY}`
-  }
-
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 4_000)
   const response = await fetch(
     'https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2',
     {
       method: 'POST',
       headers,
       body: JSON.stringify({ inputs: text, options: { wait_for_model: true } }),
+      signal: controller.signal,
     }
-  )
+  ).finally(() => clearTimeout(timer))
   const data: unknown = await response.json()
 
   if (!response.ok) {

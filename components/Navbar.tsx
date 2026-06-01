@@ -65,9 +65,10 @@ export default function Navbar() {
 
       <ul style={{ display: 'flex', gap: '22px', listStyle: 'none', margin: 0, padding: 0 }}>
         {[
-          { href: '/qbank', label: 'QBank' },
-          { href: '/exam-prep', label: 'Exam Prep' },
-          { href: '/qbank/progress', label: 'Progress' },
+          { href: '/solver', label: 'Solver' },
+          { href: '/dashboard', label: 'Dashboard' },
+          { href: '/exam-mode', label: 'Exam Mode' },
+          { href: '/ai-approach', label: 'AI Approach' },
         ].map((link) => (
           <li key={link.href}>
             <Link

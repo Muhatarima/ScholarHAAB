@@ -1027,7 +1027,7 @@ export async function handleProductChat(req: Request, options: HandlerOptions) {
   let responseOrigin: 'ai' | 'deterministic' | 'fallback' = 'ai'
   let deterministicGeneralKnowledgeAnswer: string | null = null
   let deterministicQbankFallbackAnswer: string | null = null
-  let deterministicScholarshipAnswer: string | null = null
+  const deterministicScholarshipAnswer: string | null = null
   let promptTextForDebug: string | null = null
   let systemPromptForDebug: string | null = null
 

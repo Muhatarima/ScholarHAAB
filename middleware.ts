@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED_PREFIXES = ['/admin', '/chat', '/dashboard', '/progress', '/qbank']
+const PROTECTED_PREFIXES = ['/admin', '/chat', '/dashboard', '/exam-mode', '/exam-prep', '/progress', '/qbank', '/solver']
 const AUTH_PAGES = ['/auth', '/login', '/signup']
 
 function isProtectedPath(pathname: string) {
@@ -64,10 +64,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  if (request.nextUrl.pathname === '/dashboard/performance') {
-    return response
-  }
-
   if (isProtectedPath(request.nextUrl.pathname) && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
@@ -93,7 +89,10 @@ export const config = {
     '/admin/:path*',
     '/chat/:path*',
     '/dashboard/:path*',
+    '/exam-mode/:path*',
+    '/exam-prep/:path*',
     '/progress/:path*',
     '/qbank/:path*',
+    '/solver/:path*',
   ],
 }

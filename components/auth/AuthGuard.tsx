@@ -6,13 +6,12 @@ import { createSupabaseClient } from '@/lib/supabase/clientClient';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [checking, setChecking] = useState(true);
-  const [authed, setAuthed] = useState(false);
+  const bypassAuth = process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+  const [checking, setChecking] = useState(!bypassAuth);
+  const [authed, setAuthed] = useState(bypassAuth);
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
-      setAuthed(true);
-      setChecking(false);
+    if (bypassAuth) {
       return;
     }
 
@@ -26,7 +25,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       }
       setChecking(false);
     });
-  }, [router]);
+  }, [bypassAuth, router]);
 
   if (checking) {
     return (

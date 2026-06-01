@@ -216,6 +216,7 @@ function applyLocalCorrections(raw: string) {
     [/\bwaev\b/gi, 'wave'],
     [/\bmoshon\b/gi, 'motion'],
     [/\bfisiks\b/gi, 'physics'],
+    [/\bphsyics\b/gi, 'physics'],
     [/\bphysic\b/gi, 'physics'],
     [/\bwerk\s+dun\b/gi, 'work done'],
     [/\bwork\s+dun\b/gi, 'work done'],
@@ -257,7 +258,7 @@ function extractSkippedTopic(raw: string) {
     /\bwithout\s+(.+?)(?:[,.!?]|$)/i,
     /\bdon'?t\s+use\s+(.+?)(?:[,.!?]|$)/i,
     /\bami\s+(.+?)\s+pari\s+na(?:[,.!?]|$)/i,
-    /\b(.+?)\s+skip\s+korechi(?:[,.!?]|$)/i,
+    /\b(.+?)\s+skip\s+(?:korsi|korechi|korchi|korechhi)(?:\s|[,.!?]|$)/i,
   ]
 
   for (const pattern of patterns) {
@@ -269,6 +270,17 @@ function extractSkippedTopic(raw: string) {
   }
 
   return null
+}
+
+function extractTopicAfterSkip(raw: string) {
+  const corrected = applyLocalCorrections(raw).text
+  const match = corrected.match(/\bskip\s+(?:korsi|korechi|korchi|korechhi)\s+(.+?)(?:[,.!?]|$)/i)
+  const topic = match?.[1]?.trim()
+  if (!topic) return null
+  return topic
+    .replace(/\b(bujhao|bujhiye|explain|please|dao|koro)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim() || null
 }
 
 function deriveCategory(intent: ParserIntent, isAcademic: boolean): UnderstandingCategory {
@@ -324,6 +336,10 @@ function parserFailureResult(raw: string): UnderstandingResult {
   const trimmed = local.text
   const lower = trimmed.toLowerCase()
   const skippedTopic = extractSkippedTopic(raw)
+  const topicAfterSkip = skippedTopic ? extractTopicAfterSkip(raw) : null
+  const skippedCleanMessage = skippedTopic
+    ? `Explain ${topicAfterSkip ?? 'the current topic'} without ${skippedTopic}`
+    : trimmed
   const emotional = /\b(panic|fail|nervous|parbona|dar|scared|ami shesh|kal exam|exam kal|kichui janina)\b/i.test(lower)
   if (emotional) {
     return {
@@ -347,6 +363,13 @@ function parserFailureResult(raw: string): UnderstandingResult {
   }
 
   if (/\b(bujhini|bujhi nai|bujhte|confus|stuck|arekbar|again)\b/i.test(lower)) {
+    const hasAcademicClueForConfusion =
+      /\b(integration|integral|differentiat|calculus|bonding|ionic|photosynthesis|wave|force|motion|chemistry|physics|biology|mathematics|math)\b/i.test(
+        lower
+      )
+    if (hasAcademicClueForConfusion) {
+      // Continue into the academic parser so "integration bujhte parchi na" becomes a real tutoring query.
+    } else {
     return {
       raw,
       cleanMessage: trimmed,
@@ -365,6 +388,7 @@ function parserFailureResult(raw: string): UnderstandingResult {
         "Haan, arekbar. I'll explain it a different way: simple idea first, one tiny example, then exam wording. Which topic confused you?",
       skippedTopic: null,
       corrections: local.corrections,
+    }
     }
   }
 
@@ -390,8 +414,9 @@ function parserFailureResult(raw: string): UnderstandingResult {
   }
 
   const academicIntent = /\b(explain|define|calculate|solve|find|formula|state|what|why|how)\b/.test(lower)
+  const hasYearOrPaper = /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|paper\s*questions?|mark\s*scheme/.test(lower)
   const academicTopic =
-    /\b(newton|force|motion|work|energy|wave|photosynthesis|cell|atom|bond|bonding|ionic|equation|integral|differentiat|quadratic|demand|supply)\b/.test(
+    /\b(physics|chemistry|mathematics|math|biology|economics|accounting|newton|force|motion|work|energy|wave|photosynthesis|cell|atom|bond|bonding|ionic|equation|integration|integral|calculus|differentiat|quadratic|demand|supply)\b/.test(
       lower
     )
   const knownAcademicTerm =
@@ -402,24 +427,28 @@ function parserFailureResult(raw: string): UnderstandingResult {
     !knownAcademicTerm &&
     /^[a-z]{4,}$/i.test(trimmed) &&
     !/[aeiou]{2}|(ing|tion|law|work|force)$/i.test(trimmed)
-  const shouldTreatAsAcademic = !keyboardMash && (academicIntent || academicTopic || Boolean(skippedTopic))
+  const shouldTreatAsAcademic = !keyboardMash && (academicIntent || academicTopic || hasYearOrPaper || Boolean(skippedTopic))
 
   if (shouldTreatAsAcademic) {
     return {
       raw,
-      cleanMessage: trimmed,
-      correctedMessage: trimmed,
-      intent: academicIntent && /\b(calculate|solve|find)\b/.test(lower) ? 'solve' : 'explain',
+      cleanMessage: skippedCleanMessage,
+      correctedMessage: skippedCleanMessage,
+      intent: hasYearOrPaper
+        ? 'past_paper'
+        : academicIntent && /\b(calculate|solve|find)\b/.test(lower)
+          ? 'solve'
+          : 'explain',
       subject: /\b(newton|force|motion|work|energy|wave)\b/.test(lower)
         ? 'Physics'
-        : /\b(ionic|bond|bonding|atom)\b/.test(lower)
+        : /\b(chemistry|ionic|bond|bonding|atom|reaction|organic)\b/.test(lower)
           ? 'Chemistry'
-          : /\b(photosynthesis|cell)\b/.test(lower)
+          : /\b(biology|photosynthesis|cell)\b/.test(lower)
             ? 'Biology'
-            : /\b(quadratic|integral|differentiat)\b/.test(lower)
+            : /\b(mathematics|math|quadratic|integration|integral|calculus|differentiat)\b/.test(lower)
               ? 'Mathematics'
               : null,
-      topic: academicTopic ? trimmed : null,
+      topic: topicAfterSkip ?? (academicTopic || hasYearOrPaper ? trimmed : null),
       language: 'english',
       isAcademic: true,
       emotionalState: 'neutral',
@@ -486,11 +515,12 @@ export async function understandMessage(raw: string, history: Message[] = []): P
     }
   }
 
-  const localAcademicFastPath =
-    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|wave|newton|force|motion|reaction\s+rate|photosynthesis|ionic|bonding|quadratic|string theory|without|explain|define|calculate|solve|formula|what|why|how|ki|bujhiye|bujhini|bujhte|arekbar|panic|fail|nervous|skip/i.test(
+  const shouldUseLocalParser =
+    !getGeminiKey() ||
+    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|paper\s*questions?|mark\s*scheme|wave|newton|force|motion|reaction\s+rate|photosynthesis|ionic|bonding|integration|integral|quadratic|string theory|without|skip|explain|define|calculate|solve|formula|what|why|how|ki|bujhiye|bujhini|bujhte|arekbar|panic|fail|nervous|parbona|dar|scared|ami shesh|kal exam|exam kal|kichui janina/i.test(
       localText
     )
-  if (localAcademicFastPath) {
+  if (shouldUseLocalParser) {
     return parserFailureResult(raw)
   }
 

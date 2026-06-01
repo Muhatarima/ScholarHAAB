@@ -29,11 +29,6 @@ function normalizePassword(value: FormDataEntryValue | null) {
   return typeof value === 'string' ? value : ''
 }
 
-function normalizeName(value: FormDataEntryValue | null, email?: string) {
-  const name = typeof value === 'string' ? value.trim() : ''
-  return name || email?.split('@')[0] || 'Student'
-}
-
 function getAuthOrigin() {
   const configuredOrigin = (
     process.env.NEXT_PUBLIC_APP_URL ||

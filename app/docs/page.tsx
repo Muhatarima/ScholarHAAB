@@ -4,11 +4,19 @@ import './docs.css'
 import LiveStats from '@/components/docs/LiveStats'
 import TeamSection from '@/components/docs/TeamSection'
 import Link from 'next/link'
-import { LucideShield, LucideLayout, LucideZap, LucideUsers, LucideActivity, LucideCode, LucideDatabase, LucideCpu, LucideGlobe } from 'lucide-react'
+import { LucideShield, LucideLayout, LucideZap, LucideUsers, LucideActivity, LucideCode, LucideGlobe } from 'lucide-react'
 
 export const metadata = {
   title: 'ScholarHAAB Documentation & Pitch Deck',
   description: 'Technical documentation and product pitch for ScholarHAAB - AI Powered Exam Prep Platform.',
+}
+
+function SafeDocContent({ content }: { content: string }) {
+  return (
+    <div className="markdownContent">
+      <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', margin: 0 }}>{content}</pre>
+    </div>
+  )
 }
 
 export default async function DocsPage() {
@@ -72,9 +80,9 @@ export default async function DocsPage() {
         </div>
 
         <div style={{marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-          <button onClick={() => window.print()} className="navLink" style={{background: 'rgba(255,255,255,0.05)', width: '100%', border: 'none', cursor: 'pointer'}}>
+          <a href="#top" className="navLink" style={{background: 'rgba(255,255,255,0.05)', width: '100%', border: 'none', cursor: 'pointer'}}>
             <LucideGlobe size={16} /> Export to PDF
-          </button>
+          </a>
           <Link href="/admin/docs" className="navLink" style={{opacity: 0.6}}>
             <LucideShield size={16} /> Admin Panel
           </Link>
@@ -96,8 +104,7 @@ export default async function DocsPage() {
         {pitchSections.map(section => (
           <section key={section.id} id={section.slug} className="section pitchCard">
             <h2 className="sectionTitle" style={{fontSize: '2rem'}}>{section.title}</h2>
-            <div className="markdownContent" dangerouslySetInnerHTML={{ __html: section.content }}>
-            </div>
+            <SafeDocContent content={section.content} />
           </section>
         ))}
 
@@ -149,8 +156,7 @@ export default async function DocsPage() {
         {techSections.map(section => (
           <section key={section.id} id={section.slug} className="section">
             <h2 className="sectionTitle" style={{fontSize: '2.5rem'}}>{section.title}</h2>
-            <div className="markdownContent" dangerouslySetInnerHTML={{ __html: section.content }}>
-            </div>
+            <SafeDocContent content={section.content} />
           </section>
         ))}
 

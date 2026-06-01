@@ -4,7 +4,6 @@ import { pathToFileURL } from 'node:url'
 import JSZip from 'jszip'
 import mammoth from 'mammoth'
 import { PDFParse } from 'pdf-parse'
-import * as XLSX from 'xlsx'
 import type { AiInputPart } from '@/lib/ai-service'
 
 export type ChatFilePayload = {
@@ -70,7 +69,7 @@ export type PreparedUploadedFiles = {
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
 const MAX_FILE_COUNT = 4
 const SUPPORTED_FILE_ERROR =
-  'Unsupported file type. Use image, PDF, DOCX, TXT, CSV, JSON, XLSX, XLS, or PPTX.'
+  'Unsupported file type. Use image, PDF, DOCX, TXT, CSV, JSON, or PPTX.'
 let pdfWorkerConfigured = false
 
 function ensurePdfWorkerConfigured() {
@@ -131,16 +130,6 @@ function isWordFile(mimeType: string, fileName: string) {
     mimeType.includes('word') ||
     mimeType.includes('officedocument.wordprocessingml') ||
     ext === '.docx'
-  )
-}
-
-function isSpreadsheetFile(mimeType: string, fileName: string) {
-  const ext = getFileExtension(fileName)
-  return (
-    mimeType.includes('spreadsheetml') ||
-    mimeType.includes('ms-excel') ||
-    ext === '.xlsx' ||
-    ext === '.xls'
   )
 }
 
@@ -338,18 +327,6 @@ async function extractWordText(buffer: Buffer) {
   return compactWhitespace(result.value)
 }
 
-async function extractSpreadsheetSections(buffer: Buffer) {
-  const workbook = XLSX.read(buffer, { type: 'buffer' })
-  return workbook.SheetNames.map((sheetName) => {
-    const sheet = workbook.Sheets[sheetName]
-    const csv = compactWhitespace(XLSX.utils.sheet_to_csv(sheet, { blankrows: false }))
-    return {
-      section: `Sheet ${sheetName}`,
-      text: csv,
-    }
-  }).filter((entry) => entry.text)
-}
-
 async function extractPresentationSections(buffer: Buffer) {
   const zip = await JSZip.loadAsync(buffer)
   const slideNames = Object.keys(zip.files)
@@ -488,7 +465,6 @@ export function normalizeChatFilesPayload(payload: ChatFilePayload) {
       !isAllowedImage(mimeType, file.fileName) &&
       !isPdfFile(mimeType, file.fileName) &&
       !isWordFile(mimeType, file.fileName) &&
-      !isSpreadsheetFile(mimeType, file.fileName) &&
       !isPresentationFile(mimeType, file.fileName) &&
       !isPlainTextFile(mimeType, file.fileName)
     ) {
@@ -616,29 +592,6 @@ export async function prepareUploadedFiles(files: NormalizedChatFile[]): Promise
         section: 'document',
         text,
       })
-    } else if (isSpreadsheetFile(fileType, fileName)) {
-      const sections = await extractSpreadsheetSections(buffer)
-      if (sections.length === 0) {
-        throw new Error(`Could not extract readable table data from ${fileName}.`)
-      }
-
-      extractionStrategy = 'spreadsheet_text'
-      pageCount = sections.length
-      extractedChars = sections.reduce((total, entry) => total + entry.text.length, 0)
-      for (const section of sections) {
-        extractedTextParts.push({
-          text: `Attachment extracted text: ${fileName} ${section.section}\n${section.text}`,
-        })
-        fileChunks.push(
-          ...buildChunkObjects({
-            fileName,
-            fileType,
-            page: null,
-            section: section.section,
-            text: section.text,
-          })
-        )
-      }
     } else if (isPresentationFile(fileType, fileName)) {
       const sections = await extractPresentationSections(buffer)
       if (sections.length === 0) {

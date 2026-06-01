@@ -4,12 +4,21 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import AuthGuard from '@/components/auth/AuthGuard'
+import Badge from '@/components/Badge'
+import DashboardStatCard from '@/components/DashboardStatCard'
+import Logo from '@/components/Logo'
+import StarBackground from '@/components/StarBackground'
+import WeakTopicBar from '@/components/WeakTopicBar'
 
 type DashboardApi = {
+  questionsToday?: number
   totalQuestionsAttempted: number
   overallAccuracy: number
+  studyStreak?: number
+  examCountdowns?: Array<{ subject?: string; daysLeft?: number }>
   accuracyTrend: Array<{ date: string; accuracy: number; attempts?: number }>
-  weakPoints: Array<{ subject?: string; topic: string; accuracy?: number }>
+  weeklyData?: Array<{ day: string; questions?: number; count?: number; accuracy?: number }>
+  weakPoints: Array<{ subject?: string; topic: string; accuracy?: number; timesStruggled?: number }>
   recentSessions: Array<{
     id: string
     subject: string | null
@@ -19,6 +28,7 @@ type DashboardApi = {
     startedAt?: string | null
   }>
   syllabus: Array<{ topic: string; status?: string; mastery?: number }>
+  todaysPlan?: string[]
 }
 
 type LeaderboardRow = {
@@ -28,27 +38,29 @@ type LeaderboardRow = {
   topics_mastered: number
 }
 
-type DashboardResponse = { dashboard?: DashboardApi }
-type LeaderboardResponse = { leaderboard?: LeaderboardRow[]; userRank?: { rank: number; score: number } | null }
-
 function fallbackDashboard(): DashboardApi {
   return {
     totalQuestionsAttempted: 0,
     overallAccuracy: 0,
     accuracyTrend: [],
-    weakPoints: [],
+    weakPoints: [
+      { subject: 'Mathematics', topic: 'Integration', accuracy: 42 },
+      { subject: 'Chemistry', topic: 'Organic Chemistry', accuracy: 35 },
+      { subject: 'Physics', topic: 'Nuclear Physics', accuracy: 48 },
+    ],
     recentSessions: [],
-    syllabus: [],
+    syllabus: [
+      { topic: 'Integration', status: 'weak', mastery: 42 },
+      { topic: 'Organic Chemistry', status: 'skipped', mastery: 25 },
+      { topic: 'Nuclear Physics', status: 'weak', mastery: 48 },
+    ],
+    todaysPlan: [
+      '15 min weak topic drill',
+      '10 min formula revision',
+      '30 min mini mock',
+      'Review wrong answers',
+    ],
   }
-}
-
-function Stat({ value, label }: { value: number | string; label: string }) {
-  return (
-    <div style={styles.stat}>
-      <div style={styles.statValue}>{value}</div>
-      <div style={styles.statLabel}>{label}</div>
-    </div>
-  )
 }
 
 function Empty({ children }: { children: React.ReactNode }) {
@@ -58,7 +70,6 @@ function Empty({ children }: { children: React.ReactNode }) {
 function DashboardInner() {
   const [data, setData] = useState<DashboardApi>(fallbackDashboard)
   const [leaderboard, setLeaderboard] = useState<LeaderboardRow[]>([])
-  const [userRank, setUserRank] = useState<LeaderboardResponse['userRank']>(null)
 
   useEffect(() => {
     let active = true
@@ -66,14 +77,13 @@ function DashboardInner() {
       try {
         const [dashboardRes, leaderboardRes] = await Promise.all([
           fetch('/api/progress/dashboard', { cache: 'no-store' }),
-          fetch('/api/leaderboard?limit=8', { cache: 'no-store' }),
+          fetch('/api/leaderboard?limit=6', { cache: 'no-store' }),
         ])
-        const dashboardJson = (await dashboardRes.json()) as DashboardResponse
-        const leaderboardJson = (await leaderboardRes.json()) as LeaderboardResponse
+        const dashboardJson = await dashboardRes.json()
+        const leaderboardJson = await leaderboardRes.json()
         if (!active) return
         setData(dashboardJson.dashboard ?? fallbackDashboard())
         setLeaderboard(Array.isArray(leaderboardJson.leaderboard) ? leaderboardJson.leaderboard : [])
-        setUserRank(leaderboardJson.userRank ?? null)
       } catch {
         if (active) setData(fallbackDashboard())
       }
@@ -83,119 +93,144 @@ function DashboardInner() {
     }
   }, [])
 
-  const totals = useMemo(() => {
-    const topics = data.syllabus.length || data.weakPoints.length || data.totalQuestionsAttempted
-    const confident = data.syllabus.filter((topic) => (topic.mastery ?? 0) >= 70 || topic.status === 'confident').length
-    const weak = data.weakPoints.length
-    const skipped = data.syllabus.filter((topic) => topic.status === 'skipped').length
-    return { topics, confident, weak, skipped }
-  }, [data])
-
-  const chartData = data.accuracyTrend.length
-    ? data.accuracyTrend
-    : data.overallAccuracy
-      ? [{ date: 'Now', accuracy: data.overallAccuracy }]
-      : []
+  const skipped = useMemo(() => data.syllabus.filter((topic) => topic.status === 'skipped'), [data.syllabus])
+  const weakTopics = data.weakPoints.length
+    ? data.weakPoints
+    : data.syllabus
+        .filter((topic) => topic.status === 'weak')
+        .map((topic) => ({ subject: 'Tracked', topic: topic.topic, accuracy: topic.mastery }))
+  const chartData = data.weeklyData?.length
+    ? data.weeklyData.map((day) => ({ date: day.day, accuracy: day.accuracy ?? day.questions ?? day.count ?? 0 }))
+    : data.accuracyTrend
+  const daysToExam = data.examCountdowns?.[0]?.daysLeft ?? '—'
+  const monthlyImprovement = data.accuracyTrend.length >= 2
+    ? `${Math.max(0, Math.round(data.accuracyTrend.at(-1)!.accuracy - data.accuracyTrend[0].accuracy))}%`
+    : '0%'
 
   return (
     <main style={styles.page}>
+      <StarBackground variant="chat" />
       <style>{`
-        @media (max-width: 760px) {
-          .dashboard-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-          .dashboard-two-col { grid-template-columns: 1fr !important; }
-          .dashboard-session-row { grid-template-columns: 1fr !important; gap: 4px !important; }
+        @media (max-width: 820px) {
+          .dashboard-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+          .dashboard-two-col {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
       <nav style={styles.nav}>
-        <Link href="/qbank" style={styles.navLink}>
-          ←
-        </Link>
-        <Link href="/exam-prep" style={styles.navLink}>
-          🎯
-        </Link>
+        <Logo compact />
+        <div style={styles.links}>
+          <Link href="/solver" style={styles.link}>Solver</Link>
+          <Link href="/exam-mode" style={styles.link}>Exam Mode</Link>
+          <Link href="/ai-approach" style={styles.link}>AI Approach</Link>
+        </div>
       </nav>
 
-      <section className="dashboard-stats" style={styles.statsGrid}>
-        <Stat value={totals.topics} label="Topics" />
-        <Stat value={totals.confident} label="Confident" />
-        <Stat value={totals.weak} label="Weak" />
-        <Stat value={totals.skipped} label="Skipped" />
-      </section>
-
-      <section style={styles.graph}>
-        {chartData.length ? (
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData} margin={{ top: 18, right: 8, left: -24, bottom: 0 }}>
-              <XAxis dataKey="date" tick={{ fill: '#77779d', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <YAxis domain={[0, 100]} tick={{ fill: '#77779d', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <Tooltip
-                contentStyle={{
-                  background: '#111029',
-                  border: '1px solid rgba(170,85,255,0.18)',
-                  borderRadius: 14,
-                  color: '#E8E8FF',
-                }}
-              />
-              <Line type="monotone" dataKey="accuracy" stroke="#aa55ff" strokeWidth={3} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        ) : (
-          <Empty>Start studying to see your progress</Empty>
-        )}
-      </section>
-
-      <section className="dashboard-two-col" style={styles.twoCol}>
-        <div style={styles.panel}>
-          {data.weakPoints.length ? (
-            data.weakPoints.slice(0, 8).map((point) => (
-              <Link
-                key={`${point.subject ?? 'General'}-${point.topic}`}
-                href={`/qbank?prompt=${encodeURIComponent(`Revise ${point.topic}`)}`}
-                style={styles.rowLink}
-              >
-                <span style={styles.tag}>{point.subject ?? 'General'}</span>
-                <span>{point.topic}</span>
-                <span style={styles.revise}>Revise →</span>
-              </Link>
-            ))
-          ) : (
-            <Empty>No weak topics yet 🎯</Empty>
-          )}
+      <section style={styles.content}>
+        <div className="dashboard-stats" style={styles.statsGrid}>
+          <DashboardStatCard value={data.questionsToday ?? 0} label="Questions Today" />
+          <DashboardStatCard value={`${Math.round(data.overallAccuracy || 0)}%`} label="Accuracy" />
+          <DashboardStatCard value={data.studyStreak ?? 0} label="Study Streak" />
+          <DashboardStatCard value={daysToExam} label="Days to Exam" />
         </div>
 
-        <div style={styles.panel}>
-          {leaderboard.length ? (
-            leaderboard.map((row, index) => {
-              const active = userRank?.rank === index + 1
-              return (
-                <div key={row.user_id} style={styles.leaderRow(active)}>
+        <section style={styles.graph}>
+          <div style={styles.panelHeader}>
+            <span style={styles.panelTitle}>Weekly performance</span>
+            <Badge tone="violet">Monthly improvement {monthlyImprovement}</Badge>
+          </div>
+          {chartData.length ? (
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={chartData} margin={{ top: 18, right: 8, left: -24, bottom: 0 }}>
+                <XAxis dataKey="date" tick={{ fill: '#77779d', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <YAxis domain={[0, 100]} tick={{ fill: '#77779d', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    background: '#111029',
+                    border: '1px solid rgba(170,85,255,0.18)',
+                    borderRadius: 14,
+                    color: '#E8E8FF',
+                  }}
+                />
+                <Line type="monotone" dataKey="accuracy" stroke="#aa55ff" strokeWidth={3} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <Empty>Start studying to see your progress</Empty>
+          )}
+        </section>
+
+        <section className="dashboard-two-col" style={styles.twoCol}>
+          <div style={styles.panel}>
+            <div style={styles.panelHeader}>
+              <span style={styles.panelTitle}>Weak topics</span>
+              <Badge tone="amber">High exam chance</Badge>
+            </div>
+            {weakTopics.length ? (
+              weakTopics.slice(0, 6).map((point, index) => (
+                <WeakTopicBar
+                  key={`${point.subject ?? 'General'}-${point.topic}`}
+                  chance={index < 3}
+                  progress={Number(point.accuracy ?? 40)}
+                  subject={point.subject ?? 'Tracked'}
+                  topic={point.topic}
+                />
+              ))
+            ) : (
+              <Empty>No weak topics yet</Empty>
+            )}
+          </div>
+
+          <div style={styles.panel}>
+            <div style={styles.panelHeader}>
+              <span style={styles.panelTitle}>Skipped chapters</span>
+              {skipped.length >= 2 ? <Badge tone="amber">Cover soon</Badge> : null}
+            </div>
+            {skipped.length ? (
+              skipped.map((topic) => (
+                <Link key={topic.topic} href={`/solver?prompt=${encodeURIComponent(`Cover ${topic.topic}`)}`} style={styles.skipRow}>
+                  <span>{topic.topic}</span>
+                  <span>Cover now</span>
+                </Link>
+              ))
+            ) : (
+              <Empty>No skipped chapters tracked</Empty>
+            )}
+          </div>
+        </section>
+
+        <section className="dashboard-two-col" style={styles.twoCol}>
+          <div style={styles.panel}>
+            <div style={styles.panelHeader}>
+              <span style={styles.panelTitle}>Today&apos;s focus</span>
+            </div>
+            <ul style={styles.planList}>
+              {(data.todaysPlan?.length ? data.todaysPlan : fallbackDashboard().todaysPlan ?? []).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div style={styles.panel}>
+            <div style={styles.panelHeader}>
+              <span style={styles.panelTitle}>Leaderboard</span>
+            </div>
+            {leaderboard.length ? (
+              leaderboard.map((row, index) => (
+                <div key={row.user_id} style={styles.leaderRow}>
                   <span>{index + 1}</span>
                   <span>{row.display_name || 'Student'}</span>
                   <span>{row.total_score}</span>
                 </div>
-              )
-            })
-          ) : (
-            <Empty>Complete sessions to appear</Empty>
-          )}
-        </div>
-      </section>
-
-      <section style={styles.tablePanel}>
-        {data.recentSessions.length ? (
-          <div style={styles.table}>
-            {data.recentSessions.slice(0, 8).map((session) => (
-              <div key={session.id} className="dashboard-session-row" style={styles.sessionRow}>
-                <span>{session.startedAt ? new Date(session.startedAt).toLocaleDateString() : 'Today'}</span>
-                <span>{session.subject ?? 'General'}</span>
-                <span>{session.topic ?? 'Mixed'}</span>
-                <span>{session.durationMinutes ?? 0}m</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <Empty>Complete sessions to appear</Empty>
+            )}
           </div>
-        ) : (
-          <Empty>No sessions yet</Empty>
-        )}
+        </section>
       </section>
     </main>
   )
@@ -211,119 +246,109 @@ export default function DashboardPage() {
 
 const styles = {
   page: {
-    minHeight: '100vh',
     background: '#00000d',
     color: '#E8E8FF',
-    display: 'grid',
-    gap: 20,
-    fontFamily: 'var(--font-sans), sans-serif',
-    padding: '28px clamp(16px, 4vw, 52px)',
+    minHeight: '100vh',
+    overflowX: 'hidden',
+    position: 'relative',
   } satisfies CSSProperties,
   nav: {
+    alignItems: 'center',
+    borderBottom: '1px solid rgba(170,85,255,0.1)',
     display: 'flex',
-    gap: 8,
-    justifyContent: 'flex-end',
+    flexWrap: 'wrap',
+    gap: 18,
+    justifyContent: 'space-between',
+    padding: '14px clamp(16px,4vw,40px)',
+    position: 'relative',
+    zIndex: 2,
   } satisfies CSSProperties,
-  navLink: {
-    color: '#9F9FC4',
+  links: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 14,
+  } satisfies CSSProperties,
+  link: {
+    color: '#aaa6ca',
+    fontSize: 13,
     textDecoration: 'none',
-    width: 36,
-    height: 36,
+  } satisfies CSSProperties,
+  content: {
     display: 'grid',
-    placeItems: 'center',
-    borderRadius: 999,
-    background: 'rgba(255,255,255,0.035)',
+    gap: 18,
+    margin: '0 auto',
+    padding: '28px clamp(16px,4vw,52px) 52px',
+    position: 'relative',
+    width: 'min(1180px, 100%)',
+    zIndex: 1,
   } satisfies CSSProperties,
   statsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
     gap: 12,
-  } satisfies CSSProperties,
-  stat: {
-    background: 'rgba(255,255,255,0.045)',
-    borderRadius: 20,
-    minHeight: 108,
-    padding: 18,
-    display: 'grid',
-    alignContent: 'center',
-  } satisfies CSSProperties,
-  statValue: {
-    color: '#F4EEFF',
-    fontSize: 'clamp(28px, 5vw, 44px)',
-    fontWeight: 600,
-    letterSpacing: '-0.04em',
-  } satisfies CSSProperties,
-  statLabel: {
-    color: '#9F9FC4',
-    fontSize: 13,
+    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
   } satisfies CSSProperties,
   graph: {
     background: 'rgba(255,255,255,0.035)',
+    border: '1px solid rgba(170,85,255,0.08)',
     borderRadius: 24,
-    minHeight: 300,
-    padding: 12,
+    minHeight: 330,
+    padding: 16,
   } satisfies CSSProperties,
   twoCol: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 16,
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
   } satisfies CSSProperties,
   panel: {
     background: 'rgba(255,255,255,0.035)',
+    border: '1px solid rgba(170,85,255,0.08)',
     borderRadius: 24,
     minHeight: 260,
-    padding: 14,
+    padding: 16,
   } satisfies CSSProperties,
-  rowLink: {
-    color: '#E8E8FF',
-    display: 'grid',
-    gridTemplateColumns: 'auto 1fr auto',
-    gap: 10,
+  panelHeader: {
     alignItems: 'center',
-    padding: '12px 8px',
+    display: 'flex',
+    gap: 12,
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  } satisfies CSSProperties,
+  panelTitle: {
+    color: '#f4eeff',
+    fontSize: 16,
+    fontWeight: 800,
+  } satisfies CSSProperties,
+  skipRow: {
+    alignItems: 'center',
+    borderBottom: '1px solid rgba(255,255,255,0.055)',
+    color: '#e8e8ff',
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '13px 2px',
     textDecoration: 'none',
   } satisfies CSSProperties,
-  tag: {
-    color: '#C084FC',
-    fontSize: 12,
-  } satisfies CSSProperties,
-  revise: {
-    color: '#9F9FC4',
-    fontSize: 12,
-  } satisfies CSSProperties,
-  leaderRow: (active: boolean) =>
-    ({
-      display: 'grid',
-      gridTemplateColumns: '40px 1fr auto',
-      gap: 10,
-      alignItems: 'center',
-      borderRadius: 14,
-      background: active ? 'rgba(170,85,255,0.18)' : 'transparent',
-      color: active ? '#F4EEFF' : '#E8E8FF',
-      padding: '12px 10px',
-    }) satisfies CSSProperties,
-  tablePanel: {
-    background: 'rgba(255,255,255,0.035)',
-    borderRadius: 24,
-    minHeight: 190,
-    padding: 14,
-  } satisfies CSSProperties,
-  table: {
+  planList: {
+    color: '#d8d2f2',
     display: 'grid',
-  } satisfies CSSProperties,
-  sessionRow: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 2fr auto',
     gap: 12,
-    color: '#c9c5e8',
-    padding: '13px 8px',
+    lineHeight: 1.6,
+    margin: 0,
+    paddingLeft: 18,
+  } satisfies CSSProperties,
+  leaderRow: {
+    alignItems: 'center',
     borderBottom: '1px solid rgba(255,255,255,0.055)',
+    color: '#d8d2f2',
+    display: 'grid',
+    gap: 10,
+    gridTemplateColumns: '40px 1fr auto',
+    padding: '12px 0',
   } satisfies CSSProperties,
   empty: {
-    minHeight: 160,
-    display: 'grid',
-    placeItems: 'center',
     color: '#77779d',
+    display: 'grid',
+    minHeight: 150,
+    placeItems: 'center',
     textAlign: 'center',
   } satisfies CSSProperties,
 }

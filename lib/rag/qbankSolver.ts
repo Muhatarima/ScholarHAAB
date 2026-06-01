@@ -435,15 +435,15 @@ function buildIntentAwarePrompt(
 function classifyConfidence(results: SearchResult[]) {
   const best = results[0]
   if (!best) return { label: 'AI_REASONING' as const, score: 0 }
-  if (best.similarity > 0.7) return { label: 'VERIFIED' as const, score: Math.round(best.similarity * 100) }
+  if (best.similarity >= 0.8) return { label: 'VERIFIED' as const, score: Math.round(best.similarity * 100) }
   if (best.similarity >= 0.5) return { label: 'PARTIAL' as const, score: Math.round(best.similarity * 100) }
   return { label: 'AI_REASONING' as const, score: Math.round(best.similarity * 100) }
 }
 
 export function getQbankConfidenceBadge(confidence: QbankConfidence) {
-  if (confidence === 'VERIFIED') return '✅ VERIFIED — from Cambridge/Edexcel past papers'
-  if (confidence === 'PARTIAL') return '⚠️ PARTIAL MATCH — AI reasoning applied'
-  return '🤖 AI REASONING — verify before exam'
+  if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
+  if (confidence === 'PARTIAL') return 'PARTIAL MATCH - AI reasoning applied'
+  return 'AI REASONING - verify before exam'
 }
 
 function enforceConfidence(answer: string, confidence: SolvedAnswer['confidence'], source: SearchResult | undefined) {
@@ -452,6 +452,7 @@ function enforceConfidence(answer: string, confidence: SolvedAnswer['confidence'
     .replace(/^\s*Confidence:\s*(?:✅|🔶|⚠️|🤖)?[^\n]*/gim, '')
     .replace(/^\s*(?:✅ VERIFIED — from Cambridge\/Edexcel past papers|⚠️ PARTIAL MATCH — AI reasoning applied|🤖 AI REASONING — verify before exam)\s*$/gim, '')
     .replace(/^\s*Past paper reference:\s*[^\n]+$/gim, '')
+    .replace(/^\s*(?:VERIFIED - from Cambridge\/Edexcel past papers|PARTIAL MATCH - AI reasoning applied|AI REASONING - verify before exam)\s*$/gim, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 
@@ -614,7 +615,8 @@ export async function solveQuestion(
     outOfSyllabusCuriosity ||
     Boolean(options.avoidedTopics?.length) ||
     /\bwave\s+motion\b/i.test(userMessage) ||
-    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|er\s+question|paper\s*questions?/i.test(userMessage)
+    /\b(bujhte|bujhini|confus|integration|integral|differentiat|calculus)\b/i.test(userMessage) ||
+    /\b20(?:1[4-9]|2[0-6])\b|past\s*paper|er\s+question|paper\s*questions?|mark\s*scheme/i.test(userMessage)
 
   if (useFastDeterministicAnswer) {
     const answer = filterResponse(

@@ -6,7 +6,7 @@ import { getAuthenticatedUser } from '@/lib/supabase/serverClient'
 
 export const metadata: Metadata = buildMetadata({
   title: 'ScholarHAAB',
-  description: 'Beyond borders. Beyond limits.',
+  description: 'AI you can actually trust. Built for Bangladesh — ready for the world.',
   path: '/',
 })
 
@@ -231,7 +231,7 @@ function Blackhole() {
 
 export default async function Home() {
   const user = await getAuthenticatedUser()
-  const startHref = user ? '/qbank' : '/login?next=/qbank'
+  const startHref = user ? '/solver' : '/login?next=/solver'
 
   return (
     <main
@@ -242,7 +242,7 @@ export default async function Home() {
         display: 'flex',
         flexDirection: 'column',
         fontFamily: 'var(--font-sans), sans-serif',
-        overflow: 'hidden',
+        overflowX: 'hidden',
         position: 'relative',
       }}
     >
@@ -332,7 +332,7 @@ export default async function Home() {
         <div className="landing-nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           {user ? (
             <>
-              <Link className="landing-nav-link" href="/qbank" style={navLinkStyle}>
+              <Link className="landing-nav-link" href="/solver" style={navLinkStyle}>
                 <NavIcon name="solver" />
                 Solver
               </Link>
@@ -340,9 +340,12 @@ export default async function Home() {
                 <NavIcon name="dashboard" />
                 Dashboard
               </Link>
-              <Link className="landing-nav-link" href="/exam-prep" style={navLinkStyle}>
+              <Link className="landing-nav-link" href="/exam-mode" style={navLinkStyle}>
                 <NavIcon name="exam" />
                 Exam Mode
+              </Link>
+              <Link className="landing-nav-link" href="/ai-approach" style={navLinkStyle}>
+                AI Approach
               </Link>
               <form action={signOut}>
                 <button className="landing-nav-button" type="submit" style={navButtonStyle}>
@@ -352,10 +355,24 @@ export default async function Home() {
               </form>
             </>
           ) : (
-            <Link className="landing-nav-button" href="/login?next=/qbank" style={navButtonStyle}>
-              <NavIcon name="signin" />
-              Sign in
-            </Link>
+            <>
+              <Link className="landing-nav-link" href="/login?next=/solver" style={navLinkStyle}>
+                Solver
+              </Link>
+              <Link className="landing-nav-link" href="/login?next=/dashboard" style={navLinkStyle}>
+                Dashboard
+              </Link>
+              <Link className="landing-nav-link" href="/login?next=/exam-mode" style={navLinkStyle}>
+                Exam Mode
+              </Link>
+              <Link className="landing-nav-link" href="/ai-approach" style={navLinkStyle}>
+                AI Approach
+              </Link>
+              <Link className="landing-nav-button" href="/login?next=/solver" style={navButtonStyle}>
+                <NavIcon name="signin" />
+                Sign in
+              </Link>
+            </>
           )}
         </div>
       </nav>
@@ -480,6 +497,58 @@ export default async function Home() {
             </article>
           ))}
         </div>
+
+        <section
+          style={{
+            border: '1px solid rgba(170,85,255,0.14)',
+            borderRadius: 28,
+            background: 'linear-gradient(145deg, rgba(18,16,37,0.86), rgba(16,11,36,0.58))',
+            display: 'grid',
+            gap: 22,
+            marginTop: 10,
+            padding: 'clamp(22px, 4vw, 36px)',
+          }}
+        >
+          <p
+            style={{
+              color: '#f4eeff',
+              fontSize: 'clamp(24px, 4vw, 42px)',
+              letterSpacing: '-0.045em',
+              lineHeight: 1.1,
+              margin: 0,
+              maxWidth: 930,
+            }}
+          >
+            300,000 students sit for A and O Level exams in Bangladesh every year.
+            Most of them are already using AI. ScholarHAAB makes that AI accurate.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gap: 12,
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            }}
+          >
+            {['Weekly mastery', 'Exam preparation accuracy', 'Performance improvement', 'Inclusive access'].map((item) => (
+              <div
+                key={item}
+                style={{
+                  border: '1px solid rgba(170,85,255,0.12)',
+                  borderRadius: 18,
+                  color: '#cfc8ec',
+                  padding: '15px 16px',
+                  background: 'rgba(255,255,255,0.035)',
+                  fontSize: 14,
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+          <strong style={{ color: '#c084fc', fontSize: 16 }}>
+            ScholarHAAB. AI you can actually trust. Built for Bangladesh — ready for the world.
+          </strong>
+        </section>
       </section>
     </main>
   )

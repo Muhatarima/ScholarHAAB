@@ -170,7 +170,7 @@ export default function AuthPage({ action, mode, nextPath, oauthAction }: AuthPa
     error: null,
     message: null,
   })
-  const next = nextPath ?? '/qbank'
+  const next = nextPath ?? '/solver'
   const linkHref = mode === 'signup' ? `/login?next=${encodeURIComponent(next)}` : `/signup?next=${encodeURIComponent(next)}`
 
   return (

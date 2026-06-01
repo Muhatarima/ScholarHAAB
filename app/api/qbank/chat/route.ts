@@ -221,10 +221,18 @@ export async function POST(req: Request) {
         payload.confidenceScore = validation.confidenceScore
         payload.confidenceBadge =
           validation.confidence === 'VERIFIED'
-            ? '✅ VERIFIED — from Cambridge/Edexcel past papers'
+            ? 'VERIFIED - from Cambridge/Edexcel past papers'
             : validation.confidence === 'PARTIAL'
-              ? '⚠️ PARTIAL MATCH — AI reasoning applied'
-              : '🤖 AI REASONING — verify before exam'
+              ? 'PARTIAL MATCH - AI reasoning applied'
+              : 'AI REASONING - verify before exam'
+        payload.understood = understood
+        if (understood.skippedTopic) {
+          payload.chapterGap = {
+            skippedTopic: understood.skippedTopic,
+            currentTopic: parsedQuery.topicHints[0] ?? understood.topic ?? loggedSubject ?? 'Current topic',
+            recommendation: `We will avoid ${understood.skippedTopic} and use a simpler route first.`,
+          }
+        }
 
         finalResponse = Response.json(payload, {
           status: response.status,

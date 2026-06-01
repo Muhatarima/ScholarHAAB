@@ -54,7 +54,7 @@
     "mafs": "^0.21.0",
     "mammoth": "^1.12.0",
     "mathjax-react": "^2.0.1",
-    "next": "16.1.6",
+    "next": "16.2.6",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^2.4.5",
     "plotly.js": "^3.5.1",
@@ -63,7 +63,6 @@
     "react-katex": "^3.1.0",
     "react-plotly.js": "^2.6.0",
     "recharts": "^3.8.1",
-    "xlsx": "^0.18.5",
     "zustand": "^5.0.13"
   },
   "devDependencies": {
@@ -73,7 +72,7 @@
     "@types/react-dom": "^19",
     "@types/react-katex": "^3.0.4",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
@@ -84,5 +83,8 @@
       "module": "commonjs",
       "moduleResolution": "node"
     }
+  },
+  "overrides": {
+    "postcss": "8.5.15"
   }
 }

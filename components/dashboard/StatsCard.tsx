@@ -41,10 +41,10 @@ export default function StatsCard({
   const [displayValue, setDisplayValue] = useState(value)
   const accent = colorMap[color]
   const numeric = parseNumber(value)
+  const renderedValue = numeric === null ? value : displayValue
 
   useEffect(() => {
     if (numeric === null) {
-      setDisplayValue(value)
       return
     }
 
@@ -85,7 +85,7 @@ export default function StatsCard({
         </span>
         <span style={{ color: accent.text }}>{icon}</span>
       </div>
-      <strong style={{ color: '#fff', fontSize: 36, lineHeight: 1 }}>{displayValue}</strong>
+      <strong style={{ color: '#fff', fontSize: 36, lineHeight: 1 }}>{renderedValue}</strong>
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
         <p style={{ margin: 0, color: '#c7c3e8', fontSize: 13, lineHeight: 1.5 }}>{subtitle}</p>
         {trendValue ? (

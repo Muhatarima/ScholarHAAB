@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { getDocSections, getDocSettings, updateDocSettings, createDocSection, updateDocSection, deleteDocSection } from '../../docs/actions'
-import { DocSection, DocSettings } from '@/types/docs'
+import type { DocCategory, DocSection, DocSettings } from '@/types/docs'
 import { LucideSettings, LucidePlus, LucideEdit, LucideTrash, LucideSave, LucideEye, LucideClock } from 'lucide-react'
 import '../../docs/docs.css'
 
@@ -45,7 +45,15 @@ export default function AdminDocsPage() {
     if (editingSection.id) {
       await updateDocSection(editingSection.id, editingSection)
     } else {
-      await createDocSection(editingSection as any)
+      const sectionInput: Omit<DocSection, 'id' | 'updated_at'> = {
+        slug: editingSection.slug ?? '',
+        title: editingSection.title ?? '',
+        content: editingSection.content ?? '',
+        section_order: editingSection.section_order ?? sections.length + 1,
+        category: editingSection.category ?? 'pitch',
+        is_active: editingSection.is_active ?? true,
+      }
+      await createDocSection(sectionInput)
     }
     window.location.reload()
   }
@@ -166,7 +174,7 @@ export default function AdminDocsPage() {
                     <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
                       <label>
                         <span style={{fontSize: '0.8rem', opacity: 0.6}}>Category</span>
-                        <select value={editingSection.category} onChange={e => setEditingSection({...editingSection, category: e.target.value as any})} style={{width: '100%', padding: '0.75rem', background: '#1e1e30', border: '1px solid #333', color: '#fff', borderRadius: '8px', marginTop: '0.5rem'}}>
+                        <select value={editingSection.category} onChange={e => setEditingSection({...editingSection, category: e.target.value as DocCategory})} style={{width: '100%', padding: '0.75rem', background: '#1e1e30', border: '1px solid #333', color: '#fff', borderRadius: '8px', marginTop: '0.5rem'}}>
                           <option value="pitch">Pitch Deck</option>
                           <option value="tech">Technical</option>
                         </select>

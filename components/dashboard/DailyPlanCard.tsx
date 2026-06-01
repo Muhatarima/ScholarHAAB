@@ -24,7 +24,7 @@ export default function DailyPlanCard({ plan }: { plan: DashboardDailyPlanItem[]
   return (
     <section style={{ display: 'grid', gap: 14 }}>
       <div>
-        <h3 style={{ margin: 0, color: '#fff' }}>Today's Recommended Plan</h3>
+        <h3 style={{ margin: 0, color: '#fff' }}>Today&apos;s Recommended Plan</h3>
         <p style={{ margin: '6px 0 0', color: '#c7c3e8' }}>{progress}% complete</p>
       </div>
       <div style={{ height: 9, borderRadius: 999, overflow: 'hidden', background: 'rgba(255,255,255,0.08)' }}>
