@@ -55,7 +55,7 @@ export async function POST(req: Request) {
 
   if (type === 'drill') {
     const count = Math.max(1, Math.min(10, Number(body.count ?? 5)))
-    const questions = await generateTargetedDrillSet(user.id, topic, count)
+    const questions = await generateTargetedDrillSet(user.id, topic, count, { subject, level, paper })
     return NextResponse.json({
       type: 'drill',
       label: 'AI-generated mock based on A/O Level pattern',

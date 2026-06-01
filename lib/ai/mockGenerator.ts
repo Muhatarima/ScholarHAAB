@@ -5,6 +5,7 @@ import { loadStudentMemory } from '@/lib/memory/studentMemory'
 import { parseQbankQuery } from '@/lib/server/qbank'
 import { searchCompiledQbankQuestions } from '@/lib/server/qbank-compiled-questions'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
+import { formatKnowledgeContext, getKnowledgeContext } from '@/lib/knowledge/base'
 
 export type MockQuestionResult = {
   questionText: string
@@ -27,17 +28,21 @@ function getMarksFromText(text: string) {
 }
 
 function fallbackQuestion(subject: string, topic: string, difficulty: string): MockQuestionResult {
+  const knowledge = getKnowledgeContext(subject, topic)
+  const formulaLine = knowledge.formula ? ` Use ${knowledge.formula} where relevant.` : ''
   return {
     questionText: [
       `${subject} ${difficulty} practice question`,
-      `A student is investigating ${topic}. Describe the key principle involved and explain how it would be tested in a Cambridge-style exam question.`,
+      `A student is investigating ${topic}. ${knowledge.theory} Explain the key idea and apply it to an exam-style situation.${formulaLine}`,
       '[4 marks]',
     ].join('\n'),
     markScheme: [
-      'Award one mark for the correct principle.',
-      'Award one mark for using the correct technical term.',
-      'Award one mark for linking evidence/data to the conclusion.',
-      'Award one mark for correct units or exam wording where relevant.',
+      `Award one mark for the correct principle: ${knowledge.theory}`,
+      `Award one mark for using exam keywords: ${knowledge.examKeywords.slice(0, 3).join(', ')}.`,
+      knowledge.formula
+        ? `Award one mark for correct formula/use: ${knowledge.formula}.`
+        : 'Award one mark for linking the idea to the example.',
+      `Award one mark for avoiding the common mistake: ${knowledge.commonMistake}`,
     ].join('\n'),
     marks: 4,
     basedOnQuestionIds: [],
@@ -45,14 +50,25 @@ function fallbackQuestion(subject: string, topic: string, difficulty: string): M
 }
 
 function splitGeneratedQuestion(text: string) {
-  const modelAnswerIndex = text.search(/model answer:/i)
+  const cleaned = text
+    .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+    .replace(/^\s*(arre|hey|hi|okay|sure)[^\n]*\n+/i, '')
+    .replace(/\*{3,}/g, '')
+    .trim()
+  const modelAnswerIndex = cleaned.search(/model answer:/i)
   if (modelAnswerIndex === -1) {
-    return { questionText: text.trim(), markScheme: 'Mark scheme not separated. Use the model answer in the question body.' }
+    const questionStart = cleaned.search(/question\s*:/i)
+    return {
+      questionText: (questionStart >= 0 ? cleaned.slice(questionStart) : cleaned).trim(),
+      markScheme: 'Mark scheme not separated. Use the model answer in the question body.',
+    }
   }
 
+  const questionRaw = cleaned.slice(0, modelAnswerIndex).trim()
+  const questionStart = questionRaw.search(/question\s*:/i)
   return {
-    questionText: text.slice(0, modelAnswerIndex).trim(),
-    markScheme: text.slice(modelAnswerIndex).trim(),
+    questionText: (questionStart >= 0 ? questionRaw.slice(questionStart) : questionRaw).trim(),
+    markScheme: cleaned.slice(modelAnswerIndex).trim(),
   }
 }
 
@@ -96,6 +112,7 @@ export async function generateMockQuestion(
   const references = similar
     .map((row, index) => `${index + 1}. ${row.year ?? 'Unknown'} ${row.paper ?? paper} ${row.topic}: ${row.question_text.slice(0, 220)}`)
     .join('\n')
+  const knowledgeContext = formatKnowledgeContext(subject, topic)
   const prompt = [
     `Generate a Cambridge ${level} ${subject} exam question about ${topic}.`,
     `Difficulty: ${difficulty}`,
@@ -103,6 +120,9 @@ export async function generateMockQuestion(
     'Include a full concise mark scheme with marking points.',
     `Paper style: ${paper}`,
     'Do not copy any reference question. Generate an original question with authentic wording.',
+    'Tone: concise exam paper wording only. No emojis. No hype. No long intro. Start with "Question:".',
+    'Use this syllabus/formula/theory context. Do not claim it is a real past paper:',
+    knowledgeContext,
     'After the question include: [X marks], Model answer, What this tests, Common mistake.',
     '',
     'Style references:',
@@ -131,9 +151,20 @@ export async function generateMockQuestion(
   }
 }
 
-export async function generateTargetedDrillSet(studentId: string, topic: string, count = 5) {
+export async function generateTargetedDrillSet(
+  studentId: string,
+  topic: string,
+  count = 5,
+  options: {
+    subject?: string
+    level?: string
+    paper?: string
+  } = {}
+) {
   const memory = await loadStudentMemory(studentId)
-  const subject = memory.subjects[0] ?? 'Physics'
+  const subject = options.subject ?? memory.subjects[0] ?? 'Physics'
+  const level = options.level ?? memory.level
+  const paper = options.paper ?? 'Paper 2'
   const difficulties = ['easy', 'medium', 'hard']
 
   const questions = []
@@ -144,8 +175,8 @@ export async function generateTargetedDrillSet(studentId: string, topic: string,
         topic,
         difficulties[Math.min(index, difficulties.length - 1)],
         studentId,
-        memory.level,
-        'Paper 2'
+        level,
+        paper
       )
     )
   }

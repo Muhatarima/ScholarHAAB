@@ -7,36 +7,13 @@ import Badge from '@/components/Badge'
 import Logo from '@/components/Logo'
 import StarBackground from '@/components/StarBackground'
 import { BOARDS, LEVELS, SUBJECTS } from '@/lib/profile/setupOptions'
+import { gradeMockAnswer, type MockGradeResult } from '@/lib/mock/gradeMock'
 
 type MockQuestion = {
   questionText: string
   markScheme: string
   marks: number
   basedOnQuestionIds?: string[]
-}
-
-function splitMarkScheme(markScheme: string) {
-  return markScheme
-    .split(/\n|•|-/)
-    .map((point) => point.trim())
-    .filter((point) => point.length > 8)
-    .slice(0, 6)
-}
-
-function scoreAnswer(answer: string, markScheme: string, marks: number) {
-  const cleanAnswer = answer.toLowerCase()
-  const points = splitMarkScheme(markScheme)
-  const hitPoints = points.filter((point) => {
-    const keywords = point
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, ' ')
-      .split(/\s+/)
-      .filter((word) => word.length > 5)
-      .slice(0, 4)
-    return keywords.some((word) => cleanAnswer.includes(word))
-  })
-  const score = Math.min(marks, Math.max(0, Math.round((hitPoints.length / Math.max(1, points.length)) * marks)))
-  return { score, hitPoints, missingPoints: points.filter((point) => !hitPoints.includes(point)) }
 }
 
 function formatTime(totalSeconds: number) {
@@ -59,7 +36,7 @@ function MockInner() {
   const [questions, setQuestions] = useState<MockQuestion[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answer, setAnswer] = useState('')
-  const [feedback, setFeedback] = useState<ReturnType<typeof scoreAnswer> | null>(null)
+  const [feedback, setFeedback] = useState<MockGradeResult | null>(null)
   const [remainingSeconds, setRemainingSeconds] = useState(0)
 
   const subjects = useMemo(() => Array.from(new Set([...SUBJECTS['O Level'], ...SUBJECTS['A Level']])), [])
@@ -118,18 +95,31 @@ function MockInner() {
       setError('Write an answer first.')
       return
     }
-    const result = scoreAnswer(answer, current.markScheme, current.marks)
-    setFeedback(result)
-    await fetch('/api/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        subject,
-        topic,
-        isCorrect: result.score / Math.max(1, current.marks) >= 0.6,
-        confidenceScore: Math.round((result.score / Math.max(1, current.marks)) * 100),
-      }),
-    }).catch(() => undefined)
+    setError('')
+    try {
+      const response = await fetch('/api/mock/grade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          answer,
+          markScheme: current.markScheme,
+          questionText: current.questionText,
+          marks: current.marks,
+          subject,
+          topic,
+          level,
+          board,
+          paper,
+          difficulty,
+        }),
+      })
+      const json = await response.json()
+      if (!response.ok) throw new Error(json.error || 'Could not grade answer.')
+      setFeedback(json.grade)
+    } catch (err) {
+      setFeedback(gradeMockAnswer({ answer, markScheme: current.markScheme, marks: current.marks }))
+      setError(err instanceof Error ? `${err.message} Showing local feedback.` : 'Showing local feedback.')
+    }
   }
 
   function nextQuestion() {
@@ -211,7 +201,7 @@ function MockInner() {
             <section style={styles.card}>
               <div style={styles.cardHeader}>
                 <span style={styles.panelTitle}>Mark scheme feedback</span>
-                {feedback ? <Badge tone={feedback.score >= Math.ceil(current.marks * 0.6) ? 'green' : 'amber'}>{feedback.score}/{current.marks}</Badge> : null}
+                {feedback ? <Badge tone={feedback.isCorrect ? 'green' : 'amber'}>{feedback.score}/{feedback.totalMarks}</Badge> : null}
               </div>
               {feedback ? (
                 <div style={styles.feedbackGrid}>
@@ -225,7 +215,8 @@ function MockInner() {
                   </div>
                   <div>
                     <h3 style={styles.smallTitle}>Model answer / mark scheme</h3>
-                    <pre style={styles.scheme}>{current.markScheme}</pre>
+                    <pre style={styles.scheme}>{feedback.correctAnswer}</pre>
+                    <p style={styles.muted}>{feedback.improvementAdvice}</p>
                   </div>
                 </div>
               ) : (

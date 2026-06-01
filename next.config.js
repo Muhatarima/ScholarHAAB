@@ -1,18 +1,29 @@
 /** @type {import('next').NextConfig} */
+const deployExcludedGlobs = [
+  './data/**/*',
+  './chromadb/**/*',
+  './scholarhaaab-intelligence/**/*',
+  './scripts/**/*',
+  './reports/**/*',
+  './eval/**/*',
+  './output/**/*',
+  './extracted/**/*',
+  '**/data/**/*',
+  '**/chromadb/**/*',
+  '**/scholarhaaab-intelligence/**/*',
+  '**/scripts/**/*',
+  '**/reports/**/*',
+  '**/eval/**/*',
+  '**/output/**/*',
+  '**/extracted/**/*',
+]
+
 const nextConfig = {
-  output: 'standalone',
   outputFileTracingRoot: __dirname,
   outputFileTracingExcludes: {
-    '/**': [
-      'data/**/*',
-      'chromadb/**/*',
-      'scholarhaaab-intelligence/**/*',
-      'scripts/**/*',
-      'reports/**/*',
-      'eval/**/*',
-      'output/**/*',
-      'extracted/**/*',
-    ],
+    '*': deployExcludedGlobs,
+    '/**': deployExcludedGlobs,
+    '/api/**/*': deployExcludedGlobs,
   },
   transpilePackages: ['katex', 'react-katex'],
   serverExternalPackages: [
