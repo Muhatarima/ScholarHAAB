@@ -93,6 +93,15 @@ function logFallbackOnce(reason: string, error: unknown, context: Record<string,
   }
 
   warnedFallbackReasons.add(reason)
+  if (isRateLimitTableError(error)) {
+    logEvent('warn', 'distributed_rate_limit_fallback', {
+      ...context,
+      reason,
+      fallback: 'local_in_memory_bucket',
+    })
+    return
+  }
+
   logError('distributed_rate_limit_unavailable', error, {
     ...context,
     fallback: 'local_in_memory_bucket',
@@ -112,6 +121,14 @@ async function maybeCleanupRateLimitLog(requestId?: string) {
     const supabaseAdmin = getSupabaseAdmin()
     await supabaseAdmin.from('rate_limit_log').delete().lt('created_at', cutoff)
   } catch (error) {
+    if (isRateLimitTableError(error)) {
+      logFallbackOnce('missing_rate_limit_table_cleanup', error, {
+        request_id: requestId ?? null,
+        route: 'rate_limit_cleanup',
+      })
+      return
+    }
+
     logError('rate_limit_cleanup_failed', error, {
       request_id: requestId ?? null,
       route: 'rate_limit_cleanup',

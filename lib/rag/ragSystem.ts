@@ -700,8 +700,8 @@ export async function searchSimilarQuestions(
       const combined = unifiedCandidate ? [unifiedCandidate, ...normalized] : normalized
       return prioritizeSearchResults(combined, limit)
     }
-  } catch (error) {
-    console.error('Hybrid RAG search failed, using text fallback:', error)
+  } catch {
+    console.warn('Hybrid RAG embedding unavailable; using text fallback.')
   }
 
   const fallbackResults = await fallbackTextSearch(queryData.expanded, filters, limit)

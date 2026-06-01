@@ -83,6 +83,12 @@ function normalizeTopic(topic: string) {
   return topic.trim() || 'General'
 }
 
+function isOptionalAnalyticsTableMissing(error: unknown) {
+  const code = (error as { code?: string })?.code
+  const message = String((error as { message?: string })?.message ?? '')
+  return code === '42P01' || code === 'PGRST205' || /topic_interactions/i.test(message)
+}
+
 async function getExistingPerformance(userId: string | null, subject: string, topic: string) {
   const supabase = getSupabaseAdmin()
   let query = supabase.from('student_topic_performance').select('*').eq('subject', subject).eq('topic', topic).limit(1)
@@ -144,7 +150,7 @@ async function logInteraction(
     topic: normalizeTopic(topic),
     interaction_type: interactionType,
   })
-  if (error) throw error
+  if (error && !isOptionalAnalyticsTableMissing(error)) throw error
 }
 
 export async function trackSkip(userId: string, subject: string, topic: string, sessionId?: string | null) {

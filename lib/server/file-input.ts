@@ -3,8 +3,8 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import JSZip from 'jszip'
 import mammoth from 'mammoth'
-import { PDFParse } from 'pdf-parse'
 import type { AiInputPart } from '@/lib/ai-service'
+import type { PDFParse as PDFParseClass } from 'pdf-parse'
 
 export type ChatFilePayload = {
   fileBase64?: string | null
@@ -72,7 +72,9 @@ const SUPPORTED_FILE_ERROR =
   'Unsupported file type. Use image, PDF, DOCX, TXT, CSV, JSON, or PPTX.'
 let pdfWorkerConfigured = false
 
-function ensurePdfWorkerConfigured() {
+type PdfParserConstructor = typeof PDFParseClass
+
+function ensurePdfWorkerConfigured(PDFParse: PdfParserConstructor) {
   if (pdfWorkerConfigured) {
     return
   }
@@ -298,7 +300,8 @@ function extractSvgText(svgText: string) {
 }
 
 async function extractPdfPages(buffer: Buffer) {
-  ensurePdfWorkerConfigured()
+  const { PDFParse } = await import('pdf-parse')
+  ensurePdfWorkerConfigured(PDFParse)
   const parser = new PDFParse({ data: buffer })
 
   try {
