@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import AIReasoningBadge from '@/components/AIReasoningBadge'
+import Badge from '@/components/Badge'
 import RichMessageContent from '@/components/RichMessageContent'
 import SourceCard from '@/components/SourceCard'
 import StarBackdrop from '@/components/StarBackdrop'
@@ -201,7 +202,9 @@ function sourceText(sources?: SourceCitation[]) {
 
 function confidenceText(confidence?: string) {
   if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
+  if (confidence === 'PATTERN_BASED') return 'PATTERN-BASED REASONING - based on similar examiner patterns'
   if (confidence === 'PARTIAL') return 'PARTIAL MATCH - AI reasoning applied'
+  if (confidence === 'UNSUPPORTED') return 'UNSUPPORTED - verify with teacher/source'
   return 'AI REASONING - verify before exam'
 }
 
@@ -522,6 +525,12 @@ export default function ProductChatShell({ product }: { product: Product }) {
                               typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
                             }`}
                           />
+                        ) : message.confidence === 'PATTERN_BASED' ? (
+                          <Badge tone="violet">
+                            {`${message.confidenceBadge || confidenceText(message.confidence)}${
+                              typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
+                            }`}
+                          </Badge>
                         ) : (
                           <AIReasoningBadge
                             label={`${message.confidenceBadge || confidenceText(message.confidence)}${

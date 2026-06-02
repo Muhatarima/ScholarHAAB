@@ -85,14 +85,47 @@ CREATE TABLE IF NOT EXISTS paper_patterns (
   board text NOT NULL,
   level text NOT NULL,
   subject text NOT NULL,
+  chapter text,
   paper_type text,
   topic text NOT NULL,
+  question_type text,
+  command_word text,
+  marks_range int4range,
   frequency int DEFAULT 0,
   years_appeared int[] DEFAULT '{}',
+  sample_question_ids uuid[] DEFAULT '{}',
   common_question_types text[],
+  mark_scheme_keywords text[],
+  common_mistakes text[],
+  reasoning_pattern text,
+  confidence numeric DEFAULT 0,
   mark_scheme_patterns text[],
   formula_patterns text[],
   command_words text[],
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS chapter text;
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS question_type text;
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS command_word text;
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS marks_range int4range;
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS sample_question_ids uuid[] DEFAULT '{}';
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS mark_scheme_keywords text[];
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS common_mistakes text[];
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS reasoning_pattern text;
+ALTER TABLE IF EXISTS paper_patterns ADD COLUMN IF NOT EXISTS confidence numeric DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS mark_scheme_patterns (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  subject text NOT NULL,
+  topic text NOT NULL,
+  question_type text,
+  command_word text,
+  required_points text[],
+  optional_points text[],
+  common_wrong_answers text[],
+  mark_allocation_pattern text[],
+  examiner_keywords text[],
   updated_at timestamptz DEFAULT now()
 );
 
@@ -158,6 +191,15 @@ CREATE INDEX IF NOT EXISTS mark_schemes_question_idx ON mark_schemes (question_i
 CREATE INDEX IF NOT EXISTS formula_bank_lookup_idx ON formula_bank (level, subject, topic);
 CREATE INDEX IF NOT EXISTS theory_bank_lookup_idx ON theory_bank (level, subject, topic);
 CREATE INDEX IF NOT EXISTS paper_patterns_lookup_idx ON paper_patterns (board, level, subject, paper_type, topic);
+CREATE INDEX IF NOT EXISTS mark_scheme_patterns_lookup_idx ON mark_scheme_patterns (subject, topic, question_type, command_word);
+CREATE UNIQUE INDEX IF NOT EXISTS paper_patterns_unique_idx
+  ON paper_patterns (board, level, subject, topic, COALESCE(paper_type, ''), COALESCE(question_type, ''), COALESCE(command_word, ''));
+CREATE UNIQUE INDEX IF NOT EXISTS mark_scheme_patterns_unique_idx
+  ON mark_scheme_patterns (subject, topic, COALESCE(question_type, ''), COALESCE(command_word, ''));
+CREATE UNIQUE INDEX IF NOT EXISTS paper_patterns_upsert_idx
+  ON paper_patterns (board, level, subject, topic, paper_type, question_type, command_word);
+CREATE UNIQUE INDEX IF NOT EXISTS mark_scheme_patterns_upsert_idx
+  ON mark_scheme_patterns (subject, topic, question_type, command_word);
 CREATE INDEX IF NOT EXISTS mock_attempts_user_created_idx ON mock_attempts (user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS student_learning_memory_user_idx ON student_learning_memory (user_id);
 
@@ -167,6 +209,7 @@ ALTER TABLE IF EXISTS syllabus_topics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS formula_bank ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS theory_bank ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS paper_patterns ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS mark_scheme_patterns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS student_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS student_learning_gaps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS mock_attempts ENABLE ROW LEVEL SECURITY;
@@ -189,6 +232,9 @@ CREATE POLICY "Public read theory bank" ON theory_bank FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Public read paper patterns" ON paper_patterns;
 CREATE POLICY "Public read paper patterns" ON paper_patterns FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read mark scheme patterns" ON mark_scheme_patterns;
+CREATE POLICY "Public read mark scheme patterns" ON mark_scheme_patterns FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Users read own mock attempts" ON mock_attempts;
 CREATE POLICY "Users read own mock attempts" ON mock_attempts FOR SELECT USING (auth.uid() = user_id);
