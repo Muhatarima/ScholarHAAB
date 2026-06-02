@@ -14,11 +14,12 @@ const BULLET_LINE_PATTERN = /^[*-]\s+/
 const OPTION_LINE_PATTERN = /^[A-Z]\.\s+/
 const MARK_SCHEME_POINTS_PATTERN = /^(mark scheme points?|ms points?):\s*(.+)$/gim
 const DIAGRAM_HINT_PATTERN =
-  /\b(diagram|figure|sketch|draw|label|wave|wavelength|amplitude|circuit|resistor|ray|lens|triangle|energy profile|activation energy)\b/i
+  /\b(diagram|figure|sketch|draw|label|wave|wavelength|amplitude|circuit|resistor|ray|lens|triangle|energy profile|activation energy|molecule|bonding|cell|nucleus|membrane|chloroplast|mitochondria)\b/i
 
 function inferSubject(content: string) {
   if (/\bphysics\b/i.test(content)) return 'Physics'
   if (/\bchemistry\b/i.test(content)) return 'Chemistry'
+  if (/\bbiology|cell|nucleus|membrane|chloroplast|mitochondria|photosynthesis\b/i.test(content)) return 'Biology'
   if (/\bmath|mathematics|integral|differentiat|trigonometry|triangle|graph\b/i.test(content)) {
     return 'Mathematics'
   }

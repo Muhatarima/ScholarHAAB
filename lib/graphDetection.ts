@@ -67,6 +67,8 @@ export function detectGraphIntents(text: string): GraphIntent[] {
     intents.push({ kind: 'statistics', title: 'Normal distribution curve', type: 'normal' })
   } else if (/histogram/i.test(lower)) {
     intents.push({ kind: 'statistics', title: 'Histogram', type: 'histogram' })
+  } else if (/frequency graph|frequency polygon|frequency curve/i.test(lower)) {
+    intents.push({ kind: 'statistics', title: 'Frequency graph', type: 'histogram' })
   } else if (/box plot|box-and-whisker/i.test(lower)) {
     intents.push({ kind: 'statistics', title: 'Box plot', type: 'box' })
   } else if (/scatter|regression/i.test(lower)) {

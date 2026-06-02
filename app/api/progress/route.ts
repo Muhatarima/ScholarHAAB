@@ -2,12 +2,12 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 import { NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/auth/requireAuth'
+import { requireRealAuth } from '@/lib/auth/requireAuth'
 import { getDashboardData } from '@/lib/progress/progressEngine'
 import { trackSolvedTopic } from '@/lib/progress/autoTrack'
 
-export async function GET(req: Request) {
-  const { user, error: authError } = await requireAuth(req)
+export async function GET() {
+  const { user, error: authError } = await requireRealAuth()
   if (authError) return authError
   if (!user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { user, error: authError } = await requireAuth(req)
+  const { user, error: authError } = await requireRealAuth()
   if (authError) return authError
   if (!user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 

@@ -6,6 +6,8 @@ export type DiagramType =
   | 'ray_diagram'
   | 'graph'
   | 'force'
+  | 'molecule'
+  | 'cell'
   | 'unknown';
 
 export function matchDiagramType(
@@ -34,6 +36,15 @@ export function matchDiagramType(
   if (subjectLower === 'chemistry') {
     if (/energy profile|activation energy|enthalpy|exothermic|endothermic/.test(text)) {
       return 'energy_profile';
+    }
+    if (/molecule|molecular|covalent|ionic|bonding|dot and cross|structure|atom/.test(text)) {
+      return 'molecule';
+    }
+  }
+
+  if (subjectLower === 'biology') {
+    if (/cell|nucleus|mitochondria|chloroplast|membrane|organ|heart|leaf/.test(text)) {
+      return 'cell';
     }
   }
 

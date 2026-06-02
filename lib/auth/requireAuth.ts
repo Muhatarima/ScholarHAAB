@@ -32,3 +32,19 @@ export async function requireAuth(_req?: Request): Promise<{
 
   return { user, error: null };
 }
+
+export async function requireRealAuth(): Promise<{
+  user: User | null;
+  error: NextResponse | null;
+}> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    return {
+      user: null,
+      error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+    };
+  }
+
+  return { user, error: null };
+}

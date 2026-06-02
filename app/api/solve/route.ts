@@ -11,6 +11,11 @@ import { solveQuestion } from '@/lib/rag/qbankSolver'
 import { calculateConfidence } from '@/lib/rag/calculateConfidence'
 import { retrieveMarkSchemeFromResult } from '@/lib/rag/retrieveMarkScheme'
 import { trackLearningGap, trackSolvedTopic } from '@/lib/progress/autoTrack'
+import { solveWithSympy } from '@/lib/math/sympyEngine'
+import { formatMathSolution } from '@/lib/math/solutionFormatter'
+import { isLikelyMathQuestion } from '@/lib/math/mathParser'
+import { buildMathGraph } from '@/lib/math/graphEngine'
+import { generateDiagramSpec, suggestDiagramKind } from '@/lib/diagram/diagramGenerator'
 
 function isUuid(value: string | undefined): value is string {
   return Boolean(value && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
@@ -189,9 +194,18 @@ export async function POST(req: Request) {
           recommendation: `No worries. We will avoid ${classified.skippedChapter} and explain ${currentTopic} from the basics.`,
         }
       : null
+    const mathResult =
+      !chapterGap && strictConfidence.status !== 'verified' && isLikelyMathQuestion(`${subject ?? ''} ${classified.normalizedQuery}`)
+        ? await solveWithSympy(classified.normalizedQuery)
+        : null
+    const diagramKind = suggestDiagramKind(`${classified.normalizedQuery} ${currentTopic}`)
+    const graphSpec = isLikelyMathQuestion(classified.normalizedQuery) ? buildMathGraph(classified.normalizedQuery) : null
+    const diagramSpec = diagramKind ? generateDiagramSpec(diagramKind, currentTopic) : null
     const answer = chapterGap
       ? adaptedGapAnswer(currentTopic, chapterGap.skippedTopic)
-      : solved.answer
+      : mathResult
+        ? formatMathSolution(rawMessage, mathResult)
+        : solved.answer
 
     return NextResponse.json({
       status: strictConfidence.status,
@@ -224,6 +238,18 @@ export async function POST(req: Request) {
       markScheme,
       sources: solved.sources,
       chapterGap,
+      mathEngine: mathResult
+        ? {
+            intent: mathResult.parsed.intent,
+            exactAnswer: mathResult.exactAnswer,
+            latex: mathResult.latex ?? null,
+            usedSympy: mathResult.usedSympy,
+          }
+        : null,
+      visualLearning: {
+        graph: graphSpec,
+        diagram: diagramSpec,
+      },
       subjectWarning: subjectNotInProfile
         ? `${subject} is not in your study profile. Add it in settings or search anyway.`
         : null,

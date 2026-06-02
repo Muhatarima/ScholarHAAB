@@ -141,12 +141,25 @@ CREATE TABLE IF NOT EXISTS mock_attempts (
   created_at timestamptz DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS student_learning_memory (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE NOT NULL,
+  weak_topics text[] DEFAULT '{}',
+  skipped_chapters text[] DEFAULT '{}',
+  misconceptions text[] DEFAULT '{}',
+  repeated_mistakes jsonb DEFAULT '[]'::jsonb,
+  preferred_explanation_style text,
+  updated_at timestamptz DEFAULT now(),
+  created_at timestamptz DEFAULT now()
+);
+
 CREATE INDEX IF NOT EXISTS questions_lookup_idx ON questions (board, level, subject, topic, year);
 CREATE INDEX IF NOT EXISTS mark_schemes_question_idx ON mark_schemes (question_id);
 CREATE INDEX IF NOT EXISTS formula_bank_lookup_idx ON formula_bank (level, subject, topic);
 CREATE INDEX IF NOT EXISTS theory_bank_lookup_idx ON theory_bank (level, subject, topic);
 CREATE INDEX IF NOT EXISTS paper_patterns_lookup_idx ON paper_patterns (board, level, subject, paper_type, topic);
 CREATE INDEX IF NOT EXISTS mock_attempts_user_created_idx ON mock_attempts (user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS student_learning_memory_user_idx ON student_learning_memory (user_id);
 
 ALTER TABLE IF EXISTS questions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS mark_schemes ENABLE ROW LEVEL SECURITY;
@@ -157,6 +170,7 @@ ALTER TABLE IF EXISTS paper_patterns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS student_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS student_learning_gaps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS mock_attempts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS student_learning_memory ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Public read questions" ON questions;
 CREATE POLICY "Public read questions" ON questions FOR SELECT USING (true);
@@ -184,3 +198,12 @@ CREATE POLICY "Users insert own mock attempts" ON mock_attempts FOR INSERT WITH 
 
 DROP POLICY IF EXISTS "Users update own mock attempts" ON mock_attempts;
 CREATE POLICY "Users update own mock attempts" ON mock_attempts FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users read own learning memory" ON student_learning_memory;
+CREATE POLICY "Users read own learning memory" ON student_learning_memory FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users insert own learning memory" ON student_learning_memory;
+CREATE POLICY "Users insert own learning memory" ON student_learning_memory FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users update own learning memory" ON student_learning_memory;
+CREATE POLICY "Users update own learning memory" ON student_learning_memory FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);

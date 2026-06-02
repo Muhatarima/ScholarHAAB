@@ -23,8 +23,18 @@ function getAdminClientOrNull() {
 }
 
 function getMarksFromText(text: string) {
-  const match = /\[(\d+)\s*marks?\]/i.exec(text)
-  return match ? Number(match[1]) : 4
+  const totalMatch = /\[\s*total\s*:?\s*(\d+)\s*marks?\s*\]/i.exec(text)
+  if (totalMatch) return Number(totalMatch[1])
+
+  const bracketMatches = [...text.matchAll(/\[(\d+)\s*marks?\]|\[(\d+)\]/gi)]
+    .map((match) => Number(match[1] ?? match[2]))
+    .filter((value) => Number.isFinite(value) && value > 0)
+
+  if (bracketMatches.length > 1) {
+    return Math.min(40, bracketMatches.reduce((sum, value) => sum + value, 0))
+  }
+
+  return bracketMatches[0] ?? 4
 }
 
 function fallbackQuestion(subject: string, topic: string, difficulty: string): MockQuestionResult {
@@ -68,8 +78,17 @@ function splitGeneratedQuestion(text: string) {
   const questionStart = questionRaw.search(/question\s*:/i)
   return {
     questionText: (questionStart >= 0 ? questionRaw.slice(questionStart) : questionRaw).trim(),
-    markScheme: cleaned.slice(modelAnswerIndex).trim(),
+    markScheme: cleanMarkScheme(cleaned.slice(modelAnswerIndex)),
   }
+}
+
+function cleanMarkScheme(text: string) {
+  return text
+    .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+    .replace(/^\s*(arre|bhai|hey|hi|okay|sure)[^.\n]*(?:[.\n]|$)/gim, '')
+    .replace(/^.*\b(arre|bhai|bojhageche|easy na\??|dekho|did you remember|how did you find|ready to try)\b.*(?:\n|$)/gim, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
 }
 
 async function saveGeneratedMock(
@@ -121,6 +140,7 @@ export async function generateMockQuestion(
     `Paper style: ${paper}`,
     'Do not copy any reference question. Generate an original question with authentic wording.',
     'Tone: concise exam paper wording only. No emojis. No hype. No long intro. Start with "Question:".',
+    'Do not include Banglish, slang, jokes, or tutor chatter inside the question or mark scheme.',
     'Use this syllabus/formula/theory context. Do not claim it is a real past paper:',
     knowledgeContext,
     'After the question include: [X marks], Model answer, What this tests, Common mistake.',

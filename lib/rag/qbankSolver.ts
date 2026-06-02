@@ -311,6 +311,91 @@ function deterministicFallbackAnswer(params: {
       .join('\n')
   }
 
+  if (/integrat|integral|∫/.test(lower)) {
+    const definiteMatch = lower.match(/x\^?2.*from\s+(-?\d+(?:\.\d+)?)\s+to\s+(-?\d+(?:\.\d+)?)/)
+    const hasXSquared = /x\^?2|x²/.test(lower)
+    const workedExample = definiteMatch && hasXSquared
+      ? [
+          `Here the exam move is simple: integrate first, then apply the limits.`,
+          `∫x² dx = x³/3`,
+          `[x³/3] from ${definiteMatch[1]} to ${definiteMatch[2]} = (${definiteMatch[2]}³/3) - (${definiteMatch[1]}³/3) = ${(Number(definiteMatch[2]) ** 3 / 3 - Number(definiteMatch[1]) ** 3 / 3).toString()}`,
+        ]
+      : [
+          'Think of integration as reverse differentiation.',
+          'For xⁿ, add 1 to the power and divide by the new power: ∫xⁿ dx = xⁿ⁺¹/(n+1) + c.',
+        ]
+    return [
+      badge,
+      '',
+      sourceLine,
+      '',
+      'Answer:',
+      ...workedExample,
+      '',
+      'Cambridge mark-scheme style:',
+      'Step 1 [1]: Write the correct integration rule.',
+      'Step 2 [1]: Increase the power and divide by the new power.',
+      'Step 3 [1]: For definite integrals, substitute upper limit minus lower limit.',
+      'Step 4 [1]: Give the final simplified value; include + c only for indefinite integrals.',
+      '',
+      'Examiner tip: The method mark usually comes from showing the integrated expression before substituting limits.',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  if (/differentiat|derivative|dy\/dx/.test(lower)) {
+    return [
+      badge,
+      '',
+      sourceLine,
+      '',
+      'Answer:',
+      'For powers, use the rule: if y = axⁿ, then dy/dx = anxⁿ⁻¹.',
+      /x\^?3.*2x|x³.*2x/.test(lower)
+        ? 'So for y = x³ + 2x, dy/dx = 3x² + 2.'
+        : 'Differentiate each term separately, then simplify.',
+      '',
+      'Cambridge mark-scheme style:',
+      'Step 1 [1]: Apply the power rule correctly.',
+      'Step 2 [1]: Differentiate each term.',
+      'Step 3 [1]: Simplify the gradient function.',
+      '',
+      'Examiner tip: If the question asks for gradient at a point, substitute x after differentiating, not before.',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  if (/normal distribution|z[- ]?score|binomial|probability/.test(lower)) {
+    return [
+      badge,
+      '',
+      sourceLine,
+      '',
+      'Answer:',
+      /normal distribution|z[- ]?score/.test(lower)
+        ? 'For a normal distribution, standardise using z = (x - μ) / σ.'
+        : 'For probability, define the event carefully, then use the correct rule: add for OR, multiply for AND when independent.',
+      '',
+      'Cambridge mark-scheme style:',
+      'Point 1 [1]: State the correct model or formula.',
+      'Point 2 [1]: Substitute values carefully.',
+      'Point 3 [1]: Use the table/calculator consistently.',
+      'Point 4 [1]: Give probability to the required accuracy.',
+      '',
+      'Examiner tip: For normal distribution, σ is the standard deviation, not the variance.',
+      '',
+      `Past paper reference: ${citation}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  }
+
   if (/ionic|bonding|bond/.test(lower) && /chemistry/i.test(subject ?? message)) {
     const reExplainMode = /re-explain|simpler|different|bujhini|again/.test(lower)
     return [

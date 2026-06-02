@@ -4,7 +4,7 @@ import { resolveRequestIdentity } from '@/lib/server/auth'
 import { getStudentProfile, upsertStudentProfile } from '@/lib/server/profile'
 import { createRequestId, logError } from '@/lib/server/logger'
 import { readJsonBody } from '@/lib/server/request-body'
-import { requireAuth } from '@/lib/auth/requireAuth'
+import { requireRealAuth } from '@/lib/auth/requireAuth'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
 export const dynamic = 'force-dynamic'
@@ -98,7 +98,7 @@ function toLegacyLanguagePreference(value: string | null | undefined) {
 }
 
 export async function GET(req: Request) {
-  const { error: authError } = await requireAuth(req)
+  const { error: authError } = await requireRealAuth()
   if (authError) return authError
 
   const requestId = createRequestId()
@@ -142,7 +142,7 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  const { error: authError } = await requireAuth(req)
+  const { error: authError } = await requireRealAuth()
   if (authError) return authError
 
   const requestId = createRequestId()

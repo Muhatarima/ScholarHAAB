@@ -10,6 +10,7 @@ ALTER TABLE IF EXISTS user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS exam_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS exam_plans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS mock_attempts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS student_learning_memory ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS syllabus_topics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS formula_bank ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS theory_bank ENABLE ROW LEVEL SECURITY;
@@ -169,6 +170,25 @@ WITH CHECK (auth.uid() = user_id);
 DROP POLICY IF EXISTS "Users update own mock attempts" ON mock_attempts;
 CREATE POLICY "Users update own mock attempts"
 ON mock_attempts
+FOR UPDATE
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users select own learning memory" ON student_learning_memory;
+CREATE POLICY "Users select own learning memory"
+ON student_learning_memory
+FOR SELECT
+USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users insert own learning memory" ON student_learning_memory;
+CREATE POLICY "Users insert own learning memory"
+ON student_learning_memory
+FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users update own learning memory" ON student_learning_memory;
+CREATE POLICY "Users update own learning memory"
+ON student_learning_memory
 FOR UPDATE
 USING (auth.uid() = user_id)
 WITH CHECK (auth.uid() = user_id);
