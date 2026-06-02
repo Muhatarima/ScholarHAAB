@@ -145,8 +145,12 @@ export async function solveWithSympy(rawQuestion: string): Promise<(SympySolveRe
   const parsed = parseMathQuestion(rawQuestion)
   if (parsed.intent === 'unknown') return null
 
-  const sympyResult = await runPythonSympy(parsed)
-  const result = sympyResult ?? polynomialPowerFallback(parsed) ?? statisticsFallback(parsed)
+  const deterministicResult = polynomialPowerFallback(parsed) ?? statisticsFallback(parsed)
+  if (deterministicResult) {
+    return { ...deterministicResult, parsed }
+  }
+
+  const result = await runPythonSympy(parsed)
   if (!result) return null
 
   return { ...result, parsed }

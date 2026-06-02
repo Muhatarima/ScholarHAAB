@@ -9,6 +9,7 @@ import { getStudentProfile } from '@/lib/server/profile'
 import { classifyIntent } from '@/lib/rag/classifyIntent'
 import { solveQuestion } from '@/lib/rag/qbankSolver'
 import { calculateConfidence } from '@/lib/rag/calculateConfidence'
+import { retrievePastPaper } from '@/lib/rag/retrievePastPaper'
 import { retrieveMarkSchemeFromResult } from '@/lib/rag/retrieveMarkScheme'
 import { trackLearningGap, trackSolvedTopic } from '@/lib/progress/autoTrack'
 import { solveWithSympy } from '@/lib/math/sympyEngine'
@@ -16,6 +17,7 @@ import { formatMathSolution } from '@/lib/math/solutionFormatter'
 import { isLikelyMathQuestion } from '@/lib/math/mathParser'
 import { buildMathGraph } from '@/lib/math/graphEngine'
 import { generateDiagramSpec, suggestDiagramKind } from '@/lib/diagram/diagramGenerator'
+import { buildAcademicReasoning, formatReasoningOverlay } from '@/lib/reasoning/academicReasoner'
 
 function isUuid(value: string | undefined): value is string {
   return Boolean(value && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
@@ -109,6 +111,20 @@ function adaptedGapAnswer(currentTopic: string, skippedChapter: string) {
   ].join('\n')
 }
 
+async function withFallbackTimeout<T>(task: Promise<T>, fallback: T, timeoutMs: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      task,
+      new Promise<T>((resolve) => {
+        timer = setTimeout(() => resolve(fallback), timeoutMs)
+      }),
+    ])
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+}
+
 export async function POST(req: Request) {
   const { user, error: authError } = await requireAuth(req)
   if (authError) return authError
@@ -147,13 +163,143 @@ export async function POST(req: Request) {
     const subjectNotInProfile =
       subject && profileSubjects.length > 0 && !profileSubjects.some((item) => item.toLowerCase() === subject.toLowerCase())
 
+    const profileFilters = {
+      board: classified.board ?? profile.preferredBoard,
+      level: classified.level ?? profile.preferredLevel,
+      subjects: profileSubjects,
+    }
+
+    const likelyMath = !classified.skippedChapter && isLikelyMathQuestion(`${subject ?? ''} ${classified.normalizedQuery}`)
+    if (likelyMath) {
+      const quickSources = await withFallbackTimeout(
+        retrievePastPaper(
+          classified.normalizedQuery,
+          {
+            board: profileFilters.board ?? undefined,
+            level: profileFilters.level ?? undefined,
+            subject,
+            topic: classified.topic ?? undefined,
+          },
+          5
+        ),
+        [],
+        1800
+      )
+      const bestQuickSource = quickSources[0]
+      const quickConfidence = calculateConfidence(bestQuickSource)
+      const quickMarkScheme = retrieveMarkSchemeFromResult(bestQuickSource)
+      const hasVerifiedMarkScheme =
+        quickConfidence.status === 'verified' &&
+        Boolean(quickMarkScheme.answerText || quickMarkScheme.markPoints.length > 0)
+
+      if (!hasVerifiedMarkScheme) {
+        const mathResult = await solveWithSympy(classified.normalizedQuery)
+        const currentTopic = classified.topic ?? (mathResult ? 'Mathematics' : 'Graphing')
+        if (mathResult) {
+          void trackSolvedTopic({
+            userId: user?.id ?? 'test-anonymous-user',
+            subject: subject ?? 'Mathematics',
+            topic: currentTopic,
+            isCorrect: false,
+            confidenceScore: quickConfidence.confidence,
+            profile: {
+              board: profile.preferredBoard,
+              level: profile.preferredLevel,
+            },
+          }).catch((error) => console.error('Math progress tracking failed:', error))
+
+          const diagramKind = suggestDiagramKind(`${classified.normalizedQuery} ${currentTopic}`)
+          const academicReasoning = buildAcademicReasoning({
+            question: rawMessage,
+            normalizedQuestion: classified.normalizedQuery,
+            subject: subject ?? 'Mathematics',
+            topic: currentTopic,
+            sources: quickSources,
+          })
+          const formattedMathAnswer = formatMathSolution(rawMessage, mathResult)
+          return NextResponse.json({
+            status: 'ai_reasoning',
+            answer: `${formattedMathAnswer}${formatReasoningOverlay(academicReasoning)}`,
+            response: `${formattedMathAnswer}${formatReasoningOverlay(academicReasoning)}`,
+            warning: 'No exact past paper match found. This is AI reasoning. Verify before exam.',
+            confidence: 'AI_REASONING',
+            confidenceBadge: statusToBadge('ai_reasoning'),
+            confidenceScore: quickConfidence.confidence,
+            intent: classified,
+            profileFilters,
+            source: null,
+            question: null,
+            markScheme: quickMarkScheme,
+            sources: quickSources,
+            chapterGap: null,
+            mathEngine: {
+              intent: mathResult.parsed.intent,
+              exactAnswer: mathResult.exactAnswer,
+              latex: mathResult.latex ?? null,
+              usedSympy: mathResult.usedSympy,
+            },
+            visualLearning: {
+              graph: buildMathGraph(classified.normalizedQuery),
+              diagram: diagramKind ? generateDiagramSpec(diagramKind, currentTopic) : null,
+            },
+            academicReasoning,
+            subjectWarning: subjectNotInProfile
+              ? `${subject} is not in your study profile. Add it in settings or search anyway.`
+              : null,
+          })
+        }
+
+        const graphSpec = buildMathGraph(classified.normalizedQuery)
+        if (graphSpec) {
+          const academicReasoning = buildAcademicReasoning({
+            question: rawMessage,
+            normalizedQuestion: classified.normalizedQuery,
+            subject: subject ?? 'Mathematics',
+            topic: currentTopic,
+            sources: quickSources,
+          })
+          const graphAnswer = [
+            'AI REASONING - verify before exam',
+            '',
+            `Graph generated: ${graphSpec.title}`,
+            'Use the graph to read intercepts, turning points, gradient, or area depending on the question.',
+            '',
+            'Exam tip: label both axes and state the key feature the question asks for.',
+            formatReasoningOverlay(academicReasoning),
+          ].join('\n')
+
+          return NextResponse.json({
+            status: 'ai_reasoning',
+            answer: graphAnswer,
+            response: graphAnswer,
+            warning: 'No exact past paper match found. This is AI reasoning. Verify before exam.',
+            confidence: 'AI_REASONING',
+            confidenceBadge: statusToBadge('ai_reasoning'),
+            confidenceScore: quickConfidence.confidence,
+            intent: classified,
+            profileFilters,
+            source: null,
+            question: null,
+            markScheme: quickMarkScheme,
+            sources: quickSources,
+            chapterGap: null,
+            mathEngine: null,
+            visualLearning: {
+              graph: graphSpec,
+              diagram: null,
+            },
+            academicReasoning,
+            subjectWarning: subjectNotInProfile
+              ? `${subject} is not in your study profile. Add it in settings or search anyway.`
+              : null,
+          })
+        }
+      }
+    }
+
     const solved = await solveQuestion(user?.id ?? 'test-anonymous-user', classified.normalizedQuery, subject, history, {
       avoidedTopics: classified.skippedChapter ? [classified.skippedChapter] : [],
-      profileFilters: {
-        board: classified.board ?? profile.preferredBoard,
-        level: classified.level ?? profile.preferredLevel,
-        subjects: profileSubjects,
-      },
+      profileFilters,
     })
 
     const bestSource = solved.sources[0]
@@ -194,6 +340,14 @@ export async function POST(req: Request) {
           recommendation: `No worries. We will avoid ${classified.skippedChapter} and explain ${currentTopic} from the basics.`,
         }
       : null
+    const academicReasoning = buildAcademicReasoning({
+      question: rawMessage,
+      normalizedQuestion: classified.normalizedQuery,
+      subject: subject ?? solved.subject,
+      topic: currentTopic,
+      sources: solved.sources,
+      weakOrSkippedConcepts: classified.skippedChapter ? [classified.skippedChapter] : [],
+    })
     const mathResult =
       !chapterGap && strictConfidence.status !== 'verified' && isLikelyMathQuestion(`${subject ?? ''} ${classified.normalizedQuery}`)
         ? await solveWithSympy(classified.normalizedQuery)
@@ -204,8 +358,8 @@ export async function POST(req: Request) {
     const answer = chapterGap
       ? adaptedGapAnswer(currentTopic, chapterGap.skippedTopic)
       : mathResult
-        ? formatMathSolution(rawMessage, mathResult)
-        : solved.answer
+        ? `${formatMathSolution(rawMessage, mathResult)}${formatReasoningOverlay(academicReasoning)}`
+        : `${solved.answer}${formatReasoningOverlay(academicReasoning)}`
 
     return NextResponse.json({
       status: strictConfidence.status,
@@ -250,6 +404,7 @@ export async function POST(req: Request) {
         graph: graphSpec,
         diagram: diagramSpec,
       },
+      academicReasoning,
       subjectWarning: subjectNotInProfile
         ? `${subject} is not in your study profile. Add it in settings or search anyway.`
         : null,
