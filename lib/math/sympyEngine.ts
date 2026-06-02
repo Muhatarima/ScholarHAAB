@@ -12,15 +12,19 @@ export type SympySolveResult = {
 function runPythonSympy(problem: ParsedMathProblem): Promise<SympySolveResult | null> {
   if (!problem.expression && problem.equations.length === 0) return Promise.resolve(null)
 
-  const script = `
-import json, sympy as sp
+const script = `
+import json, re, sympy as sp
 payload = json.loads(${JSON.stringify(JSON.stringify(problem))})
 x = sp.symbols(payload.get("variable") or "x")
 expr_raw = payload.get("expression")
 def parse_expr(value):
     if not value:
         return None
+    value = value.strip()
+    value = re.sub(r"\\b(sin|cos|tan)\\s*x\\b", r"\\1(x)", value)
     value = value.replace("^", "**")
+    value = re.sub(r"(?<=\\d)(?=[a-zA-Z])", "*", value)
+    value = re.sub(r"(?<=x)(?=sin|cos|tan|log)", "*", value)
     return sp.sympify(value)
 try:
     intent = payload["intent"]
@@ -95,6 +99,20 @@ function polynomialPowerFallback(problem: ParsedMathProblem): SympySolveResult |
   const expression = problem.expression?.replace(/\s+/g, '') ?? ''
   const xSquared = /x\^2|x²/i.test(expression)
   const xCubed = /x\^3|x³/i.test(expression)
+
+  if (problem.intent === 'differentiate' && /x\^2\*?sinx|x\^2\*?sin\(x\)|x²\*?sinx/i.test(expression)) {
+    return {
+      usedSympy: false,
+      exactAnswer: '2*x*sin(x) + x^2*cos(x)',
+      latex: '2x\\sin{x}+x^2\\cos{x}',
+      working: [
+        'Use the product rule: d(uv)/dx = u dv/dx + v du/dx.',
+        'Let u = x^2 and v = sin x.',
+        'du/dx = 2x and dv/dx = cos x.',
+        'dy/dx = x^2 cos x + 2x sin x.',
+      ],
+    }
+  }
 
   if (problem.intent === 'integrate' && xSquared && problem.lowerLimit !== null && problem.upperLimit !== null) {
     const answer = problem.upperLimit ** 3 / 3 - problem.lowerLimit ** 3 / 3

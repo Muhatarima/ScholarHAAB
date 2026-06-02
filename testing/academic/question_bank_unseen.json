@@ -1,0 +1,42 @@
+[
+  {
+    "id": "math_unseen_diff_001",
+    "subject": "Mathematics",
+    "category": "math",
+    "topic": "Trigonometric differentiation",
+    "question": "differentiate y = sinx",
+    "expectedUnit": null,
+    "expectedFormulaPath": ["differentiate"],
+    "expectedMarkAllocation": ["method", "answer"]
+  },
+  {
+    "id": "math_unseen_int_001",
+    "subject": "Mathematics",
+    "category": "math",
+    "topic": "Indefinite integration",
+    "question": "integrate x^2",
+    "expectedUnit": null,
+    "expectedFormulaPath": ["integrate", "power rule"],
+    "expectedMarkAllocation": ["method", "constant"]
+  },
+  {
+    "id": "physics_unseen_work_001",
+    "subject": "Physics",
+    "category": "numerical_physics",
+    "topic": "Work done",
+    "question": "A 10 N force moves an object 5 m. Calculate work done.",
+    "expectedUnit": "J",
+    "expectedFormulaPath": ["W = Fd"],
+    "expectedMarkAllocation": ["formula", "substitution", "answer", "unit"]
+  },
+  {
+    "id": "physics_unseen_momentum_001",
+    "subject": "Physics",
+    "category": "numerical_physics",
+    "topic": "Momentum",
+    "question": "Find momentum of a 2 kg ball moving at 7 m/s.",
+    "expectedUnit": "kg m/s",
+    "expectedFormulaPath": ["p = mv"],
+    "expectedMarkAllocation": ["formula", "substitution", "answer", "unit"]
+  }
+]

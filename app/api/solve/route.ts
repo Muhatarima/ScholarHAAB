@@ -12,12 +12,14 @@ import { calculateConfidence } from '@/lib/rag/calculateConfidence'
 import { retrievePastPaper } from '@/lib/rag/retrievePastPaper'
 import { retrieveMarkSchemeFromResult } from '@/lib/rag/retrieveMarkScheme'
 import { trackLearningGap, trackSolvedTopic } from '@/lib/progress/autoTrack'
+import { solveNumericalPhysics } from '@/lib/math/numericalPhysicsEngine'
 import { solveWithSympy } from '@/lib/math/sympyEngine'
 import { formatMathSolution } from '@/lib/math/solutionFormatter'
 import { isLikelyMathQuestion } from '@/lib/math/mathParser'
 import { buildMathGraph } from '@/lib/math/graphEngine'
 import { generateDiagramSpec, suggestDiagramKind } from '@/lib/diagram/diagramGenerator'
 import { buildAcademicReasoning, formatReasoningOverlay } from '@/lib/reasoning/academicReasoner'
+import { verifyWithSympy } from '@/lib/verification/sympyGroundTruth'
 
 function isUuid(value: string | undefined): value is string {
   return Boolean(value && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
@@ -169,6 +171,98 @@ export async function POST(req: Request) {
       subjects: profileSubjects,
     }
 
+    const numericalPhysics = !classified.skippedChapter ? solveNumericalPhysics(classified.normalizedQuery) : null
+    if (numericalPhysics) {
+      const verification = await verifyWithSympy({
+        question: classified.normalizedQuery,
+        category: 'numerical_physics',
+        solverAnswer: numericalPhysics.finalAnswer,
+        solverLatex: numericalPhysics.latex ?? null,
+        solverNumericValue: numericalPhysics.numericValue,
+        solverUnit: numericalPhysics.unit,
+        solverFormulaPath: numericalPhysics.formulaPath,
+        solverMarkAllocation: numericalPhysics.markAllocation,
+      })
+      const currentTopic = classified.topic ?? numericalPhysics.topic
+      const academicReasoning = buildAcademicReasoning({
+        question: rawMessage,
+        normalizedQuestion: classified.normalizedQuery,
+        subject: subject ?? 'Physics',
+        topic: currentTopic,
+        sources: [],
+      })
+      const answer = [
+        'AI REASONING - verify before exam',
+        '',
+        verification.passed
+          ? 'Calculation check: passed by independent SymPy verification.'
+          : `Calculation check: failed (${verification.failureTypes.join(', ')}).`,
+        '',
+        'Short answer:',
+        numericalPhysics.finalAnswer,
+        '',
+        'Working:',
+        ...numericalPhysics.working.map((step, index) => `Step ${index + 1} [1]: ${step}`),
+        '',
+        'Mark scheme points:',
+        ...numericalPhysics.markAllocation.map((point) => `- ${point}`),
+        '',
+        'Exam tip:',
+        'Write known values with units first, then choose the formula. Sign errors are the easiest marks to lose.',
+        formatReasoningOverlay(academicReasoning),
+      ].join('\n')
+
+      void trackSolvedTopic({
+        userId: user?.id ?? 'test-anonymous-user',
+        subject: subject ?? 'Physics',
+        topic: currentTopic,
+        isCorrect: verification.passed,
+        confidenceScore: verification.passed ? 97 : 35,
+        profile: {
+          board: profile.preferredBoard,
+          level: profile.preferredLevel,
+        },
+      }).catch((error) => console.error('Physics progress tracking failed:', error))
+
+      return NextResponse.json({
+        status: verification.passed ? 'calculation_verified' : 'ai_reasoning',
+        answer,
+        response: answer,
+        warning: 'No exact past paper match found. This is AI reasoning. Verify before exam.',
+        confidence: 'AI_REASONING',
+        confidenceBadge: verification.passed
+          ? 'SYMPY CHECK PASSED - calculation verified'
+          : 'AI REASONING - SymPy mismatch detected',
+        confidenceScore: verification.passed ? 97 : 35,
+        intent: classified,
+        profileFilters,
+        source: null,
+        question: null,
+        markScheme: {
+          answerText: numericalPhysics.finalAnswer,
+          markPoints: numericalPhysics.markAllocation,
+          sourcePdfUrl: null,
+        },
+        sources: [],
+        chapterGap: null,
+        mathEngine: {
+          intent: 'numerical_physics',
+          exactAnswer: numericalPhysics.finalAnswer,
+          latex: numericalPhysics.latex ?? null,
+          usedSympy: false,
+        },
+        calculationVerification: verification,
+        visualLearning: {
+          graph: null,
+          diagram: null,
+        },
+        academicReasoning,
+        subjectWarning: subjectNotInProfile
+          ? `${subject} is not in your study profile. Add it in settings or search anyway.`
+          : null,
+      })
+    }
+
     const likelyMath = !classified.skippedChapter && isLikelyMathQuestion(`${subject ?? ''} ${classified.normalizedQuery}`)
     if (likelyMath) {
       const quickSources = await withFallbackTimeout(
@@ -216,15 +310,33 @@ export async function POST(req: Request) {
             topic: currentTopic,
             sources: quickSources,
           })
+          const calculationVerification = await verifyWithSympy({
+            question: classified.normalizedQuery,
+            category: 'math',
+            solverAnswer: mathResult.exactAnswer,
+            solverLatex: mathResult.latex ?? null,
+            solverFormulaPath: mathResult.working,
+            solverMarkAllocation: mathResult.working,
+          })
           const formattedMathAnswer = formatMathSolution(rawMessage, mathResult)
           return NextResponse.json({
             status: 'ai_reasoning',
-            answer: `${formattedMathAnswer}${formatReasoningOverlay(academicReasoning)}`,
-            response: `${formattedMathAnswer}${formatReasoningOverlay(academicReasoning)}`,
+            answer: `${formattedMathAnswer}\n\nCalculation check: ${
+              calculationVerification.passed
+                ? 'passed by independent SymPy verification.'
+                : `failed (${calculationVerification.failureTypes.join(', ')}).`
+            }${formatReasoningOverlay(academicReasoning)}`,
+            response: `${formattedMathAnswer}\n\nCalculation check: ${
+              calculationVerification.passed
+                ? 'passed by independent SymPy verification.'
+                : `failed (${calculationVerification.failureTypes.join(', ')}).`
+            }${formatReasoningOverlay(academicReasoning)}`,
             warning: 'No exact past paper match found. This is AI reasoning. Verify before exam.',
             confidence: 'AI_REASONING',
-            confidenceBadge: statusToBadge('ai_reasoning'),
-            confidenceScore: quickConfidence.confidence,
+            confidenceBadge: calculationVerification.passed
+              ? 'SYMPY CHECK PASSED - calculation verified'
+              : 'AI REASONING - SymPy mismatch detected',
+            confidenceScore: calculationVerification.passed ? Math.max(quickConfidence.confidence, 97) : quickConfidence.confidence,
             intent: classified,
             profileFilters,
             source: null,
@@ -238,6 +350,7 @@ export async function POST(req: Request) {
               latex: mathResult.latex ?? null,
               usedSympy: mathResult.usedSympy,
             },
+            calculationVerification,
             visualLearning: {
               graph: buildMathGraph(classified.normalizedQuery),
               diagram: diagramKind ? generateDiagramSpec(diagramKind, currentTopic) : null,
@@ -352,13 +465,27 @@ export async function POST(req: Request) {
       !chapterGap && strictConfidence.status !== 'verified' && isLikelyMathQuestion(`${subject ?? ''} ${classified.normalizedQuery}`)
         ? await solveWithSympy(classified.normalizedQuery)
         : null
+    const calculationVerification = mathResult
+      ? await verifyWithSympy({
+          question: classified.normalizedQuery,
+          category: 'math',
+          solverAnswer: mathResult.exactAnswer,
+          solverLatex: mathResult.latex ?? null,
+          solverFormulaPath: mathResult.working,
+          solverMarkAllocation: mathResult.working,
+        })
+      : null
     const diagramKind = suggestDiagramKind(`${classified.normalizedQuery} ${currentTopic}`)
     const graphSpec = isLikelyMathQuestion(classified.normalizedQuery) ? buildMathGraph(classified.normalizedQuery) : null
     const diagramSpec = diagramKind ? generateDiagramSpec(diagramKind, currentTopic) : null
     const answer = chapterGap
       ? adaptedGapAnswer(currentTopic, chapterGap.skippedTopic)
       : mathResult
-        ? `${formatMathSolution(rawMessage, mathResult)}${formatReasoningOverlay(academicReasoning)}`
+        ? `${formatMathSolution(rawMessage, mathResult)}\n\nCalculation check: ${
+            calculationVerification?.passed
+              ? 'passed by independent SymPy verification.'
+              : `failed (${calculationVerification?.failureTypes.join(', ') || 'unsupported_ground_truth'}).`
+          }${formatReasoningOverlay(academicReasoning)}`
         : `${solved.answer}${formatReasoningOverlay(academicReasoning)}`
 
     return NextResponse.json({
@@ -367,8 +494,10 @@ export async function POST(req: Request) {
       response: answer,
       warning: strictConfidence.warning,
       confidence: strictConfidence.status === 'verified' ? 'VERIFIED' : strictConfidence.status === 'partial' ? 'PARTIAL' : 'AI_REASONING',
-      confidenceBadge: statusToBadge(strictConfidence.status),
-      confidenceScore: strictConfidence.confidence,
+      confidenceBadge: calculationVerification?.passed
+        ? 'SYMPY CHECK PASSED - calculation verified'
+        : statusToBadge(strictConfidence.status),
+      confidenceScore: calculationVerification?.passed ? Math.max(strictConfidence.confidence, 97) : strictConfidence.confidence,
       intent: classified,
       profileFilters: {
         board: classified.board ?? profile.preferredBoard,
@@ -400,6 +529,7 @@ export async function POST(req: Request) {
             usedSympy: mathResult.usedSympy,
           }
         : null,
+      calculationVerification,
       visualLearning: {
         graph: graphSpec,
         diagram: diagramSpec,

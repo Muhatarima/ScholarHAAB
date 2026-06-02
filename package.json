@@ -18,6 +18,8 @@
     "test:learning-system": "node scripts/verify_learning_system.mjs",
     "test:intelligence-layer": "node scripts/verify_intelligence_layer.mjs",
     "test:dashboard-system": "node scripts/verify_dashboard_system.mjs",
+    "test:academic-torture": "ts-node --transpile-only scripts/academic_torture_gate.ts",
+    "accuracy:monitor": "ts-node --transpile-only scripts/accuracy_monitor.ts",
     "test:regressions": "node scripts/run_regression_checks.mjs",
     "eval:rag": "ts-node-script --transpile-only scripts/rag_eval.ts",
     "qa": "ts-node --transpile-only scripts/auto_qa.ts",

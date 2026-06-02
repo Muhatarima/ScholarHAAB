@@ -1,0 +1,52 @@
+[
+  {
+    "id": "math_hard_diff_001",
+    "subject": "Mathematics",
+    "category": "math",
+    "topic": "Differentiation",
+    "question": "differentiate y = x^3 + 2*x",
+    "expectedUnit": null,
+    "expectedFormulaPath": ["differentiate", "power rule"],
+    "expectedMarkAllocation": ["method", "answer"]
+  },
+  {
+    "id": "math_hard_int_001",
+    "subject": "Mathematics",
+    "category": "math",
+    "topic": "Integration",
+    "question": "integrate x^2 from 0 to 3",
+    "expectedUnit": null,
+    "expectedFormulaPath": ["integrate", "power rule"],
+    "expectedMarkAllocation": ["method", "substitution", "answer"]
+  },
+  {
+    "id": "math_hard_product_001",
+    "subject": "Mathematics",
+    "category": "math",
+    "topic": "Product rule",
+    "question": "dy/dx of x^2 sinx",
+    "expectedUnit": null,
+    "expectedFormulaPath": ["product rule", "differentiate"],
+    "expectedMarkAllocation": ["method", "answer"]
+  },
+  {
+    "id": "physics_hard_suvat_001",
+    "subject": "Physics",
+    "category": "numerical_physics",
+    "topic": "Projectile motion",
+    "question": "A ball is thrown vertically upwards at 20 m/s. Find maximum height.",
+    "expectedUnit": "m",
+    "expectedFormulaPath": ["v^2 = u^2 + 2as"],
+    "expectedMarkAllocation": ["formula", "substitution", "answer", "unit"]
+  },
+  {
+    "id": "physics_hard_energy_001",
+    "subject": "Physics",
+    "category": "numerical_physics",
+    "topic": "Kinetic energy",
+    "question": "Calculate the kinetic energy of a 4 kg object moving at 6 m/s.",
+    "expectedUnit": "J",
+    "expectedFormulaPath": ["E_k = 1/2 mv^2"],
+    "expectedMarkAllocation": ["formula", "substitution", "answer", "unit"]
+  }
+]

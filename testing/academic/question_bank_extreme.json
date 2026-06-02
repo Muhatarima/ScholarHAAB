@@ -1,0 +1,32 @@
+[
+  {
+    "id": "math_extreme_graph_001",
+    "subject": "Mathematics",
+    "category": "graph",
+    "topic": "Graph validation",
+    "question": "graph y = x^2 - 2*x",
+    "expectedUnit": null,
+    "expectedFormulaPath": ["sample function values with SymPy"],
+    "expectedMarkAllocation": ["axis", "scale", "points"]
+  },
+  {
+    "id": "physics_extreme_car_001",
+    "subject": "Physics",
+    "category": "numerical_physics",
+    "topic": "Forces and energy",
+    "question": "A car of mass 1200 kg accelerates from rest to 30 m/s in 10 seconds. Calculate acceleration, net force and kinetic energy.",
+    "expectedUnit": "J",
+    "expectedFormulaPath": ["a = (v-u)/t", "F = ma", "E_k = 1/2 mv^2"],
+    "expectedMarkAllocation": ["acceleration", "force", "energy", "units"]
+  },
+  {
+    "id": "physics_extreme_ohm_001",
+    "subject": "Physics",
+    "category": "numerical_physics",
+    "topic": "Electricity",
+    "question": "A circuit has a voltage of 12 V and current of 3 A. Find resistance.",
+    "expectedUnit": "ohm",
+    "expectedFormulaPath": ["V = IR", "R = V / I"],
+    "expectedMarkAllocation": ["formula", "rearrangement", "answer", "unit"]
+  }
+]
