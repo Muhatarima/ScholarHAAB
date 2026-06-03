@@ -5,9 +5,6 @@ import { calculateConfidence } from '@/lib/rag/calculateConfidence'
 import { analyzeQuestion, type QuestionAnalysis } from '@/lib/paper-solver/questionAnalyzer'
 import { retrievePatterns, type PatternRetrievalResult } from '@/lib/paper-solver/patternRetriever'
 import { retrieveMarkSchemePattern, type MarkSchemePattern } from '@/lib/paper-solver/markSchemePatternRetriever'
-import { retrieveSolverFormulas } from '@/lib/paper-solver/formulaRetriever'
-import { retrieveSolverTheory } from '@/lib/paper-solver/theoryRetriever'
-import { retrieveSyllabusObjectives } from '@/lib/paper-solver/syllabusRetriever'
 import { classifySolverConfidence, type ConfidenceClassification } from '@/lib/paper-solver/confidenceClassifier'
 import { solveUnknownQuestion } from '@/lib/paper-solver/unknownQuestionSolver'
 import { composeReasonedSolution, composeVerifiedSolution, type SourceBasis } from '@/lib/paper-solver/solutionComposer'
@@ -15,6 +12,8 @@ import type { FormulaRetrieval } from '@/lib/rag/retrieveFormula'
 import type { TheoryRetrieval } from '@/lib/rag/retrieveTheory'
 import type { SpecificationRetrieval } from '@/lib/rag/retrieveSpecification'
 import type { ExaminerSolution } from '@/lib/paper-solver/examinerSolver'
+import { routeKnowledge } from '@/lib/knowledge/knowledgeRouter'
+import type { KnowledgeRouterResult } from '@/lib/knowledge/types'
 
 export type PaperSolveProfile = {
   board?: string | null
@@ -37,6 +36,7 @@ export type PatternSolveResult = {
   formulas: FormulaRetrieval[]
   theory: TheoryRetrieval[]
   syllabus: SpecificationRetrieval[]
+  knowledge: KnowledgeRouterResult | null
   sourceBasis: SourceBasis
   reasoningSteps: string[]
   markSchemePoints: string[]
@@ -44,6 +44,43 @@ export type PatternSolveResult = {
   commonMistake: string
   practiceNext: string
   examinerSolution: ExaminerSolution | null
+}
+
+function formulaFromKnowledge(items: KnowledgeRouterResult['formulas']): FormulaRetrieval[] {
+  return items.map((item) => ({
+    formula: item.formula,
+    topic: item.topic,
+    subject: item.subject,
+    meaning: item.meaning,
+    units: item.units,
+    commonMistake: item.commonMistake,
+    source: item.source === 'database' ? 'formula_bank' : 'local_knowledge',
+  }))
+}
+
+function theoryFromKnowledge(items: KnowledgeRouterResult['theory']): TheoryRetrieval[] {
+  return items.map((item) => ({
+    subject: item.subject,
+    chapter: item.chapter,
+    topic: item.topic,
+    shortExplanation: item.shortExplanation,
+    detailedExplanation: item.detailedExplanation,
+    examKeywords: item.examKeywords,
+    misconceptions: item.commonMisconceptions,
+    source: item.source === 'database' ? 'theory_bank' : 'local_knowledge',
+  }))
+}
+
+function syllabusFromKnowledge(items: KnowledgeRouterResult['syllabus']): SpecificationRetrieval[] {
+  return items.map((item) => ({
+    board: item.board,
+    level: item.level,
+    subject: item.subject,
+    chapter: item.chapter ?? '',
+    topic: item.topic,
+    learningObjectives: item.learningObjectives,
+    specificationRef: item.specificationRef,
+  }))
 }
 
 function selectedSubject(analysis: QuestionAnalysis, profile: PaperSolveProfile) {
@@ -118,6 +155,7 @@ export async function solveWithPatternPipeline(input: {
       formulas: [],
       theory: [],
       syllabus: [],
+      knowledge: null,
       sourceBasis: composed.sourceBasis,
       reasoningSteps: composed.reasoningSteps,
       markSchemePoints: composed.markSchemePoints,
@@ -128,19 +166,21 @@ export async function solveWithPatternPipeline(input: {
     }
   }
 
-  const [patterns, formulas, theory, syllabus] = await Promise.all([
+  const [patterns, knowledge] = await Promise.all([
     retrievePatterns(analysis, {
       board: input.profile.board ?? undefined,
       level: input.profile.level ?? undefined,
       subject: selectedSubject(analysis, input.profile),
     }),
-    retrieveSolverFormulas(analysis),
-    retrieveSolverTheory(analysis),
-    retrieveSyllabusObjectives(analysis, {
+    routeKnowledge(analysis, {
       board: input.profile.board ?? undefined,
       level: input.profile.level ?? undefined,
+      subject: selectedSubject(analysis, input.profile),
     }),
   ])
+  const formulas = formulaFromKnowledge(knowledge.formulas)
+  const theory = theoryFromKnowledge(knowledge.theory)
+  const syllabus = syllabusFromKnowledge(knowledge.syllabus)
   const markSchemePattern = await retrieveMarkSchemePattern(analysis, patterns)
   const examinerSolution = await solveUnknownQuestion({
     analysis,
@@ -187,6 +227,7 @@ export async function solveWithPatternPipeline(input: {
     formulas,
     theory,
     syllabus,
+    knowledge,
     sourceBasis: composed.sourceBasis,
     reasoningSteps: composed.reasoningSteps,
     markSchemePoints: composed.markSchemePoints,

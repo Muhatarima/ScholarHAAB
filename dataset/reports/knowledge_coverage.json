@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-06-03T03:57:28.785Z",
+  "honesty_notice": "No permitted knowledge rows imported yet. Do not claim academic coverage.",
+  "subjects_covered": [],
+  "formulas_per_subject": {},
+  "theory_topics_per_subject": {},
+  "syllabus_topics_per_board": {},
+  "misconception_count": 0,
+  "concept_graph_nodes": 0,
+  "public_dataset_chunks": 0,
+  "missing_chapters": [],
+  "missing_topics": [],
+  "review_required_sources": 0,
+  "totals": {
+    "formula_bank": 0,
+    "theory_bank": 0,
+    "syllabus_topics": 0,
+    "concept_graph": 0,
+    "misconception_bank": 0,
+    "public_education_chunks": 0
+  }
+}

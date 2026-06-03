@@ -7,6 +7,16 @@ export const DATASET_ROOT = path.resolve(process.cwd(), 'dataset')
 export type PaperType = 'qp' | 'ms' | 'er' | 'syllabus' | 'textbook_allowed' | 'formula' | 'theory'
 export type LicenseStatus = 'permitted' | 'user_provided' | 'blocked' | 'unknown'
 export type AllowedStatus = 'allowed' | 'blocked' | 'needs_review'
+export type SourceType =
+  | 'past_paper'
+  | 'mark_scheme'
+  | 'syllabus'
+  | 'formula'
+  | 'theory'
+  | 'concept_graph'
+  | 'misconception'
+  | 'public_dataset'
+  | 'manual'
 
 export type AcademicSource = {
   url: string
@@ -21,6 +31,8 @@ export type AcademicSource = {
   allowed_status: AllowedStatus
   notes: string
   local_path?: string
+  source_type?: SourceType
+  license?: string
 }
 
 export type DownloadLog = {
@@ -56,6 +68,8 @@ export function ensureDatasetDirs() {
     'raw/cambridge/a-level',
     'raw/edexcel/o-level',
     'raw/edexcel/a-level',
+    'sources',
+    'cleaned',
     'processed',
     'manifests',
     'logs',
@@ -65,6 +79,29 @@ export function ensureDatasetDirs() {
     'embeddings',
     'reports',
   ].forEach((dir) => ensureDir(path.join(DATASET_ROOT, dir)))
+}
+
+export function readJson<T>(filePath: string, fallback: T): T {
+  if (!fs.existsSync(filePath)) return fallback
+  return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T
+}
+
+export function licenseAllowed(value: unknown) {
+  const text = String(value ?? '').toLowerCase()
+  if (!text || text === 'unknown' || text.includes('review')) return false
+  return [
+    'cc0',
+    'cc-by',
+    'cc by',
+    'creative commons',
+    'mit',
+    'apache',
+    'public domain',
+    'user_provided',
+    'user provided',
+    'permitted',
+    'open government',
+  ].some((allowed) => text.includes(allowed))
 }
 
 export function jsonlPath(relativePath: string) {

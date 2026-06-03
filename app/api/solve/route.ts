@@ -183,6 +183,11 @@ export async function POST(req: Request) {
         formulas: solved.formulas,
         theory: solved.theory,
         syllabus: solved.syllabus,
+        conceptGraph: solved.knowledge?.concepts ?? [],
+        misconceptions: solved.knowledge?.misconceptions ?? [],
+        publicEducation: solved.knowledge?.publicEducation ?? [],
+        knowledgeRoute: solved.knowledge?.route ?? null,
+        knowledgeNotes: solved.knowledge?.notes ?? [],
       },
       calculationVerification,
       mathEngine: solved.examinerSolution?.mathResult
