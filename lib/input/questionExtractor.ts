@@ -32,7 +32,9 @@ const TOPIC_KEYWORDS: Array<[RegExp, string]> = [
   [/\bphotosynthesis\b/i, 'Photosynthesis'],
   [/\bwork done\b|\bwork\b/i, 'Work, Energy and Power'],
   [/\breaction rate\b|\brates\b/i, 'Rates of Reaction'],
-  [/\bmagnetism\b|\belectromagnetic\b|\binduction\b/i, 'Electromagnetic Induction']
+  [/\bmagnetism\b|\bmagnetic\s+field\b/i, 'Magnetism'],
+  [/\belectromagnetic\s+induction\b|\bfaraday\b|\bflux\s+linkage\b|\binduced\s+emf\b/i, 'Electromagnetic Induction'],
+  [/\belectromagnetic\b/i, 'Electromagnetism'],
 ]
 
 export function extractQuestionDetails(rawInput: string): ExtractedQuestion {

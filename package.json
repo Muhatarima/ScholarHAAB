@@ -12,6 +12,8 @@
     "dataset:download": "ts-node --transpile-only scripts/download_papers.ts",
     "dataset:manifest": "ts-node --transpile-only scripts/build_manifest.ts",
     "dataset:coverage": "ts-node --transpile-only scripts/audit_coverage.ts",
+    "dataset:audit": "ts-node --transpile-only audits/run_dataset_audit.ts",
+    "test:ocr": "ts-node --transpile-only testing/input/ocr_accuracy_test.ts",
     "dataset:extract-text": "ts-node --transpile-only scripts/extract_pdf_text.ts",
     "dataset:tag": "ts-node --transpile-only scripts/tag_topics.ts",
     "dataset:embed": "ts-node --transpile-only scripts/embed_dataset.ts",

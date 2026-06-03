@@ -5,6 +5,7 @@ import JSZip from 'jszip'
 import mammoth from 'mammoth'
 import type { AiInputPart } from '@/lib/ai-service'
 import type { PDFParse as PDFParseClass } from 'pdf-parse'
+import { processImageBuffer, processPdfBuffer } from '@/lib/input/multimodalProcessor'
 
 export type ChatFilePayload = {
   fileBase64?: string | null
@@ -25,9 +26,11 @@ export type UploadedFileTrace = {
   sizeBytes: number
   extractionStrategy:
     | 'image_inline_only'
+    | 'image_ocr_text'
     | 'image_svg_text'
     | 'pdf_text_only'
     | 'pdf_text_plus_inline'
+    | 'pdf_ocr_text'
     | 'pdf_inline_only'
     | 'document_text'
     | 'spreadsheet_text'
@@ -536,9 +539,41 @@ export async function prepareUploadedFiles(files: NormalizedChatFile[]): Promise
           text: svgText,
         })
       } else {
-        extractionStrategy = 'image_inline_only'
-        hasInlineOnlyEvidence = true
-        fileWarnings.push('No reliable OCR text was extracted. This answer depends on native image inspection.')
+        try {
+          const multimodal = await processImageBuffer({
+            buffer,
+            mimeType: fileType || 'image/png',
+            fileName,
+          })
+          const ocrText = multimodal.rawText.trim()
+          if (ocrText && ocrText.length > 20) {
+            extractedChars = ocrText.length
+            extractionStrategy = 'image_ocr_text'
+            extractedTextParts.push({
+              text: `Attachment OCR text: ${fileName}\n${ocrText}`,
+            })
+            fileChunks = buildChunkObjects({
+              fileName,
+              fileType,
+              page: 1,
+              section: 'ocr',
+              text: ocrText,
+            })
+            if (multimodal.warnings.length) {
+              fileWarnings.push(...multimodal.warnings)
+            }
+          } else {
+            extractionStrategy = 'image_inline_only'
+            hasInlineOnlyEvidence = true
+            fileWarnings.push(
+              'OCR confidence was low. Answer may depend on native image inspection.'
+            )
+          }
+        } catch {
+          extractionStrategy = 'image_inline_only'
+          hasInlineOnlyEvidence = true
+          fileWarnings.push('OCR failed. This answer depends on native image inspection.')
+        }
       }
     } else if (isPdfFile(fileType, fileName)) {
       const { pages, pageCount: extractedPageCount } = await extractPdfPages(buffer)
@@ -573,9 +608,33 @@ export async function prepareUploadedFiles(files: NormalizedChatFile[]): Promise
           )
         }
       } else {
-        extractionStrategy = 'pdf_inline_only'
-        hasInlineOnlyEvidence = true
-        fileWarnings.push('PDF text extraction failed. The answer depends on native PDF inspection.')
+        try {
+          const multimodal = await processPdfBuffer(buffer)
+          const ocrText = multimodal.rawText.trim()
+          if (ocrText.length > 30) {
+            extractionStrategy = 'pdf_ocr_text'
+            extractedChars = ocrText.length
+            extractedTextParts.push({
+              text: `Attachment OCR text: ${fileName}\n${ocrText}`,
+            })
+            fileChunks = buildChunkObjects({
+              fileName,
+              fileType,
+              page: 1,
+              section: 'ocr',
+              text: ocrText,
+            })
+            fileWarnings.push(...multimodal.warnings)
+          } else {
+            extractionStrategy = 'pdf_inline_only'
+            hasInlineOnlyEvidence = true
+            fileWarnings.push('PDF text extraction failed. The answer depends on native PDF inspection.')
+          }
+        } catch {
+          extractionStrategy = 'pdf_inline_only'
+          hasInlineOnlyEvidence = true
+          fileWarnings.push('PDF OCR failed. The answer depends on native PDF inspection.')
+        }
       }
     } else if (isWordFile(fileType, fileName)) {
       const text = await extractWordText(buffer)

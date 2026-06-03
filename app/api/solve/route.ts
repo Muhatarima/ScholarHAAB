@@ -8,7 +8,13 @@ import { validateQuestion } from '@/lib/validation/inputValidator'
 import { getStudentProfile } from '@/lib/server/profile'
 import { classifyIntent } from '@/lib/rag/classifyIntent'
 import { trackLearningGap, trackSolvedTopic } from '@/lib/progress/autoTrack'
-import { solveWithPatternPipeline } from '@/lib/paper-solver/solvePipeline'
+import { runScholarPipeline } from '@/lib/pipeline/scholarPipeline'
+import type { PatternSolveResult } from '@/lib/paper-solver/solvePipeline'
+import {
+  normalizeChatFilesPayload,
+  prepareUploadedFiles,
+  type ChatFilePayload,
+} from '@/lib/server/file-input'
 
 function isUuid(value: string | undefined): value is string {
   return Boolean(value && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
@@ -47,7 +53,7 @@ function panicAnswer(topic: string | null) {
   ].join('\n')
 }
 
-function sourceFromResult(result: NonNullable<Awaited<ReturnType<typeof solveWithPatternPipeline>>['exactResult']>) {
+function sourceFromResult(result: NonNullable<PatternSolveResult['exactResult']>) {
   return {
     board: result.board,
     level: result.level,
@@ -61,7 +67,7 @@ function sourceFromResult(result: NonNullable<Awaited<ReturnType<typeof solveWit
   }
 }
 
-function citationSources(result: Awaited<ReturnType<typeof solveWithPatternPipeline>>) {
+function citationSources(result: PatternSolveResult) {
   if (result.exactResult) return [sourceFromResult(result.exactResult)]
   return result.patterns.similarQuestions.slice(0, 3).map(sourceFromResult)
 }
@@ -71,8 +77,43 @@ export async function POST(req: Request) {
   if (authError) return authError
 
   try {
-    const body = (await req.json()) as Record<string, unknown>
-    const rawMessage = validateQuestion(String(body.message ?? body.question ?? ''))
+    const body = (await req.json()) as Record<string, unknown> & ChatFilePayload
+    let rawMessage = validateQuestion(String(body.message ?? body.question ?? ''))
+
+    const filePayload: ChatFilePayload = {
+      fileBase64: typeof body.fileBase64 === 'string' ? body.fileBase64 : null,
+      fileType: typeof body.fileType === 'string' ? body.fileType : null,
+      fileName: typeof body.fileName === 'string' ? body.fileName : null,
+      files: body.files,
+    }
+
+    let pipelineImage: { buffer: Buffer; mimeType: string; fileName: string } | undefined
+    let pipelinePdf: Buffer | undefined
+
+    try {
+      const normalizedFiles = normalizeChatFilesPayload(filePayload)
+      if (normalizedFiles.length > 0) {
+        const prepared = await prepareUploadedFiles(normalizedFiles)
+        const ocrChunks = prepared.chunks.map((c) => c.content).filter(Boolean)
+        if (ocrChunks.length) {
+          rawMessage = [rawMessage, ...ocrChunks].filter(Boolean).join('\n\n')
+        }
+        const first = normalizedFiles[0]
+        const buffer = Buffer.from(first.fileBase64, 'base64')
+        if (first.fileType.includes('pdf') || first.fileName.toLowerCase().endsWith('.pdf')) {
+          pipelinePdf = buffer
+        } else if (first.fileType.startsWith('image/')) {
+          pipelineImage = {
+            buffer,
+            mimeType: first.fileType,
+            fileName: first.fileName,
+          }
+        }
+      }
+    } catch {
+      // attachments optional
+    }
+
     const profile = await loadProfile(user?.id)
     const classified = classifyIntent(rawMessage)
     const bodySubject = typeof body.subject === 'string' ? body.subject : undefined
@@ -100,18 +141,44 @@ export async function POST(req: Request) {
     const subjectNotInProfile =
       subject && profileSubjects.length > 0 && !profileSubjects.some((item) => item.toLowerCase() === subject.toLowerCase())
 
-    const solved = await solveWithPatternPipeline({
-      question: rawMessage,
+    const pipeline = await runScholarPipeline({
+      text: pipelineImage || pipelinePdf ? undefined : rawMessage,
+      image: pipelineImage,
+      pdf: pipelinePdf,
       profile: profileFilters,
     })
-    const topic = solved.analysis.topic ?? solved.analysis.chapter ?? solved.analysis.subtopic ?? 'General'
-    const solvedSubject = solved.analysis.subject ?? subject ?? 'General'
+    const solved = pipeline.solve
+    const analysis = pipeline.understanding.analysis
+    const topic = analysis.topic ?? analysis.chapter ?? analysis.subtopic ?? 'General'
+    const solvedSubject = analysis.subject ?? subject ?? 'General'
+    const answerText = pipeline.answer
 
-    if (solved.analysis.skippedChapter) {
+    if (!solved) {
+      return NextResponse.json({
+        status: pipeline.understanding.mode === 'repeated_questions' ? 'pattern_based' : 'ai_reasoning',
+        answer: answerText,
+        response: answerText,
+        intent: pipeline.understanding.intent,
+        confidence: pipeline.confidence,
+        confidenceBadge: 'AI REASONING - theory/pattern tutor mode',
+        confidenceScore: pipeline.confidenceScore,
+        pipelineTrace: pipeline.pipelineTrace,
+        understanding: {
+          mode: pipeline.understanding.mode,
+          repeated: pipeline.understanding.repeated ?? null,
+          explain: pipeline.understanding.explain
+            ? { topic: pipeline.understanding.explain.topic, subject: pipeline.understanding.explain.subject }
+            : null,
+        },
+        profileFilters,
+      })
+    }
+
+    if (analysis.skippedChapter) {
       await trackLearningGap({
         userId: user?.id ?? 'test-anonymous-user',
         subject: solvedSubject,
-        skippedChapter: solved.analysis.skippedChapter,
+        skippedChapter: analysis.skippedChapter,
         currentTopic: topic,
         detectedFromMessage: rawMessage,
         profile: {
@@ -124,7 +191,9 @@ export async function POST(req: Request) {
         userId: user?.id ?? 'test-anonymous-user',
         subject: solvedSubject,
         topic,
-        isCorrect: solved.status === 'verified' || Boolean(solved.examinerSolution?.calculationVerification?.passed),
+        isCorrect:
+          solved.status === 'verified' ||
+          Boolean(solved.examinerSolution?.calculationVerification?.passed),
         confidenceScore: solved.confidenceScore,
         profile: {
           board: profile.preferredBoard,
@@ -133,11 +202,11 @@ export async function POST(req: Request) {
       })
     }
 
-    const chapterGap = solved.analysis.skippedChapter
+    const chapterGap = analysis.skippedChapter
       ? {
-          skippedTopic: solved.analysis.skippedChapter,
+          skippedTopic: analysis.skippedChapter,
           currentTopic: topic,
-          recommendation: `No worries. I will avoid ${solved.analysis.skippedChapter} and explain ${topic} from a safer foundation route.`,
+          recommendation: `No worries. I will avoid ${analysis.skippedChapter} and explain ${topic} from a safer foundation route.`,
         }
       : null
     const sources = citationSources(solved)
@@ -146,8 +215,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       status: solved.status,
-      answer: solved.answer,
-      response: solved.response,
+      answer: answerText,
+      response: answerText,
+      pipelineTrace: pipeline.pipelineTrace,
+      ocrAccuracyEstimate: pipeline.multimodal?.ocrAccuracyEstimate ?? null,
       warning: solved.warning,
       confidence: solved.confidence,
       confidenceBadge: solved.confidenceBadge,
@@ -161,11 +232,12 @@ export async function POST(req: Request) {
       practiceNext: solved.practiceNext,
       intent: {
         ...classified,
-        commandWord: solved.analysis.commandWord,
-        questionType: solved.analysis.questionType,
-        concepts: solved.analysis.concepts,
-        formulasNeeded: solved.analysis.formulasNeeded,
+        commandWord: analysis.commandWord,
+        questionType: analysis.questionType,
+        concepts: analysis.concepts,
+        formulasNeeded: analysis.formulasNeeded,
       },
+      understandingMode: pipeline.understanding.mode,
       profileFilters,
       source,
       question: solved.exactResult?.question_text ?? null,

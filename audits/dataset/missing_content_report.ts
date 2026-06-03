@@ -1,160 +1,254 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import { jsonlPath, readJsonl, writeJson } from '../../scripts/dataset_common'
+import {
+  evaluateDatasetQuality,
+  type QualityResult,
+  type DatasetQualityMeta,
+} from '@/lib/dataset/qualityGate'
 
-export type QualityResult = {
-  name: string
-  score: number
-  licenseOk: boolean
-  relevanceOk: boolean
-  subjectOk: boolean
-  boardOk: boolean
-  dedupedOk: boolean
-  passed: boolean
-  details: string
+export type { QualityResult, DatasetQualityMeta }
+export { evaluateDatasetQuality }
+
+export type SyllabusTopicRow = {
+  subject: string
+  topic: string
+  chapter?: string | null
+  board?: string | null
+  level?: string | null
+}
+
+export type KnowledgeBankCounts = {
+  subject: string
+  formulaCount: number
+  theoryCount: number
+  topicCount: number
+  misconceptionCount: number
+  chapterCount: number
+  coveredTopics: string[]
 }
 
 export type KnowledgeAuditReport = {
   generatedAt: string
-  subjects: Record<string, {
-    chapterCount: number
-    topicCount: number
-    formulaCount: number
-    theoryCount: number
-    misconceptionCount: number
-    missingTopics: string[]
-  }>
+  complete: boolean
+  subjects: Record<
+    string,
+    {
+      chapterCount: number
+      topicCount: number
+      formulaCount: number
+      theoryCount: number
+      misconceptionCount: number
+      missingTopics: string[]
+      flagged: boolean
+    }
+  >
   totals: {
     formulaCount: number
     theoryCount: number
     topicCount: number
     misconceptionCount: number
+    missingTopicCount: number
   }
 }
 
-// Enforces Dataset Quality Score (0-100, reject <70)
-export function evaluateDatasetQuality(meta: {
-  name: string
-  license: string
-  relevance: boolean
-  subjectMapped: boolean
-  boardSupported: boolean
-  hasDuplicates: boolean
-}): QualityResult {
-  let score = 0
-  
-  // 1. License Check (permitted / user-provided)
-  const licenseLower = String(meta.license || '').toLowerCase()
-  const isPermitted = [
-    'cc0', 'cc-by', 'cc by', 'creative commons', 'mit', 'apache',
-    'public domain', 'user_provided', 'user provided', 'permitted', 'open government'
-  ].some(term => licenseLower.includes(term))
-
-  if (isPermitted) score += 30
-
-  // 2. Educational Relevance
-  if (meta.relevance) score += 20
-
-  // 3. Subject Mapping
-  if (meta.subjectMapped) score += 20
-
-  // 4. Board Compatibility
-  if (meta.boardSupported) score += 15
-
-  // 5. Deduplication verification
-  if (!meta.hasDuplicates) score += 15
-
-  const passed = score >= 70 && isPermitted
-
-  return {
-    name: meta.name,
-    score,
-    licenseOk: isPermitted,
-    relevanceOk: meta.relevance,
-    subjectOk: meta.subjectMapped,
-    boardOk: meta.boardSupported,
-    dedupedOk: !meta.hasDuplicates,
-    passed,
-    details: `Dataset Score: ${score}/100. License status: ${isPermitted ? 'Permitted' : 'Rejected'}.`
-  }
+const FALLBACK_SYLLABUS: Record<string, string[]> = {
+  Physics: [
+    'Wave Motion',
+    'Forces and Motion',
+    'Work, Energy and Power',
+    'Electromagnetism',
+    'Magnetism',
+    'Electromagnetic Induction',
+    'Thermal Physics',
+    'Radioactivity',
+    'Astrophysics',
+  ],
+  Chemistry: [
+    'Chemical Bonding',
+    'Organic Chemistry',
+    'Rates of Reaction',
+    'Energetics',
+    'Stoichiometry',
+    'Equilibrium',
+    'Electrochemistry',
+  ],
+  Biology: [
+    'Photosynthesis',
+    'Cell Structure',
+    'Enzymes',
+    'Osmosis and Diffusion',
+    'Respiration',
+    'Genetics',
+    'Ecology',
+  ],
+  Mathematics: [
+    'Integration',
+    'Differentiation',
+    'Algebra',
+    'Vectors',
+    'Probability',
+    'Trigonometric Differentiation',
+    'Differential Equations',
+  ],
+  Economics: [
+    'Law of Demand',
+    'Market Structure',
+    'Inflation',
+    'Fiscal Policy',
+    'Monetary Policy',
+    'International Trade',
+  ],
+  Accounting: ['Ledgers', 'Balance Sheet', 'Profit and Loss', 'Depreciation', 'Cost Accounting'],
+  Business: ['Leadership Styles', 'USP', 'Liquidity', 'Human Resource Management', 'Marketing Mix'],
+  'Computer Science': [
+    'Binary Arithmetic',
+    'Data Structures',
+    'Database Design',
+    'Networking',
+    'Boolean Logic',
+  ],
+  English: ['Reading Comprehension', 'Essay Writing', 'Grammar', 'Literary Analysis'],
 }
 
-// Generate missing topics report based on expected vs actual syllabus topics
-export function auditKnowledgeCoverage(dbQuestions: any[]): {
-  report: KnowledgeAuditReport
-  missingReport: { missingTopics: string[] }
-} {
-  const subjects = [
-    'Physics', 'Chemistry', 'Biology', 'Mathematics', 'Further Mathematics',
-    'Accounting', 'Economics', 'Business', 'ICT', 'Computer Science', 'English'
-  ]
+function topicCovered(expected: string, actualTopics: string[]) {
+  const needle = expected.toLowerCase()
+  return actualTopics.some(
+    (t) => t.toLowerCase().includes(needle) || needle.includes(t.toLowerCase())
+  )
+}
+
+export function auditKnowledgeCoverageFromSyllabus(input: {
+  syllabusTopics: SyllabusTopicRow[]
+  bankCounts: KnowledgeBankCounts[]
+}): { report: KnowledgeAuditReport; missingReport: { missingTopics: string[]; complete: boolean } } {
+  const expectedBySubject = new Map<string, Set<string>>()
+
+  for (const row of input.syllabusTopics) {
+    const set = expectedBySubject.get(row.subject) ?? new Set<string>()
+    set.add(row.topic)
+    if (row.chapter) set.add(row.chapter)
+    expectedBySubject.set(row.subject, set)
+  }
+
+  for (const [subject, topics] of Object.entries(FALLBACK_SYLLABUS)) {
+    if (!expectedBySubject.has(subject)) {
+      expectedBySubject.set(subject, new Set(topics))
+    }
+  }
 
   const resultSubjects: KnowledgeAuditReport['subjects'] = {}
   let totalFormulas = 0
   let totalTheory = 0
   let totalTopics = 0
   let totalMisconceptions = 0
+  let missingTopicCount = 0
+  const allMissing: string[] = []
 
-  // Seed expected topics if not present
-  const expectedSyllabusTopics: Record<string, string[]> = {
-    'Physics': ['Wave Motion', 'Forces and Motion', 'Work, Energy and Power', 'Electromagnetism', 'Thermal Physics', 'Radioactivity', 'Astrophysics'],
-    'Chemistry': ['Chemical Bonding', 'Organic Chemistry', 'Rates of Reaction', 'Energetics', 'Stoichiometry', 'Equilibrium', 'Electrochemistry'],
-    'Biology': ['Photosynthesis', 'Cell Structure', 'Enzymes', 'Osmosis and Diffusion', 'Respiration', 'Genetics', 'Ecology'],
-    'Mathematics': ['Integration', 'Differentiation', 'Algebra', 'Vectors', 'Probability', 'Trigonometric Differentiation', 'Differential Equations'],
-    'Economics': ['Law of Demand', 'Market Structure', 'Inflation', 'Fiscal Policy', 'Monetary Policy', 'International Trade'],
-    'Accounting': ['Ledgers', 'Balance Sheet', 'Profit and Loss', 'Depreciation', 'Cost Accounting'],
-    'Business': ['Leadership Styles', 'USP', 'Liquidity', 'Human Resource Management', 'Marketing Mix'],
-    'Computer Science': ['Binary Arithmetic', 'Data Structures', 'Database Design', 'Networking', 'Boolean Logic'],
-    'English': ['Reading Comprehension', 'Essay Writing', 'Grammar', 'Literary Analysis']
-  }
+  const subjects = Array.from(
+    new Set([
+      ...input.bankCounts.map((b) => b.subject),
+      ...Array.from(expectedBySubject.keys()),
+    ])
+  )
 
-  for (const sub of subjects) {
-    // Filter questions by subject
-    const subRows = dbQuestions.filter(q => String(q.subject || '').toLowerCase() === sub.toLowerCase())
-    
-    // Extrapolate counts from resource types
-    const formulas = subRows.filter(q => q.resource_type === 'formula' || q.resource_type === 'concept' && /formula|equation/i.test(q.content || ''))
-    const theory = subRows.filter(q => ['theory', 'concept', 'concept_guide'].includes(q.resource_type))
-    const misconceptions = subRows.filter(q => q.resource_type === 'concept' && /misconception|trap|common error/i.test(q.content || ''))
+  for (const subject of subjects) {
+    const counts =
+      input.bankCounts.find((b) => b.subject.toLowerCase() === subject.toLowerCase()) ?? {
+        subject,
+        formulaCount: 0,
+        theoryCount: 0,
+        topicCount: 0,
+        misconceptionCount: 0,
+        chapterCount: 0,
+        coveredTopics: [],
+      }
 
-    // Unique topics
-    const uniqueTopics = Array.from(new Set(subRows.map(q => q.topic).filter(Boolean))) as string[]
+    const expected = Array.from(expectedBySubject.get(subject) ?? [])
+    const missingTopics = expected.filter((t) => !topicCovered(t, counts.coveredTopics))
 
-    const expected = expectedSyllabusTopics[sub] || []
-    const missingTopics = expected.filter(expectedTopic => 
-      !uniqueTopics.some(t => String(t).toLowerCase().includes(expectedTopic.toLowerCase()))
-    )
-
-    resultSubjects[sub] = {
-      chapterCount: Math.max(1, Math.ceil(uniqueTopics.length / 3)),
-      topicCount: uniqueTopics.length,
-      formulaCount: formulas.length,
-      theoryCount: theory.length,
-      misconceptionCount: misconceptions.length,
-      missingTopics
+    if (missingTopics.length) {
+      missingTopicCount += missingTopics.length
+      allMissing.push(...missingTopics.map((t) => `${subject}: ${t}`))
     }
 
-    totalFormulas += formulas.length
-    totalTheory += theory.length
-    totalTopics += uniqueTopics.length
-    totalMisconceptions += misconceptions.length
+    resultSubjects[subject] = {
+      chapterCount: counts.chapterCount || Math.max(1, Math.ceil(counts.topicCount / 3)),
+      topicCount: counts.topicCount,
+      formulaCount: counts.formulaCount,
+      theoryCount: counts.theoryCount,
+      misconceptionCount: counts.misconceptionCount,
+      missingTopics,
+      flagged: missingTopics.length > 0,
+    }
+
+    totalFormulas += counts.formulaCount
+    totalTheory += counts.theoryCount
+    totalTopics += counts.topicCount
+    totalMisconceptions += counts.misconceptionCount
   }
+
+  const complete = allMissing.length === 0
 
   const report: KnowledgeAuditReport = {
     generatedAt: new Date().toISOString(),
+    complete,
     subjects: resultSubjects,
     totals: {
       formulaCount: totalFormulas,
       theoryCount: totalTheory,
       topicCount: totalTopics,
-      misconceptionCount: totalMisconceptions
-    }
+      misconceptionCount: totalMisconceptions,
+      missingTopicCount,
+    },
   }
-
-  const allMissing = Object.values(resultSubjects).flatMap(s => s.missingTopics)
 
   return {
     report,
-    missingReport: { missingTopics: allMissing }
+    missingReport: { missingTopics: allMissing, complete },
   }
+}
+
+/** Legacy: audit from flat question rows when syllabus table is empty. */
+export function auditKnowledgeCoverage(dbQuestions: Array<{
+  subject?: string | null
+  topic?: string | null
+  resource_type?: string | null
+  content?: string | null
+}>): {
+  report: KnowledgeAuditReport
+  missingReport: { missingTopics: string[]; complete: boolean }
+} {
+  const bySubject = new Map<string, KnowledgeBankCounts>()
+
+  for (const row of dbQuestions) {
+    const subject = String(row.subject || 'General')
+    const entry = bySubject.get(subject) ?? {
+      subject,
+      formulaCount: 0,
+      theoryCount: 0,
+      topicCount: 0,
+      misconceptionCount: 0,
+      chapterCount: 0,
+      coveredTopics: [],
+    }
+
+    const rt = String(row.resource_type || '')
+    if (rt === 'formula' || (rt === 'concept' && /formula|equation/i.test(row.content || ''))) {
+      entry.formulaCount++
+    }
+    if (['theory', 'concept', 'concept_guide'].includes(rt)) {
+      entry.theoryCount++
+    }
+    if (rt === 'concept' && /misconception|trap|common error/i.test(row.content || '')) {
+      entry.misconceptionCount++
+    }
+    if (row.topic) {
+      entry.coveredTopics.push(String(row.topic))
+      entry.topicCount = new Set(entry.coveredTopics).size
+    }
+    bySubject.set(subject, entry)
+  }
+
+  return auditKnowledgeCoverageFromSyllabus({
+    syllabusTopics: [],
+    bankCounts: Array.from(bySubject.values()),
+  })
 }

@@ -3,21 +3,26 @@ export type ImageMetadata = {
   mimeType: string
   sizeBytes: number
   isBlurry: boolean
+  likelyScreenshot: boolean
+  likelyHandwritten: boolean
 }
 
 export function parseImageMetadata(fileName: string, mimeType: string, base64Data: string): ImageMetadata {
   const buffer = Buffer.from(base64Data, 'base64')
-  
-  // Simple heuristic checks
   const sizeBytes = buffer.length
-  
-  // A simple heuristic for blurry image based on size vs base64 length or generic indicators
-  const isBlurry = sizeBytes < 2000 // very small size might mean low-res/blurry crop
+  const nameLower = fileName.toLowerCase()
+
+  const isBlurry = sizeBytes < 2500
+  const likelyScreenshot =
+    /screenshot|screen.?shot|snip|capture/i.test(nameLower) || mimeType === 'image/png'
+  const likelyHandwritten = /handwrit|scan|photo|cam|img_/i.test(nameLower)
 
   return {
     fileName,
     mimeType: mimeType || 'image/png',
     sizeBytes,
-    isBlurry
+    isBlurry,
+    likelyScreenshot,
+    likelyHandwritten,
   }
 }

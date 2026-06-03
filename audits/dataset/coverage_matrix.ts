@@ -1,4 +1,4 @@
-import { PaperManifestItem, readJsonl, jsonlPath } from '../../scripts/dataset_common'
+// Matrix builder — manifest JSONL optional at runtime via lib/dataset/common
 
 export type CoverageGrid = {
   board: string

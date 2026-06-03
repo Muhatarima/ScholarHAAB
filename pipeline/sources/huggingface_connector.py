@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from pipeline.dataset_quality import hf_import_allowed, evaluate_dataset_quality
 from pipeline.schema import normalize_question_record
 from pipeline.utils import logger, safe_fix_text
 
@@ -89,6 +90,24 @@ def _pick_split(dataset: Any):
 def download_hf_dataset(
     dataset_id: str, subject: str, board: str, level: str, limit: int = 500
 ) -> list[dict[str, Any]]:
+    if not hf_import_allowed(dataset_id):
+        logger.warning(
+            f"HF dataset {dataset_id} blocked — not on approved list (no blind import)."
+        )
+        return []
+
+    score, passed = evaluate_dataset_quality(
+        name=dataset_id,
+        license_name="mit",
+        relevance=True,
+        subject_mapped=bool(subject),
+        board_supported=board in ("Cambridge", "Edexcel"),
+        has_duplicates=False,
+    )
+    if not passed:
+        logger.warning(f"HF dataset {dataset_id} rejected for production RAG (score={score}).")
+        return []
+
     try:
         from datasets import load_dataset  # type: ignore
     except Exception as exc:
