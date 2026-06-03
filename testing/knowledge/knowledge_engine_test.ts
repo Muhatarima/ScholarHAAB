@@ -3,12 +3,17 @@ import path from 'node:path'
 import assert from 'node:assert/strict'
 import { analyzeQuestion } from '@/lib/paper-solver/questionAnalyzer'
 import { routeKnowledge } from '@/lib/knowledge/knowledgeRouter'
-import { readJson } from '../../scripts/dataset_common'
 
 const ROOT = process.cwd()
 
 function exists(relativePath: string) {
   assert.equal(fs.existsSync(path.join(ROOT, relativePath)), true, `${relativePath} must exist`)
+}
+
+function readJson<T>(relativePath: string, fallback: T): T {
+  const filePath = path.join(ROOT, relativePath)
+  if (!fs.existsSync(filePath)) return fallback
+  return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T
 }
 
 async function main() {
@@ -64,8 +69,7 @@ async function main() {
     assert.ok(migration.includes(token), `migration must include ${token}`)
   }
 
-  const coveragePath = path.join(ROOT, 'dataset/reports/knowledge_coverage.json')
-  const coverage = readJson<Record<string, unknown>>(coveragePath, {})
+  const coverage = readJson<Record<string, unknown>>('dataset/reports/knowledge_coverage.json', {})
   if (Object.keys(coverage).length) {
     assert.notEqual(String(coverage.honesty_notice || '').toLowerCase().includes('guaranteed'), true)
   }
