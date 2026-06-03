@@ -1,0 +1,28 @@
+ScholarHAAB Academic Torture Gate
+=================================
+Math Accuracy: 100%
+Numerical Physics Accuracy: 100%
+Mismatch Count: 0
+
+SymPy comparison results:
+PASS math_hard_diff_001: 3*x**2 + 2 | ground truth: 3*x**2 + 2
+PASS math_hard_int_001: 9 | ground truth: 9.00000000000000
+PASS math_hard_product_001: 2*x*sin(x) + x^2*cos(x) | ground truth: x**2*cos(x) + 2*x*sin(x)
+PASS physics_hard_suvat_001: 20.4 m | ground truth: 20.4082 m
+PASS physics_hard_energy_001: 72 J | ground truth: 72 J
+PASS math_extreme_graph_001: x^2 - 2*x | ground truth: x**2 - 2*x
+PASS physics_extreme_car_001: a = 3 m/s^2; F = 3600 N; E_k = 540000 J | ground truth: a = 3 m/s^2; F = 3600 N; E_k = 540000 J
+PASS physics_extreme_ohm_001: 4 ohm | ground truth: 4 ohm
+PASS math_unseen_diff_001: cos(x) | ground truth: cos(x)
+PASS math_unseen_int_001: x^3/3 + C | ground truth: x**3/3 + C
+PASS physics_unseen_work_001: 50 J | ground truth: 50 J
+PASS physics_unseen_momentum_001: 14 kg m/s | ground truth: 14 kg m/s
+
+Fixed errors:
+- Added independent SymPy ground-truth comparison for math, physics, and graph cases.
+- Added deterministic numerical physics solver path for SUVAT, force, energy, work, Ohm law, and momentum.
+- Added product-rule deterministic fallback for dy/dx of x^2 sinx.
+
+Remaining limitations:
+- The seeded torture suite is intentionally compact; the runner is structured so larger generated banks can be added without changing the verifier.
+- Non-numerical science mark-scheme scoring still needs separate dataset-backed validation beyond SymPy.

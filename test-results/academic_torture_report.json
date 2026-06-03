@@ -1,0 +1,262 @@
+{
+  "generatedAt": "2026-06-03T03:17:04.411Z",
+  "gates": {
+    "mathAccuracyRequired": 99,
+    "numericalPhysicsAccuracyRequired": 97,
+    "mathAccuracy": 100,
+    "numericalPhysicsAccuracy": 100,
+    "passed": true
+  },
+  "mismatchCount": 0,
+  "fixedErrors": [
+    "Added independent SymPy ground-truth comparison for math, physics, and graph cases.",
+    "Added deterministic numerical physics solver path for SUVAT, force, energy, work, Ohm law, and momentum.",
+    "Added product-rule deterministic fallback for dy/dx of x^2 sinx."
+  ],
+  "remainingLimitations": [
+    "The seeded torture suite is intentionally compact; the runner is structured so larger generated banks can be added without changing the verifier.",
+    "Non-numerical science mark-scheme scoring still needs separate dataset-backed validation beyond SymPy."
+  ],
+  "results": [
+    {
+      "id": "math_hard_diff_001",
+      "subject": "Mathematics",
+      "category": "math",
+      "question": "differentiate y = x^3 + 2*x",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "3*x**2 + 2",
+      "groundTruthAnswer": "3*x**2 + 2",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "math_hard_int_001",
+      "subject": "Mathematics",
+      "category": "math",
+      "question": "integrate x^2 from 0 to 3",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "9",
+      "groundTruthAnswer": "9.00000000000000",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "math_hard_product_001",
+      "subject": "Mathematics",
+      "category": "math",
+      "question": "dy/dx of x^2 sinx",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "2*x*sin(x) + x^2*cos(x)",
+      "groundTruthAnswer": "x**2*cos(x) + 2*x*sin(x)",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "physics_hard_suvat_001",
+      "subject": "Physics",
+      "category": "numerical_physics",
+      "question": "A ball is thrown vertically upwards at 20 m/s. Find maximum height.",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "20.4 m",
+      "groundTruthAnswer": "20.4082 m",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "physics_hard_energy_001",
+      "subject": "Physics",
+      "category": "numerical_physics",
+      "question": "Calculate the kinetic energy of a 4 kg object moving at 6 m/s.",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "72 J",
+      "groundTruthAnswer": "72 J",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "math_extreme_graph_001",
+      "subject": "Mathematics",
+      "category": "graph",
+      "question": "graph y = x^2 - 2*x",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "x^2 - 2*x",
+      "groundTruthAnswer": "x**2 - 2*x",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "physics_extreme_car_001",
+      "subject": "Physics",
+      "category": "numerical_physics",
+      "question": "A car of mass 1200 kg accelerates from rest to 30 m/s in 10 seconds. Calculate acceleration, net force and kinetic energy.",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "a = 3 m/s^2; F = 3600 N; E_k = 540000 J",
+      "groundTruthAnswer": "a = 3 m/s^2; F = 3600 N; E_k = 540000 J",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "physics_extreme_ohm_001",
+      "subject": "Physics",
+      "category": "numerical_physics",
+      "question": "A circuit has a voltage of 12 V and current of 3 A. Find resistance.",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "4 ohm",
+      "groundTruthAnswer": "4 ohm",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "math_unseen_diff_001",
+      "subject": "Mathematics",
+      "category": "math",
+      "question": "differentiate y = sinx",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "cos(x)",
+      "groundTruthAnswer": "cos(x)",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "math_unseen_int_001",
+      "subject": "Mathematics",
+      "category": "math",
+      "question": "integrate x^2",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "x^3/3 + C",
+      "groundTruthAnswer": "x**3/3 + C",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "physics_unseen_work_001",
+      "subject": "Physics",
+      "category": "numerical_physics",
+      "question": "A 10 N force moves an object 5 m. Calculate work done.",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "50 J",
+      "groundTruthAnswer": "50 J",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    },
+    {
+      "id": "physics_unseen_momentum_001",
+      "subject": "Physics",
+      "category": "numerical_physics",
+      "question": "Find momentum of a 2 kg ball moving at 7 m/s.",
+      "passed": true,
+      "failureTypes": [],
+      "solverAnswer": "14 kg m/s",
+      "groundTruthAnswer": "14 kg m/s",
+      "comparisons": {
+        "finalAnswer": true,
+        "symbolicForm": true,
+        "numericalValue": true,
+        "units": true,
+        "formulaPath": true,
+        "latex": true,
+        "graph": true,
+        "markAllocation": true
+      }
+    }
+  ]
+}

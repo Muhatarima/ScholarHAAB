@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-06-03T03:20:46.497Z",
+  "honesty_notice": "No approved source manifest entries exist yet. Coverage is 0 and no collection claims are permitted.",
+  "total_expected": 0,
+  "total_found": 0,
+  "total_downloaded": 0,
+  "total_parsed": 0,
+  "total_inserted": 0,
+  "coverage_percentage": 0,
+  "parse_percentage": 0,
+  "insert_percentage": 0,
+  "missingByBoard": {},
+  "missingByLevel": {},
+  "missingBySubject": {},
+  "missingByYear": {},
+  "missing_mark_schemes": 0,
+  "missing_question_papers": 0,
+  "failed_items": []
+}
