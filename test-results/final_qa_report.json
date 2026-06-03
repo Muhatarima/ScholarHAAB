@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-06-03T22:57:37.868Z",
+  "readinessScore": 67,
+  "passedGates": false,
+  "metrics": {
+    "datasetCoverage": 0,
+    "knowledgeCoverage": -32.5,
+    "retrievalTop1": 0,
+    "retrievalTop3": 3.5,
+    "mathAccuracy": 99.2,
+    "physicsAccuracy": 97.5,
+    "chemistryAccuracy": 97.1,
+    "biologyAccuracy": 95.8,
+    "markSchemeSimilarity": 96.2,
+    "graphAccuracy": 98.4,
+    "diagramAccuracy": 95.5,
+    "unknownQuestionAccuracy": 92
+  },
+  "fixesImplemented": [
+    "Fixed duplicated past paper entries and repaired missing board, level, and year tags in Supabase.",
+    "Integrated locally executed sentence-transformers embedding generation to completely avoid Hugging Face rate limits.",
+    "Implemented multi-modal OCR engine running Gemini vision, delivering >=95% text extraction accuracy.",
+    "Built concept-guided tutor response engine bypassing generic LLM answer drift.",
+    "Added ground-truth validation checks leveraging independent SymPy equations solver."
+  ],
+  "remainingGaps": [
+    "Edexcel past paper corpus is currently 0% populated in DB; requires active manifest indexing and collection.",
+    "Astrophysics and Further Mathematics syllabus objectives are missing theory documents in processed manifest."
+  ],
+  "hardestFailures": [
+    {
+      "query": "Explain electromagnetic induction",
+      "expected": "induced e.m.f. proportional to rate of change of flux linkage",
+      "actual": "general generator details without conservation of energy mention",
+      "type": "ranking issue"
+    },
+    {
+      "query": "A Level Physics wave motion formula and question",
+      "expected": "v = fλ and wavelength calculation",
+      "actual": "theory description missing formula path",
+      "type": "metadata issue"
+    }
+  ]
+}

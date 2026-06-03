@@ -1,0 +1,609 @@
+{
+  "generatedAt": "2026-06-03T22:54:54.531Z",
+  "totalQueries": 500,
+  "passedQueries": 0,
+  "accuracy": 0,
+  "failuresCount": 500,
+  "failures": [
+    {
+      "query": "May June 2017 Physics Paper 1 Question 1",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Organic Chemistry",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Differentiation questions",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | English",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Wave Motion in Physics",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Rates of Reaction",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Photosynthesis bujhte parchi na",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain differentiasion in detail",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Cambridge O Level Physics Wave Motion theory",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Chemistry Paper 2 Question 10",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Wave Motion questions",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | English",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Organic Chemistry in Chemistry",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Differentiation bujhte parchi na",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain waev motoin in detail",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Business",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Edexcel A Level Chemistry Rates of Reaction theory",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Biology Paper 3 Question 9",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Chemical Bonding questions",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Photosynthesis in Biology",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Wave Motion bujhte parchi na",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain organik chemestry in detail",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Cambridge O Level Biology Photosynthesis theory",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Mathematics Paper 4 Question 8",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Mathematics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Rates of Reaction",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Photosynthesis questions",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Differentiation in Mathematics",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Chemical Bonding bujhte parchi na",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain photosinthsis in detail",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Edexcel A Level Mathematics Differentiation theory",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Mathematics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Physics Paper 1 Question 7",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Organic Chemistry",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Differentiation questions",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | English",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Wave Motion in Physics",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Rates of Reaction",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Photosynthesis bujhte parchi na",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain differentiasion in detail",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Cambridge O Level Physics Wave Motion theory",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Chemistry Paper 2 Question 6",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Wave Motion questions",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | English",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Organic Chemistry in Chemistry",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Differentiation bujhte parchi na",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain waev motoin in detail",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Business",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Edexcel A Level Chemistry Rates of Reaction theory",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Biology Paper 3 Question 5",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Chemical Bonding questions",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Photosynthesis in Biology",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Wave Motion bujhte parchi na",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain organik chemestry in detail",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Cambridge O Level Biology Photosynthesis theory",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Mathematics Paper 4 Question 4",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Mathematics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Rates of Reaction",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Photosynthesis questions",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Differentiation in Mathematics",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Chemical Bonding bujhte parchi na",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain photosinthsis in detail",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Edexcel A Level Mathematics Differentiation theory",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Mathematics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Physics Paper 1 Question 3",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Organic Chemistry",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Differentiation questions",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | English",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Wave Motion in Physics",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Rates of Reaction",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Photosynthesis bujhte parchi na",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain differentiasion in detail",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Cambridge O Level Physics Wave Motion theory",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Chemistry Paper 2 Question 2",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Wave Motion questions",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | English",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Organic Chemistry in Chemistry",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Photosynthesis",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Differentiation bujhte parchi na",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain waev motoin in detail",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Business",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Edexcel A Level Chemistry Rates of Reaction theory",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Biology Paper 3 Question 1",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain the concept of Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "syllabus details for Wave Motion",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "mark scheme for Chemical Bonding questions",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "formula of Photosynthesis in Biology",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "detailed notes on Differentiation",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "bhai Wave Motion bujhte parchi na",
+      "expected": "Cambridge | Physics",
+      "actual": "undefined | Physics",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "explain organik chemestry in detail",
+      "expected": "Edexcel | Chemistry",
+      "actual": "undefined | Chemistry",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "Cambridge O Level Biology Photosynthesis theory",
+      "expected": "Cambridge | Biology",
+      "actual": "undefined | Biology",
+      "failureType": "wrong board"
+    },
+    {
+      "query": "May June 2017 Mathematics Paper 4 Question 10",
+      "expected": "Edexcel | Mathematics",
+      "actual": "undefined | Mathematics",
+      "failureType": "wrong board"
+    }
+  ]
+}

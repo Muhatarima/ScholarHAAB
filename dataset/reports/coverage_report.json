@@ -1,19 +1,45 @@
 {
-  "generated_at": "2026-06-03T03:20:46.497Z",
-  "honesty_notice": "No approved source manifest entries exist yet. Coverage is 0 and no collection claims are permitted.",
-  "total_expected": 0,
-  "total_found": 0,
-  "total_downloaded": 0,
-  "total_parsed": 0,
-  "total_inserted": 0,
-  "coverage_percentage": 0,
-  "parse_percentage": 0,
-  "insert_percentage": 0,
-  "missingByBoard": {},
-  "missingByLevel": {},
-  "missingBySubject": {},
-  "missingByYear": {},
-  "missing_mark_schemes": 0,
-  "missing_question_papers": 0,
-  "failed_items": []
+  "generatedAt": "2026-06-03T22:52:28.592Z",
+  "expected_files": 2420,
+  "found_files": 0,
+  "parsed_files": 0,
+  "inserted_files": 0,
+  "missing_files": 2420,
+  "coverage_percent": 0,
+  "missing_by_board": {
+    "Cambridge": 1320,
+    "Edexcel": 1100
+  },
+  "missing_by_level": {
+    "O Level": 1210,
+    "A Level": 1210
+  },
+  "missing_by_subject": {
+    "Physics": 220,
+    "Chemistry": 220,
+    "Biology": 220,
+    "Mathematics": 220,
+    "Further Mathematics": 220,
+    "Accounting": 220,
+    "Economics": 220,
+    "Business": 220,
+    "ICT": 220,
+    "Computer Science": 220,
+    "English": 220
+  },
+  "missing_by_year": {
+    "2016": 242,
+    "2017": 242,
+    "2018": 242,
+    "2019": 242,
+    "2020": 242,
+    "2021": 242,
+    "2022": 242,
+    "2023": 242,
+    "2024": 242,
+    "2025": 242
+  },
+  "missing_mark_schemes": 440,
+  "missing_question_papers": 440,
+  "duplicatesRemovedCount": 0
 }
