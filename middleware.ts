@@ -57,26 +57,6 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (request.nextUrl.pathname === '/auth') {
-    const url = request.nextUrl.clone()
-    url.pathname = user ? '/dashboard' : '/login'
-    url.search = user ? '' : request.nextUrl.search
-    return NextResponse.redirect(url)
-  }
-
-  if (isProtectedPath(request.nextUrl.pathname) && !user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    url.searchParams.set('next', buildNextPath(request))
-    return NextResponse.redirect(url)
-  }
-
-  if (isAuthPage(request.nextUrl.pathname) && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    url.search = ''
-    return NextResponse.redirect(url)
-  }
 
   return response
 }
