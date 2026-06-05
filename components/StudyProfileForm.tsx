@@ -125,11 +125,11 @@ export default function StudyProfileForm({
       })
       const data = await res.json()
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not save setup.')
-      router.push(redirectTo)
-      router.refresh()
+      // router.refresh() সরানো হয়েছে — এটা AuthGuard এ race condition করত
+      // API response এ redirectTo আসলে সেটা use করো, নইলে default
+      router.push(data.redirectTo ?? redirectTo)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not save setup.')
-    } finally {
       setSaving(false)
     }
   }

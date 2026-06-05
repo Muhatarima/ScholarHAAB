@@ -24,27 +24,35 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       const user = result.data.user;
       if (!user) {
         router.replace('/login');
-      } else {
-        try {
-          const res = await fetch('/api/profile', { cache: 'no-store' });
-          const data = await res.json();
-          const completed = Boolean(data?.profile?.onboardingCompleted);
-          if (!completed && pathname !== '/setup') {
-            router.replace('/setup');
-            return;
-          }
-          if (completed && pathname === '/setup') {
-            router.replace('/solver');
-            return;
-          }
-        } catch {
-          if (pathname !== '/setup') {
-            router.replace('/setup');
-            return;
-          }
-        }
-        setAuthed(true);
+        setChecking(false);
+        return;
       }
+
+      try {
+        const res = await fetch('/api/profile', { cache: 'no-store' });
+        const data = await res.json();
+        const completed = Boolean(data?.profile?.onboardingCompleted);
+
+        if (!completed && pathname !== '/setup') {
+          router.replace('/setup');
+          setChecking(false);
+          return;
+        }
+
+        if (completed && pathname === '/setup') {
+          router.replace('/solver');
+          setChecking(false);
+          return;
+        }
+      } catch {
+        if (pathname !== '/setup') {
+          router.replace('/setup');
+          setChecking(false);
+          return;
+        }
+      }
+
+      setAuthed(true);
       setChecking(false);
     });
   }, [bypassAuth, pathname, router]);
