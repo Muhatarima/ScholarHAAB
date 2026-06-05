@@ -57,6 +57,17 @@ function isDemoUserId(userId: string | undefined) {
   return !userId || userId === 'test-anonymous-user' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)
 }
 
+function fallbackSetupProfile(userId: string, setup: ReturnType<typeof validateSetup>) {
+  return {
+    id: userId,
+    preferredBoard: setup.board,
+    preferredLevel: setup.level,
+    preferredSubjects: setup.subjects,
+    preferredLanguage: toLegacyLanguage(setup.languagePreference),
+    onboardingCompleted: true,
+  }
+}
+
 export async function POST(req: Request) {
   const { user, error: authError } = await requireAuth(req)
   if (authError) return authError
@@ -120,16 +131,22 @@ export async function POST(req: Request) {
       if (!isMissingTable(error)) throw error
     }
 
-    const profile = await upsertStudentProfile(user.id, {
-      defaultProduct: 'qbank',
-      preferredBoard: setup.board,
-      preferredLevel: setup.level,
-      preferredSubjects: setup.subjects,
-      preferredLanguage: toLegacyLanguage(setup.languagePreference),
-      nationality: 'Bangladesh',
-      wantsDeadlineAlerts: false,
-      onboardingCompleted: true,
-    })
+    let profile
+    try {
+      profile = await upsertStudentProfile(user.id, {
+        defaultProduct: 'qbank',
+        preferredBoard: setup.board,
+        preferredLevel: setup.level,
+        preferredSubjects: setup.subjects,
+        preferredLanguage: toLegacyLanguage(setup.languagePreference),
+        nationality: 'Bangladesh',
+        wantsDeadlineAlerts: false,
+        onboardingCompleted: true,
+      })
+    } catch (error) {
+      if (!userProfileSaved) throw error
+      profile = fallbackSetupProfile(user.id, setup)
+    }
 
     return NextResponse.json({
       success: true,

@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { validateQuestion } from '@/lib/validation/inputValidator'
 import { getStudentProfile } from '@/lib/server/profile'
+import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 import { classifyIntent } from '@/lib/rag/classifyIntent'
 import { trackLearningGap, trackSolvedTopic } from '@/lib/progress/autoTrack'
 import { runScholarPipeline } from '@/lib/pipeline/scholarPipeline'
@@ -30,6 +31,21 @@ async function loadProfile(userId: string | undefined) {
   }
 
   try {
+    const supabase = getSupabaseAdmin()
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('board, level, subjects, setup_completed')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    if (!error && data?.setup_completed) {
+      return {
+        preferredBoard: typeof data.board === 'string' ? data.board : 'Cambridge',
+        preferredLevel: typeof data.level === 'string' ? data.level : 'O Level',
+        preferredSubjects: Array.isArray(data.subjects) ? data.subjects.filter(Boolean) : ['Physics', 'Chemistry'],
+      }
+    }
+
     return await getStudentProfile(userId)
   } catch {
     return {

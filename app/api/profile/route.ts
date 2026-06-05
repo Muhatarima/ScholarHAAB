@@ -115,10 +115,25 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: true, profile, setupProfile: profile.setupProfile }, { headers: { 'x-request-id': requestId } })
     }
 
-    const [profile, setupProfile] = await Promise.all([
-      getStudentProfile(identity.authUserId),
-      loadSetupProfile(identity.authUserId),
-    ])
+    const setupProfile = await loadSetupProfile(identity.authUserId)
+    let profile
+    try {
+      profile = await getStudentProfile(identity.authUserId)
+    } catch (error) {
+      if (!setupProfile?.setup_completed) {
+        throw error
+      }
+      profile = createDemoProfile({
+        preferredBoard: setupProfile.board ?? 'Cambridge',
+        preferredLevel: setupProfile.level ?? 'O Level',
+        preferredSubjects: setupProfile.subjects?.filter(Boolean) ?? [],
+        preferredLanguage: toLegacyLanguagePreference(setupProfile.language_preference),
+        onboardingCompleted: Boolean(setupProfile.setup_completed),
+        stage: setupProfile.stage ?? null,
+        languagePreference: setupProfile.language_preference ?? 'English',
+        explanationStyle: setupProfile.explanation_style ?? 'Step-by-step teacher style',
+      })
+    }
     const mergedProfile = {
       ...profile,
       preferredBoard: profile.preferredBoard ?? setupProfile?.board ?? null,
@@ -199,10 +214,11 @@ export async function PUT(req: Request) {
       return NextResponse.json({ success: true, profile, setupProfile: profile.setupProfile }, { headers: { 'x-request-id': requestId } })
     }
 
+    let setupProfileSaved = false
     if (preferredBoard || preferredLevel || preferredSubjects.length || languagePreference || typeof body.explanationStyle === 'string') {
       try {
         const supabase = getSupabaseAdmin()
-        await supabase.from('user_profiles').upsert(
+        const { error } = await supabase.from('user_profiles').upsert(
           {
             user_id: identity.authUserId,
             board: preferredBoard ?? 'Cambridge',
@@ -219,31 +235,46 @@ export async function PUT(req: Request) {
           },
           { onConflict: 'user_id' }
         )
+        if (error) throw error
+        setupProfileSaved = true
       } catch (error) {
         if (!isMissingTable(error)) throw error
       }
     }
 
-    const profile = await upsertStudentProfile(identity.authUserId, {
-      defaultProduct: 'qbank',
-      preferredBoard,
-      preferredLevel,
-      preferredSubjects,
-      preferredLanguage: languagePreference
-        ? languagePreference === 'English'
-          ? 'en'
-          : 'bn'
-        : body.preferredLanguage === 'bn'
-          ? 'bn'
-          : 'en',
-      targetCountry: typeof body.targetCountry === 'string' ? body.targetCountry : null,
-      targetDegree: typeof body.targetDegree === 'string' ? body.targetDegree : null,
-      targetField: typeof body.targetField === 'string' ? body.targetField : null,
-      fundingPreference: typeof body.fundingPreference === 'string' ? body.fundingPreference : null,
-      nationality: typeof body.nationality === 'string' ? body.nationality : 'Bangladesh',
-      wantsDeadlineAlerts: body.wantsDeadlineAlerts !== false,
-      onboardingCompleted,
-    })
+    let profile
+    try {
+      profile = await upsertStudentProfile(identity.authUserId, {
+        defaultProduct: 'qbank',
+        preferredBoard,
+        preferredLevel,
+        preferredSubjects,
+        preferredLanguage: languagePreference
+          ? languagePreference === 'English'
+            ? 'en'
+            : 'bn'
+          : body.preferredLanguage === 'bn'
+            ? 'bn'
+            : 'en',
+        targetCountry: typeof body.targetCountry === 'string' ? body.targetCountry : null,
+        targetDegree: typeof body.targetDegree === 'string' ? body.targetDegree : null,
+        targetField: typeof body.targetField === 'string' ? body.targetField : null,
+        fundingPreference: typeof body.fundingPreference === 'string' ? body.fundingPreference : null,
+        nationality: typeof body.nationality === 'string' ? body.nationality : 'Bangladesh',
+        wantsDeadlineAlerts: body.wantsDeadlineAlerts !== false,
+        onboardingCompleted,
+      })
+    } catch (error) {
+      if (!setupProfileSaved) throw error
+      profile = {
+        id: identity.authUserId,
+        preferredBoard: preferredBoard ?? 'Cambridge',
+        preferredLevel: preferredLevel ?? 'O Level',
+        preferredSubjects,
+        preferredLanguage: languagePreference === 'English' ? 'en' : 'bn',
+        onboardingCompleted,
+      }
+    }
 
     return NextResponse.json({ success: true, profile }, { headers: { 'x-request-id': requestId } })
   } catch (error) {

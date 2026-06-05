@@ -8,7 +8,9 @@ import { createSupabaseClient } from '@/lib/supabase/clientClient';
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const bypassAuth = process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+  const bypassAuth =
+    process.env.NODE_ENV !== 'production' &&
+    (process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || process.env.DEMO_MODE === 'true');
   const [checking, setChecking] = useState(!bypassAuth);
   const [authed, setAuthed] = useState(bypassAuth);
 
