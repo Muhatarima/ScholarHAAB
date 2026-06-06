@@ -229,6 +229,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [filePreviews, setFilePreviews] = useState<FilePreview[]>([])
   const [usage, setUsage] = useState<UsageState | null>(null)
+  const [sessionContext, setSessionContext] = useState<Record<string, unknown>>({})
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -245,6 +246,28 @@ export default function ProductChatShell({ product }: { product: Product }) {
       })
     }
   }, [filePreviews])
+
+  // Load user profile to build sessionContext for accurate RAG retrieval
+  useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch('/api/profile', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        const profile = data?.profile
+        if (!profile) return
+        setSessionContext({
+          board: profile.preferredBoard ?? null,
+          level: profile.preferredLevel ?? null,
+          subject: profile.preferredSubjects?.[0] ?? null,
+          language: profile.preferredLanguage ?? 'en',
+          nationality: 'Bangladesh',
+        })
+      } catch {
+        // Non-fatal
+      }
+    })()
+  }, [])
 
   async function refreshSessions() {
     try {
@@ -337,6 +360,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
           message: text,
           mode,
           sessionId,
+          sessionContext,
           files,
           history: messages.slice(-8).map((message) => ({
             role: message.role,
