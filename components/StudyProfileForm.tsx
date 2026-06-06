@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { useRouter } from 'next/navigation'
+import { completeSetup } from '@/app/setup/actions'
 import { BOARDS, EXPLANATION_STYLES, LANGUAGES, LEVELS, STAGES, SUBJECTS } from '@/lib/profile/setupOptions'
 
 type Props = {
@@ -43,7 +43,6 @@ export default function StudyProfileForm({
   subtitle = 'Only stable study identity. Weak topics and skipped chapters are detected automatically.',
   redirectTo = '/solver',
 }: Props) {
-  const router = useRouter()
   const [level, setLevel] = useState<'O Level' | 'A Level'>('O Level')
   const [board, setBoard] = useState<'Cambridge' | 'Edexcel'>('Cambridge')
   const [stage, setStage] = useState('')
@@ -111,23 +110,17 @@ export default function StudyProfileForm({
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch('/api/setup', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          level,
+      await completeSetup(
+        {
           board,
+          explanationStyle,
+          languagePreference,
+          level,
           stage,
           subjects,
-          languagePreference,
-          explanationStyle,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok || !data.success) throw new Error(data.error || 'Could not save setup.')
-      // router.refresh() সরানো হয়েছে — এটা AuthGuard এ race condition করত
-      // API response এ redirectTo আসলে সেটা use করো, নইলে default
-      router.push(data.redirectTo ?? redirectTo)
+        },
+        redirectTo
+      )
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not save setup.')
       setSaving(false)

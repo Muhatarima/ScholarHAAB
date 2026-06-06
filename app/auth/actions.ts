@@ -1,5 +1,6 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
@@ -29,7 +30,16 @@ function normalizePassword(value: FormDataEntryValue | null) {
   return typeof value === 'string' ? value : ''
 }
 
-function getAuthOrigin() {
+async function getAuthOrigin() {
+  const headerStore = await headers()
+  const forwardedHost = headerStore.get('x-forwarded-host')
+  const host = forwardedHost || headerStore.get('host')
+  const forwardedProto = headerStore.get('x-forwarded-proto')
+
+  if (host) {
+    return `${forwardedProto || (host.startsWith('localhost') || host.startsWith('127.0.0.1') ? 'http' : 'https')}://${host}`
+  }
+
   const configuredOrigin = (
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_URL ||
@@ -116,7 +126,7 @@ export async function signUp(_prevState: AuthActionState, formData: FormData): P
     email,
     password,
     options: {
-      emailRedirectTo: `${getAuthOrigin()}/auth/callback?next=${encodeURIComponent(nextPath)}`,
+      emailRedirectTo: `${await getAuthOrigin()}/auth/callback?next=${encodeURIComponent(nextPath)}`,
       data: {
         full_name: name,
       },
@@ -173,7 +183,7 @@ export async function signOut() {
 export async function signInWithGoogle(formData: FormData) {
   const supabase = await createClient()
   const nextPath = normalizeNextPath(formData.get('next'))
-  const origin = getAuthOrigin()
+  const origin = await getAuthOrigin()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
