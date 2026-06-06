@@ -1,13 +1,8 @@
 function stripLatexCommands(response: string) {
   return response
     .replace(/\\ce\{([^{}]+)\}/g, '$1')
-    .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '$1/$2')
-    .replace(/\\\[([\s\S]*?)\\\]/g, '$1')
-    .replace(/\\\(([\s\S]*?)\\\)/g, '$1')
-    .replace(/\$\$([^$]+)\$\$/g, '$1')
-    .replace(/\$([^$]+)\$/g, '$1')
-    .replace(/\\(?:text|mathrm|mathbf|left|right)\{?([^{}]*)\}?/g, '$1')
-    .replace(/\\[a-zA-Z]+/g, '')
+    .replace(/\\(?:text|mathrm|mathbf)\{([^{}]*)\}/g, '$1')
+    .replace(/\\(?:left|right)\b/g, '')
 }
 
 function removeFillerOpeners(response: string) {
@@ -21,7 +16,7 @@ function replaceRefusals(response: string) {
 
   return response.replace(
     /\b(I don't have|I do not have|I cannot|I can't|not enough information)[^.!\n]*(?:[.!\n]|$)/gi,
-    'Best-effort Cambridge answer: use the core definition, formula, and mark-scheme keywords for this topic. '
+    'No verified past-paper match is loaded for that exact wording. '
   )
 }
 

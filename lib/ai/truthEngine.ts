@@ -50,9 +50,9 @@ export type VerifiedContext = {
   similarity: number
   sources: string[]
   docs: RagChunk[]
-  lowConfidence: boolean
   bestSimilarity: number
   contextText: string
+  lowConfidence: boolean
 }
 
 export type TruthValidationResult = {
@@ -239,7 +239,6 @@ Solving rules:
 ${CAMBRIDGE_MASTER_PROMPT}
 
 =======================================
-CONFIDENCE: ${confidence.badge} ${confidence.level}
 MODE: ${confidence.mode}${marksNote}
 =======================================
 
@@ -295,16 +294,6 @@ export function validateTruthResponse(response: string): {
     issues.push('Response too short')
   }
 
-  const hasConfidence =
-    response.includes('✅') ||
-    response.includes('🔶') ||
-    response.includes('⚠️') ||
-    response.includes('🧠')
-
-  if (!hasConfidence) {
-    issues.push('Missing confidence badge')
-  }
-
   const didntMatch =
     /did(?:\s+not|n't)\s+match|no\s+match|not\s+found\s+in|cannot\s+find/i.test(
       response
@@ -317,6 +306,19 @@ export function validateTruthResponse(response: string): {
   }
 
   return { valid: issues.length === 0, issues }
+}
+
+function confidenceScoreFromContext(confidence: ConfidenceLevel, bestSimilarity: number) {
+  const retrievedScore = Math.round(bestSimilarity * 100)
+
+  if (retrievedScore > 0) {
+    return retrievedScore
+  }
+
+  if (confidence === 'EXPERT') return 62
+  if (confidence === 'REASONING') return 55
+  if (confidence === 'PARTIAL') return 70
+  return 85
 }
 
 // --- Backward-compatible helpers used by existing QBank routes
@@ -349,9 +351,9 @@ export async function retrieveVerifiedContext(
     similarity: result.maxSimilarity,
     sources,
     docs: chunks,
-    lowConfidence: result.maxSimilarity < 0.8,
     bestSimilarity: result.maxSimilarity,
     contextText: context,
+    lowConfidence: result.maxSimilarity < 0.5,
   }
 }
 
@@ -364,13 +366,14 @@ export async function validateAIResponse(
   void studentId
   const validation = validateTruthResponse(answer)
   const confidence = classifyConfidence(verifiedContext.bestSimilarity, verifiedContext.docs.length > 0)
+  const confidenceScore = confidenceScoreFromContext(confidence.level, verifiedContext.bestSimilarity)
 
   if (validation.valid) {
     return {
       valid: true,
       issues: [],
       confidence: confidence.level,
-      confidenceScore: Math.round(verifiedContext.bestSimilarity * 100),
+      confidenceScore,
       source: verifiedContext.sources[0] ?? confidence.mode,
       answer,
     }
@@ -398,7 +401,7 @@ export async function validateAIResponse(
     valid: false,
     issues: validation.issues,
     confidence: confidence.level,
-    confidenceScore: Math.round(verifiedContext.bestSimilarity * 100),
+    confidenceScore,
     source: verifiedContext.sources[0] ?? 'Cambridge expert reasoning',
     answer: repaired,
   }

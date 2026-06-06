@@ -484,9 +484,10 @@ function parserFailureResult(raw: string): UnderstandingResult {
 export async function understandMessage(raw: string, history: Message[] = []): Promise<UnderstandingResult> {
   const local = applyLocalCorrections(raw)
   const localText = local.text.toLowerCase()
-  const confusedWithHistory = /\b(bujhini|bujhi nai|bujhte|confus|stuck|arekbar|again)\b/i.test(
-    localText
-  )
+  const confusedWithHistory =
+    /\b(bujhini|bujhi nai|bujhte|confus|stuck|arekbar|again|bad explanation|worst explanation|terrible explanation|not helpful)\b/i.test(
+      localText
+    ) || /doesn'?t make sense/i.test(localText)
 
   if (confusedWithHistory && history.length > 0) {
     const previousQuestion = [...history]

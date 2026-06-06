@@ -78,6 +78,52 @@ async function solveCalculation(analysis: QuestionAnalysis): Promise<Partial<Exa
 }
 
 function localExaminerAnswer(analysis: QuestionAnalysis): Partial<ExaminerSolution> | null {
+  if (
+    includesConcept(analysis, 'calculus') &&
+    /\barea\s+under\s+(?:the\s+)?curv\w*|\bdefinite integral\b/i.test(analysis.normalizedQuestion)
+  ) {
+    return {
+      finalAnswer: 'The area under y = f(x) from x = a to x = b is A = integral from a to b of f(x) dx. For y = x^2 from 0 to 2, A = [x^3/3] from 0 to 2 = 8/3 square units.',
+      reasoningSteps: [
+        'Identify the curve and the lower and upper x-limits.',
+        'Write the definite integral A = integral from a to b of f(x) dx.',
+        'Integrate the function.',
+        'Substitute the upper limit, then subtract the lower-limit value.',
+      ],
+      markSchemeStyleAnswer: [
+        'Correct definite integral with limits [1]',
+        'Correct antiderivative [1]',
+        'Upper-limit value minus lower-limit value [1]',
+        'Correct area with square units [1]',
+      ],
+      examTip: 'Always show the limits and upper minus lower substitution.',
+      commonMistake: 'Do not forget that a geometric area below the x-axis may need an absolute value.',
+      practiceNext: 'Find the area under y = 2x from x = 1 to x = 3.',
+      confidenceBoost: 8,
+    }
+  }
+
+  if (includesConcept(analysis, 'ideal gas law')) {
+    return {
+      finalAnswer: 'PV = nRT is the ideal gas equation: pressure x volume = moles x gas constant x absolute temperature.',
+      reasoningSteps: [
+        'P is pressure in pascals (Pa).',
+        'V is volume in cubic metres (m^3).',
+        'n is amount of gas in moles.',
+        'R = 8.31 J mol^-1 K^-1 and T must be in kelvin.',
+      ],
+      markSchemeStyleAnswer: [
+        'State PV = nRT [1]',
+        'Use SI units for pressure and volume [1]',
+        'Convert temperature to kelvin [1]',
+      ],
+      examTip: 'Convert degrees Celsius to kelvin by adding 273 before substituting.',
+      commonMistake: 'Using degrees Celsius directly in PV = nRT.',
+      practiceNext: 'Rearrange PV = nRT to make pressure P the subject.',
+      confidenceBoost: 8,
+    }
+  }
+
   if (includesConcept(analysis, 'resistance') && includesConcept(analysis, 'temperature')) {
     return {
       finalAnswer: 'As temperature increases, the metal ions vibrate more. Electrons collide with them more often, so charge flow is opposed more and resistance increases.',

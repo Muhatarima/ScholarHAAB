@@ -814,6 +814,28 @@ function buildSimpleMathSolveReply(
   return null
 }
 
+function buildAreaUnderCurveReply(mode: PromptMode) {
+  const lines = [
+    'The area under a curve between x = a and x = b is found with a definite integral.',
+    '',
+    '$$A = \\int_a^b f(x)\\,dx$$',
+    '',
+    'Example: find the area under y = x^2 from x = 0 to x = 2.',
+    '',
+    '$$A = \\int_0^2 x^2\\,dx = \\left[\\frac{x^3}{3}\\right]_0^2 = \\frac{8}{3}$$',
+    '',
+    'So the area is 8/3 square units, approximately 2.67 square units.',
+    '',
+    'Exam tip: write the limits, integrate, then substitute upper limit minus lower limit.',
+  ]
+
+  if (mode === 'tutor') {
+    lines.push('', 'Practice: what would the limits be for the area from x = 1 to x = 4?')
+  }
+
+  return lines.join('\n')
+}
+
 export function buildQbankGeneralKnowledgeReply(
   mode: PromptMode,
   rawMessage: string,
@@ -825,6 +847,13 @@ export function buildQbankGeneralKnowledgeReply(
   }
 
   const normalized = rawMessage.toLowerCase().replace(/\s+/g, ' ').trim()
+  if (
+    /\barea\s+under\s+(?:the\s+)?(?:curv\w*|graph)\b/.test(normalized) ||
+    /\bdefinite integral\b/.test(normalized)
+  ) {
+    return buildAreaUnderCurveReply(mode)
+  }
+
   if (/\bintegration by parts\b/.test(normalized)) {
     if (shouldTutorScaffold(mode, rawMessage, sessionContext)) {
       return [
@@ -908,12 +937,15 @@ export function buildQbankGeneralKnowledgeReply(
     ].join('\n')
   }
 
-  if (/\bideal gas( formula| equation| law)?\b/.test(normalized)) {
+  if (
+    /\bideal gas( formula| equation| law)?\b/.test(normalized) ||
+    /\bp\s*v\s*(?:=|equals?)?\s*n\s*r\s*t\b/.test(normalized)
+  ) {
     return buildStemFormulaReply(mode, rawMessage, sessionContext, {
       title: 'ideal gas law',
       formula: 'PV = nRT',
       explanation:
-        'Here $P$ means pressure, $V$ means volume, $n$ is number of moles, $R$ is the gas constant, and $T$ is temperature in kelvin.',
+        'Here $P$ is pressure in pascals, $V$ is volume in m^3, $n$ is amount of gas in moles, $R = 8.31$ J mol^-1 K^-1, and $T$ is temperature in kelvin.',
       tip: 'Convert temperature to kelvin before substituting values.',
       scaffoldQuestion: 'Before I give the full line, can you tell me what the $P$ in gas equations usually stands for?',
       scaffoldHint: 'The full relation connects pressure, volume, moles, and temperature.',

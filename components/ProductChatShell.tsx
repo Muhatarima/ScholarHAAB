@@ -352,7 +352,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
           name: file.name,
         }))
       )
-      const endpoint = files.length > 0 ? ENDPOINT : '/api/solve'
+      const endpoint = ENDPOINT
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: await buildJsonAuthHeaders(),

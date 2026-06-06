@@ -8,6 +8,8 @@ import { matchDiagramType } from '@/lib/diagrams/diagramMatcher'
 import { detectAndWrapNotation } from '@/lib/notationDetector'
 
 const SECTION_TITLE_PATTERN = /^[A-Za-z][A-Za-z0-9 /&()+-]{1,60}:$/
+const MARKDOWN_HEADING_PATTERN = /^(#{1,4})\s+(.+)$/
+const INLINE_BOLD_PATTERN = /(\*\*[^*\n]+\*\*)/g
 const QUESTION_TAG_PATTERN = /^\[[^\]]+\](?:\s+\[[^\]]+\])+$/u
 const NUMBERED_LINE_PATTERN = /^\d+\.\s+/
 const BULLET_LINE_PATTERN = /^[*-]\s+/
@@ -27,7 +29,30 @@ function inferSubject(content: string) {
 }
 
 function renderMathAwareText(text: string, keyBase: string) {
-  return <MathRenderer key={keyBase} text={detectAndWrapNotation(text)} />
+  const parts = text.split(INLINE_BOLD_PATTERN).filter(Boolean)
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        const isBold = part.startsWith('**') && part.endsWith('**')
+        const value = isBold ? part.slice(2, -2) : part
+        const rendered = (
+          <MathRenderer
+            key={`${keyBase}-math-${index}`}
+            text={detectAndWrapNotation(value)}
+          />
+        )
+
+        return isBold ? (
+          <strong key={`${keyBase}-strong-${index}`} style={{ fontWeight: 800 }}>
+            {rendered}
+          </strong>
+        ) : (
+          rendered
+        )
+      })}
+    </>
+  )
 }
 
 function getLineKind(line: string) {
@@ -173,6 +198,31 @@ function renderTextBlock(block: string, keyBase: string) {
 
   const lines = trimmed.split('\n').map((line) => line.trimEnd())
   const firstLine = lines[0]?.trim() ?? ''
+  const markdownHeading = firstLine.match(MARKDOWN_HEADING_PATTERN)
+
+  if (markdownHeading) {
+    const level = markdownHeading[1].length
+    const heading = markdownHeading[2]
+    return (
+      <section key={keyBase} style={{ display: 'grid', gap: '10px' }}>
+        <div
+          style={{
+            fontSize: level <= 2 ? '20px' : '15px',
+            lineHeight: 1.35,
+            fontWeight: 800,
+            color: level <= 2 ? '#f4f0ff' : '#c4b5fd',
+          }}
+        >
+          {renderMathAwareText(heading, `${keyBase}-heading`)}
+        </div>
+        {lines.length > 1 ? (
+          <div style={{ display: 'grid', gap: '10px' }}>
+            {renderStructuredBody(lines.slice(1), `${keyBase}-heading-body`)}
+          </div>
+        ) : null}
+      </section>
+    )
+  }
 
   if (lines.length === 1 && QUESTION_TAG_PATTERN.test(firstLine)) {
     return (

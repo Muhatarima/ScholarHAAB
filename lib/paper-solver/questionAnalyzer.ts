@@ -75,7 +75,8 @@ const CONCEPT_PATTERNS: Array<[RegExp, string]> = [
   [/\bforce|acceleration|newton|motion\b/i, 'forces and motion'],
   [/\benergy|work done|kinetic|gravitational\b/i, 'energy'],
   [/\bbonding|ionic|covalent|electron transfer\b/i, 'chemical bonding'],
-  [/\bderivative|differentiate|dy\/dx|integration|integral|sin|cos\b/i, 'calculus'],
+  [/\bderivative|differentiate|dy\/dx|integration|integral|area\s+under\s+(?:the\s+)?curv\w*|sin|cos\b/i, 'calculus'],
+  [/\bideal gas|p\s*v\s*(?:=|equals?)?\s*n\s*r\s*t\b/i, 'ideal gas law'],
   [/\bgraph|axis|gradient|plot|sketch\b/i, 'graph'],
 ]
 
@@ -135,6 +136,7 @@ function detectFormulas(concepts: string[], text: string) {
   if (concepts.includes('forces and motion')) formulas.push('F = ma', 'v^2 = u^2 + 2as')
   if (concepts.includes('energy')) formulas.push('E_k = 1/2 mv^2', 'W = Fd')
   if (concepts.includes('resistance')) formulas.push('V = IR')
+  if (concepts.includes('ideal gas law')) formulas.push('PV = nRT')
   if (/\bdy\/dx|differentiate|derivative\b/i.test(text)) formulas.push('product rule / differentiation rules')
   if (/\bintegrat|area under\b/i.test(text)) formulas.push('integration rules')
   return unique(formulas)

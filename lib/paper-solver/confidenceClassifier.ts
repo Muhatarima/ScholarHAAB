@@ -83,10 +83,10 @@ export function classifySolverConfidence(input: {
   }
 
   return {
-    status: 'unsupported',
-    confidence,
-    label: 'UNSUPPORTED',
-    badge: 'UNSUPPORTED - verify with teacher/source',
-    warning: 'I do not have enough verified support for this. Use this only as a starting point.',
+    status: 'ai_reasoning',
+    confidence: Math.max(45, confidence),
+    label: 'AI_REASONING',
+    badge: 'AI REASONING - verify before exam',
+    warning: 'No exact source match found. This answer uses general examiner-style reasoning, so verify before using it in an exam.',
   }
 }

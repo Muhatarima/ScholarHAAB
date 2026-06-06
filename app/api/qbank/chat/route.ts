@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { insertQueryLog, estimateLoggedTokens } from '@/lib/admin/query-logs'
 import { handleProductChat } from '@/lib/server/chat-api'
 import { resolveRequestIdentity } from '@/lib/server/auth'
-import { parseQbankQuery } from '@/lib/server/qbank'
+import { buildQbankGeneralKnowledgeReply, parseQbankQuery } from '@/lib/server/qbank'
 import { createRequestId, logError } from '@/lib/server/logger'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 import { updateMemoryAfterSession } from '@/lib/memory/studentMemory'
@@ -97,6 +97,8 @@ export async function POST(req: Request) {
     return withRequestId(Response.json({ error: 'message is required' }, { status: 400 }), requestId)
   }
 
+  let fallbackMessage = message
+
   try {
     const headers = new Headers(req.headers)
     headers.set('Content-Type', 'application/json')
@@ -111,6 +113,7 @@ export async function POST(req: Request) {
       : []
     const understood = await understandMessage(message, history)
     const cleanMessage = understood.cleanMessage
+    fallbackMessage = cleanMessage
     const parsedQuery = parseQbankQuery(cleanMessage)
     const intelligenceIntent = detectIntent(cleanMessage, history)
     const intelligenceSearchQuery = buildSearchQuery(intelligenceIntent, [])
@@ -283,6 +286,39 @@ export async function POST(req: Request) {
     })
 
     const parsedQuery = parseQbankQuery(message)
+    const fallbackMode = body?.mode === 'tutor' ? 'tutor' : 'direct'
+    const fallbackSessionContext =
+      body?.sessionContext && typeof body.sessionContext === 'object'
+        ? (body.sessionContext as Parameters<typeof buildQbankGeneralKnowledgeReply>[2])
+        : null
+    const directFallback = buildQbankGeneralKnowledgeReply(
+      fallbackMode,
+      fallbackMessage,
+      fallbackSessionContext
+    )
+
+    if (directFallback) {
+      const answer = filterResponse(directFallback)
+      return withRequestId(
+        Response.json({
+          answer,
+          response: answer,
+          mode: 'direct_knowledge_fallback',
+          confidence: 'EXPERT',
+          confidenceBadge: 'AI REASONING - verify before exam',
+          confidenceScore: 62,
+          truth: {
+            confidence: 'EXPERT',
+            confidenceScore: 62,
+            source: 'Core syllabus knowledge',
+            valid: true,
+            issues: [],
+          },
+        }),
+        requestId
+      )
+    }
+
     const offline = getOfflineAnswer(message, parsedQuery.subject ?? undefined)
     const answer = offline.question
       ? [

@@ -781,6 +781,10 @@ export async function handleProductChat(req: Request, options: HandlerOptions) {
       : null
   const parsedAbroadQuery: AbroadParsedQuery | null = null
   const scholarshipQuery = false
+  const directQbankKnowledgeAnswer =
+    !hasFiles && options.product === 'qbank'
+      ? buildQbankGeneralKnowledgeReply(mode, effectiveMessage, sessionContext)
+      : null
   const cacheIntent = resolveCacheIntent({
     product: options.product,
     message: effectiveMessage,
@@ -809,6 +813,7 @@ export async function handleProductChat(req: Request, options: HandlerOptions) {
     !hasFiles &&
     !isPersonalQuestion(effectiveMessage) &&
     !contextDependentFollowUp &&
+    !directQbankKnowledgeAnswer &&
     isCacheableIntent(cacheIntent)
 
   const preview = evalDebugRequested
@@ -984,6 +989,7 @@ export async function handleProductChat(req: Request, options: HandlerOptions) {
 
   const qbankContext =
     options.product === 'qbank' &&
+    !directQbankKnowledgeAnswer &&
     parsedQbankQuery?.queryClass !== 'GENERAL_KNOWLEDGE' &&
     !preferUploadedEvidence
       ? await retrieveQbankContext(retrievalMessage)
@@ -1049,8 +1055,8 @@ export async function handleProductChat(req: Request, options: HandlerOptions) {
     let deterministicQbankAnswer: string | null = null
     deterministicGeneralKnowledgeAnswer =
       options.product === 'qbank' &&
-      rawQbankQuery?.queryClass === 'GENERAL_KNOWLEDGE'
-        ? buildQbankGeneralKnowledgeReply(mode, effectiveMessage, sessionContext)
+      (rawQbankQuery?.queryClass === 'GENERAL_KNOWLEDGE' || directQbankKnowledgeAnswer)
+        ? directQbankKnowledgeAnswer
         : null
 
     if (deterministicGeneralKnowledgeAnswer) {
