@@ -49,9 +49,11 @@ import { isTrustedEvalRequest } from '@/lib/server/eval-mode'
 import { createRequestId, logError, logEvent } from '@/lib/server/logger'
 import {
   applySessionContextToMessage,
+  mergeProfileIntoSessionContext,
   sanitizeSessionContext,
   type SessionContext,
 } from '@/lib/sessionContext'
+import { getStudentProfile } from '@/lib/server/profile'
 
 type HandlerOptions = {
   product: Product
@@ -618,13 +620,25 @@ export async function handleProductChat(req: Request, options: HandlerOptions) {
   const sessionId = typeof payload.sessionId === 'string' ? payload.sessionId : undefined
   const mode =
     options.forceMode ?? (isPromptMode(payload.mode) ? payload.mode : 'direct')
-  const sessionContext = sanitizeSessionContext(payload.sessionContext)
+  const rawSessionContext = sanitizeSessionContext(payload.sessionContext)
 
   const cookieStore = await cookies()
   const identity = await resolveRequestIdentity(cookieStore, req.headers)
 
   if (!identity.isAuthenticated) {
     return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 })
+  }
+
+  // Merge user setup profile (board, level, subjects, language) into sessionContext
+  // Ensures DB retrieval is filtered correctly regardless of what frontend sent
+  let sessionContext = rawSessionContext
+  if (identity.authUserId && identity.authUserId !== 'test-anonymous-user') {
+    try {
+      const profile = await getStudentProfile(identity.authUserId)
+      sessionContext = mergeProfileIntoSessionContext(options.product, profile, rawSessionContext)
+    } catch {
+      // Non-fatal: fall back to whatever frontend sent
+    }
   }
 
   if (!shouldBypassSubscriptionCheck() && !hasPaidAccess(identity.tier)) {
