@@ -93,7 +93,7 @@ function NavIcon({ name }: { name: NavIconName }) {
 }
 
 // ── Black Hole Logo ── used in nav (small) and hero (large)
-export function BlackholeLogo({ size = 'nav' }: { size?: 'nav' | 'hero' }) {
+function BlackholeLogo({ size = 'nav' }: { size?: 'nav' | 'hero' }) {
   const isHero = size === 'hero'
   const w = isHero ? 320 : 52
   const h = isHero ? 320 : 52
