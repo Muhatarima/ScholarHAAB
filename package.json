@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.18",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.106.2",

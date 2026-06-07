@@ -519,6 +519,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
               <ThemeIcon name="exam" size={17} />
               <span>Exam Mode</span>
             </Link>
+            <Link className="shaab-top-nav-link" href="/adaptive-mode" style={styles.topNavLink} title="Adaptive Mode" aria-label="Adaptive Mode">
+              <span>Adaptive</span>
+            </Link>
             <Link className="shaab-top-nav-link" href="/mock" style={styles.topNavLink} title="Mock" aria-label="Mock">
               <span>Mock</span>
             </Link>

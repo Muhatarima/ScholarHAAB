@@ -1,5 +1,5 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-import { createGeminiEmbedding } from '@/lib/rag/embedding'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { createHuggingFaceEmbedding } from '@/lib/rag/embedding'
 import { logError, logEvent } from '@/lib/server/logger'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
@@ -9,6 +9,8 @@ export type RagMetadata = {
   subject?: string | null
   topic?: string | null
   year?: number | string | null
+  year_from?: number | null
+  year_to?: number | null
   paper?: string | null
   question_number?: string | number | null
   source_file?: string | null
@@ -25,11 +27,12 @@ export type RagMatch = {
   tier: string | null
   vectorSimilarity: number | null
   textScore: number | null
+  hybridScore: number | null
 }
 
 export type RagRetrievalResult = {
   matches: RagMatch[]
-  mode: 'hybrid' | 'text' | 'none'
+  mode: 'hybrid' | 'keyword' | 'none'
   embeddingAvailable: boolean
 }
 
@@ -43,21 +46,17 @@ type RagRpcRow = {
   tier?: unknown
   vector_similarity?: unknown
   text_score?: unknown
-  similarity?: unknown
+  hybrid_score?: unknown
 }
 
 function getRagClient(): SupabaseClient {
   try {
     return getSupabaseAdmin()
-  } catch {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    if (!url || !anonKey) {
-      throw new Error('Missing Supabase environment variables for RAG retrieval')
-    }
-    return createClient(url, anonKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
+  } catch (error) {
+    throw new Error(
+      'SUPABASE_SERVICE_ROLE_KEY is required for server-side RAG retrieval.',
+      { cause: error }
+    )
   }
 }
 
@@ -80,8 +79,8 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
   const id = asText(row.id)
   const content = asText(row.content)
   if (!id || !content) return null
-
   const metadata = normalizeMetadata(row.metadata)
+
   return {
     id,
     content,
@@ -92,16 +91,17 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
       asText(metadata.source_file) ||
       'Academic source',
     sourceUrl: asText(row.source_url) || asText(metadata.source_url),
-    sourceKind: asText(row.source_kind) || asText(metadata.source_kind),
+    sourceKind: asText(row.source_kind) || asText(metadata.resource_type),
     tier: asText(row.tier),
-    vectorSimilarity: asNumber(row.vector_similarity ?? row.similarity),
+    vectorSimilarity: asNumber(row.vector_similarity),
     textScore: asNumber(row.text_score),
+    hybridScore: asNumber(row.hybrid_score),
   }
 }
 
 function getMatchThreshold() {
   const value = Number(process.env.RAG_MATCH_THRESHOLD)
-  return Number.isFinite(value) && value > 0 && value < 1 ? value : 0.75
+  return Number.isFinite(value) && value > 0 && value < 1 ? value : 0.65
 }
 
 function buildFilter(filters?: RagMetadata) {
@@ -112,64 +112,59 @@ function buildFilter(filters?: RagMetadata) {
   )
 }
 
-async function retrieveVectorMatches(
+async function hybridSearch(
   client: SupabaseClient,
   question: string,
   filters: RagMetadata,
   limit: number,
   requestId: string
 ) {
-  const embedding = await createGeminiEmbedding(question, 'RETRIEVAL_QUERY')
+  const embedding = await createHuggingFaceEmbedding(question)
   const threshold = getMatchThreshold()
-  const { data, error } = await client.rpc('match_rag_documents', {
+  const { data, error } = await client.rpc('hybrid_search_documents', {
     query_embedding: embedding,
     query_text: question,
     match_threshold: threshold,
     match_count: limit,
     filter: filters,
   })
-
   if (error) throw error
 
   const matches = ((data as RagRpcRow[] | null) ?? [])
     .map(normalizeRow)
     .filter((row): row is RagMatch => Boolean(row))
 
-  logEvent('info', 'rag_vector_retrieval_complete', {
+  logEvent('info', 'hf_rag_hybrid_retrieval_complete', {
     request_id: requestId,
     match_count: matches.length,
     threshold,
     top_similarity: matches[0]?.vectorSimilarity ?? null,
   })
-
   return matches
 }
 
-async function retrieveTextMatches(
+async function keywordSearch(
   client: SupabaseClient,
   question: string,
   filters: RagMetadata,
   limit: number,
   requestId: string
 ) {
-  const { data, error } = await client.rpc('search_rag_documents', {
+  const { data, error } = await client.rpc('search_documents_keyword', {
     query_text: question,
     match_count: limit,
     filter: filters,
   })
-
   if (error) throw error
 
   const matches = ((data as RagRpcRow[] | null) ?? [])
     .map(normalizeRow)
     .filter((row): row is RagMatch => Boolean(row))
 
-  logEvent('info', 'rag_text_retrieval_complete', {
+  logEvent('info', 'hf_rag_keyword_retrieval_complete', {
     request_id: requestId,
     match_count: matches.length,
-    top_text_score: matches[0]?.textScore ?? null,
   })
-
   return matches
 }
 
@@ -183,10 +178,10 @@ export async function retrieveAcademicContext(
 ): Promise<RagRetrievalResult> {
   const client = getRagClient()
   const filters = buildFilter(options.filters)
-  const limit = Math.min(Math.max(options.limit ?? 5, 1), 10)
+  const limit = Math.min(Math.max(options.limit ?? 5, 1), 5)
 
   try {
-    const matches = await retrieveVectorMatches(
+    const matches = await hybridSearch(
       client,
       question,
       filters,
@@ -197,14 +192,14 @@ export async function retrieveAcademicContext(
       return { matches, mode: 'hybrid', embeddingAvailable: true }
     }
   } catch (error) {
-    logError('rag_vector_retrieval_failed', error, {
+    logError('hf_rag_hybrid_retrieval_failed', error, {
       request_id: options.requestId,
-      fallback: 'text_search',
+      fallback: 'keyword',
     })
   }
 
   try {
-    const matches = await retrieveTextMatches(
+    const matches = await keywordSearch(
       client,
       question,
       filters,
@@ -213,11 +208,11 @@ export async function retrieveAcademicContext(
     )
     return {
       matches,
-      mode: matches.length ? 'text' : 'none',
+      mode: matches.length ? 'keyword' : 'none',
       embeddingAvailable: false,
     }
   } catch (error) {
-    logError('rag_text_retrieval_failed', error, {
+    logError('hf_rag_keyword_retrieval_failed', error, {
       request_id: options.requestId,
     })
     return { matches: [], mode: 'none', embeddingAvailable: false }

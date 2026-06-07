@@ -1,21 +1,21 @@
 import { createHash } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
+import { InferenceClient } from '@huggingface/inference'
 import { createClient } from '@supabase/supabase-js'
 import { PDFParse } from 'pdf-parse'
 
 function loadLocalEnv() {
   const envPath = path.join(process.cwd(), '.env.local')
   if (!fs.existsSync(envPath)) return
-
   for (const rawLine of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
     const line = rawLine.trim()
     if (!line || line.startsWith('#')) continue
-    const separatorIndex = line.indexOf('=')
-    if (separatorIndex === -1) continue
-    const key = line.slice(0, separatorIndex).trim()
+    const separator = line.indexOf('=')
+    if (separator < 0) continue
+    const key = line.slice(0, separator).trim()
     const value = line
-      .slice(separatorIndex + 1)
+      .slice(separator + 1)
       .trim()
       .replace(/^['"]|['"]$/g, '')
     if (!(key in process.env)) process.env[key] = value
@@ -26,32 +26,29 @@ loadLocalEnv()
 
 type SourceRecord = Record<string, unknown>
 
-type PreparedChunk = {
-  id: string
+type DocumentChunk = {
   content: string
   metadata: Record<string, unknown>
-  tier: string
-  retrieval_priority: number
-  source_url: string | null
-  source_title: string
-  source_domain: string | null
-  source_kind: string
-  source_quality: string
-  last_checked: string
-  embedding: number[]
-  embedding_model: string
-  embedding_dimensions: number
-  content_hash: string
+  sourceTitle: string
+  sourceUrl: string | null
+  sourceKind: string
 }
 
 const EMBEDDING_MODEL =
-  process.env.GEMINI_EMBEDDING_MODEL?.trim() || 'gemini-embedding-001'
-const EMBEDDING_DIMENSIONS =
-  Number(process.env.GEMINI_EMBEDDING_DIMENSIONS) || 768
-const TARGET_CHARS = 2_048
-const OVERLAP_CHARS = Math.round(TARGET_CHARS * 0.2)
+  process.env.HF_EMBEDDING_MODEL?.trim() ||
+  'sentence-transformers/all-MiniLM-L6-v2'
+const EMBEDDING_DIMENSIONS = 384
+const CHUNK_TOKENS = 500
+const OVERLAP_TOKENS = 50
+const SUPPORTED_EXTENSIONS = new Set([
+  '.txt',
+  '.md',
+  '.pdf',
+  '.json',
+  '.jsonl',
+])
 
-function arg(name: string, fallback?: string) {
+function argument(name: string, fallback?: string) {
   const index = process.argv.indexOf(name)
   return index >= 0 && process.argv[index + 1]
     ? process.argv[index + 1]
@@ -62,49 +59,29 @@ function hasFlag(name: string) {
   return process.argv.includes(name)
 }
 
+function cleanText(value: unknown) {
+  return typeof value === 'string'
+    ? value
+        .replace(/\u0000/g, '')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim()
+    : ''
+}
+
 function hash(value: string) {
   return createHash('sha256').update(value).digest('hex')
 }
 
-function cleanText(value: unknown) {
-  return typeof value === 'string'
-    ? value.replace(/\u0000/g, '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim()
-    : ''
-}
-
-function safeDomain(value: string | null) {
-  if (!value) return null
-  try {
-    return new URL(value).hostname
-  } catch {
-    return null
-  }
-}
-
 function chunkText(text: string) {
-  const normalized = cleanText(text)
-  if (!normalized) return []
-  if (normalized.length <= TARGET_CHARS) return [normalized]
-
+  const tokens = cleanText(text).split(/\s+/).filter(Boolean)
+  if (!tokens.length) return []
   const chunks: string[] = []
-  let start = 0
-  while (start < normalized.length) {
-    let end = Math.min(start + TARGET_CHARS, normalized.length)
-    if (end < normalized.length) {
-      const naturalBreak = Math.max(
-        normalized.lastIndexOf('\n', end),
-        normalized.lastIndexOf('. ', end),
-        normalized.lastIndexOf(' ', end)
-      )
-      if (naturalBreak > start + TARGET_CHARS * 0.6) {
-        end = naturalBreak + 1
-      }
-    }
-
-    const chunk = normalized.slice(start, end).trim()
+  const step = CHUNK_TOKENS - OVERLAP_TOKENS
+  for (let start = 0; start < tokens.length; start += step) {
+    const chunk = tokens.slice(start, start + CHUNK_TOKENS).join(' ').trim()
     if (chunk) chunks.push(chunk)
-    if (end >= normalized.length) break
-    start = Math.max(end - OVERLAP_CHARS, start + 1)
+    if (start + CHUNK_TOKENS >= tokens.length) break
   }
   return chunks
 }
@@ -126,35 +103,128 @@ function collectRecords(value: unknown, output: SourceRecord[] = []) {
     value.forEach((entry) => collectRecords(entry, output))
     return output
   }
-
   if (!value || typeof value !== 'object') return output
   const record = value as SourceRecord
   if (sourceText(record)) {
     output.push(record)
     return output
   }
-
   Object.values(record).forEach((entry) => collectRecords(entry, output))
   return output
 }
 
-async function loadRecords(inputPath: string) {
-  const extension = path.extname(inputPath).toLowerCase()
+function humanizePathSegment(segment: string) {
+  return segment
+    .replace(/\.[^.]+$/g, '')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function inferPathMetadata(filePath: string) {
+  const parts = path
+    .normalize(filePath)
+    .split(path.sep)
+    .map(humanizePathSegment)
+    .filter(Boolean)
+  const lowerParts = parts.map((part) => part.toLowerCase())
+  const metadata: Record<string, unknown> = {}
+
+  const subjectIndex = lowerParts.findIndex((part) =>
+    /\b(physics|chemistry|math|maths|mathematics)\b/.test(part)
+  )
+  if (subjectIndex >= 0) {
+    const lowerSubject = lowerParts[subjectIndex]
+    metadata.subject = lowerSubject.includes('chem')
+      ? 'Chemistry'
+      : lowerSubject.includes('phys')
+        ? 'Physics'
+        : 'Math'
+  }
+
+  const board = lowerParts.find((part) =>
+    /\b(cambridge|cie|edexcel|aqa|ocr|ib)\b/.test(part)
+  )
+  if (board) metadata.board = humanizePathSegment(board).toUpperCase()
+
+  const level = lowerParts.find((part) =>
+    /\b(a level|alevel|as level|igcse|gcse|o level|olevel)\b/.test(part)
+  )
+  if (level) metadata.level = humanizePathSegment(level)
+
+  const yearPart = lowerParts.find((part) => /\b20\d{2}\b/.test(part))
+  const year = yearPart?.match(/\b(20\d{2})\b/)?.[1]
+  if (year) metadata.year = Number(year)
+
+  const genericSegments = new Set([
+    'data',
+    'past papers',
+    'past paper',
+    'papers',
+    'paper',
+    'mark scheme',
+    'mark schemes',
+    'question paper',
+    'question papers',
+    'physics',
+    'chemistry',
+    'math',
+    'maths',
+    'mathematics',
+    'cambridge',
+    'cie',
+    'edexcel',
+    'aqa',
+    'ocr',
+    'ib',
+  ])
+  const topic = subjectIndex >= 0 ? parts.find((part, index) => {
+    if (index <= subjectIndex) return false
+    const lower = lowerParts[index]
+    return (
+      !genericSegments.has(lower) &&
+      !/\b20\d{2}\b/.test(lower) &&
+      !/\b(a level|alevel|as level|igcse|gcse|o level|olevel)\b/.test(lower)
+    )
+  }) : null
+  if (topic) metadata.topic = topic
+
+  return metadata
+}
+
+function listInputFiles(inputPath: string) {
+  const stats = fs.statSync(inputPath)
+  if (stats.isFile()) return [inputPath]
+  const files: string[] = []
+  const visit = (directory: string) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const target = path.join(directory, entry.name)
+      if (entry.isDirectory()) visit(target)
+      else if (SUPPORTED_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) {
+        files.push(target)
+      }
+    }
+  }
+  visit(inputPath)
+  return files.sort()
+}
+
+async function loadFileRecords(filePath: string): Promise<SourceRecord[]> {
+  const extension = path.extname(filePath).toLowerCase()
   if (extension === '.pdf') {
-    const parser = new PDFParse({ data: fs.readFileSync(inputPath) })
+    const parser = new PDFParse({ data: fs.readFileSync(filePath) })
     try {
       const result = await parser.getText()
-      return [{ content: result.text, source_file: path.basename(inputPath) }]
+      return [{ content: result.text, source_file: path.basename(filePath) }]
     } finally {
       await parser.destroy()
     }
   }
 
-  const raw = fs.readFileSync(inputPath, 'utf8')
+  const raw = fs.readFileSync(filePath, 'utf8')
   if (extension === '.txt' || extension === '.md') {
-    return [{ content: raw, source_file: path.basename(inputPath) }]
+    return [{ content: raw, source_file: path.basename(filePath) }]
   }
-
   if (extension === '.jsonl') {
     return raw
       .split(/\r?\n/)
@@ -162,161 +232,181 @@ async function loadRecords(inputPath: string) {
       .filter(Boolean)
       .map((line) => JSON.parse(line) as SourceRecord)
   }
-
   return collectRecords(JSON.parse(raw))
 }
 
-function metadataFor(record: SourceRecord, inputPath: string) {
+function inferMetadata(record: SourceRecord, filePath: string) {
+  const pathMetadata = inferPathMetadata(filePath)
   const keys = [
     'board',
     'level',
     'subject',
     'topic',
-    'sub_topic',
+    'subtopic',
     'chapter',
     'year',
+    'session',
     'paper',
     'paper_code',
-    'paper_type',
     'question_number',
     'marks',
     'resource_type',
   ]
   const metadata = Object.fromEntries(
     keys
-      .filter((key) => record[key] !== null && record[key] !== undefined && record[key] !== '')
+      .filter(
+        (key) =>
+          record[key] !== null &&
+          record[key] !== undefined &&
+          record[key] !== ''
+      )
       .map((key) => [key, record[key]])
   )
+  for (const [key, value] of Object.entries(pathMetadata)) {
+    if (metadata[key] === null || metadata[key] === undefined || metadata[key] === '') {
+      metadata[key] = value
+    }
+  }
   metadata.source_file =
     cleanText(record.source_file ?? record.source_filename ?? record.local_path) ||
-    path.basename(inputPath)
-  metadata.source_url = cleanText(record.source_url) || null
+    path.basename(filePath)
   return metadata
 }
 
-async function embedDocument(text: string, title: string) {
-  const apiKey = process.env.GEMINI_API_KEY?.trim()
-  if (!apiKey) throw new Error('GEMINI_API_KEY is required')
+async function prepareChunks(inputPath: string) {
+  const files = listInputFiles(inputPath)
+  const chunks: DocumentChunk[] = []
+  for (const filePath of files) {
+    const records = await loadFileRecords(filePath)
+    records.forEach((record, recordIndex) => {
+      const metadata = inferMetadata(record, filePath)
+      const sourceTitle =
+        cleanText(record.source_title ?? record.title ?? metadata.source_file) ||
+        path.basename(filePath)
+      const sourceUrl = cleanText(record.source_url) || null
+      const sourceKind =
+        cleanText(record.resource_type ?? record.paper_type) || 'past_paper'
+      chunkText(sourceText(record)).forEach((content, chunkIndex) => {
+        chunks.push({
+          content,
+          metadata: { ...metadata, record_index: recordIndex, chunk_index: chunkIndex },
+          sourceTitle,
+          sourceUrl,
+          sourceKind,
+        })
+      })
+    })
+  }
+  return { files, chunks }
+}
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${EMBEDDING_MODEL}:embedContent`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        content: { parts: [{ text }] },
-        task_type: 'RETRIEVAL_DOCUMENT',
-        title: title.slice(0, 500),
-        output_dimensionality: EMBEDDING_DIMENSIONS,
-      }),
-      signal: AbortSignal.timeout(20_000),
-    }
-  )
-  const payload = (await response.json()) as {
-    embedding?: { values?: number[] }
-    error?: { message?: string }
+function normalizeEmbedding(output: unknown): number[] {
+  if (
+    Array.isArray(output) &&
+    output.every((value) => typeof value === 'number')
+  ) {
+    return output.map(Number)
   }
-  if (!response.ok) {
-    throw new Error(
-      `Embedding failed (${response.status}): ${payload.error?.message || 'unknown error'}`
-    )
+  if (
+    Array.isArray(output) &&
+    output.length === 1 &&
+    Array.isArray(output[0])
+  ) {
+    return normalizeEmbedding(output[0])
   }
-  const values = payload.embedding?.values
-  if (!Array.isArray(values) || values.length !== EMBEDDING_DIMENSIONS) {
-    throw new Error(`Expected ${EMBEDDING_DIMENSIONS} embedding values`)
-  }
-  return values
+  throw new Error('Unexpected Hugging Face embedding response')
 }
 
 async function main() {
   const inputPath = path.resolve(
-    arg('--input', 'data/cleaned_chunks.jsonl') as string
+    argument('--input', 'data/past-papers') as string
   )
-  const limit = Number(arg('--limit', '0'))
-  const batchSize = Math.max(1, Number(arg('--batch-size', '25')))
-  const records = await loadRecords(inputPath)
-  const selected =
-    Number.isFinite(limit) && limit > 0 ? records.slice(0, limit) : records
+  const limit = Number(argument('--limit', '0'))
+  const batchSize = Math.max(1, Number(argument('--batch-size', '16')))
+  const prepared = await prepareChunks(inputPath)
+  const chunks =
+    Number.isFinite(limit) && limit > 0
+      ? prepared.chunks.slice(0, limit)
+      : prepared.chunks
 
   console.log(
     JSON.stringify(
       {
         input: inputPath,
-        records: selected.length,
-        model: EMBEDDING_MODEL,
-        dimensions: EMBEDDING_DIMENSIONS,
-        targetChunkTokensApprox: TARGET_CHARS / 4,
-        overlapPercent: 20,
+        files: prepared.files.length,
+        chunks: chunks.length,
+        chunkTokens: CHUNK_TOKENS,
+        overlapTokens: OVERLAP_TOKENS,
+        embeddingModel: EMBEDDING_MODEL,
+        embeddingDimensions: EMBEDDING_DIMENSIONS,
         dryRun: hasFlag('--dry-run'),
       },
       null,
       2
     )
   )
-
   if (hasFlag('--dry-run')) return
 
+  const apiKey =
+    process.env.HUGGINGFACE_API_KEY?.trim() || process.env.HF_TOKEN?.trim()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!apiKey) throw new Error('HUGGINGFACE_API_KEY is required')
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error(
-      'NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for ingestion'
+      'NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required'
     )
   }
+
+  const hf = new InferenceClient(apiKey)
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
-  const prepared: PreparedChunk[] = []
-  for (let recordIndex = 0; recordIndex < selected.length; recordIndex += 1) {
-    const record = selected[recordIndex]
-    const metadata = metadataFor(record, inputPath)
-    const sourceTitle =
-      cleanText(record.title ?? record.source_title ?? metadata.source_file) ||
-      `Past paper source ${recordIndex + 1}`
-    const sourceUrl = cleanText(record.source_url) || null
-    const sourceKind =
-      cleanText(record.resource_type ?? record.paper_type) || 'past_paper'
+  for (let index = 0; index < chunks.length; index += batchSize) {
+    const batch = chunks.slice(index, index + batchSize)
+    const output = await hf.featureExtraction(
+      {
+        model: EMBEDDING_MODEL,
+        provider: 'hf-inference',
+        inputs: batch.map((chunk) => chunk.content),
+        normalize: true,
+        truncate: true,
+      },
+      { retry_on_error: true, signal: AbortSignal.timeout(60_000) }
+    )
+    if (!Array.isArray(output) || output.length !== batch.length) {
+      throw new Error('Embedding batch size did not match input batch')
+    }
 
-    for (const [chunkIndex, content] of chunkText(sourceText(record)).entries()) {
+    const rows = batch.map((chunk, batchIndex) => {
+      const embedding = normalizeEmbedding(output[batchIndex])
+      if (embedding.length !== EMBEDDING_DIMENSIONS) {
+        throw new Error(
+          `Expected ${EMBEDDING_DIMENSIONS} dimensions, received ${embedding.length}`
+        )
+      }
       const contentHash = hash(
-        `${sourceUrl ?? metadata.source_file}:${chunkIndex}:${content}`
+        `${chunk.metadata.source_file}:${chunk.metadata.record_index}:${chunk.metadata.chunk_index}:${chunk.content}`
       )
-      const embedding = await embedDocument(content, sourceTitle)
-      prepared.push({
-        id: contentHash,
-        content,
-        metadata: { ...metadata, chunk_index: chunkIndex },
-        tier: 'past_paper',
-        retrieval_priority: sourceKind.includes('mark') ? 90 : 60,
-        source_url: sourceUrl,
-        source_title: sourceTitle,
-        source_domain: safeDomain(sourceUrl),
-        source_kind: sourceKind,
-        source_quality: record.answer_ready ? 'answer_ready' : 'extracted',
-        last_checked: new Date().toISOString().slice(0, 10),
+      return {
+        content: chunk.content,
         embedding,
+        metadata: chunk.metadata,
+        source_title: chunk.sourceTitle,
+        source_url: chunk.sourceUrl,
+        source_kind: chunk.sourceKind,
         embedding_model: EMBEDDING_MODEL,
-        embedding_dimensions: EMBEDDING_DIMENSIONS,
         content_hash: contentHash,
-      })
-    }
+        updated_at: new Date().toISOString(),
+      }
+    })
 
-    if ((recordIndex + 1) % 10 === 0 || recordIndex + 1 === selected.length) {
-      console.log(`Embedded ${recordIndex + 1}/${selected.length} records`)
-    }
-  }
-
-  for (let index = 0; index < prepared.length; index += batchSize) {
-    const batch = prepared.slice(index, index + batchSize)
     const { error } = await supabase
-      .from('rag_documents')
-      .upsert(batch, { onConflict: 'id' })
+      .from('documents')
+      .upsert(rows, { onConflict: 'content_hash' })
     if (error) throw error
-    console.log(`Uploaded ${Math.min(index + batch.length, prepared.length)}/${prepared.length} chunks`)
+    console.log(`Uploaded ${Math.min(index + batch.length, chunks.length)}/${chunks.length}`)
   }
 }
 

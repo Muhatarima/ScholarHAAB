@@ -4,6 +4,7 @@ import { getSetupCompleted } from '@/lib/auth/setup-status'
 
 const PROTECTED_PREFIXES = [
   '/admin',
+  '/adaptive-mode',
   '/chat',
   '/dashboard',
   '/exam-mode',
@@ -131,6 +132,7 @@ export const config = {
     '/register',
     '/signup',
     '/admin/:path*',
+    '/adaptive-mode/:path*',
     '/chat/:path*',
     '/dashboard/:path*',
     '/exam-mode/:path*',
