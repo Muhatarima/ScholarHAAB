@@ -200,22 +200,35 @@ returns table (
 language sql
 stable
 as $$
+  with scored as (
+    select
+      d.id::text,
+      d.content,
+      d.metadata,
+      d.source_title,
+      d.source_url,
+      d.source_kind,
+      'past_paper'::text as tier,
+      null::double precision as vector_similarity,
+      ts_rank_cd(d.fts, websearch_to_tsquery('english', query_text))::double precision as text_score
+    from public.documents d
+    where nullif(trim(query_text), '') is not null
+      and d.fts @@ websearch_to_tsquery('english', query_text)
+      and public.document_matches_filter(d.metadata, filter)
+  )
   select
-    d.id::text,
-    d.content,
-    d.metadata,
-    d.source_title,
-    d.source_url,
-    d.source_kind,
-    'past_paper'::text as tier,
-    null::double precision,
-    ts_rank_cd(d.fts, websearch_to_tsquery('english', query_text))::double precision,
-    ts_rank_cd(d.fts, websearch_to_tsquery('english', query_text))::double precision
-  from public.documents d
-  where nullif(trim(query_text), '') is not null
-    and d.fts @@ websearch_to_tsquery('english', query_text)
-    and public.document_matches_filter(d.metadata, filter)
-  order by text_score desc
+    scored.id,
+    scored.content,
+    scored.metadata,
+    scored.source_title,
+    scored.source_url,
+    scored.source_kind,
+    scored.tier,
+    scored.vector_similarity,
+    scored.text_score,
+    scored.text_score as hybrid_score
+  from scored
+  order by scored.text_score desc
   limit least(greatest(match_count, 1), 5);
 $$;
 

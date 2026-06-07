@@ -2,6 +2,7 @@ const DEFAULT_EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 const DEFAULT_GENERATION_MODELS = ['google/flan-t5-large', 'microsoft/phi-2']
 const DEFAULT_OCR_MODEL = 'microsoft/trocr-large-printed'
 const EMBEDDING_DIMENSIONS = 384
+const DEFAULT_HF_INFERENCE_BASE_URL = 'https://router.huggingface.co/hf-inference/models'
 
 type GenerateTextInput = {
   fallbackText?: string
@@ -50,6 +51,22 @@ function generationModels() {
 
   const models = configured.length ? configured : DEFAULT_GENERATION_MODELS
   return Array.from(new Set(models))
+}
+
+function getHfInferenceBaseUrl() {
+  return (process.env.HF_INFERENCE_BASE_URL?.trim() || DEFAULT_HF_INFERENCE_BASE_URL).replace(
+    /\/+$/,
+    ''
+  )
+}
+
+function getModelEndpoint(model: string, pipelineTask?: string) {
+  const encodedModel = model
+    .split('/')
+    .map((part) => encodeURIComponent(part))
+    .join('/')
+  const suffix = pipelineTask ? `/pipeline/${encodeURIComponent(pipelineTask)}` : ''
+  return `${getHfInferenceBaseUrl()}/${encodedModel}${suffix}`
 }
 
 function demoFallbackEnabled() {
@@ -139,16 +156,14 @@ async function requestHfJson(
   model: string,
   payload: unknown,
   timeoutMs: number,
-  contentType = 'application/json'
+  contentType = 'application/json',
+  pipelineTask?: string
 ) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), timeoutMs)
   try {
     const response = await fetch(
-      `https://api-inference.huggingface.co/models/${model
-        .split('/')
-        .map(encodeURIComponent)
-        .join('/')}`,
+      getModelEndpoint(model, pipelineTask),
       {
         body: contentType === 'application/json' ? JSON.stringify(payload) : (payload as BodyInit),
         headers: {
@@ -226,7 +241,9 @@ export async function createHuggingFaceEmbedding(text: string) {
         inputs: input.slice(0, 8_000),
         options: { wait_for_model: true, use_cache: true },
       },
-      Number(process.env.HF_EMBEDDING_TIMEOUT_MS || 30_000)
+      Number(process.env.HF_EMBEDDING_TIMEOUT_MS || 30_000),
+      'application/json',
+      'feature-extraction'
     )
   )
 
