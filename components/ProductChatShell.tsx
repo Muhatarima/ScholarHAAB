@@ -61,7 +61,7 @@ type FilePreview = {
 
 type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
 
-const ENDPOINT = '/api/qbank/chat'
+const ENDPOINT = '/api/ask'
 const SUGGESTIONS = [
   'wave motion Physics 2021',
   'waev motion phsyics 2021',
@@ -204,8 +204,29 @@ function confidenceText(confidence?: string) {
   if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
   if (confidence === 'PATTERN_BASED') return 'PATTERN-BASED REASONING - based on similar examiner patterns'
   if (confidence === 'PARTIAL') return 'PARTIAL MATCH - AI reasoning applied'
-  if (confidence === 'UNSUPPORTED') return 'UNSUPPORTED - verify with teacher/source'
+  if (confidence === 'GENERAL_KNOWLEDGE') return 'GENERAL KNOWLEDGE - no matched past paper'
   return 'AI REASONING - verify before exam'
+}
+
+function replaceRetiredFallback(message: Message): Message {
+  if (
+    message.role === 'assistant' &&
+    (/UNSUPPORTED\s*-\s*VERIFY WITH TEACHER\/SOURCE/i.test(message.content) ||
+      /Know the definition, one example, and the mark[- ]scheme keywords/i.test(
+        message.content
+      ))
+  ) {
+    return {
+      ...message,
+      content:
+        'This response came from the retired fallback system. Send the question again to generate a real answer.',
+      confidence: undefined,
+      confidenceBadge: undefined,
+      confidenceScore: undefined,
+      sources: undefined,
+    }
+  }
+  return message
 }
 
 function formatRelativeDate(value?: string) {
@@ -251,7 +272,10 @@ export default function ProductChatShell({ product }: { product: Product }) {
   useEffect(() => {
     void (async () => {
       try {
-        const res = await fetch('/api/profile', { cache: 'no-store' })
+        const res = await fetch('/api/profile', {
+          cache: 'no-store',
+          headers: await buildJsonAuthHeaders(),
+        })
         if (!res.ok) return
         const data = await res.json()
         const profile = data?.profile
@@ -287,15 +311,17 @@ export default function ProductChatShell({ product }: { product: Product }) {
       const nextMessages = Array.isArray(data.messages) ? data.messages : []
       setSessionId(nextSessionId)
       setMessages(
-        nextMessages.map((entry: Message) => ({
-          id: entry.id,
-          role: entry.role,
-          content: entry.content,
-          sources: entry.sources,
-          confidence: entry.confidence,
-          confidenceBadge: entry.confidenceBadge,
-          confidenceScore: entry.confidenceScore,
-        }))
+        nextMessages.map((entry: Message) =>
+          replaceRetiredFallback({
+            id: entry.id,
+            role: entry.role,
+            content: entry.content,
+            sources: entry.sources,
+            confidence: entry.confidence,
+            confidenceBadge: entry.confidenceBadge,
+            confidenceScore: entry.confidenceScore,
+          })
+        )
       )
       if (data.session?.mode === 'direct' || data.session?.mode === 'tutor') {
         setMode(data.session.mode)

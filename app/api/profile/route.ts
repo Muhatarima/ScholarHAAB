@@ -98,7 +98,7 @@ function toLegacyLanguagePreference(value: string | null | undefined) {
 }
 
 export async function GET(req: Request) {
-  const { error: authError } = await requireRealAuth()
+  const { error: authError } = await requireRealAuth(req)
   if (authError) return authError
 
   const requestId = createRequestId()
@@ -157,7 +157,7 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  const { error: authError } = await requireRealAuth()
+  const { error: authError } = await requireRealAuth(req)
   if (authError) return authError
 
   const requestId = createRequestId()

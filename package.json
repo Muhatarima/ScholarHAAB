@@ -46,6 +46,7 @@
     "patterns:extract": "ts-node --transpile-only scripts/extract_patterns_from_papers.ts",
     "test:regressions": "node scripts/run_regression_checks.mjs",
     "eval:rag": "ts-node-script --transpile-only scripts/rag_eval.ts",
+    "rag:ingest": "ts-node --transpile-only scripts/ingest-pastpapers.ts",
     "qa": "ts-node --transpile-only scripts/auto_qa.ts",
     "qa:fix": "ts-node --transpile-only scripts/auto_qa.ts --auto-fix",
     "qa:train": "ts-node --transpile-only scripts/feedback_trainer.ts",

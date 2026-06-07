@@ -4,6 +4,7 @@ import { ACCESS_TOKEN_COOKIE_NAME, VIEWER_KEY_HEADER_NAME } from '@/lib/auth-con
 import { createClientFromCookieStore } from '@/lib/supabase/server'
 import type { Tier } from '@/lib/usage'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
+import { logEvent } from '@/lib/server/logger'
 import { TIER_COOKIE_NAME, VIEWER_COOKIE_NAME } from '@/lib/server/usage'
 
 type Identity = {
@@ -152,8 +153,7 @@ export async function resolveRequestIdentity(
       p_viewer_key: deviceViewerKey
     })
 
-    if (deviceError || deviceAllowed === false) {
-      // Limit exceeded or database error, safely drop authentication privileges
+    if (deviceAllowed === false) {
       return {
         viewerKey: randomUUID(), // Issuing a throwaway viewer key to prevent DB poisoning
         tier: resolveTierFromCookie(tierCookie),
@@ -161,6 +161,14 @@ export async function resolveRequestIdentity(
         authUserId: null,
         shouldSetViewerCookie: true,
       }
+    }
+
+    if (deviceError) {
+      logEvent('warn', 'device_registration_unavailable', {
+        user_id: authUserId,
+        error_code: deviceError.code,
+        error_message: deviceError.message,
+      })
     }
 
     const dbTier = await resolveDbTier(authUserId)

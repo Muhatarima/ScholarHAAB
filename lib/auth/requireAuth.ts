@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { User } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUser } from '@/lib/supabase/serverClient';
 
 function shouldBypassAuthCheck() {
@@ -10,7 +11,28 @@ function shouldBypassAuthCheck() {
   );
 }
 
-export async function requireAuth(_req?: Request): Promise<{
+async function getBearerUser(req?: Request): Promise<User | null> {
+  const authorization = req?.headers.get('authorization')?.trim();
+  const match = authorization ? /^Bearer\s+(.+)$/i.exec(authorization) : null;
+  const accessToken = match?.[1]?.trim();
+  if (!accessToken) return null;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return null;
+
+  const supabase = createClient(url, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await supabase.auth.getUser(accessToken);
+  return error ? null : data.user;
+}
+
+async function resolveAuthenticatedUser(req?: Request) {
+  return (await getBearerUser(req)) ?? (await getAuthenticatedUser());
+}
+
+export async function requireAuth(req?: Request): Promise<{
   user: User | null;
   error: NextResponse | null;
 }> {
@@ -21,7 +43,7 @@ export async function requireAuth(_req?: Request): Promise<{
     };
   }
 
-  const user = await getAuthenticatedUser();
+  const user = await resolveAuthenticatedUser(req);
 
   if (!user) {
     return {
@@ -33,11 +55,11 @@ export async function requireAuth(_req?: Request): Promise<{
   return { user, error: null };
 }
 
-export async function requireRealAuth(): Promise<{
+export async function requireRealAuth(req?: Request): Promise<{
   user: User | null;
   error: NextResponse | null;
 }> {
-  const user = await getAuthenticatedUser();
+  const user = await resolveAuthenticatedUser(req);
 
   if (!user) {
     return {
