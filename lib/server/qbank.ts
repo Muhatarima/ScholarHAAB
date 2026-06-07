@@ -1788,7 +1788,11 @@ let cachedSeedRows: QbankSeedRow[] | null = null
 function isMissingQbankError(error: unknown): boolean {
   const code = (error as { code?: string })?.code
   const message = String((error as { message?: string })?.message ?? '')
-  return code === '42P01' || code === 'PGRST205' || /qbank_topic_map|qbank_questions/i.test(message)
+  return (
+    code === '42P01' ||
+    code === 'PGRST205' ||
+    /qbank_topic_map|qbank_questions|missing supabase admin environment/i.test(message)
+  )
 }
 
 function expandQueryAliases(query: string) {
@@ -2811,6 +2815,17 @@ function buildEmptyQbankContext(parsedQuery: QbankParsedQuery) {
   }
 }
 
+async function safeQbankLookup<T>(lookup: Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await lookup
+  } catch (error) {
+    if (isMissingQbankError(error)) {
+      return fallback
+    }
+    throw error
+  }
+}
+
 export async function retrieveQbankContext(message: string) {
   const parsedQuery = parseQbankQuery(message)
   if (parsedQuery.queryClass === 'GENERAL_KNOWLEDGE') {
@@ -2824,20 +2839,35 @@ export async function retrieveQbankContext(message: string) {
 
   const [topicResult, questionResult, sourceResult, paperResult, conceptResult] = await Promise.all([
     wantsTopicRetrieval || wantsConceptRetrieval
-      ? searchQbankTopics(message)
+      ? safeQbankLookup(
+          searchQbankTopics(message),
+          { enabled: false, source: 'seed' as const, matches: [] as TopicMatch[] }
+        )
       : Promise.resolve({ enabled: false, source: 'seed' as const, matches: [] as TopicMatch[] }),
     wantsPaperRetrieval
-      ? searchQbankQuestions(message)
+      ? safeQbankLookup(
+          searchQbankQuestions(message),
+          { enabled: false, source: 'seed' as const, matches: [] as QuestionMatch[] }
+        )
       : Promise.resolve({ enabled: false, source: 'seed' as const, matches: [] as QuestionMatch[] }),
     wantsPaperRetrieval
-      ? searchQbankSources(parsedQuery)
-      : Promise.resolve({ enabled: false, matches: [] as Awaited<ReturnType<typeof searchQbankSources>>['matches'] }),
+      ? safeQbankLookup(
+          searchQbankSources(parsedQuery),
+          { enabled: false, source: 'seed' as const, matches: [] as Awaited<ReturnType<typeof searchQbankSources>>['matches'] }
+        )
+      : Promise.resolve({ enabled: false, source: 'seed' as const, matches: [] as Awaited<ReturnType<typeof searchQbankSources>>['matches'] }),
     wantsPaperRetrieval
-      ? searchQbankPapers(parsedQuery)
-      : Promise.resolve({ enabled: false, matches: [] as Awaited<ReturnType<typeof searchQbankPapers>>['matches'] }),
+      ? safeQbankLookup(
+          searchQbankPapers(parsedQuery),
+          { enabled: false, source: 'seed' as const, matches: [] as Awaited<ReturnType<typeof searchQbankPapers>>['matches'] }
+        )
+      : Promise.resolve({ enabled: false, source: 'seed' as const, matches: [] as Awaited<ReturnType<typeof searchQbankPapers>>['matches'] }),
     wantsConceptRetrieval || wantsPaperRetrieval
-      ? searchQbankConcepts(parsedQuery)
-      : Promise.resolve({ enabled: false, matches: [] as QbankConceptMatch[] }),
+      ? safeQbankLookup(
+          searchQbankConcepts(parsedQuery),
+          { enabled: false, source: 'seed' as const, matches: [] as QbankConceptMatch[] }
+        )
+      : Promise.resolve({ enabled: false, source: 'seed' as const, matches: [] as QbankConceptMatch[] }),
   ])
   const paperPairMatches = wantsPaperRetrieval ? searchQbankPaperPairs(parsedQuery) : []
   const pdfChunkMatches = wantsPaperRetrieval ? searchQbankPdfChunks(parsedQuery) : []

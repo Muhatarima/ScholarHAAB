@@ -9,6 +9,7 @@ import ExamNightCard from '@/components/ExamNightCard'
 import Logo from '@/components/Logo'
 import StarBackground from '@/components/StarBackground'
 import { BOARDS, LEVELS, SUBJECTS } from '@/lib/profile/setupOptions'
+import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 
 type ExamPlan = {
   meta?: {
@@ -20,6 +21,7 @@ type ExamPlan = {
     examSoon?: boolean
     emergencyMode?: boolean
     dataLabel?: string
+    sourceCount?: number
   }
   mostRepeatedTopics?: Array<{ topic: string; frequency?: number; yearsAppeared?: Array<string | number>; confidence?: string }>
   highProbabilityTopics?: Array<{ topic: string; whyLikely?: string; confidence?: string }>
@@ -33,7 +35,13 @@ type ExamPlan = {
     doFirst?: string[]
     skipForNow?: string[]
   }
-  practiceQuestions?: Array<{ question: string; marks: number; markScheme: string[]; label: string }>
+  practiceQuestions?: Array<{
+    question: string
+    marks: number
+    markScheme: string[]
+    label: string
+    sourceUrl?: string | null
+  }>
   personalWeaknessBoost?: Array<{ topic: string; action: string }>
 }
 
@@ -152,7 +160,10 @@ function ExamModeInner() {
     let active = true
     void (async () => {
       try {
-        const response = await fetch('/api/profile', { cache: 'no-store' })
+        const response = await fetch('/api/profile', {
+          cache: 'no-store',
+          headers: await buildSupabaseAuthHeaders(),
+        })
         if (!response.ok) return
         const data = await response.json()
         const profile = data.profile as {
@@ -187,7 +198,9 @@ function ExamModeInner() {
     try {
       const response = await fetch('/api/exam-plan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await buildSupabaseAuthHeaders({
+          'Content-Type': 'application/json',
+        }),
         body: JSON.stringify({
           subject,
           level,
@@ -290,7 +303,15 @@ function ExamModeInner() {
               <p style={styles.muted}>
                 {plan?.meta?.board || board} · {plan?.meta?.level || level} · {plan?.meta?.subject || subject} · {plan?.meta?.daysLeft ?? daysUntil(examDate) ?? 'date set'} days left
               </p>
-              {plan?.meta?.dataLabel ? <p style={styles.dataLabel}>{plan.meta.dataLabel}</p> : null}
+              {plan?.meta?.dataLabel ? (
+                <p style={styles.dataLabel}>
+                  {plan.meta.dataLabel === 'frequency_from_database'
+                    ? `${plan.meta.sourceCount ?? 0} retrieved past-paper records analysed`
+                    : plan.meta.dataLabel === 'prediction_based_on_available_data'
+                      ? 'Limited matching paper data; prediction uses the available corpus'
+                      : plan.meta.dataLabel}
+                </p>
+              ) : null}
               {error ? <p style={styles.error}>{error}</p> : null}
             </div>
             <button type="button" onClick={() => setStarted(false)} style={styles.ghostButton}>Edit exam</button>

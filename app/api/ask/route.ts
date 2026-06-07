@@ -1,11 +1,15 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { generateResponseFromParts, type AiInputPart } from '@/lib/ai-service'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { generateAcademicAnswer } from '@/lib/rag/answer'
 import type { RagMetadata } from '@/lib/rag/retrieve'
-import { handleProductChat } from '@/lib/server/chat-api'
 import { persistChatTurn } from '@/lib/server/chat-history'
 import { resolveRequestIdentity } from '@/lib/server/auth'
+import {
+  normalizeChatFilesPayload,
+  prepareUploadedFiles,
+} from '@/lib/server/file-input'
 import { createRequestId, logError } from '@/lib/server/logger'
 
 export const runtime = 'nodejs'
@@ -64,6 +68,104 @@ function hasFiles(body: Record<string, unknown>) {
   )
 }
 
+function uploadedQuestion(body: Record<string, unknown>) {
+  const question =
+    typeof body.question === 'string'
+      ? body.question.trim()
+      : typeof body.message === 'string'
+        ? body.message.trim()
+        : ''
+
+  return question || 'Read the attached question paper image or document and solve the visible question.'
+}
+
+async function answerUploadedFiles(input: {
+  body: Record<string, unknown>
+  requestId: string
+  userId: string
+}) {
+  const files = normalizeChatFilesPayload(input.body)
+  const prepared = await prepareUploadedFiles(files)
+  const question = uploadedQuestion(input.body)
+  const history = sanitizeHistory(input.body.history)
+  const parts: AiInputPart[] = [
+    {
+      text: [
+        'STUDENT REQUEST:',
+        question,
+        '',
+        'RECENT CONVERSATION:',
+        history.length
+          ? history.map((item) => `${item.role.toUpperCase()}: ${item.content}`).join('\n')
+          : 'No earlier messages.',
+        '',
+        `ATTACHMENTS: ${prepared.fileSummary ?? 'uploaded academic file'}`,
+        'Inspect the actual attachment as the primary evidence. OCR text, when present, is only a helper and may contain errors.',
+      ].join('\n'),
+    },
+    ...prepared.extractedTextParts,
+    ...prepared.inlineParts,
+  ]
+
+  const systemPrompt = [
+    'You are ScholarHAAB, an expert Cambridge/Edexcel academic tutor and exam-paper analyst.',
+    'Read every visible part of the uploaded image or document before answering.',
+    'Transcribe the exact question you are solving when that helps remove ambiguity.',
+    'Identify board, level, subject, year, paper, question number, and marks only when they are genuinely visible. Never invent them.',
+    'Solve the requested question completely. For Mathematics and Physics, show formula, substitutions, algebra, units, and final answer. For theory, write mark-scheme-ready points.',
+    'If a diagram is present, use it. If one symbol or number is unreadable, state exactly which part is unclear and continue with the readable evidence.',
+    'The uploaded file is a valid source. Do not call this answer general knowledge and do not say no past paper matched.',
+    'Never output UNSUPPORTED or the retired generic mark-scheme template.',
+    'Return clean Markdown only.',
+  ].join('\n')
+
+  const answer = await generateResponseFromParts(parts, systemPrompt, {
+    maxTokens: 1_500,
+    operation: 'academic_uploaded_file_answer',
+    requestId: input.requestId,
+    userKey: input.userId,
+  })
+
+  const sources = prepared.files.map((file, index) => ({
+    id: `upload-${index + 1}`,
+    title: file.fileName,
+    url: null,
+    board: null,
+    level: null,
+    subject: null,
+    topic: null,
+    year: null,
+    paper: null,
+    question_number: null,
+    similarity: null,
+    source: 'Uploaded question paper',
+  }))
+  const confidenceScore = prepared.hasInlineOnlyEvidence ? 82 : 90
+
+  return {
+    answer: answer.trim(),
+    response: answer.trim(),
+    confidence: 'UPLOADED_SOURCE',
+    confidenceScore,
+    confidenceBadge: 'UPLOADED QUESTION PAPER - analyzed from your file',
+    sources,
+    retrievalMode: 'uploaded',
+    sessionId:
+      typeof input.body.sessionId === 'string' ? input.body.sessionId : null,
+    fileAnalysis: {
+      traces: prepared.traces,
+      warnings: prepared.warnings,
+    },
+    truth: {
+      confidence: 'UPLOADED_SOURCE',
+      confidenceScore,
+      valid: true,
+      source: prepared.fileSummary ?? 'Uploaded question paper',
+      issues: prepared.warnings,
+    },
+  }
+}
+
 export async function POST(req: Request) {
   const requestId = createRequestId()
   const { user, error: authError } = await requireAuth(req)
@@ -87,12 +189,40 @@ export async function POST(req: Request) {
   }
 
   if (hasFiles(body)) {
-    const forwarded = new Request(req.url, {
-      method: 'POST',
-      headers: req.headers,
-      body: JSON.stringify(body),
-    })
-    return handleProductChat(forwarded, { product: 'qbank', requestId })
+    try {
+      const result = await answerUploadedFiles({
+        body,
+        requestId,
+        userId: user.id,
+      })
+      return NextResponse.json(result, {
+        headers: {
+          'Cache-Control': 'no-store',
+          'x-request-id': requestId,
+        },
+      })
+    } catch (error) {
+      logError('ask_uploaded_file_failed', error, {
+        request_id: requestId,
+        user_id: user.id,
+      })
+      return NextResponse.json(
+        {
+          error:
+            error instanceof Error
+              ? error.message
+              : 'The uploaded file could not be analyzed.',
+          requestId,
+        },
+        {
+          status: 422,
+          headers: {
+            'Cache-Control': 'no-store',
+            'x-request-id': requestId,
+          },
+        }
+      )
+    }
   }
 
   const question =

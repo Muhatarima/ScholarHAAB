@@ -1,7 +1,8 @@
 import { generateResponse } from '@/lib/ai-service'
 import type { RagMatch, RagMetadata } from '@/lib/rag/retrieve'
 import { retrieveAcademicContext } from '@/lib/rag/retrieve'
-import { logEvent } from '@/lib/server/logger'
+import { retrieveQbankContext } from '@/lib/server/qbank'
+import { logError, logEvent } from '@/lib/server/logger'
 
 export type AcademicSource = {
   id: string
@@ -23,7 +24,7 @@ export type AcademicAnswer = {
   confidenceScore: number
   confidenceBadge: string
   sources: AcademicSource[]
-  retrievalMode: 'hybrid' | 'text' | 'none'
+  retrievalMode: 'hybrid' | 'text' | 'qbank' | 'none'
 }
 
 function metadataText(metadata: RagMetadata, key: keyof RagMetadata) {
@@ -51,7 +52,7 @@ function toSource(match: RagMatch): AcademicSource {
       typeof metadata.question_number === 'string'
         ? metadata.question_number
         : null,
-    similarity: match.vectorSimilarity,
+    similarity: match.vectorSimilarity ?? match.textScore,
   }
 }
 
@@ -72,9 +73,14 @@ function buildSourceContext(matches: RagMatch[]) {
         `Year: ${source.year ?? 'unknown'}`,
         `Paper: ${source.paper ?? 'unknown'}`,
         `Question: ${source.question_number ?? 'unknown'}`,
-        `Vector similarity: ${
-          source.similarity === null ? 'not available' : source.similarity.toFixed(4)
+        `Retrieval score: ${
+          source.similarity === null
+            ? match.textScore === null
+              ? 'not available'
+              : match.textScore.toFixed(4)
+            : source.similarity.toFixed(4)
         }`,
+        `Evidence tier: ${match.tier ?? 'academic source'}`,
         `Content: ${match.content.slice(0, 4_500)}`,
       ].join('\n')
     })
@@ -116,21 +122,23 @@ function retiredFallbackDetected(answer: string) {
 }
 
 function confidenceFor(matches: RagMatch[]) {
-  const bestSimilarity = matches.reduce<number | null>((best, match) => {
-    if (match.vectorSimilarity === null) return best
-    return best === null ? match.vectorSimilarity : Math.max(best, match.vectorSimilarity)
-  }, null)
-
-  if (bestSimilarity === null) {
+  if (!matches.length) {
     return {
       confidence: 'GENERAL_KNOWLEDGE' as const,
       score: 40,
-      badge: 'GENERAL KNOWLEDGE - no verified vector match',
+      badge: 'GENERAL KNOWLEDGE - no verified corpus match',
     }
   }
 
-  const score = Math.max(0, Math.min(100, Math.round(bestSimilarity * 100)))
-  if (score >= 85) {
+  const bestScore = matches.reduce<number>((best, match) => {
+    const score = match.vectorSimilarity ?? match.textScore ?? 0
+    return Math.max(best, score)
+  }, 0)
+  const normalizedScore = bestScore > 1 ? bestScore / 100 : bestScore
+  const score = Math.max(45, Math.min(100, Math.round(normalizedScore * 100)))
+  const exactAnswer = matches.some((match) => match.tier === 'qbank_exact_answer')
+
+  if (exactAnswer || matches.some((match) => (match.vectorSimilarity ?? 0) >= 0.85)) {
     return {
       confidence: 'VERIFIED' as const,
       score,
@@ -141,8 +149,60 @@ function confidenceFor(matches: RagMatch[]) {
   return {
     confidence: 'PARTIAL' as const,
     score,
-    badge: 'PARTIAL PAST-PAPER MATCH - AI reasoning applied',
+    badge: 'ACADEMIC CORPUS MATCH - AI reasoning applied',
   }
+}
+
+async function retrieveQbankMatches(
+  question: string,
+  requestId: string
+): Promise<RagMatch[]> {
+  try {
+    const context = await retrieveQbankContext(question)
+    const parsedLevel = context.parsedQuery.level?.toLowerCase() ?? null
+    const parsedSubject = context.parsedQuery.subject?.toLowerCase() ?? null
+    return context.chunks.filter((chunk) => {
+      const haystack = `${chunk.sourceTitle} ${chunk.content}`.toLowerCase()
+      if (parsedLevel === 'a level' && /\bo level\b|igcse/.test(haystack)) {
+        return false
+      }
+      if (parsedLevel === 'o level' && /\ba level\b/.test(haystack)) {
+        return false
+      }
+      if (parsedSubject && !haystack.includes(parsedSubject)) {
+        return false
+      }
+      return true
+    }).map((chunk) => ({
+      id: chunk.id,
+      content: chunk.content,
+      metadata: {
+        board: context.parsedQuery.board,
+        level: null,
+        subject: null,
+        year: context.parsedQuery.year,
+        paper: context.parsedQuery.paper,
+      },
+      sourceTitle: chunk.sourceTitle,
+      sourceUrl: chunk.sourceUrl,
+      sourceKind: 'qbank',
+      tier: chunk.tier,
+      vectorSimilarity: null,
+      textScore: chunk.score,
+    }))
+  } catch (error) {
+    logError('qbank_retrieval_failed', error, { request_id: requestId })
+    return []
+  }
+}
+
+function mergeMatches(primary: RagMatch[], fallback: RagMatch[], limit = 6) {
+  const matches = new Map<string, RagMatch>()
+  for (const match of [...primary, ...fallback]) {
+    const key = match.id || `${match.sourceTitle}:${match.content.slice(0, 100)}`
+    if (!matches.has(key)) matches.set(key, match)
+  }
+  return Array.from(matches.values()).slice(0, limit)
 }
 
 export async function generateAcademicAnswer(input: {
@@ -153,15 +213,25 @@ export async function generateAcademicAnswer(input: {
   userId: string
 }) {
   const retrievalStartedAt = Date.now()
-  const retrieval = await retrieveAcademicContext(input.question, {
-    filters: input.filters,
-    requestId: input.requestId,
-    limit: 5,
-  })
-  const confidence = confidenceFor(retrieval.matches)
-  const hasVectorSources = retrieval.matches.some(
-    (match) => match.vectorSimilarity !== null
-  )
+  const [retrieval, qbankMatches] = await Promise.all([
+    retrieveAcademicContext(input.question, {
+      filters: input.filters,
+      requestId: input.requestId,
+      limit: 5,
+    }),
+    retrieveQbankMatches(input.question, input.requestId),
+  ])
+  const matches = mergeMatches(retrieval.matches, qbankMatches)
+  const confidence = confidenceFor(matches)
+  const hasRetrievedSources = matches.length > 0
+  const retrievalMode: AcademicAnswer['retrievalMode'] =
+    retrieval.matches.length && qbankMatches.length
+      ? 'hybrid'
+      : retrieval.matches.length
+        ? retrieval.mode
+        : qbankMatches.length
+          ? 'qbank'
+          : 'none'
 
   const systemPrompt = [
     'You are ScholarHAAB, a careful academic tutor for Mathematics, Physics, Chemistry, Biology, and exam subjects.',
@@ -181,7 +251,7 @@ export async function generateAcademicAnswer(input: {
     buildHistoryContext(input.history ?? []) || 'No earlier messages.',
     '',
     'RETRIEVED ACADEMIC CONTEXT:',
-    buildSourceContext(retrieval.matches),
+    buildSourceContext(matches),
     '',
     'STUDENT QUESTION:',
     input.question,
@@ -189,7 +259,7 @@ export async function generateAcademicAnswer(input: {
     'FOLLOW-UP RULE:',
     'If the student message is a short complaint or unclear follow-up, infer the topic from the immediately preceding user/assistant messages and re-answer that topic in a clearer way.',
     '',
-    hasVectorSources
+    hasRetrievedSources
       ? 'Write a complete answer grounded in the relevant context. Cite sources naturally only when their metadata is present.'
       : 'Write a complete general-knowledge answer and include this exact final note: "Source note: This answer is from general academic knowledge, not a matched past paper."',
   ].join('\n')
@@ -209,9 +279,10 @@ export async function generateAcademicAnswer(input: {
 
   logEvent('info', 'academic_answer_complete', {
     request_id: input.requestId,
-    retrieval_mode: retrieval.mode,
-    retrieved_chunks: retrieval.matches.length,
-    top_similarity: retrieval.matches[0]?.vectorSimilarity ?? null,
+    retrieval_mode: retrievalMode,
+    retrieved_chunks: matches.length,
+    qbank_chunks: qbankMatches.length,
+    top_similarity: matches[0]?.vectorSimilarity ?? matches[0]?.textScore ?? null,
     confidence_score: confidence.score,
     answer_length: answer.length,
     retrieval_ms: generationStartedAt - retrievalStartedAt,
@@ -223,7 +294,7 @@ export async function generateAcademicAnswer(input: {
     confidence: confidence.confidence,
     confidenceScore: confidence.score,
     confidenceBadge: confidence.badge,
-    sources: retrieval.matches.map(toSource),
-    retrievalMode: retrieval.mode,
+    sources: matches.map(toSource),
+    retrievalMode,
   } satisfies AcademicAnswer
 }

@@ -9,6 +9,7 @@ import SourceCard from '@/components/SourceCard'
 import StarBackdrop from '@/components/StarBackdrop'
 import VerifiedBadge from '@/components/VerifiedBadge'
 import type { Product, PromptMode } from '@/lib/products'
+import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 import { createSupabaseClient } from '@/lib/supabase/clientClient'
 
 type SourceCitation = {
@@ -68,24 +69,6 @@ const SUGGESTIONS = [
   'bhai integration bujhte parchi na',
   '2022 Chemistry paper questions',
 ]
-
-async function buildJsonAuthHeaders() {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-
-  try {
-    const {
-      data: { session },
-    } = await createSupabaseClient().auth.getSession()
-
-    if (session?.access_token) {
-      headers.Authorization = `Bearer ${session.access_token}`
-    }
-  } catch {
-    // Demo mode can still run without a client session.
-  }
-
-  return headers
-}
 
 function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -274,7 +257,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
       try {
         const res = await fetch('/api/profile', {
           cache: 'no-store',
-          headers: await buildJsonAuthHeaders(),
+          headers: await buildSupabaseAuthHeaders({
+            'Content-Type': 'application/json',
+          }),
         })
         if (!res.ok) return
         const data = await res.json()
@@ -381,7 +366,9 @@ export default function ProductChatShell({ product }: { product: Product }) {
       const endpoint = ENDPOINT
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: await buildJsonAuthHeaders(),
+        headers: await buildSupabaseAuthHeaders({
+          'Content-Type': 'application/json',
+        }),
         body: JSON.stringify({
           message: text,
           mode,

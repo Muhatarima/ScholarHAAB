@@ -1,4 +1,5 @@
 import { searchSimilarQuestions, type SearchResult } from '@/lib/rag/ragSystem'
+import { retrieveQbankContext, searchQbankQuestions } from '@/lib/server/qbank'
 
 export type PastPaperAnalysis = {
   repeatedTopics: Array<{ topic: string; frequency: number; yearsAppeared: number[] }>
@@ -43,6 +44,33 @@ function sortedMap(map: Map<string, number>, limit = 8) {
     .slice(0, limit)
 }
 
+function sameExamScope(source: Pick<SearchResult, 'board' | 'level' | 'subject'>, input: {
+  board: string
+  level: string
+  subject: string
+}) {
+  const sourceBoard = source.board?.toLowerCase() ?? ''
+  const sourceLevel = source.level?.toLowerCase() ?? ''
+  const sourceSubject = source.subject?.toLowerCase() ?? ''
+  const requestedBoard = input.board.toLowerCase()
+  const requestedLevel = input.level.toLowerCase()
+  const requestedSubject = input.subject.toLowerCase()
+
+  if (sourceBoard && sourceBoard !== 'general' && !sourceBoard.includes(requestedBoard)) {
+    return false
+  }
+  if (sourceSubject && sourceSubject !== 'general' && !sourceSubject.includes(requestedSubject)) {
+    return false
+  }
+  if (requestedLevel === 'a level' && /\bo level\b|igcse/.test(sourceLevel)) {
+    return false
+  }
+  if (requestedLevel === 'o level' && /\ba level\b/.test(sourceLevel)) {
+    return false
+  }
+  return true
+}
+
 export async function analyzePastPapers({
   level,
   board,
@@ -63,17 +91,106 @@ export async function analyzePastPapers({
   const query = [board, level, subject, paperType, topicFocus, 'past paper mark scheme formula pattern']
     .filter(Boolean)
     .join(' ')
-  const sources = await searchSimilarQuestions(
-    query,
-    {
-      board: board.toLowerCase(),
-      level,
-      subject,
-      year_from: yearFrom,
-      year_to: currentYear,
-    },
-    30
-  )
+  let sources: SearchResult[] = []
+
+  try {
+    sources = await searchSimilarQuestions(
+      query,
+      {
+        board: board.toLowerCase(),
+        level,
+        subject,
+        year_from: yearFrom,
+        year_to: currentYear,
+      },
+      30
+    )
+  } catch (error) {
+    console.warn('Database past-paper search unavailable; using compiled QBank.', error)
+  }
+
+  sources = sources.filter((source) => sameExamScope(source, { board, level, subject }))
+
+  if (sources.length < 8) {
+    try {
+      const compiled = await searchQbankQuestions(query)
+      const compiledSources: SearchResult[] = compiled.matches
+        .map((row) => {
+          const confidence: SearchResult['confidence'] =
+            row.linkQuality === 'exact'
+              ? 'VERIFIED'
+              : row.linkQuality === 'hierarchical'
+                ? 'PARTIAL'
+                : 'LOW_CONFIDENCE'
+          return {
+            id: row.id,
+            board: row.board,
+            level: row.level,
+            subject: row.subject,
+            year: row.year ?? 0,
+            session: '',
+            paper: row.paper ?? '',
+            question_number: row.questionLabel ?? '',
+            question_text: row.questionText,
+            marks: row.marks ?? null,
+            mark_scheme: row.answerSummary || row.solution || null,
+            mark_scheme_points: row.methodSteps,
+            topic: row.topic,
+            subtopic: row.chapter,
+            source_url: row.sourceUrl ?? row.answerSourceUrl,
+            similarity: Math.min(0.95, Math.max(0.75, (row.linkScore || 75) / 100)),
+            confidence,
+          }
+        })
+        .filter((source) => sameExamScope(source, { board, level, subject }))
+      const deduped = new Map(sources.map((source) => [source.id, source]))
+      for (const source of compiledSources) {
+        if (!deduped.has(source.id)) deduped.set(source.id, source)
+      }
+      sources = Array.from(deduped.values()).slice(0, 30)
+    } catch (error) {
+      console.warn('Compiled QBank analysis unavailable.', error)
+    }
+  }
+
+  if (sources.length < 3) {
+    try {
+      const qbankContext = await retrieveQbankContext(query)
+      const contextSources: SearchResult[] = qbankContext.chunks
+        .map((chunk) => {
+          const confidence: SearchResult['confidence'] =
+            chunk.score >= 0.85 ? 'PARTIAL' : 'LOW_CONFIDENCE'
+          return {
+            id: chunk.id,
+            board: qbankContext.parsedQuery.board ?? board,
+            level: qbankContext.parsedQuery.level ?? level,
+            subject: qbankContext.parsedQuery.subject ?? subject,
+            year: qbankContext.parsedQuery.year ?? 0,
+            session: '',
+            paper: qbankContext.parsedQuery.paper ?? paperType ?? '',
+            question_number: '',
+            question_text: chunk.content,
+            marks: null,
+            mark_scheme: null,
+            mark_scheme_points: [],
+            topic: topicFocus ?? subject,
+            subtopic: null,
+            resource_type: chunk.tier,
+            source_url: chunk.sourceUrl,
+            similarity: chunk.score,
+            confidence,
+          }
+        })
+        .filter((source) => sameExamScope(source, { board, level, subject }))
+      const deduped = new Map(sources.map((source) => [source.id, source]))
+      for (const source of contextSources) {
+        if (!deduped.has(source.id)) deduped.set(source.id, source)
+      }
+      sources = Array.from(deduped.values()).slice(0, 30)
+    } catch (error) {
+      console.warn('QBank context analysis unavailable.', error)
+    }
+  }
 
   const topicCounts = new Map<string, number>()
   const topicYears = new Map<string, Set<number>>()
@@ -116,7 +233,7 @@ export async function analyzePastPapers({
     yearsAppeared: Array.from(topicYears.get(topic) ?? []).sort((a, b) => a - b),
   }))
 
-  const dataLabel = sources.length >= 8 ? 'frequency_from_database' : 'prediction_based_on_available_data'
+  const dataLabel = sources.length >= 3 ? 'frequency_from_database' : 'prediction_based_on_available_data'
 
   return {
     repeatedTopics,

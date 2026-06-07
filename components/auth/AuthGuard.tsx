@@ -1,61 +1,61 @@
-'use client';
+'use client'
 
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { createSupabaseClient } from '@/lib/supabase/clientClient';
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { createSupabaseClient } from '@/lib/supabase/clientClient'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const bypassAuth =
-    process.env.NODE_ENV !== 'production' &&
-    (process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || process.env.DEMO_MODE === 'true');
-  const [checking, setChecking] = useState(!bypassAuth);
-  const [authed, setAuthed] = useState(bypassAuth);
+  const router = useRouter()
+  const pathname = usePathname()
+  const [checking, setChecking] = useState(true)
+  const [authed, setAuthed] = useState(false)
 
   useEffect(() => {
+    const bypassAuth =
+      process.env.NODE_ENV !== 'production' &&
+      process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
     if (bypassAuth) {
-      return;
+      setAuthed(true)
+      setChecking(false)
+      return
     }
 
-    const supabase = createSupabaseClient();
-    supabase.auth.getUser().then(async (result) => {
-      const user = result.data.user;
-      if (!user) {
-        router.replace('/login');
-        setChecking(false);
-        return;
+    let active = true
+    const supabase = createSupabaseClient()
+
+    void supabase.auth.getUser().then(({ data }) => {
+      if (!active) return
+
+      if (!data.user) {
+        const next = pathname ? `?next=${encodeURIComponent(pathname)}` : ''
+        router.replace(`/login${next}`)
+        setAuthed(false)
+      } else {
+        setAuthed(true)
       }
+      setChecking(false)
+    })
 
-      try {
-        const res = await fetch('/api/profile', { cache: 'no-store' });
-        const data = await res.json();
-        const completed = Boolean(data?.profile?.onboardingCompleted);
-
-        if (!completed && pathname !== '/setup') {
-          router.replace('/setup');
-          setChecking(false);
-          return;
-        }
-
-        if (completed && pathname === '/setup') {
-          router.replace('/solver');
-          setChecking(false);
-          return;
-        }
-      } catch {
-        if (pathname !== '/setup') {
-          router.replace('/setup');
-          setChecking(false);
-          return;
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!active) return
+      if (!session?.user) {
+        const next = pathname ? `?next=${encodeURIComponent(pathname)}` : ''
+        router.replace(`/login${next}`)
+        setAuthed(false)
+      } else {
+        setAuthed(true)
+        setChecking(false)
       }
+    })
 
-      setAuthed(true);
-      setChecking(false);
-    });
-  }, [bypassAuth, pathname, router]);
+    return () => {
+      active = false
+      subscription.unsubscribe()
+    }
+  }, [pathname, router])
 
   if (checking) {
     return (
@@ -73,6 +73,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!authed) return null;
-  return <>{children}</>;
+  if (!authed) return null
+
+  return <>{children}</>
 }

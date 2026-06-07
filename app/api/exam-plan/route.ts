@@ -33,6 +33,15 @@ function isDemoUserId(userId: string | undefined) {
   return !userId || userId === 'test-anonymous-user' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)
 }
 
+function isUsablePracticeSource(source: { question_text: string }) {
+  return (
+    source.question_text.length > 40 &&
+    !/pair completeness|question paper available|mark scheme available/i.test(
+      source.question_text
+    )
+  )
+}
+
 async function saveExamPlan(input: {
   userId: string
   level: string
@@ -122,6 +131,7 @@ export async function POST(req: Request) {
     const formulas = analysis.recurringFormulas.length
       ? analysis.recurringFormulas
       : [{ formula: 'Write formula first', topic: topicFocus ?? subject, frequency: 1 }]
+    const practiceSources = analysis.sources.filter(isUsablePracticeSource)
 
     const plan = {
       meta: {
@@ -131,10 +141,12 @@ export async function POST(req: Request) {
         paperType,
         topicFocus,
         examDate,
+        daysLeft: remainingDays,
         remainingDays,
         examSoon,
         emergencyMode,
         dataLabel: analysis.dataLabel,
+        sourceCount: analysis.sources.length,
       },
       mostRepeatedTopics: analysis.repeatedTopics,
       highProbabilityTopics: topTopics,
@@ -153,7 +165,16 @@ export async function POST(req: Request) {
       })),
       theoryRescue: topTopics.slice(0, 3).map((item) => ({
         topic: item.topic,
-        explanation: `Know the definition, one example, and the mark-scheme keywords for ${item.topic}.`,
+        explanation:
+          analysis.sources.find(
+            (source) =>
+              source.topic?.toLowerCase() === item.topic.toLowerCase() &&
+              (source.mark_scheme || source.mark_scheme_points?.length)
+          )?.mark_scheme ??
+          analysis.sources.find(
+            (source) => source.topic?.toLowerCase() === item.topic.toLowerCase()
+          )?.question_text ??
+          item.whyImportant,
       })),
       studyPlan: {
         fifteenMinutePlan: emergencyMode
@@ -164,11 +185,35 @@ export async function POST(req: Request) {
         doFirst: topTopics.slice(0, 3).map((item) => item.topic),
         skipForNow: ['Low-frequency reading', 'Long theory notes without practice'],
       },
-      practiceQuestions: topTopics.slice(0, 3).map((item, index) => ({
-        question: `${subject} ${paperType ?? 'paper'} practice ${index + 1}: Explain or calculate a key idea from ${item.topic}.`,
-        marks: index === 0 ? 4 : 3,
-        label: 'AI-generated mock based on A/O Level pattern',
-      })),
+      practiceQuestions: practiceSources.length
+        ? practiceSources.slice(0, 3).map((source) => ({
+            question: source.question_text,
+            marks: source.marks ?? 4,
+            markScheme:
+              source.mark_scheme_points?.length
+                ? source.mark_scheme_points
+                : source.mark_scheme
+                  ? [source.mark_scheme]
+                  : [],
+            label: [
+              source.board,
+              source.level,
+              source.subject,
+              source.year || null,
+              source.paper || null,
+              source.question_number ? `Q${source.question_number}` : null,
+            ]
+              .filter(Boolean)
+              .join(' '),
+            sourceUrl: source.source_url ?? null,
+          }))
+        : topTopics.slice(0, 3).map((item, index) => ({
+            question: `${subject} ${paperType ?? 'paper'} practice ${index + 1}: Explain or calculate a key idea from ${item.topic}.`,
+            marks: index === 0 ? 4 : 3,
+            markScheme: [],
+            label: 'AI-generated practice because no matching paper was available',
+            sourceUrl: null,
+          })),
       personalWeaknessBoost: {
         weakTopics: weakTopics.slice(0, 5).map((topic) => topic.topic),
         advice: weakTopics.length
