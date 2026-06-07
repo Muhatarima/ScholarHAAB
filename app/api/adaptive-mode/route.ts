@@ -25,6 +25,8 @@ export async function POST(req: Request) {
       subject: required(body.subject, 'subject'),
       topic: required(body.topic, 'topic'),
       board: typeof body.board === 'string' ? body.board.trim() : null,
+      difficulty:
+        typeof body.difficulty === 'string' ? body.difficulty.trim() : null,
       performance:
         typeof body.performance === 'string' ? body.performance.trim() : null,
       requestId,
@@ -40,9 +42,9 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error
+          error instanceof Error && /subject|topic|required/i.test(error.message)
             ? error.message
-            : 'Could not generate adaptive practice.',
+            : 'Please try again later. The AI service is temporarily unavailable.',
         requestId,
       },
       { status: 503 }

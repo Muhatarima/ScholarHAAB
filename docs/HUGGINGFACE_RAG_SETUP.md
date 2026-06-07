@@ -11,23 +11,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 HUGGINGFACE_API_KEY=
 HF_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-HF_GENERATION_MODEL=mistralai/Mistral-7B-Instruct-v0.3
-HF_GENERATION_FALLBACK_MODEL=Qwen/Qwen2.5-7B-Instruct-1M
-RAG_MATCH_THRESHOLD=0.65
+HF_GENERATION_MODEL=google/flan-t5-large
+HF_GENERATION_FALLBACK_MODEL=microsoft/phi-2
+HF_ENABLE_DEMO_FALLBACK=true
+HF_RETRY_ATTEMPTS=3
+RAG_MATCH_THRESHOLD=0.7
 ```
 
-Create the Hugging Face token as a fine-grained token with permission to make
-calls to Inference Providers. A read-only repository token is not enough. If
-the permission is missing, Hugging Face returns:
+Create the Hugging Face token with permission to call the free Inference API.
+The app uses the classic model inference endpoint and retries failures with
+exponential backoff. If Hugging Face is busy, `HF_ENABLE_DEMO_FALLBACK=true`
+returns a deterministic local fallback instead of exposing provider errors to
+students.
 
-```text
-This authentication method does not have sufficient permissions to call Inference Providers
-```
-
-For TrOCR in production, deploy `microsoft/trocr-large-printed` as a Hugging
-Face Inference Endpoint and set `HF_OCR_ENDPOINT`. The shared provider does not
-currently host this model. If the endpoint is absent, the app attempts TrOCR
-first and then uses the configured Hugging Face vision model.
+For OCR, the app calls `microsoft/trocr-large-printed` through the same Hugging
+Face API. If OCR cannot read the image, the API returns a clear message asking
+for a sharper image or typed question.
 
 ## 2. Database
 
@@ -40,6 +39,7 @@ supabase/migrations/20260607_huggingface_documents_rag.sql
 The migration creates:
 
 - `documents` with `vector(384)`, full-text search, metadata, and source fields.
+- `match_documents` with vector similarity threshold `0.7` and top-5 results.
 - `hybrid_search_documents` using vector and keyword scores.
 - `search_documents_keyword` as the embedding-service fallback.
 - `profiles.setup_completed`.
@@ -60,6 +60,14 @@ select public.search_documents_keyword(
 
 If PostgREST reports that this function is missing, the migration has not been
 applied yet.
+
+Also check the main vector RPC:
+
+```sql
+select proname
+from pg_proc
+where proname in ('match_documents', 'hybrid_search_documents', 'search_documents_keyword');
+```
 
 ## 3. Past-paper files
 
@@ -102,7 +110,7 @@ Then generate 384-dimensional embeddings and upload:
 npm run rag:ingest -- --input data/past-papers --batch-size 16
 ```
 
-The script uses 500 whitespace-token chunks with 50-token overlap. Existing
+The script uses 512 whitespace-token chunks with 50-token overlap. Existing
 chunks are updated by `content_hash`, so rerunning is safe.
 
 ## 5. Local test
@@ -128,9 +136,11 @@ Useful direct endpoints:
 
 ```text
 POST /api/explain
+POST /api/solver
 POST /api/exam-mode
 POST /api/adaptive-mode
 POST /api/ask
+GET /api/auth/me
 ```
 
 Every response includes retrieval mode, confidence, model, and source evidence.

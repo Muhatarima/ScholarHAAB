@@ -62,7 +62,7 @@ type FilePreview = {
 
 type ThemeIconName = 'dashboard' | 'exam' | 'logout' | 'file' | 'attach'
 
-const ENDPOINT = '/api/ask'
+const ENDPOINT = '/api/solver'
 const SUGGESTIONS = [
   'wave motion Physics 2021',
   'waev motion phsyics 2021',

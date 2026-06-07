@@ -38,9 +38,9 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error
+          error instanceof Error && /subject|topic|required/i.test(error.message)
             ? error.message
-            : 'Could not analyze the past-paper corpus.',
+            : 'Please try again later. The AI service is temporarily unavailable.',
         requestId,
       },
       { status: 503 }

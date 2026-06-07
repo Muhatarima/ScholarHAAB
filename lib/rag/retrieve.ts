@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { createHuggingFaceEmbedding } from '@/lib/rag/embedding'
+import { createHuggingFaceEmbedding } from '@/lib/rag/embed'
 import { logError, logEvent } from '@/lib/server/logger'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
@@ -45,6 +45,7 @@ type RagRpcRow = {
   source_kind?: unknown
   tier?: unknown
   vector_similarity?: unknown
+  similarity?: unknown
   text_score?: unknown
   hybrid_score?: unknown
 }
@@ -93,7 +94,7 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
     sourceUrl: asText(row.source_url) || asText(metadata.source_url),
     sourceKind: asText(row.source_kind) || asText(metadata.resource_type),
     tier: asText(row.tier),
-    vectorSimilarity: asNumber(row.vector_similarity),
+    vectorSimilarity: asNumber(row.vector_similarity) ?? asNumber(row.similarity),
     textScore: asNumber(row.text_score),
     hybridScore: asNumber(row.hybrid_score),
   }
@@ -101,7 +102,7 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
 
 function getMatchThreshold() {
   const value = Number(process.env.RAG_MATCH_THRESHOLD)
-  return Number.isFinite(value) && value > 0 && value < 1 ? value : 0.65
+  return Number.isFinite(value) && value > 0 && value < 1 ? value : 0.7
 }
 
 function buildFilter(filters?: RagMetadata) {
@@ -110,6 +111,38 @@ function buildFilter(filters?: RagMetadata) {
       ([, value]) => value !== null && value !== undefined && value !== ''
     )
   )
+}
+
+async function vectorSearch(
+  client: SupabaseClient,
+  question: string,
+  filters: RagMetadata,
+  limit: number,
+  requestId: string
+) {
+  const embedding = await createHuggingFaceEmbedding(question)
+  const threshold = getMatchThreshold()
+  const { data, error } = await client.rpc('match_documents', {
+    query_embedding: embedding,
+    query_text: question,
+    match_threshold: threshold,
+    match_count: limit,
+    filter: filters,
+  })
+  if (error) throw error
+
+  const matches = ((data as RagRpcRow[] | null) ?? [])
+    .map(normalizeRow)
+    .filter((row): row is RagMatch => Boolean(row))
+
+  logEvent('info', 'hf_rag_vector_retrieval_complete', {
+    request_id: requestId,
+    filter: filters,
+    match_count: matches.length,
+    threshold,
+    top_similarity: matches[0]?.vectorSimilarity ?? null,
+  })
+  return matches
 }
 
 async function hybridSearch(
@@ -176,9 +209,35 @@ export async function retrieveAcademicContext(
     requestId: string
   }
 ): Promise<RagRetrievalResult> {
-  const client = getRagClient()
+  let client: SupabaseClient
+  try {
+    client = getRagClient()
+  } catch (error) {
+    logError('hf_rag_client_unavailable', error, {
+      request_id: options.requestId,
+    })
+    return { matches: [], mode: 'none', embeddingAvailable: false }
+  }
   const filters = buildFilter(options.filters)
   const limit = Math.min(Math.max(options.limit ?? 5, 1), 5)
+
+  try {
+    const matches = await vectorSearch(
+      client,
+      question,
+      filters,
+      limit,
+      options.requestId
+    )
+    if (matches.length) {
+      return { matches, mode: 'hybrid', embeddingAvailable: true }
+    }
+  } catch (error) {
+    logError('hf_rag_vector_retrieval_failed', error, {
+      request_id: options.requestId,
+      fallback: 'hybrid',
+    })
+  }
 
   try {
     const matches = await hybridSearch(

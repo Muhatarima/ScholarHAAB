@@ -1,4 +1,3 @@
-import { PDFParse } from 'pdf-parse'
 import { extractTextWithHuggingFaceOcr } from '@/lib/rag/embedding'
 import {
   normalizeChatFilesPayload,
@@ -34,6 +33,7 @@ export async function extractAcademicFileText(payload: ChatFilePayload) {
       file.fileType === 'application/pdf' ||
       file.fileName.toLowerCase().endsWith('.pdf')
     ) {
+      const { PDFParse } = await import('pdf-parse')
       const parser = new PDFParse({ data: buffer })
       try {
         const result = await parser.getText()

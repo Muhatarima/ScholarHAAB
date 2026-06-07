@@ -1,8 +1,5 @@
 export {
   createHuggingFaceEmbedding,
-  extractTextWithHuggingFaceOcr,
-  generateHuggingFaceJson,
-  generateHuggingFaceText,
   getEmbeddingDimensions,
   getEmbeddingModel,
 } from '@/lib/huggingface/client'

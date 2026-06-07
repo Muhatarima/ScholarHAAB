@@ -1,385 +1,295 @@
-'use client'
-
 import Link from 'next/link'
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import AuthGuard from '@/components/auth/AuthGuard'
-import Badge from '@/components/Badge'
-import DashboardStatCard from '@/components/DashboardStatCard'
+import { redirect } from 'next/navigation'
+import type { CSSProperties } from 'react'
 import Logo from '@/components/Logo'
 import StarBackground from '@/components/StarBackground'
-import WeakTopicBar from '@/components/WeakTopicBar'
+import { createClient } from '@/lib/supabase/server'
 
-type DashboardApi = {
-  name?: string
-  level?: string
-  board?: string
-  subjects?: string[]
-  questionsToday?: number
-  totalQuestionsAttempted: number
-  overallAccuracy: number
-  studyStreak?: number
-  examCountdowns?: Array<{ subject?: string; daysLeft?: number }>
-  accuracyTrend: Array<{ date: string; accuracy: number; attempts?: number }>
-  weeklyData?: Array<{ day: string; questions?: number; count?: number; accuracy?: number }>
-  weakPoints: Array<{ subject?: string; topic: string; accuracy?: number; timesStruggled?: number }>
-  skippedChapters?: Array<{ subject?: string; topic: string; currentTopic?: string | null; detectionCount?: number }>
-  recentSessions: Array<{
-    id: string
-    subject: string | null
-    topic: string | null
-    questionsAttempted?: number
-    durationMinutes?: number | null
-    startedAt?: string | null
-  }>
-  syllabus: Array<{ topic: string; status?: string; mastery?: number }>
-  todaysPlan?: string[]
+export const dynamic = 'force-dynamic'
+
+type ConversationRow = {
+  assistant_message: string | null
+  created_at: string | null
+  id: string
+  mode: string | null
+  user_message: string | null
 }
 
-type LeaderboardRow = {
-  user_id: string
-  display_name: string | null
-  total_score: number
-  topics_mastered: number
+function short(value: string | null | undefined, length = 220) {
+  const text = value?.replace(/\s+/g, ' ').trim() ?? ''
+  return text.length > length ? `${text.slice(0, length)}...` : text
 }
 
-function fallbackDashboard(): DashboardApi {
-  return {
-    totalQuestionsAttempted: 0,
-    overallAccuracy: 0,
-    accuracyTrend: [],
-    weakPoints: [],
-    recentSessions: [],
-    syllabus: [],
-    todaysPlan: [
-      'Start solving questions and ScholarHAAB will detect your weak topics automatically.',
-    ],
+function formatDate(value: string | null) {
+  if (!value) return ''
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return ''
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    month: 'short',
+  }).format(parsed)
+}
+
+export default async function DashboardPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login?next=/dashboard')
   }
-}
 
-function Empty({ children }: { children: React.ReactNode }) {
-  return <div style={styles.empty}>{children}</div>
-}
+  const [{ data: profile }, { data: conversations }] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('full_name, setup_completed, updated_at')
+      .eq('id', user.id)
+      .maybeSingle(),
+    supabase
+      .from('conversations')
+      .select('id, mode, user_message, assistant_message, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(8),
+  ])
 
-function DashboardInner() {
-  const [data, setData] = useState<DashboardApi>(fallbackDashboard)
-  const [leaderboard, setLeaderboard] = useState<LeaderboardRow[]>([])
-
-  useEffect(() => {
-    let active = true
-    void (async () => {
-      try {
-        const [dashboardRes, leaderboardRes] = await Promise.all([
-          fetch('/api/dashboard', { cache: 'no-store' }),
-          fetch('/api/leaderboard?limit=6', { cache: 'no-store' }),
-        ])
-        const dashboardJson = await dashboardRes.json()
-        const leaderboardJson = await leaderboardRes.json()
-        if (!active) return
-        setData(dashboardJson.dashboard ?? dashboardJson ?? fallbackDashboard())
-        setLeaderboard(Array.isArray(leaderboardJson.leaderboard) ? leaderboardJson.leaderboard : [])
-      } catch {
-        if (active) setData(fallbackDashboard())
-      }
-    })()
-    return () => {
-      active = false
-    }
-  }, [])
-
-  const skipped = useMemo(
-    () =>
-      data.skippedChapters?.length
-        ? data.skippedChapters.map((topic) => ({ topic: topic.topic, status: 'skipped', mastery: 0 }))
-        : data.syllabus.filter((topic) => topic.status === 'skipped'),
-    [data.skippedChapters, data.syllabus]
-  )
-  const weakTopics = data.weakPoints.length
-    ? data.weakPoints
-    : data.syllabus
-        .filter((topic) => topic.status === 'weak')
-        .map((topic) => ({ subject: 'Tracked', topic: topic.topic, accuracy: topic.mastery }))
-  const chartData = data.weeklyData?.length
-    ? data.weeklyData.map((day) => ({ date: day.day, accuracy: day.accuracy ?? day.questions ?? day.count ?? 0 }))
-    : data.accuracyTrend
-  const daysToExam = data.examCountdowns?.[0]?.daysLeft ?? '—'
-  const monthlyImprovement = data.accuracyTrend.length >= 2
-    ? `${Math.max(0, Math.round(data.accuracyTrend.at(-1)!.accuracy - data.accuracyTrend[0].accuracy))}%`
-    : '0%'
+  const rows = ((conversations ?? []) as ConversationRow[]).filter(Boolean)
+  const displayName =
+    typeof profile?.full_name === 'string' && profile.full_name.trim()
+      ? profile.full_name.trim()
+      : user.email?.split('@')[0] ?? 'Student'
+  const setupCompleted = Boolean(profile?.setup_completed)
 
   return (
     <main style={styles.page}>
       <StarBackground variant="chat" />
-      <style>{`
-        @media (max-width: 820px) {
-          .dashboard-stats {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
-          .dashboard-two-col {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
       <nav style={styles.nav}>
         <Logo compact />
         <div style={styles.links}>
           <Link href="/solver" style={styles.link}>Solver</Link>
           <Link href="/exam-mode" style={styles.link}>Exam Mode</Link>
-          <Link href="/ai-approach" style={styles.link}>AI Approach</Link>
+          <Link href="/adaptive-mode" style={styles.link}>Adaptive</Link>
         </div>
       </nav>
 
-      <section style={styles.content}>
-        <section style={styles.profilePanel}>
+      <section style={styles.wrap}>
+        <div style={styles.header}>
           <div>
-            <span style={styles.panelTitle}>Study profile</span>
-            <p style={styles.profileText}>
-              {data.level || 'Level not set'} · {(data.subjects?.length ? data.subjects : ['No subjects selected']).join(', ')}
-            </p>
+            <p style={styles.eyebrow}>Dashboard</p>
+            <h1 style={styles.title}>Welcome back, {displayName}</h1>
+            <p style={styles.subtitle}>{user.email ?? 'Signed in with Supabase'}</p>
           </div>
-          <Link href="/settings/profile" style={styles.profileLink}>Edit profile</Link>
-        </section>
-
-        <div className="dashboard-stats" style={styles.statsGrid}>
-          <DashboardStatCard value={data.questionsToday ?? 0} label="Questions Today" />
-          <DashboardStatCard value={`${Math.round(data.overallAccuracy || 0)}%`} label="Accuracy" />
-          <DashboardStatCard value={data.studyStreak ?? 0} label="Study Streak" />
-          <DashboardStatCard value={daysToExam} label="Days to Exam" />
+          <Link href="/settings/profile" style={styles.primaryAction}>Edit profile</Link>
         </div>
 
-        <section style={styles.graph}>
+        <section style={styles.grid}>
+          <article style={styles.panel}>
+            <span style={styles.label}>Setup Status</span>
+            <strong style={styles.metric}>{setupCompleted ? 'Complete' : 'Not complete'}</strong>
+            <p style={styles.muted}>
+              {setupCompleted
+                ? 'One-time setup is saved. Protected routes should skip /setup.'
+                : 'Finish setup so Solver, Exam Mode, and Adaptive Mode can use your profile.'}
+            </p>
+            {!setupCompleted ? <Link href="/setup" style={styles.secondaryAction}>Finish setup</Link> : null}
+          </article>
+
+          <article style={styles.panel}>
+            <span style={styles.label}>Recent Activity</span>
+            <strong style={styles.metric}>{rows.length}</strong>
+            <p style={styles.muted}>Recent solver conversations saved from authenticated API calls.</p>
+          </article>
+        </section>
+
+        <section style={styles.historyPanel}>
           <div style={styles.panelHeader}>
-            <span style={styles.panelTitle}>Weekly performance</span>
-            <Badge tone="violet">Monthly improvement {monthlyImprovement}</Badge>
-          </div>
-          {chartData.length ? (
-            <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={chartData} margin={{ top: 18, right: 8, left: -24, bottom: 0 }}>
-                <XAxis dataKey="date" tick={{ fill: '#77779d', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis domain={[0, 100]} tick={{ fill: '#77779d', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    background: '#111029',
-                    border: '1px solid rgba(170,85,255,0.18)',
-                    borderRadius: 14,
-                    color: '#E8E8FF',
-                  }}
-                />
-                <Line type="monotone" dataKey="accuracy" stroke="#aa55ff" strokeWidth={3} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-            <Empty>Start studying to see your progress</Empty>
-          )}
-        </section>
-
-        <section className="dashboard-two-col" style={styles.twoCol}>
-          <div style={styles.panel}>
-            <div style={styles.panelHeader}>
-              <span style={styles.panelTitle}>Weak topics</span>
-              <Badge tone="amber">High exam chance</Badge>
-            </div>
-            {weakTopics.length ? (
-              weakTopics.slice(0, 6).map((point, index) => (
-                <WeakTopicBar
-                  key={`${point.subject ?? 'General'}-${point.topic}`}
-                  chance={index < 3}
-                  progress={Number(point.accuracy ?? 40)}
-                  subject={point.subject ?? 'Tracked'}
-                  topic={point.topic}
-                />
-              ))
-            ) : (
-              <Empty>Start solving questions and ScholarHAAB will detect your weak topics automatically.</Empty>
-            )}
+            <h2 style={styles.sectionTitle}>Recent questions</h2>
+            <Link href="/solver" style={styles.secondaryAction}>Ask new</Link>
           </div>
 
-          <div style={styles.panel}>
-            <div style={styles.panelHeader}>
-              <span style={styles.panelTitle}>Skipped chapters</span>
-              {skipped.length >= 2 ? <Badge tone="amber">Cover soon</Badge> : null}
-            </div>
-            {skipped.length ? (
-              skipped.map((topic) => (
-                <Link key={topic.topic} href={`/solver?prompt=${encodeURIComponent(`Cover ${topic.topic}`)}`} style={styles.skipRow}>
-                  <span>{topic.topic}</span>
-                  <span>Cover now</span>
-                </Link>
-              ))
-            ) : (
-              <Empty>No skipped chapters tracked</Empty>
-            )}
-          </div>
-        </section>
-
-        <section className="dashboard-two-col" style={styles.twoCol}>
-          <div style={styles.panel}>
-            <div style={styles.panelHeader}>
-              <span style={styles.panelTitle}>Today&apos;s focus</span>
-            </div>
-            <ul style={styles.planList}>
-              {(data.todaysPlan?.length ? data.todaysPlan : fallbackDashboard().todaysPlan ?? []).map((item) => (
-                <li key={item}>{item}</li>
+          {rows.length ? (
+            <div style={styles.historyList}>
+              {rows.map((row) => (
+                <article key={row.id} style={styles.historyItem}>
+                  <div style={styles.historyMeta}>
+                    <span>{row.mode || 'solver'}</span>
+                    <span>{formatDate(row.created_at)}</span>
+                  </div>
+                  <p style={styles.question}>{short(row.user_message, 180)}</p>
+                  <p style={styles.answer}>{short(row.assistant_message, 260)}</p>
+                </article>
               ))}
-            </ul>
-          </div>
-
-          <div style={styles.panel}>
-            <div style={styles.panelHeader}>
-              <span style={styles.panelTitle}>Leaderboard</span>
             </div>
-            {leaderboard.length ? (
-              leaderboard.map((row, index) => (
-                <div key={row.user_id} style={styles.leaderRow}>
-                  <span>{index + 1}</span>
-                  <span>{row.display_name || 'Student'}</span>
-                  <span>{row.total_score}</span>
-                </div>
-              ))
-            ) : (
-              <Empty>Complete sessions to appear</Empty>
-            )}
-          </div>
+          ) : (
+            <div style={styles.empty}>
+              No saved questions yet. Ask something in Solver and it will appear here.
+            </div>
+          )}
         </section>
       </section>
     </main>
   )
 }
 
-export default function DashboardPage() {
-  return (
-    <AuthGuard>
-      <DashboardInner />
-    </AuthGuard>
-  )
-}
-
-const styles = {
-  page: {
-    background: '#00000d',
-    color: '#E8E8FF',
-    minHeight: '100vh',
-    overflowX: 'hidden',
-    position: 'relative',
-  } satisfies CSSProperties,
+const styles: Record<string, CSSProperties> = {
+  answer: {
+    color: '#c9c5e8',
+    lineHeight: 1.65,
+    margin: '8px 0 0',
+  },
+  empty: {
+    color: '#8f89b3',
+    display: 'grid',
+    minHeight: 160,
+    placeItems: 'center',
+    textAlign: 'center',
+  },
+  eyebrow: {
+    color: '#b975ff',
+    fontSize: 12,
+    fontWeight: 800,
+    letterSpacing: '0.08em',
+    margin: '0 0 10px',
+    textTransform: 'uppercase',
+  },
+  grid: {
+    display: 'grid',
+    gap: 14,
+    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+  },
+  header: {
+    alignItems: 'end',
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    justifyContent: 'space-between',
+  },
+  historyItem: {
+    background: 'rgba(255,255,255,0.035)',
+    border: '1px solid rgba(170,85,255,0.1)',
+    borderRadius: 8,
+    padding: 16,
+  },
+  historyList: {
+    display: 'grid',
+    gap: 12,
+  },
+  historyMeta: {
+    color: '#8f89b3',
+    display: 'flex',
+    fontSize: 12,
+    gap: 12,
+    justifyContent: 'space-between',
+    textTransform: 'capitalize',
+  },
+  historyPanel: {
+    background: 'rgba(255,255,255,0.026)',
+    border: '1px solid rgba(170,85,255,0.09)',
+    borderRadius: 8,
+    padding: 18,
+  },
+  label: {
+    color: '#b9a7e8',
+    fontSize: 13,
+    fontWeight: 700,
+  },
+  link: {
+    color: '#c9c5e8',
+    fontSize: 13,
+    textDecoration: 'none',
+  },
+  links: {
+    display: 'flex',
+    gap: 16,
+  },
+  metric: {
+    color: '#f4eeff',
+    display: 'block',
+    fontSize: 28,
+    marginTop: 8,
+  },
+  muted: {
+    color: '#918aac',
+    lineHeight: 1.55,
+    margin: '10px 0 0',
+  },
   nav: {
     alignItems: 'center',
     borderBottom: '1px solid rgba(170,85,255,0.1)',
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: 18,
     justifyContent: 'space-between',
-    padding: '14px clamp(16px,4vw,40px)',
+    padding: '14px clamp(16px,4vw,44px)',
     position: 'relative',
     zIndex: 2,
-  } satisfies CSSProperties,
-  links: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: 14,
-  } satisfies CSSProperties,
-  link: {
-    color: '#aaa6ca',
-    fontSize: 13,
-    textDecoration: 'none',
-  } satisfies CSSProperties,
-  content: {
-    display: 'grid',
-    gap: 18,
-    margin: '0 auto',
-    padding: '28px clamp(16px,4vw,52px) 52px',
+  },
+  page: {
+    background: '#00000d',
+    color: '#E8E8FF',
+    minHeight: '100vh',
     position: 'relative',
-    width: 'min(1180px, 100%)',
-    zIndex: 1,
-  } satisfies CSSProperties,
-  statsGrid: {
-    display: 'grid',
-    gap: 12,
-    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-  } satisfies CSSProperties,
-  profilePanel: {
-    alignItems: 'center',
-    background: 'rgba(255,255,255,0.035)',
-    border: '1px solid rgba(170,85,255,0.08)',
-    borderRadius: 24,
-    display: 'flex',
-    gap: 16,
-    justifyContent: 'space-between',
-    padding: 16,
-  } satisfies CSSProperties,
-  profileText: {
-    color: '#aaa6ca',
-    margin: '7px 0 0',
-  } satisfies CSSProperties,
-  profileLink: {
-    border: '1px solid rgba(170,85,255,0.16)',
-    borderRadius: 999,
-    color: '#d8b4fe',
-    padding: '9px 12px',
-    textDecoration: 'none',
-  } satisfies CSSProperties,
-  graph: {
-    background: 'rgba(255,255,255,0.035)',
-    border: '1px solid rgba(170,85,255,0.08)',
-    borderRadius: 24,
-    minHeight: 330,
-    padding: 16,
-  } satisfies CSSProperties,
-  twoCol: {
-    display: 'grid',
-    gap: 16,
-    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-  } satisfies CSSProperties,
+  },
   panel: {
     background: 'rgba(255,255,255,0.035)',
-    border: '1px solid rgba(170,85,255,0.08)',
-    borderRadius: 24,
-    minHeight: 260,
-    padding: 16,
-  } satisfies CSSProperties,
+    border: '1px solid rgba(170,85,255,0.1)',
+    borderRadius: 8,
+    padding: 18,
+  },
   panelHeader: {
     alignItems: 'center',
     display: 'flex',
-    gap: 12,
     justifyContent: 'space-between',
-    marginBottom: 12,
-  } satisfies CSSProperties,
-  panelTitle: {
-    color: '#f4eeff',
-    fontSize: 16,
+    marginBottom: 14,
+  },
+  primaryAction: {
+    background: 'linear-gradient(130deg,#7733cc,#aa55ff)',
+    borderRadius: 8,
+    color: '#fff',
     fontWeight: 800,
-  } satisfies CSSProperties,
-  skipRow: {
-    alignItems: 'center',
-    borderBottom: '1px solid rgba(255,255,255,0.055)',
-    color: '#e8e8ff',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '13px 2px',
+    padding: '11px 14px',
     textDecoration: 'none',
-  } satisfies CSSProperties,
-  planList: {
-    color: '#d8d2f2',
-    display: 'grid',
-    gap: 12,
-    lineHeight: 1.6,
+  },
+  question: {
+    color: '#f4eeff',
+    fontWeight: 800,
+    lineHeight: 1.5,
+    margin: '12px 0 0',
+  },
+  secondaryAction: {
+    border: '1px solid rgba(170,85,255,0.18)',
+    borderRadius: 8,
+    color: '#d8b4fe',
+    display: 'inline-flex',
+    fontSize: 13,
+    fontWeight: 800,
+    marginTop: 14,
+    padding: '9px 12px',
+    textDecoration: 'none',
+  },
+  sectionTitle: {
+    fontSize: 20,
     margin: 0,
-    paddingLeft: 18,
-  } satisfies CSSProperties,
-  leaderRow: {
-    alignItems: 'center',
-    borderBottom: '1px solid rgba(255,255,255,0.055)',
-    color: '#d8d2f2',
+  },
+  subtitle: {
+    color: '#aaa6ca',
+    margin: 0,
+  },
+  title: {
+    fontSize: 'clamp(34px,6vw,64px)',
+    fontWeight: 500,
+    letterSpacing: '-0.02em',
+    lineHeight: 1,
+    margin: 0,
+  },
+  wrap: {
     display: 'grid',
-    gap: 10,
-    gridTemplateColumns: '40px 1fr auto',
-    padding: '12px 0',
-  } satisfies CSSProperties,
-  empty: {
-    color: '#77779d',
-    display: 'grid',
-    minHeight: 150,
-    placeItems: 'center',
-    textAlign: 'center',
-  } satisfies CSSProperties,
+    gap: 18,
+    margin: '0 auto',
+    padding: '46px clamp(16px,5vw,60px) 70px',
+    position: 'relative',
+    width: 'min(1120px, 100%)',
+    zIndex: 1,
+  },
 }

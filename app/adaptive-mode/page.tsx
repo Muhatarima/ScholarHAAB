@@ -35,6 +35,7 @@ function AdaptiveModeInner() {
   const [subject, setSubject] = useState('Physics')
   const [topic, setTopic] = useState('Kinematics')
   const [board, setBoard] = useState('Cambridge')
+  const [difficulty, setDifficulty] = useState('medium')
   const [performance, setPerformance] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -53,7 +54,7 @@ function AdaptiveModeInner() {
         headers: await buildSupabaseAuthHeaders({
           'Content-Type': 'application/json',
         }),
-        body: JSON.stringify({ subject, topic, board, performance }),
+        body: JSON.stringify({ subject, topic, board, difficulty, performance }),
       })
       const data = (await response.json()) as AdaptiveResult & { error?: string }
       if (!response.ok) throw new Error(data.error || 'Generation failed.')
@@ -109,6 +110,11 @@ function AdaptiveModeInner() {
             <option>Edexcel</option>
           </select>
           <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Topic" style={styles.field} />
+          <select value={difficulty} onChange={(event) => setDifficulty(event.target.value)} style={styles.field}>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
           <input value={performance} onChange={(event) => setPerformance(event.target.value)} placeholder="Previous performance (optional)" style={styles.field} />
           <button type="button" onClick={() => void generate()} disabled={loading} style={styles.primaryButton}>
             {loading ? <RefreshCw size={17} /> : <Sparkles size={17} />}
@@ -179,7 +185,7 @@ const styles = {
   header: { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 } satisfies CSSProperties,
   eyebrow: { color: '#b983ff', fontSize: 12, fontWeight: 800 } satisfies CSSProperties,
   title: { margin: '7px 0 0', fontSize: 'clamp(34px,6vw,58px)', fontWeight: 500 } satisfies CSSProperties,
-  controls: { display: 'grid', gridTemplateColumns: '150px 150px 1fr 1.3fr auto', gap: 9, padding: 14, borderTop: '1px solid rgba(176,128,255,.14)', borderBottom: '1px solid rgba(176,128,255,.14)', background: 'rgba(255,255,255,.025)' } satisfies CSSProperties,
+  controls: { display: 'grid', gridTemplateColumns: '150px 150px 1fr 130px 1.3fr auto', gap: 9, padding: 14, borderTop: '1px solid rgba(176,128,255,.14)', borderBottom: '1px solid rgba(176,128,255,.14)', background: 'rgba(255,255,255,.025)' } satisfies CSSProperties,
   field: { minWidth: 0, height: 44, border: '1px solid rgba(176,128,255,.18)', borderRadius: 6, background: '#090816', color: '#f4f1ff', padding: '0 12px', outline: 'none', colorScheme: 'dark' } satisfies CSSProperties,
   primaryButton: { height: 44, border: 0, borderRadius: 6, background: '#9b4dff', color: 'white', fontWeight: 800, padding: '0 16px', display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer' } satisfies CSSProperties,
   error: { color: '#fbbf24' } satisfies CSSProperties,

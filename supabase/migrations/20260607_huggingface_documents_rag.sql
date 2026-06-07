@@ -73,7 +73,7 @@ $$;
 create or replace function public.hybrid_search_documents(
   query_embedding vector(384),
   query_text text,
-  match_threshold double precision default 0.65,
+  match_threshold double precision default 0.7,
   match_count integer default 5,
   filter jsonb default '{}'::jsonb
 )
@@ -117,6 +117,61 @@ as $$
     (
       scored.vector_similarity * 0.8
       + least(scored.text_score, 1::double precision) * 0.2
+    ) as hybrid_score
+  from scored
+  where scored.vector_similarity >= match_threshold
+    or scored.text_score > 0
+  order by hybrid_score desc
+  limit least(greatest(match_count, 1), 5);
+$$;
+
+create or replace function public.match_documents(
+  query_embedding vector(384),
+  match_threshold double precision default 0.7,
+  match_count integer default 5,
+  filter jsonb default '{}'::jsonb,
+  query_text text default ''
+)
+returns table (
+  id text,
+  content text,
+  metadata jsonb,
+  source_title text,
+  source_url text,
+  source_kind text,
+  tier text,
+  vector_similarity double precision,
+  text_score double precision,
+  hybrid_score double precision
+)
+language sql
+stable
+as $$
+  with scored as (
+    select
+      d.*,
+      1 - (d.embedding <=> query_embedding) as vector_similarity,
+      case
+        when nullif(trim(query_text), '') is null then 0::double precision
+        else ts_rank_cd(d.fts, websearch_to_tsquery('english', query_text))::double precision
+      end as text_score
+    from public.documents d
+    where d.embedding_model = 'sentence-transformers/all-MiniLM-L6-v2'
+      and public.document_matches_filter(d.metadata, filter)
+  )
+  select
+    scored.id::text,
+    scored.content,
+    scored.metadata,
+    scored.source_title,
+    scored.source_url,
+    scored.source_kind,
+    'past_paper'::text as tier,
+    scored.vector_similarity,
+    scored.text_score,
+    (
+      scored.vector_similarity * 0.82
+      + least(scored.text_score, 1::double precision) * 0.18
     ) as hybrid_score
   from scored
   where scored.vector_similarity >= match_threshold
@@ -174,6 +229,24 @@ create table if not exists public.profiles (
 
 alter table public.profiles
   add column if not exists setup_completed boolean not null default false;
+
+alter table public.profiles enable row level security;
+drop policy if exists "Users can read own profile" on public.profiles;
+create policy "Users can read own profile"
+  on public.profiles for select
+  to authenticated
+  using (auth.uid() = id);
+drop policy if exists "Users can update own profile" on public.profiles;
+create policy "Users can update own profile"
+  on public.profiles for update
+  to authenticated
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
+drop policy if exists "Users can insert own profile" on public.profiles;
+create policy "Users can insert own profile"
+  on public.profiles for insert
+  to authenticated
+  with check (auth.uid() = id);
 
 create table if not exists public.conversations (
   id uuid primary key default gen_random_uuid(),

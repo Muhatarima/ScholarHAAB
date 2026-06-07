@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { User } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
-import { getAuthenticatedUser } from '@/lib/supabase/serverClient';
+import { createRouteHandlerClient } from '@/lib/supabase/route';
 
 function shouldBypassAuthCheck() {
   return (
@@ -29,7 +29,19 @@ async function getBearerUser(req?: Request): Promise<User | null> {
 }
 
 async function resolveAuthenticatedUser(req?: Request) {
-  return (await getBearerUser(req)) ?? (await getAuthenticatedUser());
+  const bearerUser = await getBearerUser(req);
+  if (bearerUser) return bearerUser;
+
+  try {
+    const supabase = await createRouteHandlerClient();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    return error ? null : user;
+  } catch {
+    return null;
+  }
 }
 
 export async function requireAuth(req?: Request): Promise<{

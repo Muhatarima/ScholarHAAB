@@ -3,6 +3,7 @@ import { requireAuth } from '@/lib/auth/requireAuth'
 import { extractAcademicFileText } from '@/lib/rag/file-query'
 import { runExplainPipeline } from '@/lib/rag/pipelines'
 import { createRequestId, logError } from '@/lib/server/logger'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -36,6 +37,12 @@ function hasFiles(body: Record<string, unknown>) {
   return (
     (Array.isArray(body.files) && body.files.length > 0) ||
     (typeof body.fileBase64 === 'string' && body.fileBase64.trim())
+  )
+}
+
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value
   )
 }
 
@@ -91,6 +98,22 @@ export async function POST(req: Request) {
       result.confidenceLabel === 'STRONG_CORPUS_MATCH'
         ? 'VERIFIED'
         : 'PARTIAL'
+    if (isUuid(user.id)) {
+      try {
+        await getSupabaseAdmin().from('conversations').insert({
+          assistant_message: result.answer.slice(0, 20_000),
+          mode: 'solver',
+          sources: result.sources,
+          user_id: user.id,
+          user_message: question.slice(0, 20_000),
+        })
+      } catch (conversationError) {
+        logError('conversation_save_failed', conversationError, {
+          request_id: requestId,
+          user_id: user.id,
+        })
+      }
+    }
 
     return NextResponse.json(
       {
@@ -145,9 +168,9 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error
+          error instanceof Error && /image|ocr|question|required/i.test(error.message)
             ? error.message
-            : 'Hugging Face RAG could not answer the question.',
+            : 'Please try again later. The AI service is temporarily unavailable.',
         requestId,
       },
       { status: 503, headers: { 'x-request-id': requestId } }

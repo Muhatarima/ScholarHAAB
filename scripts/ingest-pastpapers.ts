@@ -1,9 +1,13 @@
 import { createHash } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
-import { InferenceClient } from '@huggingface/inference'
 import { createClient } from '@supabase/supabase-js'
 import { PDFParse } from 'pdf-parse'
+import {
+  createHuggingFaceEmbedding,
+  getEmbeddingDimensions,
+  getEmbeddingModel,
+} from '../lib/huggingface/client'
 
 function loadLocalEnv() {
   const envPath = path.join(process.cwd(), '.env.local')
@@ -35,10 +39,9 @@ type DocumentChunk = {
 }
 
 const EMBEDDING_MODEL =
-  process.env.HF_EMBEDDING_MODEL?.trim() ||
-  'sentence-transformers/all-MiniLM-L6-v2'
-const EMBEDDING_DIMENSIONS = 384
-const CHUNK_TOKENS = 500
+  process.env.HF_EMBEDDING_MODEL?.trim() || getEmbeddingModel()
+const EMBEDDING_DIMENSIONS = getEmbeddingDimensions()
+const CHUNK_TOKENS = 512
 const OVERLAP_TOKENS = 50
 const SUPPORTED_EXTENSIONS = new Set([
   '.txt',
@@ -300,23 +303,6 @@ async function prepareChunks(inputPath: string) {
   return { files, chunks }
 }
 
-function normalizeEmbedding(output: unknown): number[] {
-  if (
-    Array.isArray(output) &&
-    output.every((value) => typeof value === 'number')
-  ) {
-    return output.map(Number)
-  }
-  if (
-    Array.isArray(output) &&
-    output.length === 1 &&
-    Array.isArray(output[0])
-  ) {
-    return normalizeEmbedding(output[0])
-  }
-  throw new Error('Unexpected Hugging Face embedding response')
-}
-
 async function main() {
   const inputPath = path.resolve(
     argument('--input', 'data/past-papers') as string
@@ -358,29 +344,18 @@ async function main() {
     )
   }
 
-  const hf = new InferenceClient(apiKey)
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
   for (let index = 0; index < chunks.length; index += batchSize) {
     const batch = chunks.slice(index, index + batchSize)
-    const output = await hf.featureExtraction(
-      {
-        model: EMBEDDING_MODEL,
-        provider: 'hf-inference',
-        inputs: batch.map((chunk) => chunk.content),
-        normalize: true,
-        truncate: true,
-      },
-      { retry_on_error: true, signal: AbortSignal.timeout(60_000) }
+    const embeddings = await Promise.all(
+      batch.map((chunk) => createHuggingFaceEmbedding(chunk.content))
     )
-    if (!Array.isArray(output) || output.length !== batch.length) {
-      throw new Error('Embedding batch size did not match input batch')
-    }
 
     const rows = batch.map((chunk, batchIndex) => {
-      const embedding = normalizeEmbedding(output[batchIndex])
+      const embedding = embeddings[batchIndex]
       if (embedding.length !== EMBEDDING_DIMENSIONS) {
         throw new Error(
           `Expected ${EMBEDDING_DIMENSIONS} dimensions, received ${embedding.length}`

@@ -36,7 +36,9 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error ? error.message : 'Could not explain the topic.',
+          error instanceof Error && /query|required/i.test(error.message)
+            ? error.message
+            : 'Please try again later. The AI service is temporarily unavailable.',
         requestId,
       },
       { status: 503 }

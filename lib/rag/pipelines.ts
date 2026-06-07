@@ -89,6 +89,35 @@ function evidenceSummary(matches: RagMatch[]) {
   }
 }
 
+function sourceIds(matches: RagMatch[]) {
+  return matches.slice(0, 5).map((_, index) => `S${index + 1}`)
+}
+
+function buildExplainFallback(query: string, matches: RagMatch[]) {
+  const firstSource = matches[0] ? toSource(matches[0]) : null
+  return [
+    'The Hugging Face model is temporarily busy, so I am using the retrieved context and a safe study workflow instead of failing.',
+    '',
+    `Question: ${query}`,
+    '',
+    matches.length
+      ? `Matched source: ${firstSource?.title ?? 'Academic source'}${
+          firstSource?.year ? ` (${firstSource.year})` : ''
+        }.`
+      : 'No strong past-paper source was returned for this exact question.',
+    '',
+    'How to answer it step by step:',
+    '1. Identify the topic and command word in the question.',
+    '2. Write the relevant definition or formula before substituting values.',
+    '3. Keep units with every numerical step.',
+    '4. Finish with a clear final answer and a short exam-style statement.',
+    '',
+    matches.length
+      ? `Use the retrieved evidence IDs ${sourceIds(matches).join(', ')} as the source basis.`
+      : 'Try again in a moment for the full AI-generated explanation.',
+  ].join('\n')
+}
+
 export async function runExplainPipeline(input: {
   query: string
   subject?: string | null
@@ -131,6 +160,7 @@ export async function runExplainPipeline(input: {
       'Give a direct explanation with definitions, formulas, worked steps, units, and a final result when applicable.',
     ].join('\n'),
     maxTokens: 1_500,
+    fallbackText: buildExplainFallback(input.query, retrieval.matches),
   })
 
   return {
@@ -160,6 +190,50 @@ type ExamModeJson = {
     sourceIds?: string[]
   }>
   summary?: string
+}
+
+function buildExamFallback(
+  input: { subject: string; topic: string; board?: string | null },
+  matches: RagMatch[]
+): ExamModeJson {
+  const ids = sourceIds(matches)
+  return {
+    importantTopics: [
+      {
+        name: input.topic,
+        importance: matches.length ? 'high' : 'medium',
+        whyImportant: matches.length
+          ? `This topic appears in the retrieved past-paper evidence (${ids.join(', ')}).`
+          : 'No indexed past-paper match was found yet, so this is syllabus-based guidance.',
+        sourceIds: ids,
+      },
+    ],
+    formulas: [
+      {
+        formula: 'Review the core formula list for this topic.',
+        meaning: 'Use the exact formula that matches the command word and given data.',
+        whenToUse: `When a ${input.subject} question asks for a calculation or explanation in ${input.topic}.`,
+        sourceIds: ids,
+      },
+    ],
+    importantQuestions: matches.length
+      ? matches.slice(0, 5).map((match, index) => ({
+          question: match.content.slice(0, 260),
+          whyImportant: `Retrieved as source S${index + 1} for ${input.topic}.`,
+          sourceIds: [`S${index + 1}`],
+        }))
+      : [
+          {
+            question: `Explain the main idea of ${input.topic} and apply it to one exam-style problem.`,
+            whyImportant:
+              'This is a safe starter question until the past-paper index has enough matching documents.',
+            sourceIds: [],
+          },
+        ],
+    summary: matches.length
+      ? 'Generated from retrieved past-paper chunks while Hugging Face generation was unavailable.'
+      : 'No matching corpus evidence was found. Ingest more past papers for stronger predictions.',
+  }
 }
 
 export async function runExamModePipeline(input: {
@@ -199,6 +273,7 @@ export async function runExamModePipeline(input: {
       '{"importantTopics":[{"name":"","importance":"high|medium|low","whyImportant":"","sourceIds":["S1"]}],"formulas":[{"formula":"","meaning":"","whenToUse":"","sourceIds":["S1"]}],"importantQuestions":[{"question":"","whyImportant":"","sourceIds":["S1"]}],"summary":""}',
     ].join('\n'),
     maxTokens: 1_500,
+    fallbackData: buildExamFallback(input, retrieval.matches),
   })
 
   return {
@@ -228,10 +303,88 @@ type AdaptiveModeJson = {
   sourcePattern?: string
 }
 
+function buildAdaptiveFallback(
+  input: {
+    subject: string
+    topic: string
+    board?: string | null
+    difficulty?: string | null
+    performance?: string | null
+  },
+  matches: RagMatch[]
+): AdaptiveModeJson {
+  const source = matches[0] ? toSource(matches[0]) : null
+  const topic = input.topic.toLowerCase()
+  if (topic.includes('kinematic')) {
+    return {
+      question: {
+        type: 'numerical',
+        text: 'A car starts from rest and accelerates uniformly at 2.0 m/s^2 for 6.0 s. Find its final velocity and distance travelled.',
+        marks: 4,
+        options: [],
+      },
+      answer: 'Final velocity = 12 m/s; distance = 36 m.',
+      explanation: [
+        'Use v = u + at with u = 0, a = 2.0 m/s^2, t = 6.0 s.',
+        'v = 0 + (2.0)(6.0) = 12 m/s.',
+        'Use s = ut + 1/2 at^2.',
+        's = 0 + 1/2(2.0)(6.0)^2 = 36 m.',
+      ],
+      commonMistakes: ['Forgetting that starts from rest means u = 0.', 'Leaving out units.'],
+      sourcePattern: source
+        ? `Based on retrieved pattern ${source.year ?? ''} ${source.board ?? ''} (${source.title}).`
+        : 'No matched corpus evidence; generated as a syllabus-style practice question.',
+    }
+  }
+
+  if (topic.includes('integrat')) {
+    return {
+      question: {
+        type: 'structured',
+        text: 'Find the area under y = 2x + 1 from x = 0 to x = 3.',
+        marks: 4,
+        options: [],
+      },
+      answer: '12 square units.',
+      explanation: [
+        'Area under a curve is found by definite integration.',
+        'Integrate 2x + 1 to get x^2 + x.',
+        'Evaluate from 0 to 3: (3^2 + 3) - (0^2 + 0).',
+        'The area is 12 square units.',
+      ],
+      commonMistakes: ['Using the gradient instead of the integral.', 'Forgetting the lower limit.'],
+      sourcePattern: source
+        ? `Based on retrieved pattern ${source.year ?? ''} ${source.board ?? ''} (${source.title}).`
+        : 'No matched corpus evidence; generated as a syllabus-style practice question.',
+    }
+  }
+
+  return {
+    question: {
+      type: 'structured',
+      text: `Explain the key idea of ${input.topic}, then solve one ${input.difficulty ?? 'medium'} ${input.subject} exam-style application.`,
+      marks: 4,
+      options: [],
+    },
+    answer: 'A complete answer should include the definition, formula or rule, substitution/application, and final statement.',
+    explanation: [
+      'State the core concept first.',
+      'Choose the formula or rule that matches the given data.',
+      'Apply it step by step.',
+      'Check units, signs, and the final wording.',
+    ],
+    commonMistakes: ['Skipping the formula step.', 'Writing a final answer without units or explanation.'],
+    sourcePattern: source
+      ? `Based on retrieved pattern ${source.year ?? ''} ${source.board ?? ''} (${source.title}).`
+      : 'No matched corpus evidence; generated as a syllabus-style practice question.',
+  }
+}
+
 export async function runAdaptiveModePipeline(input: {
   subject: string
   topic: string
   board?: string | null
+  difficulty?: string | null
   performance?: string | null
   requestId: string
 }) {
@@ -262,6 +415,7 @@ export async function runAdaptiveModePipeline(input: {
       `SUBJECT: ${input.subject}`,
       `TOPIC: ${input.topic}`,
       `BOARD: ${input.board ?? 'Any'}`,
+      `DIFFICULTY: ${input.difficulty ?? 'medium'}`,
       `PREVIOUS PERFORMANCE: ${input.performance ?? 'Not supplied'}`,
       '',
       'LAST-10-YEAR EVIDENCE:',
@@ -272,6 +426,7 @@ export async function runAdaptiveModePipeline(input: {
       '{"question":{"type":"MCQ|numerical|structured","text":"","marks":4,"options":[]},"answer":"","explanation":["step 1","step 2"],"commonMistakes":[],"sourcePattern":"Based on pattern of [year/board/source IDs], or no matched corpus evidence"}',
     ].join('\n'),
     maxTokens: 1_400,
+    fallbackData: buildAdaptiveFallback(input, retrieval.matches),
   })
 
   return {
