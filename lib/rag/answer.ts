@@ -5,7 +5,7 @@ export type AcademicSource = RagSource
 
 export type AcademicAnswer = {
   answer: string
-  confidence: 'VERIFIED' | 'PARTIAL'
+  confidence: 'VERIFIED' | 'PARTIAL' | 'GENERAL_KNOWLEDGE'
   confidenceScore: number
   confidenceBadge: string
   sources: AcademicSource[]
@@ -37,11 +37,14 @@ export async function generateAcademicAnswer(input: {
     confidence:
       result.confidenceLabel === 'STRONG_CORPUS_MATCH'
         ? ('VERIFIED' as const)
+        : result.confidenceLabel === 'GENERAL_CHAT' ||
+            result.confidenceLabel === 'GENERAL_KNOWLEDGE_NO_CORPUS_MATCH'
+          ? ('GENERAL_KNOWLEDGE' as const)
         : ('PARTIAL' as const),
     confidenceScore: result.confidenceScore,
     confidenceBadge: result.confidenceLabel.replaceAll('_', ' '),
     sources: result.sources,
-    retrievalMode: result.retrievalMode,
+    retrievalMode: result.retrievalMode as AcademicAnswer['retrievalMode'],
     model: result.model,
   } satisfies AcademicAnswer
 }

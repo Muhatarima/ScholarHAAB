@@ -4,6 +4,8 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { getDashboardData } from '@/lib/progress/progressEngine'
+import { buildAlternativeExplanation } from '@/lib/rag/pipelines'
+import { createRequestId, logError } from '@/lib/server/logger'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 import { getStudentProfile } from '@/lib/server/profile'
 
@@ -128,6 +130,7 @@ function fallbackPayload() {
 }
 
 export async function GET(req: Request) {
+  const requestId = createRequestId()
   const { user, error: authError } = await requireAuth(req)
   if (authError) return authError
   if (!user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -261,6 +264,41 @@ export async function GET(req: Request) {
       : ['Start solving questions and ScholarHAAB will detect your weak topics automatically.'],
   }
 
+  const recommendationSeeds = [
+    ...weakPoints.slice(0, 2).map((point) => ({
+      reason: 'weak_topic',
+      subject: point.subject,
+      topic: point.topic,
+    })),
+    ...skippedChapters.slice(0, 2).map((gap) => ({
+      reason: 'skipped_or_difficult_topic',
+      subject: gap.subject,
+      topic: gap.topic,
+    })),
+  ]
+
+  const alternativeExplanations = (
+    await Promise.all(
+      recommendationSeeds.map(async (seed) => {
+        try {
+          const explanation = await buildAlternativeExplanation({
+            requestId,
+            subject: seed.subject,
+            topic: seed.topic,
+          })
+          return explanation ? { ...seed, ...explanation } : null
+        } catch (error) {
+          logError('dashboard_rag_recommendation_failed', error, {
+            request_id: requestId,
+            topic: seed.topic,
+            user_id: user.id,
+          })
+          return null
+        }
+      })
+    )
+  ).filter(Boolean)
+
   return NextResponse.json({
     profile: {
       level,
@@ -276,6 +314,7 @@ export async function GET(req: Request) {
     skippedChapters,
     recentExamSessions: examSessions,
     recentExamPlans: examPlans,
+    ragRecommendations: alternativeExplanations,
     todayFocus: dashboard.todaysPlan,
     dashboard,
   })

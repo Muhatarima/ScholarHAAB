@@ -1,8 +1,9 @@
 export {
-  createHuggingFaceEmbedding,
-  extractTextWithHuggingFaceOcr,
-  generateHuggingFaceJson,
-  generateHuggingFaceText,
+  createQueryEmbedding,
   getEmbeddingDimensions,
-  getEmbeddingModel,
-} from '@/lib/huggingface/client'
+} from '@/lib/embeddings/client'
+export {
+  extractTextFromImage,
+  generateJson,
+  generateText,
+} from '@/lib/llm/client'

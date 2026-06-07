@@ -1,5 +1,4 @@
 export {
-  createHuggingFaceEmbedding,
+  createQueryEmbedding,
   getEmbeddingDimensions,
-  getEmbeddingModel,
-} from '@/lib/huggingface/client'
+} from '@/lib/embeddings/client'

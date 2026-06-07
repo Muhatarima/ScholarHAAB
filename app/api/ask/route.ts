@@ -97,7 +97,11 @@ export async function POST(req: Request) {
     const confidence =
       result.confidenceLabel === 'STRONG_CORPUS_MATCH'
         ? 'VERIFIED'
-        : 'PARTIAL'
+        : result.confidenceLabel === 'GENERAL_CHAT'
+          ? 'GENERAL_KNOWLEDGE'
+          : result.confidenceLabel === 'GENERAL_KNOWLEDGE_NO_CORPUS_MATCH'
+            ? 'GENERAL_KNOWLEDGE'
+            : 'PARTIAL'
     if (isUuid(user.id)) {
       try {
         await getSupabaseAdmin().from('conversations').insert({
@@ -123,7 +127,7 @@ export async function POST(req: Request) {
         confidenceScore: result.confidenceScore,
         confidenceBadge:
           fileResult.traces.length > 0
-            ? 'HF OCR + RAG ANALYSIS'
+            ? 'OCR + RAG ANALYSIS'
             : result.confidenceLabel.replaceAll('_', ' '),
         retrievalMode: result.retrievalMode,
         model: result.model,
@@ -146,8 +150,10 @@ export async function POST(req: Request) {
           source:
             result.sources[0]?.title ||
             (fileResult.traces.length
-              ? 'Uploaded question processed with Hugging Face OCR'
-              : 'Hugging Face synthesis without a matched corpus source'),
+              ? 'Uploaded question processed with OCR'
+              : result.confidenceLabel === 'GENERAL_CHAT'
+                ? 'General conversation'
+                : 'General academic knowledge without a matched corpus source'),
           issues: result.sources.length
             ? []
             : ['No matching document was returned by the current corpus.'],
@@ -161,7 +167,7 @@ export async function POST(req: Request) {
       }
     )
   } catch (error) {
-    logError('hf_ask_failed', error, {
+    logError('rag_ask_failed', error, {
       request_id: requestId,
       user_id: user.id,
     })

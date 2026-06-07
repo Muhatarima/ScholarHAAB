@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
     })
   } catch (error) {
-    logError('hf_adaptive_mode_failed', error, {
+    logError('rag_adaptive_mode_failed', error, {
       request_id: requestId,
       user_id: user.id,
     })

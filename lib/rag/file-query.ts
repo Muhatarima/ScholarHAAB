@@ -1,4 +1,4 @@
-import { extractTextWithHuggingFaceOcr } from '@/lib/rag/embedding'
+import { extractTextFromImage } from '@/lib/llm/client'
 import {
   normalizeChatFilesPayload,
   type ChatFilePayload,
@@ -16,15 +16,15 @@ export async function extractAcademicFileText(payload: ChatFilePayload) {
   for (const file of files) {
     const buffer = Buffer.from(file.fileBase64, 'base64')
     if (file.fileType.startsWith('image/')) {
-      const result = await extractTextWithHuggingFaceOcr(
-        buffer,
-        file.fileType || 'image/png'
-      )
+      const result = await extractTextFromImage({
+        base64: buffer.toString('base64'),
+        mimeType: file.fileType || 'image/png',
+      })
       sections.push(`Uploaded image ${file.fileName}:\n${result.text}`)
       traces.push({
         fileName: file.fileName,
-        strategy: 'huggingface_ocr',
-        model: result.model,
+        model: `${result.provider}:${result.model}`,
+        strategy: 'gemini_vision_ocr',
       })
       continue
     }
@@ -40,7 +40,7 @@ export async function extractAcademicFileText(payload: ChatFilePayload) {
         const text = result.text.trim()
         if (!text) {
           throw new Error(
-            `${file.fileName} is a scanned PDF with no text layer. Upload the question page as an image for Hugging Face OCR.`
+            `${file.fileName} is a scanned PDF with no text layer. Upload the question page as an image for OCR.`
           )
         }
         sections.push(`Uploaded PDF ${file.fileName}:\n${text}`)

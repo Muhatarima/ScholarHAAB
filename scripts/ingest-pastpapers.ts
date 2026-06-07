@@ -4,10 +4,9 @@ import path from 'node:path'
 import { createClient } from '@supabase/supabase-js'
 import { PDFParse } from 'pdf-parse'
 import {
-  createHuggingFaceEmbedding,
+  createQueryEmbedding,
   getEmbeddingDimensions,
-  getEmbeddingModel,
-} from '../lib/huggingface/client'
+} from '../lib/embeddings/client'
 
 function loadLocalEnv() {
   const envPath = path.join(process.cwd(), '.env.local')
@@ -39,7 +38,9 @@ type DocumentChunk = {
 }
 
 const EMBEDDING_MODEL =
-  process.env.HF_EMBEDDING_MODEL?.trim() || getEmbeddingModel()
+  process.env.LOCAL_EMBEDDING_MODEL?.trim() ||
+  process.env.GEMINI_EMBEDDING_MODEL?.trim() ||
+  'all-MiniLM-L6-v2'
 const EMBEDDING_DIMENSIONS = getEmbeddingDimensions()
 const CHUNK_TOKENS = 512
 const OVERLAP_TOKENS = 50
@@ -333,11 +334,8 @@ async function main() {
   )
   if (hasFlag('--dry-run')) return
 
-  const apiKey =
-    process.env.HUGGINGFACE_API_KEY?.trim() || process.env.HF_TOKEN?.trim()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!apiKey) throw new Error('HUGGINGFACE_API_KEY is required')
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error(
       'NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required'
@@ -351,14 +349,14 @@ async function main() {
   for (let index = 0; index < chunks.length; index += batchSize) {
     const batch = chunks.slice(index, index + batchSize)
     const embeddings = await Promise.all(
-      batch.map((chunk) => createHuggingFaceEmbedding(chunk.content))
+      batch.map((chunk) => createQueryEmbedding(chunk.content))
     )
 
     const rows = batch.map((chunk, batchIndex) => {
       const embedding = embeddings[batchIndex]
-      if (embedding.length !== EMBEDDING_DIMENSIONS) {
+      if (embedding.vector.length !== EMBEDDING_DIMENSIONS) {
         throw new Error(
-          `Expected ${EMBEDDING_DIMENSIONS} dimensions, received ${embedding.length}`
+          `Expected ${EMBEDDING_DIMENSIONS} dimensions, received ${embedding.vector.length}`
         )
       }
       const contentHash = hash(
@@ -366,12 +364,12 @@ async function main() {
       )
       return {
         content: chunk.content,
-        embedding,
+        embedding: embedding.vector,
         metadata: chunk.metadata,
         source_title: chunk.sourceTitle,
         source_url: chunk.sourceUrl,
         source_kind: chunk.sourceKind,
-        embedding_model: EMBEDDING_MODEL,
+        embedding_model: `${embedding.provider}:${EMBEDDING_MODEL}`,
         content_hash: contentHash,
         updated_at: new Date().toISOString(),
       }

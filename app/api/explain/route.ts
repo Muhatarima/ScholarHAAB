@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
     })
   } catch (error) {
-    logError('hf_explain_failed', error, {
+    logError('rag_explain_failed', error, {
       request_id: requestId,
       user_id: user.id,
     })
