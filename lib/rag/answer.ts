@@ -35,14 +35,14 @@ export async function generateAcademicAnswer(input: {
   return {
     answer: result.answer,
     confidence:
-      result.confidenceLabel === 'STRONG_CORPUS_MATCH'
+      result.confidenceLabel.toLowerCase().includes('source-backed')
         ? ('VERIFIED' as const)
-        : result.confidenceLabel === 'GENERAL_CHAT' ||
-            result.confidenceLabel === 'GENERAL_KNOWLEDGE_NO_CORPUS_MATCH'
+        : result.confidenceLabel.toLowerCase().includes('general') ||
+            result.confidenceLabel.toLowerCase().includes('study chat')
           ? ('GENERAL_KNOWLEDGE' as const)
         : ('PARTIAL' as const),
     confidenceScore: result.confidenceScore,
-    confidenceBadge: result.confidenceLabel.replaceAll('_', ' '),
+    confidenceBadge: result.confidenceLabel,
     sources: result.sources,
     retrievalMode: result.retrievalMode as AcademicAnswer['retrievalMode'],
     model: result.model,

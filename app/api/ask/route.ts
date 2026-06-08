@@ -94,14 +94,12 @@ export async function POST(req: Request) {
       history: historyFrom(body.history),
       requestId,
     })
-    const confidence =
-      result.confidenceLabel === 'STRONG_CORPUS_MATCH'
-        ? 'VERIFIED'
-        : result.confidenceLabel === 'GENERAL_CHAT'
-          ? 'GENERAL_KNOWLEDGE'
-          : result.confidenceLabel === 'GENERAL_KNOWLEDGE_NO_CORPUS_MATCH'
-            ? 'GENERAL_KNOWLEDGE'
-            : 'PARTIAL'
+    const label = result.confidenceLabel.toLowerCase()
+    const confidence = label.includes('source-backed')
+      ? 'VERIFIED'
+      : label.includes('corpus-assisted')
+        ? 'PATTERN_BASED'
+        : 'GENERAL_KNOWLEDGE'
     if (isUuid(user.id)) {
       try {
         await getSupabaseAdmin().from('conversations').insert({
@@ -128,7 +126,7 @@ export async function POST(req: Request) {
         confidenceBadge:
           fileResult.traces.length > 0
             ? 'OCR + RAG ANALYSIS'
-            : result.confidenceLabel.replaceAll('_', ' '),
+            : result.confidenceLabel,
         retrievalMode: result.retrievalMode,
         model: result.model,
         sources: result.sources.map((source) => ({
@@ -151,7 +149,7 @@ export async function POST(req: Request) {
             result.sources[0]?.title ||
             (fileResult.traces.length
               ? 'Uploaded question processed with OCR'
-              : result.confidenceLabel === 'GENERAL_CHAT'
+              : label.includes('study chat')
                 ? 'General conversation'
                 : 'General academic knowledge without a matched corpus source'),
           issues: result.sources.length

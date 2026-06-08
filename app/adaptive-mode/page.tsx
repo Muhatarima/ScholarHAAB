@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { Brain, RefreshCw, Sparkles } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import Logo from '@/components/Logo'
+import ProductNav from '@/components/ProductNav'
 import RichMessageContent from '@/components/RichMessageContent'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
@@ -83,11 +83,7 @@ function AdaptiveModeInner() {
       `}</style>
       <nav style={styles.nav}>
         <Logo compact />
-        <div style={styles.navLinks}>
-          <Link href="/solver" style={styles.navLink}>Solver</Link>
-          <Link href="/exam-mode" style={styles.navLink}>Exam Mode</Link>
-          <Link href="/dashboard" style={styles.navLink}>Dashboard</Link>
-        </div>
+        <ProductNav compact style={styles.navLinks} />
       </nav>
 
       <section style={styles.shell}>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import AIReasoningBadge from '@/components/AIReasoningBadge'
 import Badge from '@/components/Badge'
+import ProductNav from '@/components/ProductNav'
 import RichMessageContent from '@/components/RichMessageContent'
 import SourceCard from '@/components/SourceCard'
 import StarBackdrop from '@/components/StarBackdrop'
@@ -186,9 +187,9 @@ function sourceText(sources?: SourceCitation[]) {
 function confidenceText(confidence?: string) {
   if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
   if (confidence === 'PATTERN_BASED') return 'PATTERN-BASED REASONING - based on similar examiner patterns'
-  if (confidence === 'PARTIAL') return 'PARTIAL MATCH - AI reasoning applied'
-  if (confidence === 'GENERAL_KNOWLEDGE') return 'GENERAL KNOWLEDGE - no matched past paper'
-  return 'AI REASONING - verify before exam'
+  if (confidence === 'PARTIAL') return 'CORPUS-ASSISTED ANSWER'
+  if (confidence === 'GENERAL_KNOWLEDGE') return 'GENERAL ACADEMIC ANSWER'
+  return 'AI STUDY ANSWER'
 }
 
 function replaceRetiredFallback(message: Message): Message {
@@ -511,23 +512,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
           </button>
           <nav className="shaab-top-nav" style={styles.topNav} aria-label="App navigation">
             <span className="shaab-credit" style={styles.credit}>Credits {credits}</span>
-            <Link className="shaab-top-nav-link" href="/dashboard" style={styles.topNavLink} title="Dashboard" aria-label="Dashboard">
-              <ThemeIcon name="dashboard" size={17} />
-              <span>Dashboard</span>
-            </Link>
-            <Link className="shaab-top-nav-link" href="/exam-mode" style={styles.topNavLink} title="Exam Mode" aria-label="Exam Mode">
-              <ThemeIcon name="exam" size={17} />
-              <span>Exam Mode</span>
-            </Link>
-            <Link className="shaab-top-nav-link" href="/adaptive-mode" style={styles.topNavLink} title="Adaptive Mode" aria-label="Adaptive Mode">
-              <span>Adaptive</span>
-            </Link>
-            <Link className="shaab-top-nav-link" href="/mock" style={styles.topNavLink} title="Mock" aria-label="Mock">
-              <span>Mock</span>
-            </Link>
-            <Link className="shaab-top-nav-link" href="/ai-approach" style={styles.topNavLink} title="AI Approach" aria-label="AI Approach">
-              <span>AI</span>
-            </Link>
+            <ProductNav compact className="shaab-top-nav-links" />
             <Link className="shaab-top-nav-link" href="/settings/profile" style={styles.topNavLink} title="Profile settings" aria-label="Profile settings">
               <span>Profile</span>
             </Link>

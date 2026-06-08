@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import Logo from '@/components/Logo'
+import ProductNav from '@/components/ProductNav'
 import RichMessageContent from '@/components/RichMessageContent'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
@@ -108,11 +109,7 @@ function DashboardInner() {
       `}</style>
       <nav style={styles.nav}>
         <Logo compact />
-        <div className="dashboard-nav-links" style={styles.links}>
-          <Link href="/solver" style={styles.link}>Solver</Link>
-          <Link href="/exam-mode" style={styles.link}>Exam Mode</Link>
-          <Link href="/adaptive-mode" style={styles.link}>Adaptive</Link>
-        </div>
+        <ProductNav compact className="dashboard-nav-links" style={styles.links} />
       </nav>
 
       <section style={styles.wrap}>

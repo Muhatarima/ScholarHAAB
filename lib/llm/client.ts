@@ -16,7 +16,7 @@ export type LlmTextResult = {
 }
 
 const DEFAULT_PROVIDER_ORDER: LlmProvider[] = ['groq', 'gemini']
-const DEFAULT_GROQ_MODEL = 'llama-3.1-8b-instant'
+const DEFAULT_GROQ_MODELS = ['llama3-8b-8192', 'llama-3.1-8b-instant']
 const DEFAULT_GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash-lite', 'gemini-2.0-flash']
 
 function configuredProviderOrder() {
@@ -38,6 +38,21 @@ function geminiModels() {
         process.env.GEMINI_MODEL,
         process.env.GEMINI_FALLBACK_MODEL,
         ...DEFAULT_GEMINI_MODELS,
+      ]
+        .flatMap((value) => value?.split(',') ?? [])
+        .map((value) => value.trim())
+        .filter(Boolean)
+    )
+  )
+}
+
+function groqModels() {
+  return Array.from(
+    new Set(
+      [
+        process.env.GROQ_MODEL,
+        process.env.GROQ_FALLBACK_MODEL,
+        ...DEFAULT_GROQ_MODELS,
       ]
         .flatMap((value) => value?.split(',') ?? [])
         .map((value) => value.trim())
@@ -139,31 +154,45 @@ function geminiText(payload: unknown) {
 }
 
 async function callGroq(input: GenerateTextInput): Promise<LlmTextResult> {
-  const model = process.env.GROQ_MODEL?.trim() || DEFAULT_GROQ_MODEL
-  const payload = await fetchJson(
-    'https://api.groq.com/openai/v1/chat/completions',
-    {
-      body: JSON.stringify({
-        max_tokens: maxTokens(input.maxTokens),
-        messages: [
-          { role: 'system', content: input.system || 'You are a helpful academic tutor.' },
-          { role: 'user', content: input.prompt },
-        ],
+  let lastError: unknown
+
+  for (const model of groqModels()) {
+    try {
+      const payload = await fetchJson(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          body: JSON.stringify({
+            max_tokens: maxTokens(input.maxTokens),
+            messages: [
+              { role: 'system', content: input.system || 'You are a helpful academic tutor.' },
+              { role: 'user', content: input.prompt },
+            ],
+            model,
+            response_format: input.json ? { type: 'json_object' } : undefined,
+            temperature: input.temperature ?? 0.15,
+          }),
+          headers: {
+            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        },
+        input.requestId
+      )
+      const text = groqText(payload)
+      if (!text) throw new Error(`${model} returned an empty response.`)
+      return { model, provider: 'groq', text }
+    } catch (error) {
+      lastError = error
+      console.error('groq_model_failed', {
+        message: error instanceof Error ? error.message : String(error),
         model,
-        response_format: input.json ? { type: 'json_object' } : undefined,
-        temperature: input.temperature ?? 0.15,
-      }),
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    },
-    input.requestId
-  )
-  const text = groqText(payload)
-  if (!text) throw new Error('Groq returned an empty response.')
-  return { model, provider: 'groq', text }
+        requestId: input.requestId,
+      })
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error('Groq failed.')
 }
 
 async function callGemini(input: GenerateTextInput): Promise<LlmTextResult> {
@@ -249,7 +278,37 @@ export function parseJsonObject<T>(text: string): T {
 
 export async function generateJson<T>(input: GenerateTextInput): Promise<LlmTextResult & { data: T }> {
   const result = await generateText({ ...input, json: true })
-  return { ...result, data: parseJsonObject<T>(result.text) }
+  try {
+    return { ...result, data: parseJsonObject<T>(result.text) }
+  } catch (error) {
+    console.error('llm_json_parse_failed', {
+      message: error instanceof Error ? error.message : String(error),
+      model: result.model,
+      provider: result.provider,
+      requestId: input.requestId,
+    })
+
+    const repaired = await generateText({
+      json: true,
+      maxTokens: input.maxTokens,
+      prompt: [
+        'The previous response was not valid JSON.',
+        'Original task:',
+        input.prompt.slice(0, 6_000),
+        '',
+        'Malformed response:',
+        result.text.slice(0, 8_000),
+        '',
+        'Return one valid JSON object only. No markdown, no comments, no extra text.',
+      ].join('\n'),
+      requestId: input.requestId,
+      system:
+        'You repair malformed model output into strict JSON that matches the original requested schema.',
+      temperature: 0,
+    })
+
+    return { ...repaired, data: parseJsonObject<T>(repaired.text) }
+  }
 }
 
 export async function extractTextFromImage(input: {

@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import Badge from '@/components/Badge'
 import Logo from '@/components/Logo'
+import ProductNav from '@/components/ProductNav'
 import StarBackground from '@/components/StarBackground'
 import { BOARDS, LEVELS, SUBJECTS } from '@/lib/profile/setupOptions'
 import { gradeMockAnswer, type MockGradeResult } from '@/lib/mock/gradeMock'
@@ -142,12 +142,7 @@ function MockInner() {
       `}</style>
       <nav style={styles.nav}>
         <Logo compact />
-        <div style={styles.links}>
-          <Link href="/solver" style={styles.link}>Solver</Link>
-          <Link href="/dashboard" style={styles.link}>Dashboard</Link>
-          <Link href="/exam-mode" style={styles.link}>Exam Mode</Link>
-          <Link href="/ai-approach" style={styles.link}>AI Approach</Link>
-        </div>
+        <ProductNav compact style={styles.links} />
       </nav>
 
       <section style={styles.content}>

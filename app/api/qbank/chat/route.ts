@@ -226,8 +226,8 @@ export async function POST(req: Request) {
           validation.confidence === 'VERIFIED'
             ? 'VERIFIED - from Cambridge/Edexcel past papers'
             : validation.confidence === 'PARTIAL'
-              ? 'PARTIAL MATCH - AI reasoning applied'
-              : 'AI REASONING - verify before exam'
+              ? 'Corpus-assisted answer'
+              : 'General academic answer'
         payload.understood = understood
         if (understood.skippedTopic) {
           payload.chapterGap = {

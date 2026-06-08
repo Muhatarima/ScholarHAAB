@@ -14,6 +14,7 @@ import { detectIntent, type Message } from '@/lib/ai/intentEngine'
 import { buildSearchQuery } from '@/lib/ai/queryBuilder'
 import { trackSkip } from '@/lib/analytics/topicTracker'
 import { solveQuestion } from '@/lib/rag/qbankSolver'
+import { runQbankAnalysisPipeline } from '@/lib/rag/pipelines'
 import { formatQuestionCard, generateAdaptiveQuestion } from '@/lib/ai/questionGenerator'
 import {
   formatUnderstandingResponse,
@@ -46,6 +47,35 @@ export async function POST(req: Request) {
 
   try {
     const body = (await req.clone().json()) as Record<string, unknown>
+    const subject = typeof body.subject === 'string' ? body.subject.trim() : undefined
+    const topic = typeof body.topic === 'string' ? body.topic.trim() : undefined
+    const board = typeof body.board === 'string' ? body.board.trim() : null
+    const action = String(body.action || body.mode || body.type || '').toLowerCase()
+
+    if (
+      action === 'analysis' ||
+      body.analysis === true ||
+      (subject && topic && !body.message && !body.question)
+    ) {
+      if (!subject || !topic) {
+        return Response.json(
+          { error: 'subject and topic are required for QBank analysis.' },
+          { status: 400, headers: { 'x-request-id': requestId } }
+        )
+      }
+
+      const result = await runQbankAnalysisPipeline({
+        board,
+        requestId,
+        subject,
+        topic,
+      })
+      const response = Response.json(result, {
+        headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
+      })
+      return response
+    }
+
     const rawMessage = String(body.message || body.question || '')
     validateQuestion(rawMessage)
     const history = Array.isArray(body.history)
@@ -58,7 +88,6 @@ export async function POST(req: Request) {
       : []
     const understood = await understandMessage(rawMessage, history as UnderstandingMessage[])
     const message = understood.cleanMessage
-    const subject = typeof body.subject === 'string' ? body.subject.trim() : undefined
     const resolvedSubject = understood.subject ?? subject
 
     if (understood.intent === 'test_me') {
@@ -188,8 +217,63 @@ export async function POST(req: Request) {
       return handleApiError(error)
     }
     logError('qbank_root_api_error', error, { request_id: requestId, route: '/api/qbank' })
-    const response = Response.json({ error: 'Something went wrong' }, { status: 500 })
+    const response = Response.json(
+      {
+        error:
+          error instanceof Error && /subject|topic|evidence|json/i.test(error.message)
+            ? error.message
+            : 'Please try again later. QBank analysis is temporarily unavailable.',
+        requestId,
+      },
+      { status: 503 }
+    )
     response.headers.set('x-request-id', requestId)
     return response
+  }
+}
+
+export async function GET(req: Request) {
+  const requestId = createRequestId()
+  const { user, error: authError } = await requireAuth(req)
+  if (authError) return authError
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
+  try {
+    const url = new URL(req.url)
+    const subject = url.searchParams.get('subject')?.trim()
+    const topic = url.searchParams.get('topic')?.trim()
+    const board = url.searchParams.get('board')?.trim() || null
+
+    if (!subject || !topic) {
+      return Response.json(
+        { error: 'subject and topic are required for QBank analysis.' },
+        { status: 400, headers: { 'x-request-id': requestId } }
+      )
+    }
+
+    const result = await runQbankAnalysisPipeline({
+      board,
+      requestId,
+      subject,
+      topic,
+    })
+    return Response.json(result, {
+      headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
+    })
+  } catch (error) {
+    logError('qbank_analysis_api_error', error, {
+      request_id: requestId,
+      route: '/api/qbank',
+    })
+    return Response.json(
+      {
+        error:
+          error instanceof Error && /subject|topic|evidence/i.test(error.message)
+            ? error.message
+            : 'Please try again later. QBank analysis is temporarily unavailable.',
+        requestId,
+      },
+      { status: 503, headers: { 'x-request-id': requestId } }
+    )
   }
 }

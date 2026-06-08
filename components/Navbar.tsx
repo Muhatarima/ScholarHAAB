@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import ProductNav from '@/components/ProductNav'
 import SessionBadge from '@/components/SessionBadge'
 
 export default function Navbar() {
@@ -63,28 +64,7 @@ export default function Navbar() {
         </span>
       </Link>
 
-      <ul style={{ display: 'flex', gap: '22px', listStyle: 'none', margin: 0, padding: 0 }}>
-        {[
-          { href: '/solver', label: 'Solver' },
-          { href: '/dashboard', label: 'Dashboard' },
-          { href: '/exam-mode', label: 'Exam Mode' },
-          { href: '/ai-approach', label: 'AI Approach' },
-        ].map((link) => (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              style={{
-                fontSize: '13px',
-                color: '#9999BB',
-                textDecoration: 'none',
-                fontWeight: 400,
-              }}
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <ProductNav compact />
 
       <SessionBadge />
     </nav>

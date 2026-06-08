@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { BookOpen, Calculator, Search, Target } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import Logo from '@/components/Logo'
+import ProductNav from '@/components/ProductNav'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 
@@ -117,11 +117,7 @@ function ExamModeInner() {
       `}</style>
       <nav style={styles.nav}>
         <Logo compact />
-        <div style={styles.navLinks}>
-          <Link href="/solver" style={styles.navLink}>Solver</Link>
-          <Link href="/adaptive-mode" style={styles.navLink}>Adaptive</Link>
-          <Link href="/dashboard" style={styles.navLink}>Dashboard</Link>
-        </div>
+        <ProductNav compact style={styles.navLinks} />
       </nav>
 
       <section style={styles.shell}>
@@ -259,7 +255,6 @@ const styles = {
   page: { minHeight: '100vh', background: '#02020c', color: '#ecebff', position: 'relative' } satisfies CSSProperties,
   nav: { height: 62, padding: '0 clamp(18px,4vw,48px)', borderBottom: '1px solid rgba(176,128,255,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 } satisfies CSSProperties,
   navLinks: { display: 'flex', gap: 18 } satisfies CSSProperties,
-  navLink: { color: '#aaa7c8', textDecoration: 'none', fontSize: 13 } satisfies CSSProperties,
   shell: { width: 'min(1180px, calc(100% - 32px))', margin: '0 auto', padding: '44px 0 70px', position: 'relative', zIndex: 1 } satisfies CSSProperties,
   header: { display: 'flex', alignItems: 'end', justifyContent: 'space-between', gap: 20, marginBottom: 24 } satisfies CSSProperties,
   eyebrow: { color: '#b983ff', fontSize: 12, fontWeight: 800 } satisfies CSSProperties,
