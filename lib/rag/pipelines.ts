@@ -283,7 +283,7 @@ function evidenceSummary(matches: RagMatch[]) {
   return {
     confidenceLabel: matches.length
       ? effectiveSimilarity >= 0.78
-        ? 'Source-backed answer'
+        ? 'Mark-scheme supported answer'
         : 'Partly supported answer'
       : 'Study answer',
     confidenceScore,
