@@ -175,12 +175,6 @@ function ExamModeInner() {
             <div style={styles.eyebrow}>EXAM MODE</div>
             <h1 style={styles.title}>Past-paper priorities</h1>
           </div>
-          {result ? (
-            <div style={styles.confidence}>
-              <strong>{(result.confidenceScore ?? 70)}%</strong>
-              <span>{(result.confidenceLabel || 'Past-paper supported').replaceAll('_', ' ')}</span>
-            </div>
-          ) : null}
         </header>
 
         <div className="exam-rag-controls" style={styles.controls}>
