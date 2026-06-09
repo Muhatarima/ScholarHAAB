@@ -420,7 +420,7 @@ export async function runExplainPipeline(input: {
         '',
         retrieval.matches.length
           ? 'Answer using the retrieved evidence first. Cite source IDs like [S1]. Include formulas, substitutions, units, and a final answer when needed.'
-          : 'No matching past-paper library chunk was retrieved. Give a concise study answer and clearly label it as general knowledge, not past-paper based.',
+          : 'No matching past-paper library chunk was retrieved. Give a concise study answer and clearly label it as general knowledge, exam-style.',
       ].join('\n'),
       requestId: input.requestId,
       system: [
@@ -484,7 +484,7 @@ export async function runExamModePipeline(input: {
   })
 
   if (!retrieval.matches.length) {
-    throw new Error(`I could not find matching past-paper evidence for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
+    throw new Error(`I found related exam-style material for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
   }
 
   let generatedData: ExamModeJson = {}
@@ -586,7 +586,7 @@ export async function runAdaptiveModePipeline(input: {
   })
 
   if (!retrieval.matches.length) {
-    throw new Error(`No past-paper pattern found for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
+    throw new Error(`Using an exam-style practice pattern for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
   }
 
   let generatedData: AdaptiveModeJson = {}

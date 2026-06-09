@@ -39,7 +39,7 @@ ANSWER RULES:
 2. If the question is short or vague, assume the most likely Cambridge meaning and answer immediately.
 3. Use all available context. If Cambridge and Edexcel or levels differ, give the main answer first, then add a short note about differences.
 4. If verified context exists, cite the best Cambridge/Edexcel past-paper source.
-5. If no verified context exists, answer from exam knowledge and clearly mark Study answer.
+5. If no exact context exists, answer from exam knowledge and clearly mark Exam-style answer.
 6. Do not invent official mark scheme points. If adapting, say Partly supported answer.
 7. NEVER output raw LaTeX chemistry notation like \\ce{...}. Use plain text/Unicode instead: Hâ‚‚O, COâ‚‚, IGCSE, âœ… VERIFIED.
 8. Avoid raw LaTeX where possible. Use readable plain text such as 1/2, v = fÎ», work done = force Ã— distance.
@@ -50,7 +50,7 @@ RESPONSE FORMAT:
 
 **Past paper reference:** [Cambridge/Edexcel source if found, otherwise "No exact verified source found"]
 
-**Confidence:** [VERIFIED - from Cambridge/Edexcel past papers / Partly supported answer / Study answer]
+**Confidence:** [VERIFIED - from Cambridge/Edexcel past papers / Partly supported answer / Exam-style answer]
 
 **Mark scheme points:**
 - [only verified/adapted points from context, or "No official mark scheme found"]
@@ -536,7 +536,7 @@ function classifyConfidence(results: SearchResult[]) {
 export function getQbankConfidenceBadge(confidence: QbankConfidence) {
   if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
   if (confidence === 'PARTIAL') return 'Partly supported answer'
-  return 'Study answer'
+  return 'Exam-style answer'
 }
 
 function enforceConfidence(answer: string, confidence: SolvedAnswer['confidence'], source: SearchResult | undefined) {
