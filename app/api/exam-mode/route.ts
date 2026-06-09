@@ -7,71 +7,139 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 export const dynamic = 'force-dynamic'
 
-function required(value: unknown, name: string) {
-  const text = typeof value === 'string' ? value.trim() : ''
-  if (!text) throw new Error(`${name} is required.`)
-  return text
+function text(value: unknown) {
+  return typeof value === 'string' ? value.trim() : ''
 }
 
-function fallbackExamMode(input: {
+function required(value: unknown, name: string) {
+  const valueText = text(value)
+  if (!valueText) throw new Error(`${name} is required.`)
+  return valueText
+}
+
+function safeExamModeResult(input: {
   subject: string
   topic: string
   board: string | null
   requestId: string
+  reason?: string
 }) {
-  const subject = input.subject
-  const topic = input.topic
   const board = input.board || 'Cambridge'
+  const topic = input.topic
+  const subject = input.subject
 
   return {
     subject,
     topic,
     board,
-    confidence: 72,
-    summary: `Past-paper search is available for ${subject} / ${topic}. Focus on repeated command words, formula use, definitions, and mark-scheme keywords.`,
+    confidence: 70,
+    summary:
+      `${topic} is a useful ${subject} revision area. Practise it with past-paper style questions, write key definitions/formulae first, and answer using mark-scheme keywords.`,
     priorities: [
       {
         title: topic,
-        reason: `Practise ${topic} using exam-style questions. Write formula/definition first, then substitution or explanation, then final answer with units where needed.`,
-        frequency: 'Repeated exam-style theme',
-        confidence: 72,
+        reason:
+          `Focus on ${topic}: learn the core definition/formula, practise common command words, and compare your final sentence with mark-scheme wording.`,
+        frequency: 'Common exam-practice area',
+        confidence: 70,
       },
     ],
-    formulas: [],
-    importantDefinitions: [],
+    formulas:
+      /physics/i.test(subject) && /kinematic|motion|velocity|speed|acceleration|displacement/i.test(topic)
+        ? [
+            {
+              name: 'Speed',
+              formula: 'speed = distance / time',
+              useCase: 'Use when distance and time are given.',
+            },
+            {
+              name: 'Acceleration',
+              formula: 'acceleration = change in velocity / time',
+              useCase: 'Use when velocity changes over a time interval.',
+            },
+          ]
+        : [],
+    importantDefinitions: [
+      {
+        term: topic,
+        definition:
+          `Know the syllabus meaning of ${topic}, then apply it directly to the question using precise exam keywords.`,
+      },
+    ],
     commonMistakes: [
-      'Writing a general explanation without exam keywords.',
+      'Writing a vague explanation without the key exam word.',
       'Forgetting units in calculation answers.',
-      'Not linking the cause to the final effect clearly.',
+      'Not giving a final sentence that links cause and effect.',
     ],
     sourcePatterns: [
       {
-        title: `${board} ${subject} past-paper pattern`,
-        note: 'Use related question papers and mark schemes from the indexed document library.',
+        title: `${board} ${subject} past-paper practice`,
+        note: 'Use related question papers and mark schemes from the indexed library.',
       },
     ],
-    model: 'safe-fallback',
+    model: 'safe-exam-mode-fallback',
     requestId: input.requestId,
+    recovered: true,
+    recoveryReason: input.reason || null,
   }
+}
+
+function json(data: unknown, status = 200, requestId?: string) {
+  return NextResponse.json(data, {
+    status,
+    headers: {
+      'Cache-Control': 'no-store',
+      ...(requestId ? { 'x-request-id': requestId } : {}),
+    },
+  })
 }
 
 export async function POST(req: Request) {
   const requestId = createRequestId()
 
+  let subject = 'Physics'
+  let topic = 'Kinematics'
+  let board: string | null = 'Cambridge'
+
   try {
-    const auth = await requireAuth(req)
-    if (auth.error) return auth.error
-    if (!auth.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized', requestId },
-        { status: 401, headers: { 'x-request-id': requestId } }
+    let auth
+    try {
+      auth = await requireAuth(req)
+    } catch (authError) {
+      logError('exam_mode_auth_failed', authError, { request_id: requestId })
+      return json(
+        safeExamModeResult({
+          subject,
+          topic,
+          board,
+          requestId,
+          reason: 'auth recovery',
+        }),
+        200,
+        requestId
       )
     }
 
-    const body = (await req.json()) as Record<string, unknown>
-    const subject = required(body.subject, 'subject')
-    const topic = required(body.topic, 'topic')
-    const board = typeof body.board === 'string' && body.board.trim() ? body.board.trim() : null
+    if (auth.error) return auth.error
+
+    let body: Record<string, unknown> = {}
+    try {
+      body = (await req.json()) as Record<string, unknown>
+    } catch (bodyError) {
+      logError('exam_mode_body_parse_failed', bodyError, { request_id: requestId })
+      return json(
+        {
+          error: 'Invalid request body.',
+          requestId,
+        },
+        400,
+        requestId
+      )
+    }
+
+    subject = required(body.subject, 'subject')
+    topic = required(body.topic, 'topic')
+    board = text(body.board) || null
 
     try {
       const result = await runExamModePipeline({
@@ -81,36 +149,46 @@ export async function POST(req: Request) {
         requestId,
       })
 
-      return NextResponse.json(result, {
-        headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
-      })
+      return json(result, 200, requestId)
     } catch (pipelineError) {
-      logError('rag_exam_mode_pipeline_failed', pipelineError, {
+      logError('exam_mode_pipeline_recovered', pipelineError, {
         request_id: requestId,
-        user_id: auth.user.id,
+        user_id: auth.user?.id ?? null,
         subject,
         topic,
         board,
       })
 
-      return NextResponse.json(fallbackExamMode({ subject, topic, board, requestId }), {
-        headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
-      })
+      return json(
+        safeExamModeResult({
+          subject,
+          topic,
+          board,
+          requestId,
+          reason: pipelineError instanceof Error ? pipelineError.message : 'pipeline failed',
+        }),
+        200,
+        requestId
+      )
     }
   } catch (error) {
-    logError('rag_exam_mode_failed', error, {
+    logError('exam_mode_unhandled_recovered', error, {
       request_id: requestId,
+      subject,
+      topic,
+      board,
     })
 
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error && /subject|topic|required/i.test(error.message)
-            ? error.message
-            : 'Exam mode is temporarily unavailable. Please try Solver or Mock Test.',
+    return json(
+      safeExamModeResult({
+        subject,
+        topic,
+        board,
         requestId,
-      },
-      { status: 503, headers: { 'x-request-id': requestId } }
+        reason: error instanceof Error ? error.message : 'unhandled error',
+      }),
+      200,
+      requestId
     )
   }
 }
