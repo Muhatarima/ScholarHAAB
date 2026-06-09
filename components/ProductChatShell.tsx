@@ -24,6 +24,7 @@ function cleanBrokenLatexText(value: unknown) {
 }
 
 import Link from 'next/link'
+import SharedLogo from '@/components/Logo'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import AIReasoningBadge from '@/components/AIReasoningBadge'
 import Badge from '@/components/Badge'
@@ -151,7 +152,7 @@ function LogoSvg({ compact = false }: { compact?: boolean }) {
 function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link href="/" style={{ display: 'inline-flex', lineHeight: 0, textDecoration: 'none' }} aria-label="ScholarHAAB home">
-      <LogoSvg compact={compact} />
+      <SharedLogo compact={compact} />
     </Link>
   )
 }
@@ -519,7 +520,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
 
       <section className="shaab-main" style={styles.main(sidebarOpen)}>
         <div className="mobile-chat-logo" style={styles.mobileLogoButton}>
-          <LogoSvg compact />
+          <Logo compact />
         </div>
         <header style={styles.topbar}>
           <div style={styles.modeTabs}>
