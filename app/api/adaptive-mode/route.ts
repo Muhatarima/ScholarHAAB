@@ -136,7 +136,7 @@ export async function POST(req: Request) {
         difficulty,
         performance,
         requestId,
-      }), 8000)
+      }), 25000)
 
       return json(result, 200, requestId)
     } catch (pipelineError) {
