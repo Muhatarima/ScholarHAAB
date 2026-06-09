@@ -565,29 +565,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
               return (
                 <div key={`${message.role}-${index}-${message.id ?? ''}`} style={styles.messageRow(isUser)}>
                   <div style={isUser ? styles.userBubble : styles.aiText}>
-                    {!isUser && (message.confidenceBadge || message.confidence) ? (
-                      <div style={styles.confidenceBadge}>
-                        {message.confidence === 'VERIFIED' ? (
-                          <VerifiedBadge
-                            label={`${message.confidenceBadge || confidenceText(message.confidence)}${
-                              typeof message.confidenceScore === 'number' ? ` Â· ${message.confidenceScore}%` : ''
-                            }`}
-                          />
-                        ) : message.confidence === 'PATTERN_BASED' ? (
-                          <Badge tone="violet">
-                            {`${message.confidenceBadge || confidenceText(message.confidence)}${
-                              typeof message.confidenceScore === 'number' ? ` Â· ${message.confidenceScore}%` : ''
-                            }`}
-                          </Badge>
-                        ) : (
-                          <AIReasoningBadge
-                            label={`${message.confidenceBadge || confidenceText(message.confidence)}${
-                              typeof message.confidenceScore === 'number' ? ` Â· ${message.confidenceScore}%` : ''
-                            }`}
-                          />
-                        )}
-                      </div>
-                    ) : null}
                     <RichMessageContent content={cleanBrokenLatexText(message.content)} />
                   </div>
                 </div>
