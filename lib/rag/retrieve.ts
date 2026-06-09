@@ -36,24 +36,63 @@ export type RagRetrievalResult = {
   embeddingProvider?: string | null
 }
 
-type RagRpcRow = {
+type DbRow = {
   id?: unknown
   content?: unknown
   metadata?: unknown
   source_title?: unknown
   source_url?: unknown
   source_kind?: unknown
-  tier?: unknown
-  vector_similarity?: unknown
-  similarity?: unknown
-  text_score?: unknown
-  hybrid_score?: unknown
+  source_subject?: unknown
+  source_board?: unknown
+  source_topic?: unknown
 }
 
-const expansionCache = new Map<string, string[]>()
+const STOP_WORDS = new Set([
+  'cambridge',
+  'edexcel',
+  'igcse',
+  'gcse',
+  'level',
+  'paper',
+  'question',
+  'answer',
+  'explain',
+  'calculate',
+  'state',
+  'define',
+  'describe',
+  'what',
+  'why',
+  'how',
+  'when',
+  'where',
+  'with',
+  'from',
+  'that',
+  'this',
+  'these',
+  'those',
+  'using',
+  'give',
+  'show',
+  'find',
+  'the',
+  'and',
+  'for',
+  'are',
+  'was',
+  'were',
+  'into',
+  'about',
+])
 
 function getRagClient(): SupabaseClient {
   return getSupabaseAdmin()
+}
+
+function clean(value?: unknown) {
+  return String(value ?? '').trim()
 }
 
 function asText(value: unknown) {
@@ -65,17 +104,13 @@ function asNumber(value: unknown) {
   return Number.isFinite(number) ? number : null
 }
 
-function clean(value?: string | number | null) {
-  return String(value ?? '').trim()
-}
-
 function normalizeMetadata(value: unknown): RagMetadata {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? (value as RagMetadata)
     : {}
 }
 
-function normalizeRow(row: RagRpcRow): RagMatch | null {
+function normalizeRow(row: DbRow): RagMatch | null {
   const id = asText(row.id)
   const content = asText(row.content)
   if (!id || !content) return null
@@ -93,72 +128,41 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
       'Academic source',
     sourceUrl: asText(row.source_url) || asText(metadata.source_url),
     sourceKind: asText(row.source_kind) || asText(metadata.resource_type),
-    tier: asText(row.tier),
-    vectorSimilarity: asNumber(row.vector_similarity) ?? asNumber(row.similarity),
-    textScore: asNumber(row.text_score),
-    hybridScore: asNumber(row.hybrid_score),
+    tier: null,
+    vectorSimilarity: null,
+    textScore: null,
+    hybridScore: null,
   }
 }
 
 function normalizeRows(data: unknown): RagMatch[] {
-  return ((data as RagRpcRow[] | null) ?? [])
+  return ((data as DbRow[] | null) ?? [])
     .map(normalizeRow)
     .filter((row): row is RagMatch => Boolean(row))
 }
 
 function wordsFrom(text: string, max = 18) {
+  const seen = new Set<string>()
+
   return text
     .toLowerCase()
     .replace(/[^a-z0-9 ]/g, ' ')
     .split(/\s+/)
     .map((word) => word.trim())
-    .filter(Boolean)
-    .filter((word) => word.length >= 3)
-    .filter(
-      (word) =>
-        ![
-          'cambridge',
-          'edexcel',
-          'level',
-          'igcse',
-          'gcse',
-          'paper',
-          'question',
-          'answer',
-          'explain',
-          'calculate',
-          'state',
-          'define',
-          'describe',
-          'what',
-          'why',
-          'how',
-          'when',
-          'where',
-          'with',
-          'from',
-          'that',
-          'this',
-          'these',
-          'those',
-          'using',
-          'give',
-          'show',
-          'find',
-          'the',
-          'and',
-          'for',
-        ].includes(word)
-    )
+    .filter((word) => word.length >= 3 && !STOP_WORDS.has(word))
+    .filter((word) => {
+      if (seen.has(word)) return false
+      seen.add(word)
+      return true
+    })
     .slice(0, max)
 }
 
-function guessSubject(text: string, explicit?: string | null) {
+function guessSubject(question: string, explicit?: unknown) {
   const given = clean(explicit)
   if (given) return given
 
-  const lower = text.toLowerCase()
-
+  const lower = question.toLowerCase()
   const subjects = [
     'Physics',
     'Chemistry',
@@ -184,39 +188,27 @@ function getGeminiKey() {
   )
 }
 
-async function expandQueryWithAi(input: {
+async function expandWithAi(input: {
   question: string
   subject?: string | null
   board?: string | null
   level?: string | null
 }) {
-  const cacheKey = JSON.stringify(input).toLowerCase()
-  const cached = expansionCache.get(cacheKey)
-  if (cached) return cached
-
   const key = getGeminiKey()
   if (!key) return []
 
   const prompt = `
-You are a Cambridge/Edexcel exam retrieval query planner.
-
-Task:
-Convert the student's question/topic into search keywords that can find relevant past-paper mark schemes.
+Return search keywords for finding Cambridge/Edexcel past-paper mark schemes.
 
 Rules:
-- Cover the syllabus concept behind the question.
-- Include synonyms, chapter names, formula names, common examiner wording, and related keywords.
-- Do not answer the question.
-- Return ONLY a JSON array of short strings.
-- No markdown.
+- Do not answer.
+- Include syllabus topic, synonyms, formulas, examiner wording.
+- Return only JSON array of strings.
 
+Subject: ${input.subject || 'unknown'}
 Board: ${input.board || 'unknown'}
 Level: ${input.level || 'unknown'}
-Subject: ${input.subject || 'unknown'}
-Student question/topic: ${input.question}
-
-Example output:
-["motion", "velocity", "acceleration", "displacement", "speed time graph"]
+Question/topic: ${input.question}
 `.trim()
 
   try {
@@ -227,10 +219,7 @@ Example output:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 180,
-          },
+          generationConfig: { temperature: 0.1, maxOutputTokens: 180 },
         }),
       }
     )
@@ -242,186 +231,49 @@ Example output:
       json?.candidates?.[0]?.content?.parts
         ?.map((part: { text?: string }) => part.text ?? '')
         .join('')
+        .replace(/^```json/i, '')
+        .replace(/^```/i, '')
+        .replace(/```$/i, '')
         .trim() ?? ''
 
-    const cleaned = text
-      .replace(/^```json/i, '')
-      .replace(/^```/i, '')
-      .replace(/```$/i, '')
-      .trim()
-
-    const parsed = JSON.parse(cleaned)
-    const terms = Array.isArray(parsed)
-      ? parsed
-          .map((item) => clean(item))
-          .filter(Boolean)
-          .slice(0, 20)
+    const parsed = JSON.parse(text)
+    return Array.isArray(parsed)
+      ? parsed.map(clean).filter(Boolean).slice(0, 18)
       : []
-
-    expansionCache.set(cacheKey, terms)
-    return terms
   } catch (error) {
-    logError('rag_ai_query_expansion_failed', error, {
-      question: input.question,
+    logError('rag_query_expansion_failed', error, {
       subject: input.subject ?? null,
+      question: input.question,
     })
     return []
   }
 }
 
-function buildSearchText(input: {
-  question: string
-  subject?: string | null
-  board?: string | null
-  level?: string | null
-  topic?: string | null
-  aiTerms?: string[]
-}) {
-  return [
-    input.question,
-    input.subject,
-    input.board,
-    input.level,
-    input.topic,
-    ...(input.aiTerms ?? []),
-  ]
-    .map((item) => clean(item))
-    .filter(Boolean)
-    .join(' ')
-}
+function sourceWeight(match: RagMatch) {
+  const hay = `${match.sourceKind ?? ''} ${match.sourceTitle}`.toLowerCase()
 
-async function searchKeywordRpc(
-  client: SupabaseClient,
-  queryText: string,
-  limit: number
-) {
-  const { data, error } = await client.rpc('search_documents_keyword', {
-    query_text: queryText,
-    match_count: limit,
-    filter: {},
-  })
-
-  if (error) {
-    logError('rag_keyword_rpc_failed', error, { query: queryText })
-    return []
-  }
-
-  return normalizeRows(data)
-}
-
-function applySoftFilters(
-  query: ReturnType<SupabaseClient['from']> extends infer T ? any : never,
-  filters: {
-    subject?: string | null
-    board?: string | null
-    level?: string | null
-  }
-) {
-  const subject = clean(filters.subject)
-  const board = clean(filters.board)
-  const level = clean(filters.level)
-
-  let next = query
-
-  if (subject) {
-    next = next.or(
-      `source_subject.ilike.%${subject}%,metadata->>subject.ilike.%${subject}%,source_title.ilike.%${subject}%`
-    )
-  }
-
-  if (board) {
-    next = next.or(
-      `source_board.ilike.%${board}%,metadata->>board.ilike.%${board}%,source_title.ilike.%${board}%`
-    )
-  }
-
-  if (level) {
-    next = next.or(
-      `metadata->>level.ilike.%${level}%,source_title.ilike.%${level}%`
-    )
-  }
-
-  return next
-}
-
-async function searchDocumentsByKind(
-  client: SupabaseClient,
-  queryText: string,
-  sourceKind: string | null,
-  limit: number,
-  filters: {
-    subject?: string | null
-    board?: string | null
-    level?: string | null
-  },
-  strictFilters: boolean
-) {
-  const words = wordsFrom(queryText, 16)
-
-  let query = client
-    .from('documents')
-    .select('id, content, metadata, source_title, source_url, source_kind')
-    .limit(limit)
-
-  if (sourceKind) {
-    query = query.eq('source_kind', sourceKind)
-  }
-
-  if (strictFilters) {
-    query = applySoftFilters(query, filters)
-  }
-
-  if (words.length) {
-    const parts = words.flatMap((word) => [
-      `content.ilike.%${word}%`,
-      `source_title.ilike.%${word}%`,
-      `source_subject.ilike.%${word}%`,
-      `source_topic.ilike.%${word}%`,
-      `metadata->>subject.ilike.%${word}%`,
-      `metadata->>topic.ilike.%${word}%`,
-      `metadata->>board.ilike.%${word}%`,
-      `metadata->>level.ilike.%${word}%`,
-    ])
-
-    query = query.or(parts.join(','))
-  }
-
-  const { data, error } = await query
-
-  if (error) {
-    logError('rag_documents_search_failed', error, {
-      source_kind: sourceKind,
-      query: queryText,
-      strict_filters: strictFilters,
-    })
-    return []
-  }
-
-  return normalizeRows(data)
-}
-
-function uniqueMatches(matches: RagMatch[]) {
-  return Array.from(new Map(matches.map((match) => [match.id, match])).values())
+  if (hay.includes('mark_scheme') || hay.includes('mark scheme') || hay.includes('_ms_')) return 900
+  if (hay.includes('examiner_report') || hay.includes('examiner report') || hay.includes('_er')) return 750
+  if (hay.includes('question_paper') || hay.includes('question paper') || hay.includes('_qp_')) return 700
+  return 0
 }
 
 function rankMatches(
   matches: RagMatch[],
   input: {
-    searchText: string
+    queryText: string
     subject?: string | null
     board?: string | null
     level?: string | null
   }
 ) {
-  const words = wordsFrom(input.searchText, 25)
+  const terms = wordsFrom(input.queryText, 30)
   const subject = clean(input.subject).toLowerCase()
   const board = clean(input.board).toLowerCase()
   const level = clean(input.level).toLowerCase()
 
   return matches
     .map((match) => {
-      const kind = clean(match.sourceKind).toLowerCase()
-
       const haystack = [
         match.content,
         match.sourceTitle,
@@ -432,66 +284,205 @@ function rankMatches(
         match.metadata.level,
         match.metadata.source_file,
       ]
-        .map((item) => clean(item as string | number | null).toLowerCase())
+        .map(clean)
         .join(' ')
+        .toLowerCase()
 
-      let score = 0
+      let score = sourceWeight(match)
 
-      if (kind === 'mark_scheme' || haystack.includes('mark scheme') || haystack.includes('_ms_')) {
-        score += 1000
-      } else if (kind === 'examiner_report' || haystack.includes('examiner report')) {
-        score += 500
-      } else if (kind === 'question_paper' || haystack.includes('question paper') || haystack.includes('_qp_')) {
-        score += 100
-      }
-
-      if (subject && haystack.includes(subject)) score += 250
+      if (subject && haystack.includes(subject)) score += 300
       if (board && haystack.includes(board)) score += 80
       if (level && haystack.includes(level)) score += 80
 
-      for (const word of words) {
-        if (haystack.includes(word)) score += 12
+      for (const term of terms) {
+        if (haystack.includes(term)) score += 20
       }
 
-      const contentLength = match.content.length
-      if (contentLength > 80 && contentLength < 2500) score += 20
+      if (match.content.length > 60 && match.content.length < 2500) score += 20
 
       return { match, score }
     })
     .sort((a, b) => b.score - a.score)
-    .map((item) => item.match)
+    .map((item) => ({
+      ...item.match,
+      textScore: item.score,
+      hybridScore: item.score,
+    }))
 }
 
-async function searchAllSources(
+
+function markSchemeLookupKeys(title: string) {
+  const keys = new Set<string>()
+  const cleanTitle = title.trim()
+
+  if (!cleanTitle) return []
+
+  keys.add(cleanTitle.replace(/question paper/gi, 'mark scheme').replace(/_qp_/gi, '_ms_'))
+
+  const fileMatch = cleanTitle.match(/([0-9]{4}_[a-z][0-9]{2}_qp_[0-9]{2}\.pdf)/i)
+  if (fileMatch?.[1]) {
+    keys.add(fileMatch[1].replace(/_qp_/i, '_ms_'))
+  }
+
+  const noPdfMatch = cleanTitle.match(/([0-9]{4}_[a-z][0-9]{2}_qp_[0-9]{2})/i)
+  if (noPdfMatch?.[1]) {
+    keys.add(noPdfMatch[1].replace(/_qp_/i, '_ms_'))
+  }
+
+  return Array.from(keys)
+}
+
+async function findPairedMarkSchemes(
   client: SupabaseClient,
-  searchText: string,
-  limit: number,
+  questionPapers: RagMatch[],
+  limit: number
+) {
+  const found: RagMatch[] = []
+
+  for (const paper of questionPapers.slice(0, 8)) {
+    const keys = markSchemeLookupKeys(paper.sourceTitle)
+
+    for (const key of keys) {
+      const { data, error } = await client
+        .from('documents')
+        .select('id, content, metadata, source_title, source_url, source_kind, source_subject, source_board, source_topic')
+        .eq('source_kind', 'mark_scheme')
+        .ilike('source_title', `%${key}%`)
+        .limit(3)
+
+      if (!error && data?.length) {
+        found.push(...normalizeRows(data))
+      }
+
+      if (found.length >= limit) break
+    }
+
+    if (found.length >= limit) break
+  }
+
+  return found
+}
+
+function uniqueMatches(matches: RagMatch[]) {
+  return Array.from(new Map(matches.map((match) => [match.id, match])).values())
+}
+
+async function searchKind(
+  client: SupabaseClient,
+  queryText: string,
+  kind: 'mark_scheme' | 'examiner_report' | 'question_paper',
   filters: {
     subject?: string | null
     board?: string | null
     level?: string | null
-  }
+  },
+  limit: number,
+  strict: boolean
 ) {
-  const strict = await Promise.all([
-    searchDocumentsByKind(client, searchText, 'mark_scheme', limit * 8, filters, true),
-    searchDocumentsByKind(client, searchText, 'examiner_report', limit * 4, filters, true),
-    searchDocumentsByKind(client, searchText, 'question_paper', limit * 4, filters, true),
-  ])
+  const terms = wordsFrom(queryText, 14)
+  const subject = clean(filters.subject)
+  const board = clean(filters.board)
+  const level = clean(filters.level)
 
-  const strictMatches = uniqueMatches(strict.flat())
+  let query = client
+    .from('documents')
+    .select('id, content, metadata, source_title, source_url, source_kind, source_subject, source_board, source_topic')
+    .eq('source_kind', kind)
+    .limit(limit)
 
-  if (strictMatches.length >= Math.min(limit, 4)) {
-    return strictMatches
+  if (strict && subject) {
+    query = query.or(
+      `source_subject.ilike.%${subject}%,source_title.ilike.%${subject}%,metadata->>subject.ilike.%${subject}%`
+    )
   }
 
-  const loose = await Promise.all([
-    searchDocumentsByKind(client, searchText, 'mark_scheme', limit * 8, filters, false),
-    searchDocumentsByKind(client, searchText, 'examiner_report', limit * 4, filters, false),
-    searchDocumentsByKind(client, searchText, 'question_paper', limit * 4, filters, false),
-    searchKeywordRpc(client, searchText, limit * 4),
-  ])
+  if (strict && board) {
+    query = query.or(
+      `source_board.ilike.%${board}%,source_title.ilike.%${board}%,metadata->>board.ilike.%${board}%`
+    )
+  }
 
-  return uniqueMatches([...strictMatches, ...loose.flat()])
+  if (strict && level) {
+    query = query.or(
+      `source_title.ilike.%${level}%,metadata->>level.ilike.%${level}%`
+    )
+  }
+
+  if (terms.length) {
+    const parts = terms.flatMap((term) => [
+      `content.ilike.%${term}%`,
+      `source_title.ilike.%${term}%`,
+      `source_topic.ilike.%${term}%`,
+      `metadata->>topic.ilike.%${term}%`,
+    ])
+
+    query = query.or(parts.join(','))
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    logError('rag_documents_ilike_search_failed', error, {
+      kind,
+      strict,
+      query: queryText,
+    })
+    return []
+  }
+
+  return normalizeRows(data)
+}
+
+async function searchRpcBackup(client: SupabaseClient, queryText: string, limit: number) {
+  const { data, error } = await client.rpc('search_documents_keyword', {
+    query_text: queryText,
+    match_count: limit,
+    filter: {},
+  })
+
+  if (error) return []
+  return normalizeRows(data)
+}
+
+async function runSearch(
+  client: SupabaseClient,
+  queryText: string,
+  filters: {
+    subject?: string | null
+    board?: string | null
+    level?: string | null
+  },
+  limit: number
+) {
+  const strict = (
+    await Promise.all([
+      searchKind(client, queryText, 'mark_scheme', filters, limit * 10, true),
+      searchKind(client, queryText, 'examiner_report', filters, limit * 4, true),
+      searchKind(client, queryText, 'question_paper', filters, limit * 4, true),
+    ])
+  ).flat()
+
+  const loose =
+    strict.length >= Math.min(limit, 4)
+      ? []
+      : (
+          await Promise.all([
+            searchKind(client, queryText, 'mark_scheme', filters, limit * 10, false),
+            searchKind(client, queryText, 'examiner_report', filters, limit * 4, false),
+            searchKind(client, queryText, 'question_paper', filters, limit * 4, false),
+            searchRpcBackup(client, queryText, limit * 4),
+          ])
+        ).flat()
+
+  const baseMatches = uniqueMatches([...strict, ...loose])
+  const questionPapers = baseMatches.filter((match) => {
+    const hay = `${match.sourceKind ?? ''} ${match.sourceTitle}`.toLowerCase()
+    return hay.includes('question_paper') || hay.includes('question paper') || hay.includes('_qp_')
+  })
+
+  const pairedMarkSchemes = await findPairedMarkSchemes(client, questionPapers, limit * 4)
+
+  return uniqueMatches([...pairedMarkSchemes, ...baseMatches])
 }
 
 export async function retrieveAcademicContext(
@@ -508,35 +499,34 @@ export async function retrieveAcademicContext(
     const client = getRagClient()
     const filters = options.filters ?? {}
 
-    const subject = guessSubject(question, clean(filters.subject as string | null))
-    const board = clean(filters.board as string | null)
-    const level = clean(filters.level as string | null)
-    const topic = clean(filters.topic as string | null)
+    const subject = guessSubject(question, filters.subject)
+    const board = clean(filters.board)
+    const level = clean(filters.level)
+    const topic = clean(filters.topic)
 
-    const aiTerms = await expandQueryWithAi({
+    const aiTerms = await expandWithAi({
       question: [question, topic].filter(Boolean).join(' '),
       subject,
       board,
       level,
     })
 
-    const searchText = buildSearchText({
+    const queryText = [
       question,
       subject,
       board,
       level,
       topic,
-      aiTerms,
-    })
+      ...aiTerms,
+    ]
+      .map(clean)
+      .filter(Boolean)
+      .join(' ')
 
-    const allMatches = await searchAllSources(client, searchText, limit, {
-      subject,
-      board,
-      level,
-    })
+    const rawMatches = await runSearch(client, queryText, { subject, board, level }, limit)
 
-    const matches = rankMatches(allMatches, {
-      searchText,
+    const matches = rankMatches(rawMatches, {
+      queryText,
       subject,
       board,
       level,
@@ -544,10 +534,13 @@ export async function retrieveAcademicContext(
 
     logEvent('info', 'rag_retrieval_complete', {
       request_id: options.requestId,
-      match_count: matches.length,
-      mark_scheme_count: matches.filter((m) => m.sourceKind === 'mark_scheme').length,
-      mode: matches.length ? 'keyword' : 'none',
       table: 'documents',
+      search: 'ilike_plus_rpc',
+      match_count: matches.length,
+      mark_scheme_count: matches.filter((match) => match.sourceKind === 'mark_scheme').length,
+      subject,
+      board,
+      level,
       ai_terms: aiTerms.slice(0, 8),
     })
 
@@ -587,44 +580,37 @@ export async function retrieveTopicDocuments(options: {
     const board = clean(options.board)
     const topic = clean(options.topic)
 
-    const aiTerms = await expandQueryWithAi({
+    const aiTerms = await expandWithAi({
       question: topic || subject || board || 'exam topic',
       subject,
       board,
       level: null,
     })
 
-    const searchText = buildSearchText({
-      question: topic,
-      subject,
-      board,
-      level: null,
-      topic,
-      aiTerms,
-    })
+    const queryText = [topic, subject, board, ...aiTerms]
+      .map(clean)
+      .filter(Boolean)
+      .join(' ')
 
-    const allMatches = await searchAllSources(client, searchText, limit, {
-      subject,
-      board,
-      level: null,
-    })
+    const rawMatches = await runSearch(client, queryText, { subject, board, level: null }, limit)
 
-    const matches = rankMatches(allMatches, {
-      searchText,
+    const matches = rankMatches(rawMatches, {
+      queryText,
       subject,
       board,
       level: null,
     }).slice(0, limit)
 
     logEvent('info', 'rag_topic_documents_loaded', {
-      board: options.board ?? null,
-      match_count: matches.length,
-      mark_scheme_count: matches.filter((m) => m.sourceKind === 'mark_scheme').length,
       request_id: options.requestId,
-      subject: options.subject ?? null,
-      topic: options.topic ?? null,
-      ai_terms: aiTerms.slice(0, 8),
       table: 'documents',
+      search: 'ilike_plus_rpc',
+      match_count: matches.length,
+      mark_scheme_count: matches.filter((match) => match.sourceKind === 'mark_scheme').length,
+      subject,
+      board,
+      topic,
+      ai_terms: aiTerms.slice(0, 8),
     })
 
     return matches
@@ -632,7 +618,6 @@ export async function retrieveTopicDocuments(options: {
     logError('rag_topic_documents_failed', error, {
       request_id: options.requestId,
     })
-
     return []
   }
 }
