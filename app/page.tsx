@@ -262,6 +262,21 @@ export default async function Home() {
 
       <Stars />
 
+      {/* Center hero black hole */}
+      <div className="hero-bh" aria-hidden="true" style={{
+        position: 'absolute',
+        left: '50%',
+        top: '30%',
+        width: 300,
+        height: 300,
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+        zIndex: 1,
+        animation: 'heroBlackHoleFloat 6s ease-in-out infinite',
+      }}>
+        <BlackholeLogo size="hero" />
+      </div>
+
       {/* Hero black hole — right side floating */}
       <div className="hero-bh" aria-hidden="true" style={{
         position: 'absolute', right: 'max(20px, 5vw)', top: '46%',
