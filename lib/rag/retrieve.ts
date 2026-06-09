@@ -594,12 +594,34 @@ export async function retrieveTopicDocuments(options: {
 
     const rawMatches = await runSearch(client, queryText, { subject, board, level: null }, limit)
 
-    const matches = rankMatches(rawMatches, {
+    const rankedMatches = rankMatches(rawMatches, {
       queryText,
       subject,
       board,
       level: null,
-    }).slice(0, limit)
+    })
+
+    const questionPapers = rankedMatches.filter((match) => {
+      const hay = `${match.sourceKind ?? ''} ${match.sourceTitle}`.toLowerCase()
+      return hay.includes('question_paper') || hay.includes('question paper') || hay.includes('_qp_')
+    })
+
+    const markSchemes = rankedMatches.filter((match) => {
+      const hay = `${match.sourceKind ?? ''} ${match.sourceTitle}`.toLowerCase()
+      return hay.includes('mark_scheme') || hay.includes('mark scheme') || hay.includes('_ms_')
+    })
+
+    const examinerReports = rankedMatches.filter((match) => {
+      const hay = `${match.sourceKind ?? ''} ${match.sourceTitle}`.toLowerCase()
+      return hay.includes('examiner_report') || hay.includes('examiner report') || hay.includes('_er')
+    })
+
+    const matches = uniqueMatches([
+      ...questionPapers.slice(0, Math.max(3, Math.ceil(limit / 2))),
+      ...markSchemes.slice(0, Math.max(3, Math.floor(limit / 2))),
+      ...examinerReports.slice(0, 2),
+      ...rankedMatches,
+    ]).slice(0, limit)
 
     logEvent('info', 'rag_topic_documents_loaded', {
       request_id: options.requestId,
