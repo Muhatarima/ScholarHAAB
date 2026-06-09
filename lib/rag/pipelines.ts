@@ -266,8 +266,93 @@ function fallbackStudyAnswer(question: string, matches: RagMatch[]) {
   }
 
   return matches.length
-    ? `Here is an exam-style way to answer this. Use this structure: identify the command word, choose the relevant definition or formula, substitute any values with units, and finish with a clear final sentence.${sourceLine}`
+    ? `Here is a direct exam-style answer.${sourceLine}`
     : 'I can help with this, but no matching past-paper match was returned for the exact question. Please include the subject and exam board for a more exact exam-style answer.'
+}
+
+
+function directExamAnswer(question: string, sourceLine = '') {
+  const lower = question.toLowerCase()
+
+  if (/current|resistance|ohm|voltage|circuit/.test(lower)) {
+    return `Current decreases when resistance increases because resistance opposes the flow of charge.
+
+Using Ohm's law:
+
+V = IR
+
+Rearrange for current:
+
+I = V / R
+
+If the voltage stays constant, increasing resistance makes the value of I smaller. Therefore, current is inversely proportional to resistance.
+
+Exam-style final sentence: greater resistance means less charge flows per second, so the current decreases.${sourceLine}`
+  }
+
+  if (/redox|oxidation|reduction|electron/.test(lower)) {
+    return `A redox reaction is a reaction where oxidation and reduction happen at the same time.
+
+Oxidation means loss of electrons.
+Reduction means gain of electrons.
+
+A useful exam memory aid is:
+
+OIL RIG
+
+Oxidation Is Loss, Reduction Is Gain.
+
+The substance that loses electrons is oxidised. The substance that gains electrons is reduced. In terms of oxidation number, oxidation is an increase in oxidation number and reduction is a decrease in oxidation number.${sourceLine}`
+  }
+
+  if (/aldehyde|aldehydes|carbonyl|ethanal|propanal/.test(lower)) {
+    return `Aldehydes contain the functional group –CHO.
+
+They are commonly prepared by controlled oxidation of primary alcohols. For example, ethanol can be oxidised to ethanal.
+
+Use acidified potassium dichromate(VI), K2Cr2O7/H2SO4, and distil the aldehyde as it forms. Distillation is important because aldehydes can oxidise further to carboxylic acids.
+
+Example:
+
+ethanol → ethanal
+
+Exam keyword: primary alcohol, controlled oxidation, distillation, aldehyde functional group –CHO.${sourceLine}`
+  }
+
+  if (/wave|frequency|wavelength|oscillation|amplitude/.test(lower)) {
+    return `A wave transfers energy from one place to another without transferring matter.
+
+Frequency is the number of oscillations per second. It is measured in hertz, Hz.
+
+For wave calculations, use:
+
+v = fλ
+
+where v is wave speed, f is frequency, and λ is wavelength.
+
+Exam method: write the formula, substitute the values with units, calculate the answer, then give the correct unit.${sourceLine}`
+  }
+
+  if (/kinematic|velocity|speed|acceleration|displacement|distance|motion/.test(lower)) {
+    return `Kinematics describes motion using quantities such as distance, displacement, speed, velocity, acceleration, and time.
+
+Important formulae include:
+
+speed = distance / time
+
+acceleration = change in velocity / time
+
+For a velocity-time graph, the gradient gives acceleration and the area under the graph gives displacement.
+
+Exam method: identify the known values, choose the correct formula, substitute with units, and state the final answer clearly.${sourceLine}`
+  }
+
+  return `Here is a direct exam-style answer.
+
+Start by identifying the key syllabus idea in the question. Then write the relevant definition, formula, or rule. Apply it directly to the situation and finish with a clear final sentence using exam keywords.
+
+For calculation questions: formula → substitution with units → answer with unit.
+For explanation questions: keyword → cause → effect → final conclusion.${sourceLine}`
 }
 
 function evidenceSummary(matches: RagMatch[]) {
