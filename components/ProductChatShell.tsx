@@ -575,19 +575,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
                         )}
                       </div>
                     ) : null}
-                    {!isUser && message.chapterGap ? (
-                      <div style={styles.chapterGapCard}>
-                        <div style={styles.chapterGapLabel}>Chapter Gap Detected</div>
-                        <div style={styles.chapterGapGrid}>
-                          <span>Skipped: {message.chapterGap.skippedTopic || 'tracked gap'}</span>
-                          <span>Current: {message.chapterGap.currentTopic || 'current topic'}</span>
-                          <span>{message.chapterGap.recommendation || 'Using a simpler explanation path.'}</span>
-                        </div>
-                      </div>
-                    ) : null}
-                    <RichMessageContent content={message.content} />
-                    {!isUser && message.sources?.[0] ? <SourceCard source={message.sources[0]} /> : null}
-                    {!isUser && citation && !message.sources?.[0] ? <div style={styles.source}>{citation}</div> : null}
+                    <RichMessageContent content={cleanBrokenLatexText(message.content)} />
                   </div>
                 </div>
               )
