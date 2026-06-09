@@ -1,4 +1,15 @@
-﻿'use client'
+'use client'
+
+
+function cleanBrokenLatexText(value: string) {
+  return String(value ?? '')
+    .replace(/\\ce\{([^{}]+)\}/g, '$1')
+    .replace(/\ce\{([^{}]+)\}/g, '$1')
+    .replace(/\\lambda/g, 'λ')
+    .replace(/\lambda/g, 'λ')
+    .replace(/\\Omega/g, 'Ω')
+    .replace(/\Omega/g, 'Ω')
+}
 
 import type { ReactNode } from 'react'
 import DiagramRenderer from '@/components/diagrams/DiagramRenderer'

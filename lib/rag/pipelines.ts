@@ -1,4 +1,14 @@
-﻿import { generateJson, generateText } from '@/lib/llm/client'
+
+function cleanBrokenLatexText(value: string) {
+  return String(value ?? '')
+    .replace(/\\\\ce\\{([^{}]+)\\}/g, '$1')
+    .replace(/\\ce\\{([^{}]+)\\}/g, '$1')
+    .replace(/\\\\lambda/g, 'λ')
+    .replace(/\\lambda/g, 'λ')
+    .replace(/\\\\Omega/g, 'Ω')
+    .replace(/\\Omega/g, 'Ω')
+}
+import { generateJson, generateText } from '@/lib/llm/client'
 import {
   retrieveAcademicContext,
   retrieveTopicDocuments,
@@ -245,31 +255,9 @@ function fallbackExamQuestions(topic: string, matches: RagMatch[]) {
   ]
 }
 
-function fallbackStudyAnswer(question: string, matches: RagMatch[]) {
-  const lower = normalizedWords(question)
-  const ids = fallbackSourceIds(matches)
-  const sourceLine = ids.length
-    ? `\n\nBased on: ${ids.map((id) => `[${id}]`).join(', ')}.`
-    : ''
-
-  if (/velocity/.test(lower)) {
-    return `Velocity is speed in a specified direction. In kinematics, use it when the question cares about both how fast something moves and which way it moves. For constant acceleration questions, the common link is v = u + at, where v is final velocity, u is initial velocity, a is acceleration, and t is time.${sourceLine}`
-  }
-  if (/speed/.test(lower)) {
-    return `Speed is distance travelled per unit time. For exam answers, write the definition, use speed = distance / time when values are given, and include units such as m/s.${sourceLine}`
-  }
-  if (/acceleration/.test(lower)) {
-    return `Acceleration is the rate of change of velocity. For constant acceleration, use a = (v - u) / t or rearrange v = u + at depending on the values given.${sourceLine}`
-  }
-  if (/area under curve|integral|integration/.test(lower)) {
-    return `The area under a curve is found by integration. For y = f(x), the area from x = a to x = b is the definite integral integral from a to b of f(x) dx. In exam work, set the limits, integrate, then substitute upper minus lower.${sourceLine}`
-  }
-
-  return matches.length
-    ? `Here is a direct exam-style answer.${sourceLine}`
-    : 'I can help with this, but no matching past-paper match was returned for the exact question. Please include the subject and exam board for a more exact exam-style answer.'
+function fallbackStudyAnswer(question: string, _matches: RagMatch[]) {
+  return directExamAnswer(question)
 }
-
 
 function directExamAnswer(question: string, sourceLine = '') {
   const lower = question.toLowerCase()
@@ -369,8 +357,8 @@ function evidenceSummary(matches: RagMatch[]) {
     confidenceLabel: matches.length
       ? effectiveSimilarity >= 0.78
         ? 'Mark-scheme supported answer'
-        : 'Partly supported answer'
-      : 'Study answer',
+        : 'Exam-style answer'
+      : 'Exam-style answer',
     confidenceScore,
     sources: matches.map(toSource),
   }
@@ -504,7 +492,7 @@ export async function runExplainPipeline(input: {
         `QUESTION: ${input.query}`,
         '',
         retrieval.matches.length
-          ? 'Answer using the retrieved evidence first. Cite source IDs like [S1]. Include formulas, substitutions, units, and a final answer when needed.'
+          ? "Answer the student question directly. Use retrieved exam materials silently as support. Do not cite [S1] IDs. Do not discuss evidence quality. Give the actual explanation, formula, substitutions, units, and final answer when needed."
           : 'No matching past-paper library chunk was retrieved. Give a concise study answer and clearly label it as general knowledge, exam-style.',
       ].join('\n'),
       requestId: input.requestId,
