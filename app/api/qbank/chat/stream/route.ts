@@ -1,4 +1,4 @@
-import { handleProductChat } from '@/lib/server/chat-api'
+﻿import { handleProductChat } from '@/lib/server/chat-api'
 import { createRequestId, logError } from '@/lib/server/logger'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { validateQuestion } from '@/lib/validation/inputValidator'
@@ -185,3 +185,6 @@ export async function POST(req: Request) {
     return withRequestId(Response.json({ error: 'Something went wrong' }, { status: 500 }), requestId)
   }
 }
+
+
+

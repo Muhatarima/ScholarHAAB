@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
@@ -185,11 +185,10 @@ function sourceText(sources?: SourceCitation[]) {
 }
 
 function confidenceText(confidence?: string) {
-  if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
-  if (confidence === 'PATTERN_BASED') return 'PATTERN-BASED REASONING - based on similar examiner patterns'
-  if (confidence === 'PARTIAL') return 'CORPUS-ASSISTED ANSWER'
-  if (confidence === 'GENERAL_KNOWLEDGE') return 'GENERAL ACADEMIC ANSWER'
-  return 'AI STUDY ANSWER'
+  if (confidence === 'VERIFIED') return 'Past-paper supported'
+  if (confidence === 'PATTERN_BASED') return 'Exam-style answer'
+  if (confidence === 'PARTIAL') return 'Partly supported'
+  return 'Study answer'
 }
 
 function replaceRetiredFallback(message: Message): Message {
@@ -252,7 +251,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
     }
   }, [filePreviews])
 
-  // Load user profile to build sessionContext for accurate RAG retrieval
+  // Load user profile to build sessionContext for accurate past-paper search retrieval
   useEffect(() => {
     void (async () => {
       try {
@@ -547,19 +546,19 @@ export default function ProductChatShell({ product }: { product: Product }) {
                         {message.confidence === 'VERIFIED' ? (
                           <VerifiedBadge
                             label={`${message.confidenceBadge || confidenceText(message.confidence)}${
-                              typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
+                              typeof message.confidenceScore === 'number' ? ` Â· ${message.confidenceScore}%` : ''
                             }`}
                           />
                         ) : message.confidence === 'PATTERN_BASED' ? (
                           <Badge tone="violet">
                             {`${message.confidenceBadge || confidenceText(message.confidence)}${
-                              typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
+                              typeof message.confidenceScore === 'number' ? ` Â· ${message.confidenceScore}%` : ''
                             }`}
                           </Badge>
                         ) : (
                           <AIReasoningBadge
                             label={`${message.confidenceBadge || confidenceText(message.confidence)}${
-                              typeof message.confidenceScore === 'number' ? ` · ${message.confidenceScore}%` : ''
+                              typeof message.confidenceScore === 'number' ? ` Â· ${message.confidenceScore}%` : ''
                             }`}
                           />
                         )}
@@ -613,7 +612,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
                 )}
                 <span style={styles.attachmentName}>{preview.name}</span>
                 <button type="button" onClick={() => removeSelectedFile(index)} style={styles.attachmentRemove} aria-label={`Remove ${preview.name}`}>
-                  ×
+                  Ã—
                 </button>
               </div>
             ))}
@@ -638,7 +637,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
             style={styles.input}
           />
           <button type="submit" disabled={loading} style={styles.send}>
-            →
+            â†’
           </button>
         </div>
       </form>
@@ -1108,3 +1107,7 @@ const styles = {
     fontWeight: 900,
   } satisfies CSSProperties,
 }
+
+
+
+

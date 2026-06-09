@@ -101,7 +101,6 @@ export function addPersonalityOpening(
 
 export function removeRoboticHeaders(response: string): string {
   return response
-    .replace(/\*\*Confidence:\*\*\s*(?:✅|🔶|⚠️|🧠)?\s*(VERIFIED|PARTIAL|REASONING|EXPERT)/g, '')
     .replace(/\*\*Source:\*\*\s*/g, '📚 ')
     .replace(/\*\*Solution:\*\*\s*/g, '')
     .replace(/\*\*Mark Scheme:\*\*\s*/g, '\nCambridge marks this as:\n')

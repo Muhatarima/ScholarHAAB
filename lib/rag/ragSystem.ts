@@ -1,6 +1,6 @@
-import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
+﻿import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
-// Corpus embeddings are generated locally with sentence-transformers:
+// Study-library embeddings are generated locally with sentence-transformers:
 // all-MiniLM-L6-v2, 384 dimensions. Query embeddings use the same model
 // through Hugging Face Inference so Supabase pgvector dimensions stay aligned.
 export type QuestionSearchFilters = {
@@ -276,7 +276,7 @@ function buildHypotheticalAnswer(query: string, pattern: Omit<QueryPattern, 'reg
   const subject = inferSubjectFromText(query)
 
   if (/\bwork\b/.test(normalized)) {
-    return 'Work done in Physics means energy transferred when a force moves an object through a distance. Formula: work done = force × distance moved in the direction of the force. Unit: joule.'
+    return 'Work done in Physics means energy transferred when a force moves an object through a distance. Formula: work done = force Ã— distance moved in the direction of the force. Unit: joule.'
   }
 
   if (/\bphotosynthesis\b/.test(normalized)) {
@@ -710,3 +710,4 @@ export async function searchSimilarQuestions(
     : await fetchUnifiedConceptCandidate(queryData.expanded, filters)
   return prioritizeSearchResults(unifiedCandidate ? [unifiedCandidate, ...fallbackResults] : fallbackResults, limit)
 }
+

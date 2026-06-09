@@ -296,7 +296,6 @@ export function getHighConfidenceConceptAnswer(message: string, history: Message
       match.answer,
       '',
       `**Past paper reference:** Cambridge expert syllabus knowledge`,
-      `**Confidence:** ✅ VERIFIED`,
       '',
       `**Examiner tip:** Write the keyword first, then add the formula or example for the method mark.`,
     ].join('\n')

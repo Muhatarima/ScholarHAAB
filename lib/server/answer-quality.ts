@@ -1,4 +1,4 @@
-import type { PromptMode, Product } from '@/lib/products'
+﻿import type { PromptMode, Product } from '@/lib/products'
 import type { SessionContext } from '@/lib/sessionContext'
 
 export type SourceChunkLike = {
@@ -291,3 +291,6 @@ export function validateAndFinalizeAnswer({
     mathCorrect,
   }
 }
+
+
+

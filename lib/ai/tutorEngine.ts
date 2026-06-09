@@ -124,7 +124,6 @@ function extractNumber(text: string, patterns: RegExp[]) {
 function buildHardFallbackAnswer(
   message: string,
   topic: string,
-  confidence: ReturnType<typeof classifyConfidence>,
   gapMessage?: string,
   board?: string
 ) {
@@ -148,7 +147,6 @@ function buildHardFallbackAnswer(
     if (frequency !== null && wavelength !== null) {
       const speed = Number((frequency * wavelength).toFixed(4))
       return [
-        `**Confidence:** ${confidence.badge} ${confidence.level}`,
         `**Source:** ${source}`,
         gapMessage ? `\n${gapMessage}` : null,
         '',
@@ -171,7 +169,6 @@ function buildHardFallbackAnswer(
 
   if (/integration by parts|integral by parts|parts bujhte|parts bujhini|∫u|uv/.test(normalized)) {
     return [
-      `**Confidence:** ${confidence.badge} ${confidence.level}`,
       `**Source:** ${source}`,
       gapMessage ? `\n${gapMessage}` : null,
       '',
@@ -202,7 +199,6 @@ function buildHardFallbackAnswer(
   }
 
   return [
-    `**Confidence:** ${confidence.badge} ${confidence.level}`,
     `**Source:** ${source}`,
     gapMessage ? `\n${gapMessage}` : null,
     '',
@@ -389,7 +385,7 @@ export async function handleTutorMessage(
     // HARD FALLBACK: if every provider fails, still answer using Cambridge expert reasoning.
     usedFallback = true
     const confidence = classifyConfidence(ragResult.maxSimilarity, ragResult.ragAvailable)
-    answer = buildHardFallbackAnswer(message, topic, confidence, gap?.message, board)
+    answer = buildHardFallbackAnswer(message, topic, gap?.message, board)
     answer = polishResponse(
       answer,
       detectMessageTone(message),

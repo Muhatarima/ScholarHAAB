@@ -16,8 +16,8 @@ export type PaperPatternAnalysis = {
 }
 
 export type ExamPredictionTopic = {
-  topic: string
   confidence: number
+  topic: string
   reason: string
   priority: 'high' | 'medium' | 'low'
 }
@@ -113,8 +113,8 @@ export async function predictNextExam(
       const dueSoon = yearsAgo !== null && yearsAgo >= 2
 
       return {
+        confidence,
         topic: row.topic,
-        confidence: dueSoon ? Math.min(98, confidence + 6) : confidence,
         reason: last
           ? `Last appeared ${yearsAgo} year${yearsAgo === 1 ? '' : 's'} ago${dueSoon ? ' - due soon' : ''}.`
           : 'Loaded as a recurring topic in the local QBank pattern index.',

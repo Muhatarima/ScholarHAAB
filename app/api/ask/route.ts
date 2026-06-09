@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { extractAcademicFileText } from '@/lib/rag/file-query'
 import { runExplainPipeline } from '@/lib/rag/pipelines'
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     const label = result.confidenceLabel.toLowerCase()
     const confidence = label.includes('source-backed')
       ? 'VERIFIED'
-      : label.includes('corpus-assisted')
+      : label.includes('past-paper library-assisted')
         ? 'PATTERN_BASED'
         : 'GENERAL_KNOWLEDGE'
     if (isUuid(user.id)) {
@@ -125,7 +125,7 @@ export async function POST(req: Request) {
         confidenceScore: result.confidenceScore,
         confidenceBadge:
           fileResult.traces.length > 0
-            ? 'OCR + RAG ANALYSIS'
+            ? 'Uploaded question analysis'
             : result.confidenceLabel,
         retrievalMode: result.retrievalMode,
         model: result.model,
@@ -151,10 +151,10 @@ export async function POST(req: Request) {
               ? 'Uploaded question processed with OCR'
               : label.includes('study chat')
                 ? 'General conversation'
-                : 'General academic knowledge without a matched corpus source'),
+                : 'General academic knowledge without a matched past-paper library source'),
           issues: result.sources.length
             ? []
-            : ['No matching document was returned by the current corpus.'],
+            : ['No matching document was returned by the available past papers.'],
         },
       },
       {
@@ -181,3 +181,7 @@ export async function POST(req: Request) {
     )
   }
 }
+
+
+
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Brain, RefreshCw, Sparkles } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
@@ -155,7 +155,7 @@ function AdaptiveModeInner() {
               <strong>{result.sourcePattern}</strong>
               {result.sources.map((source, index) => (
                 <span key={source.id}>
-                  [S{index + 1}] {source.title} · {source.board} {source.year} · {Math.round((source.similarity ?? 0) * 100)}%
+                  [S{index + 1}] {source.title} Â· {source.board} {source.year} Â· {Math.round((source.similarity ?? 0) * 100)}%
                 </span>
               ))}
             </footer>
@@ -197,3 +197,7 @@ const styles = {
   footer: { display: 'grid', gap: 7, padding: '18px 22px', borderTop: '1px solid rgba(176,128,255,.1)', color: '#aaa7c8', fontSize: 12 } satisfies CSSProperties,
   empty: { minHeight: 300, display: 'grid', placeContent: 'center', color: '#777493' } satisfies CSSProperties,
 } as const
+
+
+
+

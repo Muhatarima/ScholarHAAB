@@ -314,87 +314,157 @@ export default async function Home() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="landing-shell" style={{
-        position: 'relative', zIndex: 2, flex: 1,
-        display: 'flex', flexDirection: 'column',
-        gap: 'clamp(30px, 5vw, 54px)',
-        width: 'min(1180px, calc(100vw - 40px))',
-        margin: '0 auto',
-        padding: '108px 0 72px',
-      }}>
-        <div>
-          <div style={{ color: '#7744aa', fontSize: 11, letterSpacing: 3, marginBottom: 16, textTransform: 'uppercase' }}>
-            OPERATIVE SINCE 2026
-          </div>
-          <div style={{ color: '#AA66FF', fontSize: 12, letterSpacing: 4, marginBottom: 24, textTransform: 'uppercase' }}>
-            — PAST PAPER SOLVER ENGINE —
-          </div>
-          <h1 className="hero-title" style={{
-            background: 'linear-gradient(112deg,#ffffff 0%,#f2e8ff 38%,#c78bff 67%,#8f3dff 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontSize: 'clamp(54px, 9vw, 112px)',
-            fontWeight: 500,
-            letterSpacing: '-0.07em',
-            lineHeight: 0.88,
-            margin: '0 0 38px',
-            maxWidth: 760,
-          }}>
-            Beyond borders. <br />Beyond limits.
-          </h1>
-          <Link href={startHref} style={{
-            background: 'linear-gradient(130deg,#7733cc,#aa55ff)',
-            borderRadius: 999,
-            boxShadow: '0 0 28px rgba(170,85,255,0.38)',
-            color: '#fff',
-            display: 'inline-flex',
-            fontSize: 15,
+    <section
+  className="landing-shell"
+  style={{
+    position: 'relative',
+    zIndex: 2,
+    width: 'min(1280px, calc(100vw - 40px))',
+    margin: '0 auto',
+    padding: '60px 0 72px',
+  }}
+>
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center',
+      minHeight: '80vh',
+      justifyContent: 'center',
+      gap: 30,
+    }}
+  >
+    {/* BIG BLACK HOLE */}
+    <div
+      style={{
+        width: 'min(720px, 90vw)',
+        aspectRatio: '1',
+        borderRadius: '50%',
+        background:
+          'radial-gradient(circle at center, #000 18%, #1f0938 28%, #7b2cff 40%, #d9a8ff 48%, #7b2cff 55%, transparent 70%)',
+        filter: 'drop-shadow(0 0 80px rgba(170,85,255,.6))',
+        animation: 'bhHeroPulse 8s ease-in-out infinite',
+        position: 'relative',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          inset: '38%',
+          borderRadius: '50%',
+          background: '#000',
+        }}
+      />
+    </div>
+
+    <div
+      style={{
+        color: '#AA66FF',
+        letterSpacing: 6,
+        fontSize: 12,
+        textTransform: 'uppercase',
+      }}
+    >
+      ScholarHAAB
+    </div>
+
+    <h1
+      style={{
+        margin: 0,
+        fontSize: 'clamp(56px,9vw,120px)',
+        lineHeight: 0.9,
+        letterSpacing: '-0.08em',
+        fontWeight: 600,
+        background:
+          'linear-gradient(180deg,#fff,#f1e7ff,#c78bff)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      }}
+    >
+      Beyond Borders.
+      <br />
+      Beyond Limits.
+    </h1>
+
+    <Link
+      href={startHref}
+      style={{
+        background:
+          'linear-gradient(135deg,#7733cc,#aa55ff)',
+        borderRadius: 999,
+        color: '#fff',
+        padding: '16px 32px',
+        textDecoration: 'none',
+        fontWeight: 700,
+        boxShadow:
+          '0 0 40px rgba(170,85,255,.45)',
+      }}
+    >
+      Enter →
+    </Link>
+  </div>
+
+  <div style={{ marginTop: 80 }}>
+    <UserCounterCard />
+  </div>
+
+  <div
+    className="card-grid"
+    style={{
+      display: 'grid',
+      gridTemplateColumns:
+        'repeat(auto-fit,minmax(260px,1fr))',
+      gap: 18,
+      marginTop: 50,
+    }}
+  >
+    {cards.map((card) => (
+      <article
+        className="landing-card"
+        key={card.label}
+        style={{
+          minHeight: 200,
+          border: '1px solid rgba(170,85,255,.16)',
+          borderRadius: 28,
+          background:
+            'linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02))',
+          padding: 24,
+        }}
+      >
+        <span
+          style={{
+            color: '#AA66FF',
+            fontSize: 11,
             fontWeight: 800,
-            padding: '14px 22px',
-            textDecoration: 'none',
-          }}>
-            Begin your mission →
-          </Link>
-        </div>
+            letterSpacing: 2,
+          }}
+        >
+          {card.label}
+        </span>
 
-        {/* ── CARDS ── */}
-        <div className="card-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-          gap: 14,
-          marginLeft: 'auto',
-          maxWidth: 560,
-          width: 'min(100%, 560px)',
-        }}>
-          {cards.map((card) => (
-            <article className="landing-card" key={card.label} style={{
-              minHeight: 188,
-              border: '1px solid rgba(170,85,255,0.14)',
-              borderRadius: 24,
-              background: 'linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025))',
-              boxShadow: '0 18px 60px rgba(0,0,0,0.22)',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-              padding: 20,
-            }}>
-              <span style={{ color: '#AA66FF', fontSize: 11, fontWeight: 800, letterSpacing: 2.4, textTransform: 'uppercase' }}>
-                {card.label}
-              </span>
-              <div>
-                <h2 className="landing-card-title" style={{ color: '#F4EEFF', fontSize: 22, lineHeight: 1.1, margin: '0 0 10px' }}>
-                  {card.title}
-                </h2>
-                <p className="landing-card-copy" style={{ color: '#9F9FC4', fontSize: 13, lineHeight: 1.6, margin: 0 }}>
-                  {card.description}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
+        <h2
+          style={{
+            color: '#fff',
+            fontSize: 24,
+            marginTop: 20,
+          }}
+        >
+          {card.title}
+        </h2>
 
-        {/* ── USER COUNTER CARD ── dynamic, live */}
-        <UserCounterCard />
-
-      </section>
+        <p
+          style={{
+            color: '#9F9FC4',
+            lineHeight: 1.7,
+          }}
+        >
+          {card.description}
+        </p>
+      </article>
+    ))}
+  </div>
+</section>
     </main>
   )
 }

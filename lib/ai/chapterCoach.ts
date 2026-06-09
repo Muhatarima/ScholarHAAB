@@ -160,7 +160,6 @@ function formatTopic(topic: TopicPlan, index: number) {
 function buildPlanAnswer() {
   const ranked = FORCES_TOPICS.map((topic, index) => `${index + 1}. ${topic.title} - ${topic.why}`).join('\n')
   return [
-    '**Confidence:** 🧠 EXPERT',
     '**Source:** Cambridge Forces past-paper pattern + ScholarHAAB topic intelligence',
     '',
     'Kal exam hole Forces er jonno fast plan eta:',
@@ -178,7 +177,6 @@ function buildPlanAnswer() {
 
 function buildReteachAnswer(topic: TopicPlan) {
   return [
-    '**Confidence:** 🧠 EXPERT',
     '**Source:** Cambridge expert reasoning',
     '',
     `Current topic: ${topic.title}`,
@@ -206,7 +204,6 @@ async function buildExampleAnswer(topic: TopicPlan) {
   const retrieved = match ? `\nClosest retrieved context:\n${match.text.slice(0, 500)}` : ''
 
   return [
-    '**Confidence:** 🔶 PARTIAL',
     `**Source:** ${sourceLine}`,
     '',
     `Current topic: ${topic.title}`,
@@ -234,7 +231,6 @@ export async function buildChapterCoachAnswer(message: string, history: Conversa
   if (intent.kind === 'plan') return buildPlanAnswer()
   if (intent.kind === 'skip') {
     return [
-      '**Confidence:** 🧠 EXPERT',
       '**Source:** Cambridge Forces topic priority',
       '',
       `Skip korlam. Next high-yield topic:`,

@@ -1,4 +1,4 @@
-import { generateJson, generateText } from '@/lib/llm/client'
+﻿import { generateJson, generateText } from '@/lib/llm/client'
 import {
   retrieveAcademicContext,
   retrieveTopicDocuments,
@@ -168,7 +168,7 @@ async function retrieveTopicEvidence(input: {
 }
 
 function contextBlock(matches: RagMatch[], maxCharsPerChunk = 2_400) {
-  if (!matches.length) return 'No retrieved corpus evidence.'
+  if (!matches.length) return 'No retrieved past-paper library evidence.'
 
   return matches
     .map((match, index) => {
@@ -221,7 +221,7 @@ function fallbackExamFormulas(topic: string, matches: RagMatch[]) {
 
   return [
     {
-      formula: 'Use the formula named in the retrieved source, then substitute values with units.',
+      formula: 'Use the formula named in the past-paper source, then substitute values with units.',
       meaning: 'The retrieved chunks contain the topic evidence; use the matching equation from the source.',
       sourceIds: ids,
       whenToUse: 'Use when the question gives numerical data and asks for a calculation.',
@@ -249,7 +249,7 @@ function fallbackStudyAnswer(question: string, matches: RagMatch[]) {
   const lower = normalizedWords(question)
   const ids = fallbackSourceIds(matches)
   const sourceLine = ids.length
-    ? `\n\nSources used: ${ids.map((id) => `[${id}]`).join(', ')}.`
+    ? `\n\nBased on: ${ids.map((id) => `[${id}]`).join(', ')}.`
     : ''
 
   if (/velocity/.test(lower)) {
@@ -266,8 +266,8 @@ function fallbackStudyAnswer(question: string, matches: RagMatch[]) {
   }
 
   return matches.length
-    ? `I found relevant source evidence. Use the source pattern like this: identify the command word, choose the relevant definition or formula, substitute any values with units, and finish with a clear final sentence.${sourceLine}`
-    : 'I can help with this, but no matching source chunk was returned for the exact question. Please send the subject/topic or a clearer academic question so I can retrieve the right past-paper evidence.'
+    ? `Here is an exam-style way to answer this. Use this structure: identify the command word, choose the relevant definition or formula, substitute any values with units, and finish with a clear final sentence.${sourceLine}`
+    : 'I can help with this, but no matching past-paper match was returned for the exact question. Please include the subject and exam board for a more exact exam-style answer.'
 }
 
 function evidenceSummary(matches: RagMatch[]) {
@@ -284,8 +284,8 @@ function evidenceSummary(matches: RagMatch[]) {
     confidenceLabel: matches.length
       ? effectiveSimilarity >= 0.78
         ? 'Source-backed answer'
-        : 'Corpus-assisted answer'
-      : 'General academic answer',
+        : 'Partly supported answer'
+      : 'Study answer',
     confidenceScore,
     sources: matches.map(toSource),
   }
@@ -347,7 +347,7 @@ export async function runExplainPipeline(input: {
         ].join('\n'),
         requestId: input.requestId,
         system:
-          'You are ScholarHAAB, a friendly academic assistant. For casual chat, answer directly. For academic content, ask for the exact question/topic so RAG can be used.',
+          'You are ScholarHAAB, a friendly academic assistant. For casual chat, answer directly. For academic content, ask for the exact question/topic so past-paper search can be used.',
         temperature: 0.25,
       })
     } catch (error) {
@@ -420,14 +420,14 @@ export async function runExplainPipeline(input: {
         '',
         retrieval.matches.length
           ? 'Answer using the retrieved evidence first. Cite source IDs like [S1]. Include formulas, substitutions, units, and a final answer when needed.'
-          : 'No matching corpus chunk was retrieved. Give a concise general academic answer and clearly label it as general knowledge, not past-paper based.',
+          : 'No matching past-paper library chunk was retrieved. Give a concise study answer and clearly label it as general knowledge, not past-paper based.',
       ].join('\n'),
       requestId: input.requestId,
       system: [
         'You are ScholarHAAB, an accurate academic tutor.',
-        'Use the supplied corpus chunks whenever they are relevant.',
+        'Use the supplied past-paper library chunks whenever they are relevant.',
         'Do not invent year, board, paper, or question metadata.',
-        'Never say UNSUPPORTED. Never mention Hugging Face.',
+        'Never say Needs review. Never mention Hugging Face.',
         'If evidence is weak, say exactly what is weak and still give the best useful answer.',
       ].join('\n'),
       temperature: 0.12,
@@ -549,7 +549,7 @@ export async function runExamModePipeline(input: {
     subject: input.subject,
     summary:
       generatedData.summary ||
-      `Based on ${retrieval.matches.length} retrieved ${input.board ?? ''} ${input.subject} source chunks, ${input.topic} is best revised through repeated formulas, source patterns, and short structured calculations.`,
+      `Based on ${retrieval.matches.length} retrieved ${input.board ?? ''} ${input.subject} past-paper matchs, ${input.topic} is best revised through repeated formulas, source patterns, and short structured calculations.`,
     topic: input.topic,
     ...evidence,
   }
@@ -646,7 +646,7 @@ export async function runAdaptiveModePipeline(input: {
       ? [nestedSolution]
       : answer
         ? [answer]
-        : ['Use the retrieved source pattern, choose the relevant formula, substitute values, and state the final answer with units.']
+        : ['Use the past-paper source pattern, choose the relevant formula, substitute values, and state the final answer with units.']
 
   return {
     answer,
@@ -735,7 +735,7 @@ export async function runQbankAnalysisPipeline(input: {
       requestId: input.requestId,
       system: [
         'You are a QBank analysis engine for exam preparation.',
-        'Use only supplied corpus evidence.',
+        'Use only supplied past-paper library evidence.',
         'List repeated concepts, likely difficulty, and useful practice questions.',
         'Cite source IDs for every evidence-based claim.',
       ].join('\n'),
@@ -755,7 +755,7 @@ export async function runQbankAnalysisPipeline(input: {
     : [
         {
           concept: input.topic,
-          frequencyHint: 'Appears in the retrieved source set for this subject/topic search.',
+          frequencyHint: 'Appears in the past-paper source set for this subject/topic search.',
           sourceIds: fallbackSourceIds(retrieval.matches),
         },
       ]
@@ -785,11 +785,11 @@ export async function runQbankAnalysisPipeline(input: {
     retrievalMode: retrieval.mode,
     studyPlan: generatedData.studyPlan?.length
       ? generatedData.studyPlan
-      : ['Review the formulas from the retrieved sources.', 'Practise one structured question with units.', 'Compare your answer with the mark-scheme style.'],
+      : ['Review the formulas from the past-paper sources.', 'Practise one structured question with units.', 'Compare your answer with the mark-scheme style.'],
     subject: input.subject,
     summary:
       generatedData.summary ||
-      `This analysis uses ${retrieval.matches.length} retrieved source chunks for ${input.subject} / ${input.topic}.`,
+      `This analysis uses ${retrieval.matches.length} past-paper matchs for ${input.subject} / ${input.topic}.`,
     topic: input.topic,
     ...evidence,
   }
@@ -824,7 +824,7 @@ export async function buildAlternativeExplanation(input: {
       maxTokens: 800,
       prompt: [
         `CONCEPT: ${input.topic}`,
-        'ALTERNATIVE SOURCE CHUNKS:',
+        'Helpful related examples:',
         contextBlock(retrieval.matches, 1_400),
         '',
         'Return JSON only: {"concept":"","explanation":"","practicePrompt":"","sourceIds":["S1"]}',
@@ -851,7 +851,7 @@ export async function buildAlternativeExplanation(input: {
       concept: input.topic,
       explanation: formulas
         ? `A simpler route for ${input.topic}: think of the situation as a relationship between known quantities and the unknown. First write the quantity you need, then choose the matching formula (${formulas}), substitute values with units, and finish with one sentence explaining what the answer means.`
-        : `A simpler route for ${input.topic}: start from the definition, connect it to one formula or example from the retrieved sources, then solve one short practice question step by step.`,
+        : `A simpler route for ${input.topic}: start from the definition, connect it to one formula or example from the past-paper sources, then solve one short practice question step by step.`,
       model: 'retrieved-source-fallback',
       practicePrompt: `Explain one ${input.topic} question using definition, formula, substitution, and units.`,
       sourceIds: fallbackSourceIds(retrieval.matches),
@@ -865,3 +865,9 @@ export async function buildAlternativeExplanation(input: {
     sources: retrieval.matches.map(toSource),
   }
 }
+
+
+
+
+
+

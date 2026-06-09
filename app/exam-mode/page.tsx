@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { BookOpen, Calculator, Search, Target } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
@@ -57,7 +57,7 @@ function sourceLabel(source: Source) {
     source.questionNumber ? `Q${source.questionNumber}` : null,
   ]
     .filter(Boolean)
-    .join(' · ')
+    .join(' Â· ')
 }
 
 function ExamModeInner() {
@@ -227,11 +227,11 @@ function ExamModeInner() {
                     style={styles.source}
                   >
                     <span>[S{index + 1}] {source.title}</span>
-                    <small>{sourceLabel(source)} · {Math.round((source.similarity ?? 0) * 100)}%</small>
+                    <small>{sourceLabel(source)} Â· {Math.round((source.similarity ?? 0) * 100)}%</small>
                   </a>
                 ))}
                 {!result.sources.length ? (
-                  <p style={styles.muted}>No matching document is indexed for this topic yet.</p>
+                  <p style={styles.muted}>No exact past-paper match is indexed for this topic yet.</p>
                 ) : null}
               </div>
             </section>
@@ -283,3 +283,4 @@ const styles = {
   source: { color: '#d9c3ff', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', gap: 14, borderBottom: '1px solid rgba(176,128,255,.08)', padding: '9px 0' } satisfies CSSProperties,
   empty: { minHeight: 300, display: 'grid', placeContent: 'center', justifyItems: 'center', gap: 12, color: '#777493' } satisfies CSSProperties,
 } as const
+

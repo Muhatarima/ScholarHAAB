@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+﻿import { cookies } from 'next/headers'
 import { insertQueryLog, estimateLoggedTokens } from '@/lib/admin/query-logs'
 import { handleProductChat } from '@/lib/server/chat-api'
 import { resolveRequestIdentity } from '@/lib/server/auth'
@@ -224,10 +224,10 @@ export async function POST(req: Request) {
         payload.confidenceScore = validation.confidenceScore
         payload.confidenceBadge =
           validation.confidence === 'VERIFIED'
-            ? 'VERIFIED - from Cambridge/Edexcel past papers'
+            ? 'Past-paper supported'
             : validation.confidence === 'PARTIAL'
               ? 'Corpus-assisted answer'
-              : 'General academic answer'
+              : 'Study answer'
         payload.understood = understood
         if (understood.skippedTopic) {
           payload.chapterGap = {
@@ -359,3 +359,6 @@ export async function POST(req: Request) {
     )
   }
 }
+
+
+

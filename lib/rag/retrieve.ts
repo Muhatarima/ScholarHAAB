@@ -1,5 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import { createQueryEmbedding } from '@/lib/embeddings/client'
+﻿import type { SupabaseClient } from '@supabase/supabase-js'
 import { logError, logEvent } from '@/lib/server/logger'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
@@ -52,14 +51,7 @@ type RagRpcRow = {
 }
 
 function getRagClient(): SupabaseClient {
-  try {
-    return getSupabaseAdmin()
-  } catch (error) {
-    throw new Error(
-      'SUPABASE_SERVICE_ROLE_KEY is required for server-side RAG retrieval.',
-      { cause: error }
-    )
-  }
+  return getSupabaseAdmin()
 }
 
 function asText(value: unknown) {
@@ -81,6 +73,7 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
   const id = asText(row.id)
   const content = asText(row.content)
   if (!id || !content) return null
+
   const metadata = normalizeMetadata(row.metadata)
 
   return {
@@ -101,11 +94,6 @@ function normalizeRow(row: RagRpcRow): RagMatch | null {
   }
 }
 
-function getMatchThreshold() {
-  const value = Number(process.env.RAG_MATCH_THRESHOLD)
-  return Number.isFinite(value) && value > 0 && value < 1 ? value : 0.65
-}
-
 function buildFilter(filters?: RagMetadata) {
   return Object.fromEntries(
     Object.entries(filters ?? {}).filter(
@@ -114,94 +102,74 @@ function buildFilter(filters?: RagMetadata) {
   )
 }
 
-async function vectorSearch(
-  client: SupabaseClient,
-  question: string,
-  filters: RagMetadata,
-  limit: number,
-  requestId: string
-) {
-  const embedding = await createQueryEmbedding(question)
-  const threshold = getMatchThreshold()
-  const { data, error } = await client.rpc('match_documents', {
-    query_embedding: embedding.vector,
-    query_text: question,
-    match_threshold: threshold,
-    match_count: limit,
-    filter: filters,
-  })
-  if (error) throw error
-
-  const matches = ((data as RagRpcRow[] | null) ?? [])
+function normalizeRows(data: unknown): RagMatch[] {
+  return ((data as RagRpcRow[] | null) ?? [])
     .map(normalizeRow)
     .filter((row): row is RagMatch => Boolean(row))
-
-  logEvent('info', 'rag_vector_retrieval_complete', {
-    embedding_provider: embedding.provider,
-    request_id: requestId,
-    filter: filters,
-    match_count: matches.length,
-    threshold,
-    top_similarity: matches[0]?.vectorSimilarity ?? null,
-  })
-  return { embeddingProvider: embedding.provider, matches }
 }
 
-async function hybridSearch(
+async function searchWithRpc(
   client: SupabaseClient,
   question: string,
   filters: RagMetadata,
-  limit: number,
-  requestId: string
+  limit: number
 ) {
-  const embedding = await createQueryEmbedding(question)
-  const threshold = getMatchThreshold()
-  const { data, error } = await client.rpc('hybrid_search_documents', {
-    query_embedding: embedding.vector,
-    query_text: question,
-    match_threshold: threshold,
-    match_count: limit,
-    filter: filters,
-  })
-  if (error) throw error
+  const rpcNames = ['search_rag_documents', 'search_documents_keyword']
 
-  const matches = ((data as RagRpcRow[] | null) ?? [])
-    .map(normalizeRow)
-    .filter((row): row is RagMatch => Boolean(row))
+  for (const rpcName of rpcNames) {
+    const { data, error } = await client.rpc(rpcName, {
+      query_text: question,
+      match_count: limit,
+      filter: filters,
+    })
 
-  logEvent('info', 'rag_hybrid_retrieval_complete', {
-    embedding_provider: embedding.provider,
-    request_id: requestId,
-    match_count: matches.length,
-    threshold,
-    top_similarity: matches[0]?.vectorSimilarity ?? null,
-  })
-  return { embeddingProvider: embedding.provider, matches }
+    if (!error) return normalizeRows(data)
+  }
+
+  return []
 }
 
-async function keywordSearch(
+async function searchWithTable(
   client: SupabaseClient,
   question: string,
   filters: RagMetadata,
-  limit: number,
-  requestId: string
+  limit: number
 ) {
-  const { data, error } = await client.rpc('search_documents_keyword', {
-    query_text: question,
-    match_count: limit,
-    filter: filters,
-  })
-  if (error) throw error
+  const tables = ['rag_documents', 'documents']
+  const cleanQuestion = question.trim()
 
-  const matches = ((data as RagRpcRow[] | null) ?? [])
-    .map(normalizeRow)
-    .filter((row): row is RagMatch => Boolean(row))
+  for (const table of tables) {
+    let query = client
+      .from(table)
+      .select('id, content, metadata, source_title, source_url, source_kind')
+      .limit(limit)
 
-  logEvent('info', 'rag_keyword_retrieval_complete', {
-    request_id: requestId,
-    match_count: matches.length,
-  })
-  return matches
+    if (cleanQuestion) {
+      query = query.ilike('content', `%${cleanQuestion}%`)
+    }
+
+    if (filters.subject) {
+      query = query.ilike('metadata->>subject', `%${String(filters.subject)}%`)
+    }
+
+    if (filters.topic) {
+      query = query.ilike('metadata->>topic', `%${String(filters.topic)}%`)
+    }
+
+    if (filters.board) {
+      query = query.ilike('metadata->>board', `%${String(filters.board)}%`)
+    }
+
+    if (filters.level) {
+      query = query.ilike('metadata->>level', `%${String(filters.level)}%`)
+    }
+
+    const { data, error } = await query
+
+    if (!error) return normalizeRows(data)
+  }
+
+  return []
 }
 
 export async function retrieveAcademicContext(
@@ -212,72 +180,23 @@ export async function retrieveAcademicContext(
     requestId: string
   }
 ): Promise<RagRetrievalResult> {
-  let client: SupabaseClient
   try {
-    client = getRagClient()
-  } catch (error) {
-    logError('rag_client_unavailable', error, {
-      request_id: options.requestId,
-    })
-    return { matches: [], mode: 'none', embeddingAvailable: false }
-  }
-  const filters = buildFilter(options.filters)
-  const limit = Math.min(Math.max(options.limit ?? 5, 1), 5)
+    const client = getRagClient()
+    const filters = buildFilter(options.filters)
+    const limit = Math.min(Math.max(options.limit ?? 5, 1), 10)
 
-  try {
-    const result = await vectorSearch(
-      client,
-      question,
-      filters,
-      limit,
-      options.requestId
-    )
-    if (result.matches.length) {
-      return {
-        matches: result.matches,
-        mode: 'hybrid',
-        embeddingAvailable: true,
-        embeddingProvider: result.embeddingProvider,
-      }
+    let matches = await searchWithRpc(client, question, filters, limit)
+
+    if (!matches.length) {
+      matches = await searchWithTable(client, question, filters, limit)
     }
-  } catch (error) {
-    logError('rag_vector_retrieval_failed', error, {
-      request_id: options.requestId,
-      fallback: 'hybrid',
-    })
-  }
 
-  try {
-    const result = await hybridSearch(
-      client,
-      question,
-      filters,
-      limit,
-      options.requestId
-    )
-    if (result.matches.length) {
-      return {
-        matches: result.matches,
-        mode: 'hybrid',
-        embeddingAvailable: true,
-        embeddingProvider: result.embeddingProvider,
-      }
-    }
-  } catch (error) {
-    logError('rag_hybrid_retrieval_failed', error, {
+    logEvent('info', 'rag_retrieval_complete', {
       request_id: options.requestId,
-      fallback: 'keyword',
+      match_count: matches.length,
+      mode: matches.length ? 'keyword' : 'none',
     })
-  }
 
-  try {
-    const matches = await keywordSearch(
-      client,
-      question,
-      filters,
-      limit,
-      options.requestId
-    )
     return {
       matches,
       mode: matches.length ? 'keyword' : 'none',
@@ -285,10 +204,16 @@ export async function retrieveAcademicContext(
       embeddingProvider: null,
     }
   } catch (error) {
-    logError('rag_keyword_retrieval_failed', error, {
+    logError('rag_retrieval_failed', error, {
       request_id: options.requestId,
     })
-    return { matches: [], mode: 'none', embeddingAvailable: false }
+
+    return {
+      matches: [],
+      mode: 'none',
+      embeddingAvailable: false,
+      embeddingProvider: null,
+    }
   }
 }
 
@@ -299,54 +224,37 @@ export async function retrieveTopicDocuments(options: {
   subject?: string | null
   topic?: string | null
 }) {
-  let client: SupabaseClient
   try {
-    client = getRagClient()
-  } catch (error) {
-    logError('rag_topic_client_unavailable', error, {
-      request_id: options.requestId,
+    const client = getRagClient()
+    const limit = Math.min(Math.max(options.limit ?? 16, 1), 30)
+
+    const filters = buildFilter({
+      board: options.board,
+      subject: options.subject,
+      topic: options.topic,
     })
-    return []
-  }
 
-  const limit = Math.min(Math.max(options.limit ?? 16, 1), 30)
-  try {
-    let query = client
-      .from('documents')
-      .select('id, content, metadata, source_title, source_url, source_kind')
-      .limit(limit)
-
-    if (options.subject?.trim()) {
-      query = query.ilike('metadata->>subject', `%${options.subject.trim()}%`)
-    }
-    if (options.topic?.trim()) {
-      const topic = options.topic.trim()
-      query = query.or(`metadata->>topic.ilike.%${topic}%,content.ilike.%${topic}%`)
-    }
-    if (options.board?.trim()) {
-      query = query.ilike('metadata->>board', `%${options.board.trim()}%`)
-    }
-
-    const { data, error } = await query
-    if (error) throw error
-
-    const rows = ((data as RagRpcRow[] | null) ?? [])
-      .map(normalizeRow)
-      .filter((row): row is RagMatch => Boolean(row))
+    const matches = await searchWithTable(
+      client,
+      options.topic || options.subject || options.board || '',
+      filters,
+      limit
+    )
 
     logEvent('info', 'rag_topic_documents_loaded', {
       board: options.board ?? null,
-      match_count: rows.length,
+      match_count: matches.length,
       request_id: options.requestId,
       subject: options.subject ?? null,
       topic: options.topic ?? null,
     })
 
-    return rows
+    return matches
   } catch (error) {
     logError('rag_topic_documents_failed', error, {
       request_id: options.requestId,
     })
+
     return []
   }
 }

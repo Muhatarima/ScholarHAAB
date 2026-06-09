@@ -6,8 +6,7 @@ interface HardestAnswerEntry {
 const HARDEST_ANSWERS: HardestAnswerEntry[] = [
   {
     patterns: [/proton travelling at 2\.4/i, /uniform magnetic field/i, /cyclotron/i, /antiproton annihilate/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9702 expert reasoning
+    answer: `**Source:** Cambridge 9702 expert reasoning
 
 **Solution:**
 (a) Magnetic force provides centripetal force: BQv = mv²/r, so r=mv/BQ.
@@ -26,8 +25,7 @@ v = √(2KE/m) = √(2 × 2.4×10^-13 / 1.67×10^-27) ≈ 1.7×10^7 m/s.
   },
   {
     patterns: [/satellite of mass 850 kg/i, /height 400km/i, /atmospheric drag/i, /speeds up/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9702 expert reasoning
+    answer: `**Source:** Cambridge 9702 expert reasoning
 
 **Solution:**
 (a) Orbital radius r = 6.37×10^6 + 4.00×10^5 = 6.77×10^6 m.
@@ -47,8 +45,7 @@ v=√(GM/r) = √(6.67×10^-11 × 5.97×10^24 / 6.77×10^6) ≈ 7670 m/s.
   },
   {
     patterns: [/470μF capacitor/i, /10kΩ resistor/i, /47kΩ resistor/i, /5 time constants/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Edexcel A Level expert reasoning
+    answer: `**Source:** Edexcel A Level expert reasoning
 
 **Solution:**
 (a) τ=RC = 10000 × 470×10^-6 = 4.7 s.
@@ -69,8 +66,7 @@ v=√(GM/r) = √(6.67×10^-11 × 5.97×10^24 / 6.77×10^6) ≈ 7670 m/s.
   },
   {
     patterns: [/photoelectric effect/i, /250nm/i, /work function 3\.5eV/i, /Uranium-238/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9702 expert reasoning
+    answer: `**Source:** Cambridge 9702 expert reasoning
 
 **Solution:**
 (a) Wave theory fails to explain threshold frequency, instantaneous emission, and KE depending on frequency not intensity. Quantum theory explains light as photons with E=hf; one photon transfers energy to one electron and emission occurs only if hf exceeds the work function.
@@ -90,8 +86,7 @@ v=√(GM/r) = √(6.67×10^-11 × 5.97×10^24 / 6.77×10^6) ≈ 7670 m/s.
   },
   {
     patterns: [/0\.450 kg/i, /spring constant 180/i, /SHM/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Edexcel A Level expert reasoning
+    answer: `**Source:** Edexcel A Level expert reasoning
 
 **Solution:**
 (a) ω=√(k/m)=√(180/0.450)=20 rad s^-1.
@@ -109,8 +104,7 @@ KE = total - PE = 0.351 J. Also KE=1/2mω²(A²-x²).
   },
   {
     patterns: [/C₅H₁₀O/i, /acidified K₂Cr₂O₇/i, /Tollens/i, /ethanol in presence/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9701 expert reasoning
+    answer: `**Source:** Cambridge 9701 expert reasoning
 
 **Solution:**
 (a) A does not react with Tollens' reagent, so A is a ketone, not an aldehyde. Oxidation gives B, and B reacts with Na2CO3 to give CO2, so B is a carboxylic acid.
@@ -127,8 +121,7 @@ KE = total - PE = 0.351 J. Also KE=1/2mω²(A²-x²).
   },
   {
     patterns: [/standard electrode potentials/i, /0\.020 mol/i, /Fe/i, /Zn/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Edexcel A Level expert reasoning
+    answer: `**Source:** Edexcel A Level expert reasoning
 
 **Solution:**
 (a) Species with E° greater than Fe3+/Fe2+ (+0.77 V) can oxidise Fe2+ to Fe3+: MnO4-/Mn2+, Cr2O7^2-/Cr3+, and Cl2/Cl-. I2/I- cannot because +0.54 V is lower.
@@ -146,8 +139,7 @@ KE = total - PE = 0.351 J. Also KE=1/2mω²(A²-x²).
   },
   {
     patterns: [/2SO₂/i, /ΔH° = -196/i, /ΔS° = -190/i, /Contact Process/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9701 expert reasoning
+    answer: `**Source:** Cambridge 9701 expert reasoning
 
 **Solution:**
 (a) Convert ΔS=-190 J mol^-1 K^-1 = -0.190 kJ mol^-1 K^-1.
@@ -165,8 +157,7 @@ KE = total - PE = 0.351 J. Also KE=1/2mω²(A²-x²).
   },
   {
     patterns: [/11x \+ 6/i, /x² - x - 6/i, /asymptotes/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9709 expert reasoning
+    answer: `**Source:** Cambridge 9709 expert reasoning
 
 **Solution:**
 (a) Numerator factorises as (2x+1)(x-2)(x-3).
@@ -189,8 +180,7 @@ f'(x)=[(4x-3)(x+2)-(2x²-3x-2)]/(x+2)².
   },
   {
     patterns: [/∫ x²eˣ/i, /partial fractions/i, /xe\^\(-x\)/i, /rotated 360/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Edexcel A Level expert reasoning
+    answer: `**Source:** Edexcel A Level expert reasoning
 
 **Solution:**
 (a) Integration by parts twice:
@@ -211,8 +201,7 @@ f'(x)=[(4x-3)(x+2)-(2x²-3x-2)]/(x+2)².
   },
   {
     patterns: [/Machine A produces 60%/i, /3% defective/i, /Bayes/i, /H₀/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9709 expert reasoning
+    answer: `**Source:** Cambridge 9709 expert reasoning
 
 **Solution:**
 (a) P(defective)=0.6×0.03 + 0.4×0.05 = 0.018+0.020 = 0.038.
@@ -230,8 +219,7 @@ P(A|defective)=P(A and defective)/P(defective)=0.6×0.03/0.038 = 0.474.
   },
   {
     patterns: [/aerobic respiration/i, /Krebs cycle/i, /respiratory quotient/i, /0\.7/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge 9700 expert reasoning
+    answer: `**Source:** Cambridge 9700 expert reasoning
 
 **Solution:**
 (a) Glycolysis occurs in cytoplasm: glucose -> 2 pyruvate, net 2 ATP and reduced NAD.
@@ -251,8 +239,7 @@ Oxidative phosphorylation on inner mitochondrial membrane uses electron transpor
   },
   {
     patterns: [/YyRr/i, /yyrr/i, /chi-squared/i, /ABO blood/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Edexcel A Level Biology reasoning
+    answer: `**Source:** Edexcel A Level Biology reasoning
 
 **Solution:**
 (a) Test cross: YyRr × yyrr. Gametes from YyRr: YR, Yr, yR, yr. yyrr gives yr only. Offspring: YyRr, Yyrr, yyRr, yyrr in a 1:1:1:1 ratio, so phenotypes are round yellow, wrinkled yellow, round green, wrinkled green depending allele order.
@@ -267,8 +254,7 @@ Oxidative phosphorylation on inner mitochondrial membrane uses electron transpor
   },
   {
     patterns: [/simple pendulum/i, /Length 1\.0m/i, /Moon/i, /g=1\.6/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge O Level Physics reasoning
+    answer: `**Source:** Cambridge O Level Physics reasoning
 
 **Solution:**
 (a) T=2π√(L/g)=2π√(1.0/10)=1.99 s.
@@ -287,8 +273,7 @@ Oxidative phosphorylation on inner mitochondrial membrane uses electron transpor
   },
   {
     patterns: [/haematite/i, /blast furnace/i, /limestone/i, /800 tonnes/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge O Level Chemistry reasoning
+    answer: `**Source:** Cambridge O Level Chemistry reasoning
 
 **Solution:**
 (a) Blast furnace equations:
@@ -310,8 +295,7 @@ CaO+SiO2 -> CaSiO3
   },
   {
     patterns: [/0\.20 kg ball/i, /rebounds at 8 m\/s/i, /contact time/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 Impulse = change in momentum.
@@ -330,8 +314,7 @@ Average force = impulse / time = -4.0 / 0.05 = -80 N.
   },
   {
     patterns: [/satellite/i, /circular orbit/i, /speed is constant/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 A satellite in circular orbit is accelerating because acceleration means a change in velocity, not just a change in speed. Its constant speed may stay the same, but its velocity direction changes continuously.
@@ -347,8 +330,7 @@ Gravity provides the centripetal force towards centre of the Earth/orbit. This f
   },
   {
     patterns: [/weak acid/i, /titrated/i, /NaOH/i, /buffer region/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 At first, the weak acid is only partly dissociated, so added NaOH neutralises H+ and more acid molecules dissociate to replace H+. This makes the pH change slowly.
@@ -366,8 +348,7 @@ Near equivalence, most weak acid has been neutralised, so a small addition of Na
   },
   {
     patterns: [/electrode potentials/i, /zinc displaces copper/i, /copper sulfate/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 Zinc displaces copper because zinc has a more negative electrode potential than copper, so zinc is more easily oxidised.
@@ -388,8 +369,7 @@ Copper cannot displace zinc because copper is less reactive and is less easily o
   },
   {
     patterns: [/integration by parts/i, /x e\^x/i, /differentiate/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 Use integration by parts: integral u dv = uv - integral v du.
@@ -413,8 +393,7 @@ d/dx(x e^x - e^x) = (e^x + x e^x) - e^x = x e^x.
   },
   {
     patterns: [/normally distributed/i, /mean 60/i, /standard deviation 8/i, /P\(X > 72\)/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 X is normal with mean 60 and standard deviation 8.
@@ -435,8 +414,7 @@ Therefore P(Z > 1.5) = 1 - 0.9332 = 0.0668.
   },
   {
     patterns: [/action potential/i, /myelinated neurone/i, /saltatory conduction/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 An action potential begins when sodium ion channels open and sodium ions diffuse into the neurone. This causes depolarisation of the membrane.
@@ -454,8 +432,7 @@ In a myelinated neurone, myelin insulates the axon. Depolarisation happens mainl
   },
   {
     patterns: [/ADH/i, /dehydration/i, /osmoreceptors/i, /collecting duct/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 During dehydration, blood water potential becomes more negative. Osmoreceptors in the hypothalamus detect this change and signal the pituitary gland to release more ADH.
@@ -474,8 +451,7 @@ When blood water potential returns to normal, less ADH is released.
   },
   {
     patterns: [/maximum price/i, /rent/i, /low-income households/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 A maximum price on rent below equilibrium can make housing cheaper for tenants who obtain it. On a demand and supply diagram, lower rent increases quantity demanded but reduces quantity supplied, causing a shortage.
@@ -494,8 +470,7 @@ Overall, it helps only if combined with policies that increase supply, such as s
   },
   {
     patterns: [/depreciation/i, /profit/i, /asset value/i, /cash flow/i],
-    answer: `**Confidence:** ✅ VERIFIED
-**Source:** Cambridge expert reasoning
+    answer: `**Source:** Cambridge expert reasoning
 
 **Solution:**
 Depreciation is the allocation of a non-current asset's cost over its useful life. It reduces profit because it is recorded as an expense in the income statement.

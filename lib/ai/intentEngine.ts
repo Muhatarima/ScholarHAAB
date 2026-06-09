@@ -23,7 +23,6 @@ export type Intent = {
   subject: string | null
   topic: string | null
   language: 'english' | 'bangla' | 'mixed'
-  confidence: number
   entities: string[]
 }
 
@@ -215,7 +214,6 @@ export function detectIntent(message: string, history: Message[] = []): Intent {
     subject,
     topic,
     language: detectLanguage(message),
-    confidence: classified.confidence,
     entities: extractEntities(message),
   }
 }

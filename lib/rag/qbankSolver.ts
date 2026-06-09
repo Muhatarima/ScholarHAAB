@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai'
+﻿import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai'
 import { resilientGeminiCall } from '@/lib/api/resilientFetch'
 import { canAffordRequest, OUTPUT_CONFIG, recordUsage, truncatePrompt } from '@/lib/ai/costManager'
 import { getGeminiErrorMessage, getGeminiModelCandidates, withGeminiTimeout } from '@/lib/ai/geminiConfig'
@@ -24,7 +24,7 @@ export type SolvedAnswer = {
 }
 
 export const QBANK_SOLVER_PROMPT = `
-You are ScholarHAAB — Cambridge & Edexcel A/O Level
+You are ScholarHAAB â€” Cambridge & Edexcel A/O Level
 exam expert with 20 years experience. Give direct, concise,
 student-friendly answers.
 
@@ -39,10 +39,10 @@ ANSWER RULES:
 2. If the question is short or vague, assume the most likely Cambridge meaning and answer immediately.
 3. Use all available context. If Cambridge and Edexcel or levels differ, give the main answer first, then add a short note about differences.
 4. If verified context exists, cite the best Cambridge/Edexcel past-paper source.
-5. If no verified context exists, answer from exam knowledge and clearly mark General academic answer.
-6. Do not invent official mark scheme points. If adapting, say Corpus-assisted answer.
-7. NEVER output raw LaTeX chemistry notation like \\ce{...}. Use plain text/Unicode instead: H₂O, CO₂, IGCSE, ✅ VERIFIED.
-8. Avoid raw LaTeX where possible. Use readable plain text such as 1/2, v = fλ, work done = force × distance.
+5. If no verified context exists, answer from exam knowledge and clearly mark Study answer.
+6. Do not invent official mark scheme points. If adapting, say Partly supported answer.
+7. NEVER output raw LaTeX chemistry notation like \\ce{...}. Use plain text/Unicode instead: Hâ‚‚O, COâ‚‚, IGCSE, âœ… VERIFIED.
+8. Avoid raw LaTeX where possible. Use readable plain text such as 1/2, v = fÎ», work done = force Ã— distance.
 
 RESPONSE FORMAT:
 **Answer:**
@@ -50,7 +50,7 @@ RESPONSE FORMAT:
 
 **Past paper reference:** [Cambridge/Edexcel source if found, otherwise "No exact verified source found"]
 
-**Confidence:** [VERIFIED - from Cambridge/Edexcel past papers / Corpus-assisted answer / General academic answer]
+**Confidence:** [VERIFIED - from Cambridge/Edexcel past papers / Partly supported answer / Study answer]
 
 **Mark scheme points:**
 - [only verified/adapted points from context, or "No official mark scheme found"]
@@ -214,9 +214,9 @@ function deterministicFallbackAnswer(params: {
       'Cambridge mark-scheme style:',
       'Point 1 [1]: A wave transfers energy from one place to another.',
       'Point 2 [1]: Particles or fields oscillate about an equilibrium position.',
-      'Point 3 [1]: For calculations, use v = fλ, where v is wave speed, f is frequency, and λ is wavelength.',
+      'Point 3 [1]: For calculations, use v = fÎ», where v is wave speed, f is frequency, and Î» is wavelength.',
       '',
-      'Examiner tip: For wave-speed questions, write v = fλ before substituting numbers.',
+      'Examiner tip: For wave-speed questions, write v = fÎ» before substituting numbers.',
       '',
       `Past paper reference: ${citation}`,
     ]
@@ -277,7 +277,7 @@ function deterministicFallbackAnswer(params: {
       'Photosynthesis is the process where plants use light energy and chlorophyll to make glucose from carbon dioxide and water.',
       '',
       'Word equation:',
-      'carbon dioxide + water → glucose + oxygen',
+      'carbon dioxide + water â†’ glucose + oxygen',
       '',
       'Cambridge mark-scheme style:',
       'Point 1 [1]: Light energy is absorbed by chlorophyll in chloroplasts.',
@@ -297,12 +297,12 @@ function deterministicFallbackAnswer(params: {
       sourceLine,
       '',
       'Answer:',
-      'For ax² + bx + c = 0, the quadratic formula is:',
-      'x = (-b ± √(b² - 4ac)) / 2a',
+      'For axÂ² + bx + c = 0, the quadratic formula is:',
+      'x = (-b Â± âˆš(bÂ² - 4ac)) / 2a',
       '',
       'Cambridge mark-scheme style:',
-      'Step 1 [1]: Identify a, b, and c from ax² + bx + c = 0.',
-      'Step 2 [1]: Substitute into x = (-b ± √(b² - 4ac)) / 2a.',
+      'Step 1 [1]: Identify a, b, and c from axÂ² + bx + c = 0.',
+      'Step 2 [1]: Substitute into x = (-b Â± âˆš(bÂ² - 4ac)) / 2a.',
       'Step 3 [1]: Simplify both roots carefully.',
       '',
       `Past paper reference: ${citation}`,
@@ -311,18 +311,18 @@ function deterministicFallbackAnswer(params: {
       .join('\n')
   }
 
-  if (/integrat|integral|∫/.test(lower)) {
+  if (/integrat|integral|âˆ«/.test(lower)) {
     const definiteMatch = lower.match(/x\^?2.*from\s+(-?\d+(?:\.\d+)?)\s+to\s+(-?\d+(?:\.\d+)?)/)
-    const hasXSquared = /x\^?2|x²/.test(lower)
+    const hasXSquared = /x\^?2|xÂ²/.test(lower)
     const workedExample = definiteMatch && hasXSquared
       ? [
           `Here the exam move is simple: integrate first, then apply the limits.`,
-          `∫x² dx = x³/3`,
-          `[x³/3] from ${definiteMatch[1]} to ${definiteMatch[2]} = (${definiteMatch[2]}³/3) - (${definiteMatch[1]}³/3) = ${(Number(definiteMatch[2]) ** 3 / 3 - Number(definiteMatch[1]) ** 3 / 3).toString()}`,
+          `âˆ«xÂ² dx = xÂ³/3`,
+          `[xÂ³/3] from ${definiteMatch[1]} to ${definiteMatch[2]} = (${definiteMatch[2]}Â³/3) - (${definiteMatch[1]}Â³/3) = ${(Number(definiteMatch[2]) ** 3 / 3 - Number(definiteMatch[1]) ** 3 / 3).toString()}`,
         ]
       : [
           'Think of integration as reverse differentiation.',
-          'For xⁿ, add 1 to the power and divide by the new power: ∫xⁿ dx = xⁿ⁺¹/(n+1) + c.',
+          'For xâ¿, add 1 to the power and divide by the new power: âˆ«xâ¿ dx = xâ¿âºÂ¹/(n+1) + c.',
         ]
     return [
       badge,
@@ -353,9 +353,9 @@ function deterministicFallbackAnswer(params: {
       sourceLine,
       '',
       'Answer:',
-      'For powers, use the rule: if y = axⁿ, then dy/dx = anxⁿ⁻¹.',
-      /x\^?3.*2x|x³.*2x/.test(lower)
-        ? 'So for y = x³ + 2x, dy/dx = 3x² + 2.'
+      'For powers, use the rule: if y = axâ¿, then dy/dx = anxâ¿â»Â¹.',
+      /x\^?3.*2x|xÂ³.*2x/.test(lower)
+        ? 'So for y = xÂ³ + 2x, dy/dx = 3xÂ² + 2.'
         : 'Differentiate each term separately, then simplify.',
       '',
       'Cambridge mark-scheme style:',
@@ -379,7 +379,7 @@ function deterministicFallbackAnswer(params: {
       '',
       'Answer:',
       /normal distribution|z[- ]?score/.test(lower)
-        ? 'For a normal distribution, standardise using z = (x - μ) / σ.'
+        ? 'For a normal distribution, standardise using z = (x - Î¼) / Ïƒ.'
         : 'For probability, define the event carefully, then use the correct rule: add for OR, multiply for AND when independent.',
       '',
       'Cambridge mark-scheme style:',
@@ -388,7 +388,7 @@ function deterministicFallbackAnswer(params: {
       'Point 3 [1]: Use the table/calculator consistently.',
       'Point 4 [1]: Give probability to the required accuracy.',
       '',
-      'Examiner tip: For normal distribution, σ is the standard deviation, not the variance.',
+      'Examiner tip: For normal distribution, Ïƒ is the standard deviation, not the variance.',
       '',
       `Past paper reference: ${citation}`,
     ]
@@ -535,15 +535,15 @@ function classifyConfidence(results: SearchResult[]) {
 
 export function getQbankConfidenceBadge(confidence: QbankConfidence) {
   if (confidence === 'VERIFIED') return 'VERIFIED - from Cambridge/Edexcel past papers'
-  if (confidence === 'PARTIAL') return 'Corpus-assisted answer'
-  return 'General academic answer'
+  if (confidence === 'PARTIAL') return 'Partly supported answer'
+  return 'Study answer'
 }
 
 function enforceConfidence(answer: string, confidence: SolvedAnswer['confidence'], source: SearchResult | undefined) {
   const withoutOldConfidence = answer
-    .replace(/\*\*Confidence:\*\*\s*(?:✅|🔶|⚠️|🤖)?\s*(?:VERIFIED|PARTIAL|UNVERIFIED|AI_REASONING|AI REASONING)[^\n]*/gi, '')
-    .replace(/^\s*Confidence:\s*(?:✅|🔶|⚠️|🤖)?[^\n]*/gim, '')
-    .replace(/^\s*(?:✅ VERIFIED — from Cambridge\/Edexcel past papers|⚠️ PARTIAL MATCH — AI reasoning applied|🤖 AI REASONING — verify before exam)\s*$/gim, '')
+    .replace(/\*\*Confidence:\*\*\s*(?:âœ…|ðŸ”¶|âš ï¸|ðŸ¤–)?\s*(?:VERIFIED|PARTIAL|UNVERIFIED|AI_REASONING|AI REASONING)[^\n]*/gi, '')
+    .replace(/^\s*Confidence:\s*(?:âœ…|ðŸ”¶|âš ï¸|ðŸ¤–)?[^\n]*/gim, '')
+    .replace(/^\s*(?:âœ… VERIFIED â€” from Cambridge\/Edexcel past papers|âš ï¸ PARTIAL MATCH â€” AI reasoning applied|ðŸ¤– AI REASONING â€” verify before exam)\s*$/gim, '')
     .replace(/^\s*Past paper reference:\s*[^\n]+$/gim, '')
     .replace(/^\s*(?:VERIFIED - from Cambridge\/Edexcel past papers|PARTIAL MATCH - AI reasoning applied|AI REASONING - verify before exam)\s*$/gim, '')
     .replace(/\n{3,}/g, '\n\n')
@@ -569,34 +569,34 @@ function sanitizeAvoidedTopics(answer: string, avoidedTopics: string[]) {
 
 function toSubscript(value: string) {
   const map: Record<string, string> = {
-    '0': '₀',
-    '1': '₁',
-    '2': '₂',
-    '3': '₃',
-    '4': '₄',
-    '5': '₅',
-    '6': '₆',
-    '7': '₇',
-    '8': '₈',
-    '9': '₉',
+    '0': 'â‚€',
+    '1': 'â‚',
+    '2': 'â‚‚',
+    '3': 'â‚ƒ',
+    '4': 'â‚„',
+    '5': 'â‚…',
+    '6': 'â‚†',
+    '7': 'â‚‡',
+    '8': 'â‚ˆ',
+    '9': 'â‚‰',
   }
   return value.replace(/\d/g, (digit) => map[digit] ?? digit)
 }
 
 function toSuperscript(value: string) {
   const map: Record<string, string> = {
-    '0': '⁰',
-    '1': '¹',
-    '2': '²',
-    '3': '³',
-    '4': '⁴',
-    '5': '⁵',
-    '6': '⁶',
-    '7': '⁷',
-    '8': '⁸',
-    '9': '⁹',
-    '+': '⁺',
-    '-': '⁻',
+    '0': 'â°',
+    '1': 'Â¹',
+    '2': 'Â²',
+    '3': 'Â³',
+    '4': 'â´',
+    '5': 'âµ',
+    '6': 'â¶',
+    '7': 'â·',
+    '8': 'â¸',
+    '9': 'â¹',
+    '+': 'âº',
+    '-': 'â»',
   }
   return value.replace(/[0-9+-]/g, (char) => map[char] ?? char)
 }
@@ -626,8 +626,8 @@ function plainChemistryText(value: string) {
       toSubscript(braced ?? plain ?? '')
     )
     .replace(/(?<=[A-Za-z)])(\d+)/g, (digits) => toSubscript(digits))
-    .replace(/<=>/g, '⇌')
-    .replace(/->/g, '→')
+    .replace(/<=>/g, 'â‡Œ')
+    .replace(/->/g, 'â†’')
     .replace(/\s+/g, ' ')
     .trim()
 }
@@ -805,3 +805,4 @@ export async function solveQuestion(
     from_cache: false,
   }
 }
+

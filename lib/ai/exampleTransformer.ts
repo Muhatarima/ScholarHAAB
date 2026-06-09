@@ -4,7 +4,6 @@ export const FEW_SHOT_EXAMPLES = `
 STUDENT: "calculate wave speed if f=500Hz λ=0.68m"
 
 ❌ ROBOTIC (old):
-**Confidence:** ✅ VERIFIED
 **Source:** Cambridge O Level Physics 2021
 **Solution:**
 Step 1: v = fλ
@@ -75,7 +74,6 @@ Same method — what would you pick as u? 🤔
 STUDENT: "define specific heat capacity"
 
 ❌ ROBOTIC (old):
-**Confidence:** ✅ VERIFIED
 Specific heat capacity is the energy required per unit
 mass per unit temperature change.
 

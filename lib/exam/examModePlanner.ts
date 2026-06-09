@@ -1,6 +1,6 @@
-/**
- * Module 9 — Exam Mode (last 10 years analysis + study plan)
- * Never claims certainty — uses historical pattern language only.
+﻿/**
+ * Module 9 â€” Exam Mode (last 10 years analysis + study plan)
+ * Never claims certainty â€” uses historical pattern language only.
  */
 import { analyzePastPapers, type PastPaperAnalysis } from '@/lib/exam/analyzePastPapers'
 
@@ -41,7 +41,7 @@ export async function buildExamModePlan(input: ExamModeInput): Promise<ExamModeP
   const repeatedTopics = analysis.repeatedTopics.slice(0, 8).map((t) => t.topic)
   const highProbabilityTopics = analysis.predictedImportantTopics
     .filter((t) => t.estimatedExamChance === 'high' || t.estimatedExamChance === 'medium')
-    .map((t) => `${t.topic} (${t.estimatedExamChance} — ${t.whyImportant})`)
+    .map((t) => `${t.topic} (${t.estimatedExamChance} â€” ${t.whyImportant})`)
 
   const repeatedFormulas = analysis.recurringFormulas.slice(0, 6).map((f) => `${f.formula} [${f.topic}]`)
   const repeatedQuestionStyles = analysis.highFrequencyQuestionTypes.map((t) => t.type)
@@ -53,21 +53,21 @@ export async function buildExamModePlan(input: ExamModeInput): Promise<ExamModeP
     : 14
 
   const studyPlan = [
-    `Day 1–2: Revise top formulas — ${repeatedFormulas.slice(0, 3).join('; ') || 'subject formula sheet'}.`,
-    `Day 3–5: Drill repeated topics — ${repeatedTopics.slice(0, 3).join(', ') || 'core syllabus'}.`,
-    `Day 6–8: Past paper questions (${input.board} ${input.level}, last ${yearsBack} years).`,
-    `Day 9–10: Mark scheme keyword review for ${repeatedQuestionStyles.slice(0, 2).join(' & ') || 'explanation questions'}.`,
-    `Day 11–${daysUntil}: Timed mock + review weak topics from dashboard.`,
+    `Day 1â€“2: Revise top formulas â€” ${repeatedFormulas.slice(0, 3).join('; ') || 'subject formula sheet'}.`,
+    `Day 3â€“5: Drill repeated topics â€” ${repeatedTopics.slice(0, 3).join(', ') || 'core syllabus'}.`,
+    `Day 6â€“8: Past paper questions (${input.board} ${input.level}, last ${yearsBack} years).`,
+    `Day 9â€“10: Mark scheme keyword review for ${repeatedQuestionStyles.slice(0, 2).join(' & ') || 'explanation questions'}.`,
+    `Day 11â€“${daysUntil}: Timed mock + review weak topics from dashboard.`,
   ]
 
   const markdown = [
-    `# Exam plan — ${input.subject} (${input.board} ${input.level})`,
+    `# Exam plan â€” ${input.subject} (${input.board} ${input.level})`,
     '',
     `> ${DISCLAIMER}`,
     '',
     analysis.dataLabel === 'prediction_based_on_available_data'
       ? '_Limited past paper data retrieved; predictions are conservative._'
-      : `_Based on ${analysis.sources.length} retrieved sources over ~${yearsBack} years._`,
+      : `Based on ${analysis.sources.length} retrieved sources over ~${yearsBack} years._`,
     '',
     '## Repeated topics',
     ...repeatedTopics.map((t) => `- ${t}`),
@@ -100,3 +100,7 @@ export async function buildExamModePlan(input: ExamModeInput): Promise<ExamModeP
     markdown,
   }
 }
+
+
+
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import type { ReactNode } from 'react'
 import DiagramRenderer from '@/components/diagrams/DiagramRenderer'
@@ -334,7 +334,7 @@ export default function RichMessageContent({
           diagramType={diagramType}
           subject={subject}
           topic={diagramType === 'energy_profile' ? 'Energetics' : diagramType}
-          diagramDescription="Auto-generated fallback visual based on the answer text. Use the original source paper for exact exam artwork when available."
+          diagramDescription="Simple visual to help understand the answer."
         />
       )}
       <GraphDetector text={content} />
