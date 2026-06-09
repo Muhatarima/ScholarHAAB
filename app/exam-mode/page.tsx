@@ -49,6 +49,20 @@ type ExamResult = {
 const SUBJECTS = ['Physics', 'Mathematics', 'Chemistry']
 const BOARDS = ['Cambridge', 'Edexcel', 'Any']
 
+async function readJsonResponse(response: Response) {
+  const text = await response.text()
+  try {
+    return text ? JSON.parse(text) : {}
+  } catch {
+    return {
+      error: response.ok
+        ? 'The server returned an unreadable response.'
+        : 'The server is temporarily unavailable. Please try again.',
+      raw: text.slice(0, 120),
+    }
+  }
+}
+
 function sourceLabel(source: Source) {
   return [
     source.board,
@@ -87,7 +101,7 @@ function ExamModeInner() {
           board: board === 'Any' ? null : board,
         }),
       })
-      const data = (await response.json()) as ExamResult & { error?: string }
+      const data = (await readJsonResponse(response)) as ExamResult & { error?: string }
       if (!response.ok) throw new Error(data.error || 'Analysis failed.')
       setResult(data)
     } catch (caught) {

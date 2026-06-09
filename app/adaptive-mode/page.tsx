@@ -31,6 +31,20 @@ type AdaptiveResult = {
   }>
 }
 
+async function readJsonResponse(response: Response) {
+  const text = await response.text()
+  try {
+    return text ? JSON.parse(text) : {}
+  } catch {
+    return {
+      error: response.ok
+        ? 'The server returned an unreadable response.'
+        : 'The server is temporarily unavailable. Please try again.',
+      raw: text.slice(0, 120),
+    }
+  }
+}
+
 function AdaptiveModeInner() {
   const [subject, setSubject] = useState('Physics')
   const [topic, setTopic] = useState('Kinematics')
@@ -56,7 +70,7 @@ function AdaptiveModeInner() {
         }),
         body: JSON.stringify({ subject, topic, board, difficulty, performance }),
       })
-      const data = (await response.json()) as AdaptiveResult & { error?: string }
+      const data = (await readJsonResponse(response)) as AdaptiveResult & { error?: string }
       if (!response.ok) throw new Error(data.error || 'Generation failed.')
       setResult(data)
     } catch (caught) {
