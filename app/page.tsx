@@ -435,7 +435,7 @@ export default async function Home() {
     </Link>
   </div>
 
-  <div style={{ marginTop: 80 }}>
+  <div style={{ marginTop: 24 }}>
     <UserCounterCard />
   </div>
 
@@ -446,7 +446,7 @@ export default async function Home() {
       gridTemplateColumns:
         'repeat(auto-fit,minmax(260px,1fr))',
       gap: 18,
-      marginTop: 50,
+      marginTop: 24,
     }}
   >
     {cards.map((card) => (
