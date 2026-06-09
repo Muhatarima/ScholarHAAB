@@ -71,7 +71,42 @@ function sourceLabel(source: Source) {
     source.questionNumber ? `Q${source.questionNumber}` : null,
   ]
     .filter(Boolean)
-    .join(' Â· ')
+    .join(' · ')
+}
+
+function normalizeExamResult(value: Partial<ExamResult> & Record<string, unknown>): ExamResult {
+  return {
+    subject: typeof value.subject === 'string' ? value.subject : 'Physics',
+    topic: typeof value.topic === 'string' ? value.topic : 'Kinematics',
+    confidenceScore: typeof value.confidenceScore === 'number' ? value.confidenceScore : 70,
+    confidenceLabel: typeof value.confidenceLabel === 'string' ? value.confidenceLabel : 'Past-paper supported',
+    retrievalMode: typeof value.retrievalMode === 'string' ? value.retrievalMode : 'keyword',
+    importantTopics: Array.isArray(value.importantTopics)
+      ? value.importantTopics
+      : Array.isArray(value.priorities)
+        ? value.priorities.map((item: any) => ({
+            name: item.title || value.topic || 'Topic',
+            importance: item.confidence ? `${item.confidence}%` : 'medium',
+            whyImportant: item.reason || item.note || 'Practise this topic using past-paper style questions.',
+            sourceIds: [],
+          }))
+        : [{
+            name: typeof value.topic === 'string' ? value.topic : 'Topic',
+            importance: 'medium',
+            whyImportant: typeof value.summary === 'string' ? value.summary : 'Practise this topic using past-paper style questions.',
+            sourceIds: [],
+          }],
+    formulas: Array.isArray(value.formulas) ? value.formulas : [],
+    importantQuestions: Array.isArray(value.importantQuestions)
+      ? value.importantQuestions
+      : [{
+          question: `Practise one exam-style question on ${typeof value.topic === 'string' ? value.topic : 'this topic'}.`,
+          whyImportant: 'This helps check formula choice, keywords, and final answer structure.',
+          sourceIds: [],
+        }],
+    summary: typeof value.summary === 'string' ? value.summary : '',
+    sources: Array.isArray(value.sources) ? value.sources : [],
+  }
 }
 
 function ExamModeInner() {
@@ -103,7 +138,7 @@ function ExamModeInner() {
       })
       const data = (await readJsonResponse(response)) as ExamResult & { error?: string }
       if (!response.ok) throw new Error(data.error || 'Analysis failed.')
-      setResult(data)
+      setResult(normalizeExamResult(data))
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Analysis failed.')
     } finally {
@@ -142,8 +177,8 @@ function ExamModeInner() {
           </div>
           {result ? (
             <div style={styles.confidence}>
-              <strong>{result.confidenceScore}%</strong>
-              <span>{result.confidenceLabel.replaceAll('_', ' ')}</span>
+              <strong>{(result.confidenceScore ?? 70)}%</strong>
+              <span>{(result.confidenceLabel || 'Past-paper supported').replaceAll('_', ' ')}</span>
             </div>
           ) : null}
         </header>
@@ -181,7 +216,7 @@ function ExamModeInner() {
                 <h2>Important topics</h2>
               </div>
               <div style={styles.grid}>
-                {result.importantTopics.map((item, index) => (
+                {(result.importantTopics ?? []).map((item, index) => (
                   <article key={`${item.name}-${index}`} style={styles.item}>
                     <div style={styles.itemTop}>
                       <strong>{item.name}</strong>
@@ -200,7 +235,7 @@ function ExamModeInner() {
                 <h2>Key formulas</h2>
               </div>
               <div style={styles.grid}>
-                {result.formulas.map((item, index) => (
+                {(result.formulas ?? []).map((item, index) => (
                   <article key={`${item.formula}-${index}`} style={styles.item}>
                     <strong style={styles.formula}>{item.formula}</strong>
                     <p>{item.meaning}</p>
@@ -217,7 +252,7 @@ function ExamModeInner() {
                 <h2>Important questions</h2>
               </div>
               <div style={styles.questionList}>
-                {result.importantQuestions.map((item, index) => (
+                {(result.importantQuestions ?? []).map((item, index) => (
                   <article key={`${item.question}-${index}`} style={styles.item}>
                     <strong>{item.question}</strong>
                     <p>{item.whyImportant}</p>
@@ -231,7 +266,7 @@ function ExamModeInner() {
               <h2 style={styles.sourceTitle}>Retrieved evidence</h2>
               <p style={styles.summary}>{result.summary}</p>
               <div style={styles.sources}>
-                {result.sources.map((source, index) => (
+                {(result.sources ?? []).map((source, index) => (
                   <a
                     key={source.id}
                     className="exam-rag-source"
