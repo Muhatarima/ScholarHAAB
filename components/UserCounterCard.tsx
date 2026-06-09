@@ -85,16 +85,6 @@ export default function UserCounterCard() {
       }}
     />
   </div>
-
-  <div
-    style={{
-      marginTop: 10,
-      color: '#8888aa',
-      fontSize: 14,
-    }}
-  >
-    Goal: 100,000 students
-  </div>
 </div>
 )
 }
