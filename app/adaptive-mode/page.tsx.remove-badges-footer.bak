@@ -139,6 +139,7 @@ function AdaptiveModeInner() {
             <div className="adaptive-result-top" style={styles.resultTop}>
               <span style={styles.type}>{result.question.type || 'structured'}</span>
               <span>{result.question.marks ?? 0} marks</span>
+              <span>{result.confidenceScore}% corpus confidence</span>
             </div>
             <section style={styles.question}>
               <RichMessageContent content={result.question.text || ''} />
@@ -164,6 +165,14 @@ function AdaptiveModeInner() {
                 <ul>{result.commonMistakes.map((mistake) => <li key={mistake}>{mistake}</li>)}</ul>
               </section>
             ) : null}
+            <footer style={styles.footer}>
+              <strong>{result.sourcePattern}</strong>
+              {result.sources.map((source, index) => (
+                <span key={source.id}>
+                  [S{index + 1}] {source.title} Â· {source.board} {source.year} Â· {Math.round((source.similarity ?? 0) * 100)}%
+                </span>
+              ))}
+            </footer>
           </div>
         ) : (
           <div style={styles.empty}>Choose a topic to generate a paper-style question.</div>

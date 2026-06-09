@@ -365,19 +365,7 @@ export default async function Home() {
       gap: 30,
     }}
   >
-    {/* BIG BLACK HOLE */}
-    <div
-      style={{
-        width: 'min(720px, 90vw)',
-        aspectRatio: '1',
-        borderRadius: '50%',
-        background:
-          'radial-gradient(circle at center, #000 18%, #1f0938 28%, #7b2cff 40%, #d9a8ff 48%, #7b2cff 55%, transparent 70%)',
-        filter: 'drop-shadow(0 0 80px rgba(170,85,255,.6))',
-        animation: 'bhHeroPulse 8s ease-in-out infinite',
-        position: 'relative',
-      }}
-    >
+ 
       <div
         style={{
           position: 'absolute',
@@ -435,7 +423,7 @@ export default async function Home() {
     </Link>
   </div>
 
-  <div style={{ marginTop: 80 }}>
+  <div style={{ marginTop: 24 }}>
     <UserCounterCard />
   </div>
 
@@ -446,7 +434,7 @@ export default async function Home() {
       gridTemplateColumns:
         'repeat(auto-fit,minmax(260px,1fr))',
       gap: 18,
-      marginTop: 50,
+      marginTop: 24,
     }}
   >
     {cards.map((card) => (

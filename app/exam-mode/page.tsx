@@ -257,7 +257,7 @@ function ExamModeInner() {
             </section>
 
             <section style={styles.sourceBand}>
-              <h2 style={styles.sourceTitle}>Retrieved evidence</h2>
+              <h2 style={styles.sourceTitle}>Supporting Information</h2>
               <p style={styles.summary}>{result.summary}</p>
               <div style={styles.sources}>
                 {(result.sources ?? []).map((source, index) => (
@@ -274,7 +274,7 @@ function ExamModeInner() {
                   </a>
                 ))}
                 {!result.sources.length ? (
-                  <p style={styles.muted}>No exact past-paper match is indexed for this topic yet.</p>
+                  <p style={styles.muted}>No past-paper matches are currently available for this topic.</p>
                 ) : null}
               </div>
             </section>
