@@ -297,10 +297,25 @@ export default async function Home() {
         background: 'rgba(0,0,13,0.42)',
         backdropFilter: 'blur(12px)',
       }}>
-        {/* Logo — small black hole in nav */}
+        {/* Logo — black hole + text */}
         <Link className="nav-logo-wrap" href="/" aria-label="ScholarHAAB home"
-          style={{ display: 'inline-flex', lineHeight: 0, textDecoration: 'none' }}>
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            textDecoration: 'none',
+            lineHeight: 1,
+          }}>
           <BlackholeLogo size="nav" />
+          <span style={{
+            color: '#f3e9ff',
+            fontSize: 20,
+            fontWeight: 900,
+            letterSpacing: '-0.02em',
+            textShadow: '0 0 16px rgba(186,124,255,0.45)',
+          }}>
+            ScholarHAAB
+          </span>
         </Link>
 
         <div className="landing-nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
