@@ -549,7 +549,7 @@ export async function runExamModePipeline(input: {
 }) {
   const retrieval = await retrieveTopicEvidence({
     board: input.board,
-    limit: 8,
+    limit: 18,
     purpose: 'past paper formulas repeated questions examiner report mark scheme',
     requestId: input.requestId,
     subject: input.subject,
@@ -564,14 +564,14 @@ export async function runExamModePipeline(input: {
   let model = 'retrieved-source-fallback'
   try {
     const generated = await generateJson<ExamModeJson>({
-      maxTokens: 1_100,
+      maxTokens: 1_700,
       prompt: [
         `SUBJECT: ${input.subject}`,
         `TOPIC: ${input.topic}`,
         `BOARD: ${input.board ?? 'Any'}`,
         '',
         'PAST-PAPER / TEXTBOOK EVIDENCE:',
-        contextBlock(retrieval.matches.slice(0, 6), 650),
+        contextBlock(retrieval.matches, 1_800),
         '',
         'Return JSON only with this shape:',
         '{"importantTopics":[{"name":"","importance":"high|medium|low","whyImportant":"","sourceIds":["S1"]}],"formulas":[{"formula":"","meaning":"","whenToUse":"","sourceIds":["S1"]}],"importantQuestions":[{"question":"","whyImportant":"","sourceIds":["S1"]}],"summary":""}',
