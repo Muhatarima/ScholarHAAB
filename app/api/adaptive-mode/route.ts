@@ -62,6 +62,15 @@ function safeAdaptiveResult(input: {
   }
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number) {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('AI timeout; using local fallback.')), ms)
+    ),
+  ])
+}
+
 function json(data: unknown, status = 200, requestId?: string) {
   return NextResponse.json(data, {
     status,
@@ -120,14 +129,14 @@ export async function POST(req: Request) {
     performance = text(body.performance) || null
 
     try {
-      const result = await runAdaptiveModePipeline({
+      const result = await withTimeout(runAdaptiveModePipeline({
         subject,
         topic,
         board,
         difficulty,
         performance,
         requestId,
-      })
+      }), 8000)
 
       return json(result, 200, requestId)
     } catch (pipelineError) {
