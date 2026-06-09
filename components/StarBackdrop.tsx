@@ -3,7 +3,7 @@ type StarBackdropProps = {
 }
 
 export default function StarBackdrop({ variant = 'auth' }: StarBackdropProps) {
-  const showBlackhole = variant === 'auth'
+  const showBlackhole = false
   const starCount = variant === 'chat' ? 76 : 58
 
   return (
