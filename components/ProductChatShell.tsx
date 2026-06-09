@@ -1,14 +1,26 @@
 'use client'
 
 
-function cleanBrokenLatexText(value: string) {
+function cleanBrokenLatexText(value: unknown) {
   return String(value ?? '')
+    .replace(/\\\\ce\{([^{}]+)\}/g, '$1')
     .replace(/\\ce\{([^{}]+)\}/g, '$1')
     .replace(/\ce\{([^{}]+)\}/g, '$1')
+    .replace(/\\\\mathrm\{([^{}]+)\}/g, '$1')
+    .replace(/\\mathrm\{([^{}]+)\}/g, '$1')
+    .replace(/\mathrm\{([^{}]+)\}/g, '$1')
+    .replace(/\\\\text\{([^{}]+)\}/g, '$1')
+    .replace(/\\text\{([^{}]+)\}/g, '$1')
+    .replace(/\text\{([^{}]+)\}/g, '$1')
+    .replace(/\\\\lambda/g, 'λ')
     .replace(/\\lambda/g, 'λ')
     .replace(/\lambda/g, 'λ')
+    .replace(/\\\\Omega/g, 'Ω')
     .replace(/\\Omega/g, 'Ω')
     .replace(/\Omega/g, 'Ω')
+    .replace(/\\\\times/g, '×')
+    .replace(/\\times/g, '×')
+    .replace(/\times/g, '×')
 }
 
 import Link from 'next/link'
