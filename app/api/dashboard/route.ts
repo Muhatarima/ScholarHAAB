@@ -30,6 +30,13 @@ type LearningGapRow = {
   updated_at?: string | null
 }
 
+type ConversationRow = {
+  answer?: string | null
+  created_at?: string | null
+  id?: string
+  question?: string | null
+}
+
 function isMissingTable(error: unknown) {
   const code = (error as { code?: string })?.code
   const message = String((error as { message?: string })?.message ?? '')
@@ -113,6 +120,7 @@ function fallbackPayload() {
     recentSessions: [],
     recentExamSessions: [],
     recentExamPlans: [],
+    recentConversations: [],
     syllabus: [],
     todaysPlan: ['Start solving questions and ScholarHAAB will detect your weak topics automatically.'],
   }
@@ -140,7 +148,7 @@ export async function GET(req: Request) {
   }
 
   const supabase = getSupabaseAdmin()
-  const [legacyProfile, stableProfile, topicProgress, learningGaps, examSessions, examPlans, legacyDashboard] =
+  const [legacyProfile, stableProfile, topicProgress, learningGaps, examSessions, examPlans, conversations, legacyDashboard] =
     await Promise.all([
       getStudentProfile(user.id).catch(() => null),
       loadStableProfile(user.id),
@@ -182,6 +190,14 @@ export async function GET(req: Request) {
         supabase
           .from('exam_plans')
           .select('id, exam_session_id, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(8)
+      ),
+      safeQuery<ConversationRow>(
+        supabase
+          .from('conversations')
+          .select('id, question, answer, created_at')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(8)
@@ -255,6 +271,7 @@ export async function GET(req: Request) {
     recentSessions: legacyDashboard?.recentSessions ?? [],
     recentExamSessions: examSessions,
     recentExamPlans: examPlans,
+    recentConversations: conversations,
     syllabus: [
       ...(legacyDashboard?.syllabus ?? []),
       ...skippedChapters.map((gap) => ({ topic: gap.topic, status: 'skipped', mastery: 0 })),
@@ -314,6 +331,7 @@ export async function GET(req: Request) {
     skippedChapters,
     recentExamSessions: examSessions,
     recentExamPlans: examPlans,
+    recentConversations: conversations,
     ragRecommendations: alternativeExplanations,
     todayFocus: dashboard.todaysPlan,
     dashboard,

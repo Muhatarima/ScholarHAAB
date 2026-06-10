@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import Logo from '@/components/Logo'
 import StarBackground from '@/components/StarBackground'
 import StudyProfileForm from '@/components/StudyProfileForm'
 import { getSetupCompleted } from '@/lib/auth/setup-status'
@@ -36,9 +35,6 @@ export default async function SetupPage() {
       }}
     >
       <StarBackground variant="chat" />
-      <div style={{ position: 'absolute', top: 24, left: 24, zIndex: 2 }}>
-        <Logo compact />
-      </div>
       <div style={{ position: 'relative', zIndex: 2, width: '100%', display: 'grid', placeItems: 'center' }}>
         <StudyProfileForm />
       </div>

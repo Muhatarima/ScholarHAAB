@@ -73,7 +73,7 @@ export function extractQuestionDetails(rawInput: string): ExtractedQuestion {
       break
     }
   }
-  let chapter = topic // heuristic mapping
+  const chapter = topic // heuristic mapping
 
   // 5. Year detection
   let year: number | null = null

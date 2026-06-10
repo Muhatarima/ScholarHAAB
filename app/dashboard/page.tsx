@@ -3,8 +3,6 @@
 import Link from 'next/link'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
-import Logo from '@/components/Logo'
-import ProductNav from '@/components/ProductNav'
 import RichMessageContent from '@/components/RichMessageContent'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
@@ -18,6 +16,12 @@ type DashboardPayload = {
     subjects?: string[]
     todaysPlan?: string[]
     totalQuestionsAttempted?: number
+    recentConversations?: Array<{
+      answer?: string | null
+      created_at?: string | null
+      id?: string
+      question?: string | null
+    }>
     weakPoints?: Array<{
       accuracy?: number
       subject?: string
@@ -54,6 +58,12 @@ type DashboardPayload = {
     subject?: string | null
     topic?: string | null
     wrong_count?: number
+  }>
+  recentConversations?: Array<{
+    answer?: string | null
+    created_at?: string | null
+    id?: string
+    question?: string | null
   }>
 }
 
@@ -93,6 +103,7 @@ function DashboardInner() {
   const skipped = data?.skippedChapters ?? []
   const progress = data?.topicProgress ?? []
   const recommendations = data?.ragRecommendations ?? []
+  const recentConversations = data?.recentConversations ?? data?.dashboard?.recentConversations ?? []
   const subjects = useMemo(
     () => profile?.subjects?.length ? profile.subjects : dashboard?.subjects ?? [],
     [dashboard?.subjects, profile?.subjects]
@@ -107,11 +118,6 @@ function DashboardInner() {
           .dashboard-nav-links { gap: 10px !important; }
         }
       `}</style>
-      <nav style={styles.nav}>
-        <Logo compact />
-        <ProductNav compact className="dashboard-nav-links" style={styles.links} />
-      </nav>
-
       <section style={styles.wrap}>
         <header style={styles.header}>
           <div>
@@ -121,7 +127,7 @@ function DashboardInner() {
               {profile?.level ?? 'Level not set'} · {profile?.board ?? dashboard?.board ?? 'Board not set'}
             </p>
           </div>
-          <Link href="/settings/profile" style={styles.primaryAction}>Edit profile</Link>
+          <Link href="/profile" style={styles.primaryAction}>Edit profile</Link>
         </header>
 
         {error ? <p style={styles.error}>{error}</p> : null}
@@ -173,6 +179,19 @@ function DashboardInner() {
                   {!skipped.length ? <p style={styles.muted}>Nothing marked difficult yet.</p> : null}
                 </div>
               </article>
+            </section>
+
+            <section style={styles.panel}>
+              <h2 style={styles.sectionTitle}>Recent conversations</h2>
+              <div style={styles.list}>
+                {recentConversations.slice(0, 5).map((item) => (
+                  <div key={item.id ?? item.question ?? item.created_at} style={styles.row}>
+                    <strong>{item.question || 'Question'}</strong>
+                    <span>{item.answer ? item.answer.slice(0, 130) : 'Answer saved'}</span>
+                  </div>
+                ))}
+                {!recentConversations.length ? <p style={styles.muted}>No saved conversations yet.</p> : null}
+              </div>
             </section>
 
             <section style={styles.panel}>
@@ -237,13 +256,10 @@ const styles = {
   eyebrow: { color: '#b983ff', fontSize: 12, fontWeight: 800, margin: 0, textTransform: 'uppercase' } satisfies CSSProperties,
   header: { alignItems: 'end', display: 'flex', flexWrap: 'wrap', gap: 20, justifyContent: 'space-between' } satisfies CSSProperties,
   label: { color: '#b9a7e8', fontSize: 13, fontWeight: 700 } satisfies CSSProperties,
-  link: { color: '#c9c5e8', fontSize: 13, textDecoration: 'none' } satisfies CSSProperties,
-  links: { display: 'flex', gap: 16 } satisfies CSSProperties,
   list: { display: 'grid', gap: 10, marginTop: 14 } satisfies CSSProperties,
   metric: { color: '#f4eeff', display: 'block', fontSize: 30, marginTop: 8 } satisfies CSSProperties,
   metricGrid: { display: 'grid', gap: 14, gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' } satisfies CSSProperties,
   muted: { color: '#aaa7c8', lineHeight: 1.6, margin: '8px 0 0' } satisfies CSSProperties,
-  nav: { alignItems: 'center', borderBottom: '1px solid rgba(176,128,255,.12)', display: 'flex', height: 62, justifyContent: 'space-between', padding: '0 clamp(18px,4vw,48px)', position: 'relative', zIndex: 2 } satisfies CSSProperties,
   page: { background: '#02020c', color: '#ecebff', minHeight: '100vh', position: 'relative' } satisfies CSSProperties,
   panel: { background: 'rgba(255,255,255,.028)', border: '1px solid rgba(176,128,255,.13)', borderRadius: 8, padding: 18 } satisfies CSSProperties,
   practice: { borderLeft: '3px solid #a855f7', color: '#e9d5ff', paddingLeft: 12 } satisfies CSSProperties,

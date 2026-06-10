@@ -8,7 +8,7 @@ function cleanBrokenLatexText(value: string) {
     .replace(/\\\\Omega/g, 'Ω')
     .replace(/\\Omega/g, 'Ω')
 }
-import { generateJson, generateText } from '@/lib/llm/client'
+import { generateJson, generateText } from '@/lib/llm/failover'
 import {
   retrieveAcademicContext,
   retrieveTopicDocuments,
@@ -402,33 +402,21 @@ export async function runExplainPipeline(input: {
   topic?: string | null
 }) {
   if (isGeneralConversation(input.query)) {
-    let chat: { model: string; provider: string; text: string } = {
-      model: 'local-chat-fallback',
-      provider: 'local',
-      text: 'Hi, I am here. Send me the subject, topic, board, or exact question and I will solve it with past-paper evidence when possible.',
-    }
-    try {
-      chat = await generateText({
-        maxTokens: 500,
-        prompt: [
-          'Recent conversation:',
-          historyBlock(input.history),
-          '',
-          `User message: ${input.query}`,
-          '',
-          'Reply naturally in the user language. If they want study help, ask for subject, topic, board, or the exact question. Do not cite fake sources.',
-        ].join('\n'),
-        requestId: input.requestId,
-        system:
-          'You are ScholarHAAB, a friendly academic assistant. For casual chat, answer directly. For academic content, ask for the exact question/topic so past-paper search can be used.',
-        temperature: 0.25,
-      })
-    } catch (error) {
-      console.error('general_chat_llm_failed', {
-        message: error instanceof Error ? error.message : String(error),
-        requestId: input.requestId,
-      })
-    }
+    const chat = await generateText({
+      maxTokens: 500,
+      prompt: [
+        'Recent conversation:',
+        historyBlock(input.history),
+        '',
+        `User message: ${input.query}`,
+        '',
+        'Reply naturally in the user language. If they want study help, ask for subject, topic, board, or the exact question. Do not cite fake sources.',
+      ].join('\n'),
+      requestId: input.requestId,
+      system:
+        'You are ScholarHAAB, a friendly academic assistant. For casual chat, answer directly. For academic content, ask for the exact question/topic so past-paper search can be used.',
+      temperature: 0.25,
+    })
 
     return {
       answer: chat.text,
@@ -474,43 +462,31 @@ export async function runExplainPipeline(input: {
   }
   const evidence = evidenceSummary(retrieval.matches)
 
-  let generation: { model: string; provider: string; text: string } = {
-    model: 'retrieved-source-fallback',
-    provider: 'local',
-    text: fallbackStudyAnswer(input.query, retrieval.matches),
-  }
-  try {
-    generation = await generateText({
-      maxTokens: 1_500,
-      prompt: [
-        'RETRIEVED EVIDENCE:',
-        contextBlock(retrieval.matches),
-        '',
-        'RECENT CONVERSATION:',
-        historyBlock(input.history),
-        '',
-        `QUESTION: ${input.query}`,
-        '',
-        retrieval.matches.length
-          ? "Answer the student question directly. Use retrieved exam materials silently as support. Do not cite [S1] IDs. Do not discuss evidence quality. Give the actual explanation, formula, substitutions, units, and final answer when needed."
-          : 'No matching past-paper library chunk was retrieved. Give a concise study answer and clearly label it as general knowledge, exam-style.',
-      ].join('\n'),
-      requestId: input.requestId,
-      system: [
-        'You are ScholarHAAB, an accurate academic tutor.',
-        'Use the supplied past-paper library chunks whenever they are relevant.',
-        'Do not invent year, board, paper, or question metadata.',
-        'Never say Needs review. Never mention Hugging Face.',
-        'If evidence is weak, say exactly what is weak and still give the best useful answer.',
-      ].join('\n'),
-      temperature: 0.12,
-    })
-  } catch (error) {
-    console.error('solver_llm_failed_using_source_fallback', {
-      message: error instanceof Error ? error.message : String(error),
-      requestId: input.requestId,
-    })
-  }
+  const generation = await generateText({
+    maxTokens: 1_500,
+    prompt: [
+      'RETRIEVED EVIDENCE:',
+      contextBlock(retrieval.matches),
+      '',
+      'RECENT CONVERSATION:',
+      historyBlock(input.history),
+      '',
+      `QUESTION: ${input.query}`,
+      '',
+      retrieval.matches.length
+        ? "Answer the student question directly. Use retrieved exam materials silently as support. Do not cite [S1] IDs. Do not discuss evidence quality. Give the actual explanation, formula, substitutions, units, and final answer when needed."
+        : 'No matching past-paper library chunk was retrieved. Give a concise study answer and clearly label it as general knowledge, exam-style.',
+    ].join('\n'),
+    requestId: input.requestId,
+    system: [
+      'You are ScholarHAAB, an accurate academic tutor.',
+      'Use the supplied past-paper library chunks whenever they are relevant.',
+      'Do not invent year, board, paper, or question metadata.',
+      'Never mention Hugging Face.',
+      'If evidence is weak, say exactly what is weak and still give the best useful answer.',
+    ].join('\n'),
+    temperature: 0.12,
+  })
 
   return {
     answer: generation.text,
@@ -560,57 +536,37 @@ export async function runExamModePipeline(input: {
     throw new Error(`I found related exam-style material for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
   }
 
-  let generatedData: ExamModeJson = {}
-  let model = 'retrieved-source-fallback'
-  try {
-    const generated = await generateJson<ExamModeJson>({
-      maxTokens: 1_100,
-      prompt: [
-        `SUBJECT: ${input.subject}`,
-        `TOPIC: ${input.topic}`,
-        `BOARD: ${input.board ?? 'Any'}`,
-        '',
-        'PAST-PAPER / TEXTBOOK EVIDENCE:',
-        contextBlock(retrieval.matches.slice(0, 6), 650),
-        '',
-        'Return JSON only with this shape:',
-        '{"importantTopics":[{"name":"","importance":"high|medium|low","whyImportant":"","sourceIds":["S1"]}],"formulas":[{"formula":"","meaning":"","whenToUse":"","sourceIds":["S1"]}],"importantQuestions":[{"question":"","whyImportant":"","sourceIds":["S1"]}],"summary":""}',
-      ].join('\n'),
-      requestId: input.requestId,
-      system: [
-        'You are a data-driven exam analysis engine.',
-        'Only use the supplied retrieved evidence.',
-        'Rank topics/questions by repetition, exam usefulness, and mark-scheme value visible in the chunks.',
-        'Mention source IDs for every claim.',
-        'Do not use general knowledge. Do not invent metadata.',
-      ].join('\n'),
-      temperature: 0.08,
-    })
-    generatedData = generated.data
-    model = `${generated.provider}:${generated.model}`
-  } catch (error) {
-    console.error('exam_mode_llm_failed_using_source_fallback', {
-      message: error instanceof Error ? error.message : String(error),
-      requestId: input.requestId,
-    })
-  }
+  const generated = await generateJson<ExamModeJson>({
+    maxTokens: 1_100,
+    prompt: [
+      `SUBJECT: ${input.subject}`,
+      `TOPIC: ${input.topic}`,
+      `BOARD: ${input.board ?? 'Any'}`,
+      '',
+      'PAST-PAPER / TEXTBOOK EVIDENCE:',
+      contextBlock(retrieval.matches.slice(0, 6), 650),
+      '',
+      'Extract formulas only when the formula is visible or directly implied in the chunks.',
+      'Return JSON only with this shape:',
+      '{"importantTopics":[{"name":"","importance":"high|medium|low","whyImportant":"","sourceIds":["S1"]}],"formulas":[{"formula":"","meaning":"","whenToUse":"","sourceIds":["S1"]}],"importantQuestions":[{"question":"","whyImportant":"","sourceIds":["S1"]}],"summary":""}',
+    ].join('\n'),
+    requestId: input.requestId,
+    system: [
+      'You are a data-driven exam analysis engine.',
+      'Only use the supplied retrieved evidence.',
+      'Explain concepts from formulas found in the chunks.',
+      'Rank topics/questions by repetition, exam usefulness, and mark-scheme value visible in the chunks.',
+      'Mention source IDs for every claim.',
+      'Do not use general knowledge. Do not invent metadata.',
+    ].join('\n'),
+    temperature: 0.08,
+  })
+  const generatedData = generated.data
+  const model = `${generated.provider}:${generated.model}`
   const evidence = evidenceSummary(retrieval.matches)
-  const formulas = generatedData.formulas?.length
-    ? generatedData.formulas
-    : fallbackExamFormulas(input.topic, retrieval.matches)
-  const importantQuestions = generatedData.importantQuestions?.length
-    ? generatedData.importantQuestions
-    : fallbackExamQuestions(input.topic, retrieval.matches)
-  const importantTopics = generatedData.importantTopics?.length
-    ? generatedData.importantTopics
-    : [
-        {
-          importance: 'high',
-          name: input.topic,
-          sourceIds: fallbackSourceIds(retrieval.matches),
-          whyImportant: 'Retrieved past-paper chunks contain repeated source evidence for this topic.',
-        },
-      ]
+  const formulas = generatedData.formulas ?? []
+  const importantQuestions = generatedData.importantQuestions ?? []
+  const importantTopics = generatedData.importantTopics ?? []
 
   return {
     board: input.board ?? null,
@@ -622,7 +578,7 @@ export async function runExamModePipeline(input: {
     subject: input.subject,
     summary:
       generatedData.summary ||
-      `Based on ${retrieval.matches.length} retrieved ${input.board ?? ''} ${input.subject} past-paper matchs, ${input.topic} is best revised through repeated formulas, source patterns, and short structured calculations.`,
+      `Observation from ${retrieval.matches.length} retrieved chunks: focus on formulas and repeated question wording for ${input.topic}.`,
     topic: input.topic,
     ...evidence,
   }
@@ -662,42 +618,33 @@ export async function runAdaptiveModePipeline(input: {
     throw new Error(`Using an exam-style practice pattern for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
   }
 
-  let generatedData: AdaptiveModeJson = {}
-  let model = 'retrieved-source-fallback'
-  try {
-    const generated = await generateJson<AdaptiveModeJson>({
-      maxTokens: 1_500,
-      prompt: [
-        `SUBJECT: ${input.subject}`,
-        `TOPIC: ${input.topic}`,
-        `BOARD: ${input.board ?? 'Any'}`,
-        `DIFFICULTY: ${input.difficulty ?? 'medium'}`,
-        `PREVIOUS PERFORMANCE: ${input.performance ?? 'Not supplied'}`,
-        '',
-        'PATTERN EVIDENCE:',
-        contextBlock(retrieval.matches, 1_800),
-        '',
-        'Create one mock question in the same past-paper style, then solve it. If a retrieved question is already perfect, adapt it lightly instead of copying long text.',
-        'Return JSON only with this shape:',
-        '{"question":{"type":"MCQ|numerical|structured","text":"","marks":4,"options":[]},"answer":"","explanation":["step 1","step 2"],"commonMistakes":[],"sourcePattern":"Based on [S1], [S2]"}',
-      ].join('\n'),
-      requestId: input.requestId,
-      system: [
-        'You generate adaptive practice from retrieved past-paper patterns.',
-        'Use the supplied chunks as the source of style, difficulty, and marking.',
-        'Do not invent exact source metadata; cite source IDs.',
-        'Show step-by-step reasoning and units for numerical answers.',
-      ].join('\n'),
-      temperature: 0.18,
-    })
-    generatedData = generated.data
-    model = `${generated.provider}:${generated.model}`
-  } catch (error) {
-    console.error('adaptive_mode_llm_failed_using_source_fallback', {
-      message: error instanceof Error ? error.message : String(error),
-      requestId: input.requestId,
-    })
-  }
+  const generated = await generateJson<AdaptiveModeJson>({
+    maxTokens: 1_500,
+    prompt: [
+      `SUBJECT: ${input.subject}`,
+      `TOPIC: ${input.topic}`,
+      `BOARD: ${input.board ?? 'Any'}`,
+      `DIFFICULTY: ${input.difficulty ?? 'medium'}`,
+      `PREVIOUS PERFORMANCE: ${input.performance ?? 'Not supplied'}`,
+      '',
+      'PATTERN EVIDENCE:',
+      contextBlock(retrieval.matches, 1_800),
+      '',
+      'Create one mock question in the same past-paper style, then solve it. If a retrieved question is already perfect, adapt it lightly instead of copying long text.',
+      'Return JSON only with this shape:',
+      '{"question":{"type":"MCQ|numerical|structured","text":"","marks":4,"options":[]},"answer":"","explanation":["step 1","step 2"],"commonMistakes":[],"sourcePattern":"Based on [S1], [S2]"}',
+    ].join('\n'),
+    requestId: input.requestId,
+    system: [
+      'You generate adaptive practice from retrieved past-paper patterns.',
+      'Use the supplied chunks as the source of style, difficulty, and marking.',
+      'Do not invent exact source metadata; cite source IDs.',
+      'Show step-by-step reasoning and units for numerical answers.',
+    ].join('\n'),
+    temperature: 0.18,
+  })
+  const generatedData = generated.data
+  const model = `${generated.provider}:${generated.model}`
   const evidence = evidenceSummary(retrieval.matches)
   const rawQuestion = generatedData.question ?? {}
   const nestedAnswer =
@@ -711,15 +658,14 @@ export async function runAdaptiveModePipeline(input: {
   const answer =
     generatedData.answer ||
     nestedAnswer ||
-    nestedSolution ||
-    fallbackStudyAnswer(`${input.topic} ${input.subject}`, retrieval.matches)
+    nestedSolution
   const explanation = generatedData.explanation?.length
     ? generatedData.explanation
     : nestedSolution
       ? [nestedSolution]
       : answer
         ? [answer]
-        : ['Use the past-paper source pattern, choose the relevant formula, substitute values, and state the final answer with units.']
+        : []
 
   return {
     answer,
@@ -789,65 +735,34 @@ export async function runQbankAnalysisPipeline(input: {
     throw new Error(`No QBank evidence found for ${input.subject} / ${input.topic}. Try a related topic keyword.`)
   }
 
-  let generatedData: QbankAnalysisJson = {}
-  let model = 'retrieved-source-fallback'
-  try {
-    const generated = await generateJson<QbankAnalysisJson>({
-      maxTokens: 1_600,
-      prompt: [
-        `SUBJECT: ${input.subject}`,
-        `TOPIC: ${input.topic}`,
-        `BOARD: ${input.board ?? 'Any'}`,
-        '',
-        'QBANK EVIDENCE:',
-        contextBlock(retrieval.matches, 1_700),
-        '',
-        'Return JSON only with this shape:',
-        '{"repeatedConcepts":[{"concept":"","frequencyHint":"","sourceIds":["S1"]}],"difficultyLevels":[{"level":"easy|medium|hard","evidence":"","sourceIds":["S1"]}],"practiceQuestions":[{"question":"","whyPractice":"","sourceIds":["S1"]}],"studyPlan":[""],"summary":""}',
-      ].join('\n'),
-      requestId: input.requestId,
-      system: [
-        'You are a QBank analysis engine for exam preparation.',
-        'Use only supplied past-paper library evidence.',
-        'List repeated concepts, likely difficulty, and useful practice questions.',
-        'Cite source IDs for every evidence-based claim.',
-      ].join('\n'),
-      temperature: 0.1,
-    })
-    generatedData = generated.data
-    model = `${generated.provider}:${generated.model}`
-  } catch (error) {
-    console.error('qbank_analysis_llm_failed_using_source_fallback', {
-      message: error instanceof Error ? error.message : String(error),
-      requestId: input.requestId,
-    })
-  }
+  const generated = await generateJson<QbankAnalysisJson>({
+    maxTokens: 1_600,
+    prompt: [
+      `SUBJECT: ${input.subject}`,
+      `TOPIC: ${input.topic}`,
+      `BOARD: ${input.board ?? 'Any'}`,
+      '',
+      'QBANK EVIDENCE:',
+      contextBlock(retrieval.matches, 1_700),
+      '',
+      'Return JSON only with this shape:',
+      '{"repeatedConcepts":[{"concept":"","frequencyHint":"","sourceIds":["S1"]}],"difficultyLevels":[{"level":"easy|medium|hard","evidence":"","sourceIds":["S1"]}],"practiceQuestions":[{"question":"","whyPractice":"","sourceIds":["S1"]}],"studyPlan":[""],"summary":""}',
+    ].join('\n'),
+    requestId: input.requestId,
+    system: [
+      'You are a QBank analysis engine for exam preparation.',
+      'Use only supplied past-paper library evidence.',
+      'List repeated concepts, likely difficulty, and useful practice questions.',
+      'Cite source IDs for every evidence-based claim.',
+    ].join('\n'),
+    temperature: 0.1,
+  })
+  const generatedData = generated.data
+  const model = `${generated.provider}:${generated.model}`
   const evidence = evidenceSummary(retrieval.matches)
-  const repeatedConcepts = generatedData.repeatedConcepts?.length
-    ? generatedData.repeatedConcepts
-    : [
-        {
-          concept: input.topic,
-          frequencyHint: 'Appears in the past-paper source set for this subject/topic search.',
-          sourceIds: fallbackSourceIds(retrieval.matches),
-        },
-      ]
-  const difficultyLevels = generatedData.difficultyLevels?.length
-    ? generatedData.difficultyLevels
-    : [
-        {
-          evidence: 'Formula/substitution questions are usually medium; explanation-only questions are usually easier; multi-step calculations are harder.',
-          level: 'medium',
-          sourceIds: fallbackSourceIds(retrieval.matches),
-        },
-      ]
-  const practiceQuestions = generatedData.practiceQuestions?.length
-    ? generatedData.practiceQuestions
-    : fallbackExamQuestions(input.topic, retrieval.matches).map((item) => ({
-        question: item.question,
-        sourceIds: item.sourceIds,
-        whyPractice: item.whyImportant,
-      }))
+  const repeatedConcepts = generatedData.repeatedConcepts ?? []
+  const difficultyLevels = generatedData.difficultyLevels ?? []
+  const practiceQuestions = generatedData.practiceQuestions ?? []
 
   return {
     board: input.board ?? null,
@@ -858,17 +773,18 @@ export async function runQbankAnalysisPipeline(input: {
     retrievalMode: retrieval.mode,
     studyPlan: generatedData.studyPlan?.length
       ? generatedData.studyPlan
-      : ['Review the formulas from the past-paper sources.', 'Practise one structured question with units.', 'Compare your answer with the mark-scheme style.'],
+      : [],
     subject: input.subject,
     summary:
       generatedData.summary ||
-      `This analysis uses ${retrieval.matches.length} past-paper matchs for ${input.subject} / ${input.topic}.`,
+      `This analysis uses ${retrieval.matches.length} retrieved chunks for ${input.subject} / ${input.topic}.`,
     topic: input.topic,
     ...evidence,
   }
 }
 
 export async function buildAlternativeExplanation(input: {
+  confusion?: string | null
   requestId: string
   subject?: string | null
   topic: string
@@ -891,46 +807,21 @@ export async function buildAlternativeExplanation(input: {
       )
   if (!retrieval.matches.length) return null
 
-  let generated: Awaited<ReturnType<typeof generateJson<AlternativeExplanationJson>>> | null = null
-  try {
-    generated = await generateJson<AlternativeExplanationJson>({
-      maxTokens: 800,
+  const generated = await generateJson<AlternativeExplanationJson>({
+    maxTokens: 800,
       prompt: [
         `CONCEPT: ${input.topic}`,
+        `STUDENT CONFUSION: ${input.confusion || 'Not supplied'}`,
         'Helpful related examples:',
-        contextBlock(retrieval.matches, 1_400),
-        '',
-        'Return JSON only: {"concept":"","explanation":"","practicePrompt":"","sourceIds":["S1"]}',
-      ].join('\n'),
-      requestId: input.requestId,
-      system:
-        'Give a non-judgmental alternative explanation using the supplied chunks. Do not say the student skipped or failed anything.',
-      temperature: 0.15,
-    })
-  } catch (error) {
-    console.error('alternative_explanation_json_failed', {
-      message: error instanceof Error ? error.message : String(error),
-      requestId: input.requestId,
-    })
-  }
-
-  if (!generated) {
-    const formulas = fallbackExamFormulas(input.topic, retrieval.matches)
-      .map((item) => item.formula)
-      .filter(Boolean)
-      .slice(0, 3)
-      .join(', ')
-    return {
-      concept: input.topic,
-      explanation: formulas
-        ? `A simpler route for ${input.topic}: think of the situation as a relationship between known quantities and the unknown. First write the quantity you need, then choose the matching formula (${formulas}), substitute values with units, and finish with one sentence explaining what the answer means.`
-        : `A simpler route for ${input.topic}: start from the definition, connect it to one formula or example from the past-paper sources, then solve one short practice question step by step.`,
-      model: 'retrieved-source-fallback',
-      practicePrompt: `Explain one ${input.topic} question using definition, formula, substitution, and units.`,
-      sourceIds: fallbackSourceIds(retrieval.matches),
-      sources: retrieval.matches.map(toSource),
-    }
-  }
+      contextBlock(retrieval.matches, 1_400),
+      '',
+      'Return JSON only: {"concept":"","explanation":"","practicePrompt":"","sourceIds":["S1"]}',
+    ].join('\n'),
+    requestId: input.requestId,
+    system:
+      'Give a non-judgmental alternative explanation using the supplied chunks. Do not say the student skipped or failed anything.',
+    temperature: 0.15,
+  })
 
   return {
     ...generated.data,

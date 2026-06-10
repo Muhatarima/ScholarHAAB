@@ -99,7 +99,7 @@ export function generateTestQueries(count = 5000): GeneratedQuery[] {
     const templates = TEMPLATES[type]
     const template = templates[i % templates.length]
 
-    let queryText = template
+    const queryText = template
       .replace('{subject}', subject)
       .replace('{topic}', topic)
       .replace('{board}', board)

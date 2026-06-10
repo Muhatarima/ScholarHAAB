@@ -12,6 +12,7 @@ function cleanText(value: unknown) {
 }
 
 async function handleSkipped(input: {
+  confusion?: string | null
   requestId: string
   subject?: string | null
   topic: string
@@ -62,6 +63,7 @@ export async function POST(req: Request) {
     return handleSkipped({
       requestId,
       subject: cleanText(body.subject) || null,
+      confusion: cleanText(body.confusion) || null,
       topic,
     })
   } catch (error) {
@@ -95,6 +97,7 @@ export async function GET(req: Request) {
     return handleSkipped({
       requestId,
       subject: url.searchParams.get('subject')?.trim() || null,
+      confusion: url.searchParams.get('confusion')?.trim() || null,
       topic,
     })
   } catch (error) {

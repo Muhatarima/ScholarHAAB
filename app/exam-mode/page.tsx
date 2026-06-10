@@ -1,71 +1,50 @@
-﻿'use client'
+'use client'
 
 import { BookOpen, Calculator, Search, Target } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
+import AnswerRenderer from '@/components/AnswerRenderer'
 import AuthGuard from '@/components/auth/AuthGuard'
-import Logo from '@/components/Logo'
-import ProductNav from '@/components/ProductNav'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 
 type Source = {
-  id: string
-  title: string
-  url: string | null
-  board: string | null
-  year: number | string | null
-  paper: string | null
-  questionNumber: string | number | null
-  similarity: number | null
+  board?: string | null
+  id?: string
+  paper?: string | null
+  questionNumber?: string | number | null
+  subject?: string | null
+  title?: string
+  topic?: string | null
+  year?: number | string | null
 }
 
 type ExamResult = {
-  subject: string
-  topic: string
-  confidenceScore: number
-  confidenceLabel: string
-  retrievalMode: string
-  importantTopics: Array<{
-    name?: string
-    importance?: string
-    whyImportant?: string
-    sourceIds?: string[]
-  }>
-  formulas: Array<{
-    formula?: string
-    meaning?: string
-    whenToUse?: string
-    sourceIds?: string[]
-  }>
-  importantQuestions: Array<{
-    question?: string
-    whyImportant?: string
-    sourceIds?: string[]
-  }>
-  summary: string
-  sources: Source[]
+  formulas?: Array<{ formula?: string; meaning?: string; sourceIds?: string[]; whenToUse?: string }>
+  importantQuestions?: Array<{ question?: string; sourceIds?: string[]; whyImportant?: string }>
+  importantTopics?: Array<{ name?: string; sourceIds?: string[]; whyImportant?: string }>
+  observation?: string
+  sources?: Source[]
+  summary?: string
 }
 
 const SUBJECTS = ['Physics', 'Mathematics', 'Chemistry']
-const BOARDS = ['Cambridge', 'Edexcel', 'Any']
+const DIFFICULTIES = ['easy', 'medium', 'hard']
 
-async function readJsonResponse(response: Response) {
+async function readJson(response: Response) {
   const text = await response.text()
   try {
     return text ? JSON.parse(text) : {}
   } catch {
-    return {
-      error: response.ok
-        ? 'The server returned an unreadable response.'
-        : 'The server is temporarily unavailable. Please try again.',
-      raw: text.slice(0, 120),
-    }
+    return { error: 'The server returned an unreadable response.' }
   }
 }
 
-function sourceLabel(source: Source) {
+function sourceLine(source: Source) {
   return [
+    source.title,
     source.board,
+    source.subject,
+    source.topic,
     source.year,
     source.paper,
     source.questionNumber ? `Q${source.questionNumber}` : null,
@@ -74,45 +53,10 @@ function sourceLabel(source: Source) {
     .join(' · ')
 }
 
-function normalizeExamResult(value: Partial<ExamResult> & Record<string, unknown>): ExamResult {
-  return {
-    subject: typeof value.subject === 'string' ? value.subject : 'Physics',
-    topic: typeof value.topic === 'string' ? value.topic : 'Kinematics',
-    confidenceScore: typeof value.confidenceScore === 'number' ? value.confidenceScore : 70,
-    confidenceLabel: typeof value.confidenceLabel === 'string' ? value.confidenceLabel : 'Past-paper supported',
-    retrievalMode: typeof value.retrievalMode === 'string' ? value.retrievalMode : 'keyword',
-    importantTopics: Array.isArray(value.importantTopics)
-      ? value.importantTopics
-      : Array.isArray(value.priorities)
-        ? value.priorities.map((item: any) => ({
-            name: item.title || value.topic || 'Topic',
-            importance: item.confidence ? `${item.confidence}%` : 'medium',
-            whyImportant: item.reason || item.note || 'Practise this topic using past-paper style questions.',
-            sourceIds: [],
-          }))
-        : [{
-            name: typeof value.topic === 'string' ? value.topic : 'Topic',
-            importance: 'medium',
-            whyImportant: typeof value.summary === 'string' ? value.summary : 'Practise this topic using past-paper style questions.',
-            sourceIds: [],
-          }],
-    formulas: Array.isArray(value.formulas) ? value.formulas : [],
-    importantQuestions: Array.isArray(value.importantQuestions)
-      ? value.importantQuestions
-      : [{
-          question: `Practise one exam-style question on ${typeof value.topic === 'string' ? value.topic : 'this topic'}.`,
-          whyImportant: 'This helps check formula choice, keywords, and final answer structure.',
-          sourceIds: [],
-        }],
-    summary: typeof value.summary === 'string' ? value.summary : '',
-    sources: Array.isArray(value.sources) ? value.sources : [],
-  }
-}
-
 function ExamModeInner() {
   const [subject, setSubject] = useState('Physics')
   const [topic, setTopic] = useState('Kinematics')
-  const [board, setBoard] = useState('Cambridge')
+  const [difficulty, setDifficulty] = useState('medium')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState<ExamResult | null>(null)
@@ -122,23 +66,18 @@ function ExamModeInner() {
       setError('Subject and topic are required.')
       return
     }
+
     setLoading(true)
     setError('')
     try {
       const response = await fetch('/api/exam-mode', {
+        body: JSON.stringify({ difficulty, subject, topic: topic.trim() }),
+        headers: await buildSupabaseAuthHeaders({ 'Content-Type': 'application/json' }),
         method: 'POST',
-        headers: await buildSupabaseAuthHeaders({
-          'Content-Type': 'application/json',
-        }),
-        body: JSON.stringify({
-          subject,
-          topic: topic.trim(),
-          board: board === 'Any' ? null : board,
-        }),
       })
-      const data = (await readJsonResponse(response)) as ExamResult & { error?: string }
+      const data = await readJson(response)
       if (!response.ok) throw new Error(data.error || 'Analysis failed.')
-      setResult(normalizeExamResult(data))
+      setResult(data)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Analysis failed.')
     } finally {
@@ -149,52 +88,21 @@ function ExamModeInner() {
   return (
     <main style={styles.page}>
       <StarBackground variant="chat" />
-      <style>{`
-        @media (max-width: 760px) {
-          .exam-rag-controls {
-            grid-template-columns: 1fr !important;
-          }
-          .exam-rag-header {
-            align-items: flex-start !important;
-            flex-direction: column !important;
-          }
-          .exam-rag-source {
-            align-items: flex-start !important;
-            flex-direction: column !important;
-          }
-        }
-      `}</style>
-      <nav style={styles.nav}>
-        <Logo compact />
-        <ProductNav compact style={styles.navLinks} />
-      </nav>
-
       <section style={styles.shell}>
-        <header className="exam-rag-header" style={styles.header}>
-          <div>
-            <div style={styles.eyebrow}>EXAM MODE</div>
-            <h1 style={styles.title}>Past-paper priorities</h1>
-          </div>
+        <header style={styles.header}>
+          <span style={styles.eyebrow}>Exam Mode</span>
+          <h1 style={styles.title}>Past-paper priorities</h1>
         </header>
 
-        <div className="exam-rag-controls" style={styles.controls}>
-          <label style={styles.label}>
-            Subject
-            <select value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
-              {SUBJECTS.map((item) => <option key={item}>{item}</option>)}
-            </select>
-          </label>
-          <label style={styles.label}>
-            Board
-            <select value={board} onChange={(event) => setBoard(event.target.value)} style={styles.field}>
-              {BOARDS.map((item) => <option key={item}>{item}</option>)}
-            </select>
-          </label>
-          <label style={{ ...styles.label, ...styles.topicLabel }}>
-            Topic
-            <input value={topic} onChange={(event) => setTopic(event.target.value)} style={styles.field} />
-          </label>
-          <button type="button" onClick={() => void analyze()} disabled={loading} style={styles.primaryButton}>
+        <div style={styles.controls}>
+          <select value={subject} onChange={(event) => setSubject(event.target.value)} style={styles.field}>
+            {SUBJECTS.map((item) => <option key={item}>{item}</option>)}
+          </select>
+          <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Topic" style={styles.field} />
+          <select value={difficulty} onChange={(event) => setDifficulty(event.target.value)} style={styles.field}>
+            {DIFFICULTIES.map((item) => <option key={item} value={item}>{item[0].toUpperCase() + item.slice(1)}</option>)}
+          </select>
+          <button type="button" onClick={() => void analyze()} disabled={loading} style={styles.primary}>
             <Search size={17} />
             {loading ? 'Analysing...' : 'Analyse'}
           </button>
@@ -204,86 +112,65 @@ function ExamModeInner() {
 
         {result ? (
           <div style={styles.results}>
-            <section style={styles.band}>
-              <div style={styles.sectionHeading}>
-                <Target size={20} />
-                <h2>Important topics</h2>
-              </div>
-              <div style={styles.grid}>
-                {(result.importantTopics ?? []).map((item, index) => (
-                  <article key={`${item.name}-${index}`} style={styles.item}>
-                    <div style={styles.itemTop}>
-                      <strong>{item.name}</strong>
-                      <span style={styles.tag}>{item.importance || 'medium'}</span>
-                    </div>
-                    <p>{item.whyImportant}</p>
-                    <small>{item.sourceIds?.join(', ')}</small>
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            <section style={styles.band}>
-              <div style={styles.sectionHeading}>
-                <Calculator size={20} />
-                <h2>Key formulas</h2>
-              </div>
+            <section style={styles.section}>
+              <div style={styles.sectionTitle}><Calculator size={19} /> Key formulas</div>
               <div style={styles.grid}>
                 {(result.formulas ?? []).map((item, index) => (
-                  <article key={`${item.formula}-${index}`} style={styles.item}>
+                  <article key={`${item.formula}-${index}`} style={styles.card}>
                     <strong style={styles.formula}>{item.formula}</strong>
                     <p>{item.meaning}</p>
                     <p style={styles.muted}>{item.whenToUse}</p>
-                    <small>{item.sourceIds?.join(', ')}</small>
+                    {item.sourceIds?.length ? <small>{item.sourceIds.join(', ')}</small> : null}
+                  </article>
+                ))}
+                {!result.formulas?.length ? <p style={styles.muted}>No formula was extracted from the retrieved chunks.</p> : null}
+              </div>
+            </section>
+
+            <section style={styles.section}>
+              <div style={styles.sectionTitle}><Target size={19} /> Observation</div>
+              <article style={styles.card}>
+                <AnswerRenderer content={result.observation || result.summary || 'No observation returned yet.'} />
+              </article>
+            </section>
+
+            <section style={styles.section}>
+              <div style={styles.sectionTitle}><Target size={19} /> Important topics</div>
+              <div style={styles.grid}>
+                {(result.importantTopics ?? []).map((item, index) => (
+                  <article key={`${item.name}-${index}`} style={styles.card}>
+                    <strong>{item.name}</strong>
+                    <p>{item.whyImportant}</p>
+                    {item.sourceIds?.length ? <small>{item.sourceIds.join(', ')}</small> : null}
                   </article>
                 ))}
               </div>
             </section>
 
-            <section style={styles.band}>
-              <div style={styles.sectionHeading}>
-                <BookOpen size={20} />
-                <h2>Important questions</h2>
-              </div>
-              <div style={styles.questionList}>
-                {(result.importantQuestions ?? []).map((item, index) => (
-                  <article key={`${item.question}-${index}`} style={styles.item}>
+            <section style={styles.section}>
+              <div style={styles.sectionTitle}><BookOpen size={19} /> Important questions</div>
+              <div style={styles.list}>
+                {(result.importantQuestions ?? []).slice(0, 5).map((item, index) => (
+                  <article key={`${item.question}-${index}`} style={styles.card}>
                     <strong>{item.question}</strong>
                     <p>{item.whyImportant}</p>
-                    <small>{item.sourceIds?.join(', ')}</small>
+                    {item.sourceIds?.length ? <small>{item.sourceIds.join(', ')}</small> : null}
                   </article>
                 ))}
               </div>
             </section>
 
-            <section style={styles.sourceBand}>
-              <h2 style={styles.sourceTitle}>Supporting Information</h2>
-              <p style={styles.summary}>{result.summary}</p>
+            <section style={styles.section}>
+              <div style={styles.sectionTitle}>Retrieved evidence</div>
               <div style={styles.sources}>
-                {(result.sources ?? []).map((source, index) => (
-                  <a
-                    key={source.id}
-                    className="exam-rag-source"
-                    href={source.url || undefined}
-                    target={source.url ? '_blank' : undefined}
-                    rel={source.url ? 'noreferrer' : undefined}
-                    style={styles.source}
-                  >
-                    <span>[S{index + 1}] {source.title}</span>
-                    <small>{sourceLabel(source)} Â· {Math.round((source.similarity ?? 0) * 100)}%</small>
-                  </a>
+                {(result.sources ?? []).slice(0, 8).map((source, index) => (
+                  <span key={`${source.id}-${index}`}>{sourceLine(source)}</span>
                 ))}
-                {!result.sources.length ? (
-                  <p style={styles.muted}>No past-paper matches are currently available for this topic.</p>
-                ) : null}
               </div>
             </section>
           </div>
         ) : (
-          <div style={styles.empty}>
-            <Search size={28} />
-            <span>Select a subject and topic.</span>
-          </div>
+          <div style={styles.empty}>Choose a subject and topic to analyse.</div>
         )}
       </section>
     </main>
@@ -291,39 +178,72 @@ function ExamModeInner() {
 }
 
 export default function ExamModePage() {
-  return <AuthGuard><ExamModeInner /></AuthGuard>
+  return (
+    <AuthGuard>
+      <ExamModeInner />
+    </AuthGuard>
+  )
 }
 
 const styles = {
-  page: { minHeight: '100vh', background: '#02020c', color: '#ecebff', position: 'relative' } satisfies CSSProperties,
-  nav: { height: 62, padding: '0 clamp(18px,4vw,48px)', borderBottom: '1px solid rgba(176,128,255,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 } satisfies CSSProperties,
-  navLinks: { display: 'flex', gap: 18 } satisfies CSSProperties,
-  shell: { width: 'min(1180px, calc(100% - 32px))', margin: '0 auto', padding: '44px 0 70px', position: 'relative', zIndex: 1 } satisfies CSSProperties,
-  header: { display: 'flex', alignItems: 'end', justifyContent: 'space-between', gap: 20, marginBottom: 24 } satisfies CSSProperties,
-  eyebrow: { color: '#b983ff', fontSize: 12, fontWeight: 800 } satisfies CSSProperties,
-  title: { margin: '8px 0 0', fontSize: 'clamp(34px,6vw,62px)', fontWeight: 500 } satisfies CSSProperties,
-  confidence: { display: 'grid', textAlign: 'right', gap: 3, color: '#bdb9da', fontSize: 11 } satisfies CSSProperties,
-  controls: { display: 'grid', gridTemplateColumns: '180px 180px minmax(220px,1fr) auto', gap: 10, alignItems: 'end', padding: 14, borderTop: '1px solid rgba(176,128,255,.14)', borderBottom: '1px solid rgba(176,128,255,.14)', background: 'rgba(255,255,255,.025)' } satisfies CSSProperties,
-  label: { display: 'grid', gap: 7, color: '#aaa7c8', fontSize: 12 } satisfies CSSProperties,
-  topicLabel: {} satisfies CSSProperties,
-  field: { height: 44, border: '1px solid rgba(176,128,255,.18)', borderRadius: 6, background: '#090816', color: '#f4f1ff', padding: '0 12px', outline: 'none', colorScheme: 'dark' } satisfies CSSProperties,
-  primaryButton: { height: 44, border: 0, borderRadius: 6, background: '#9b4dff', color: 'white', fontWeight: 800, padding: '0 18px', display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer' } satisfies CSSProperties,
-  error: { color: '#fbbf24', margin: '14px 0 0' } satisfies CSSProperties,
-  results: { display: 'grid', gap: 30, marginTop: 32 } satisfies CSSProperties,
-  band: { display: 'grid', gap: 14 } satisfies CSSProperties,
-  sectionHeading: { display: 'flex', gap: 9, alignItems: 'center', color: '#c798ff' } satisfies CSSProperties,
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: 10 } satisfies CSSProperties,
-  questionList: { display: 'grid', gap: 10 } satisfies CSSProperties,
-  item: { border: '1px solid rgba(176,128,255,.13)', borderRadius: 8, background: 'rgba(255,255,255,.028)', padding: 16, lineHeight: 1.6 } satisfies CSSProperties,
-  itemTop: { display: 'flex', justifyContent: 'space-between', gap: 12 } satisfies CSSProperties,
-  tag: { color: '#facc15', fontSize: 11, textTransform: 'uppercase' } satisfies CSSProperties,
-  formula: { color: '#f5dcff', fontFamily: 'Georgia,serif', fontSize: 19 } satisfies CSSProperties,
+  card: {
+    background: 'rgba(255,255,255,.032)',
+    border: '1px solid rgba(176,128,255,.14)',
+    borderRadius: 8,
+    lineHeight: 1.65,
+    padding: 16,
+  } satisfies CSSProperties,
+  controls: {
+    background: 'rgba(255,255,255,.025)',
+    border: '1px solid rgba(176,128,255,.12)',
+    borderRadius: 8,
+    display: 'grid',
+    gap: 10,
+    gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+    padding: 14,
+  } satisfies CSSProperties,
+  empty: {
+    color: '#aaa7c8',
+    display: 'grid',
+    minHeight: 260,
+    placeItems: 'center',
+  } satisfies CSSProperties,
+  error: { color: '#fbbf24' } satisfies CSSProperties,
+  eyebrow: { color: '#b983ff', fontSize: 12, fontWeight: 850, textTransform: 'uppercase' } satisfies CSSProperties,
+  field: {
+    background: '#090816',
+    border: '1px solid rgba(176,128,255,.18)',
+    borderRadius: 8,
+    color: '#f4f1ff',
+    height: 44,
+    minWidth: 0,
+    outline: 'none',
+    padding: '0 12px',
+  } satisfies CSSProperties,
+  formula: { color: '#f3d9ff', display: 'block', fontSize: 18, marginBottom: 8 } satisfies CSSProperties,
+  grid: { display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' } satisfies CSSProperties,
+  header: { display: 'grid', gap: 8 } satisfies CSSProperties,
+  list: { display: 'grid', gap: 12 } satisfies CSSProperties,
   muted: { color: '#aaa7c8' } satisfies CSSProperties,
-  sourceBand: { borderTop: '1px solid rgba(176,128,255,.14)', paddingTop: 22 } satisfies CSSProperties,
-  sourceTitle: { fontSize: 18, margin: 0 } satisfies CSSProperties,
-  summary: { color: '#c9c6df', lineHeight: 1.7 } satisfies CSSProperties,
-  sources: { display: 'grid', gap: 7 } satisfies CSSProperties,
-  source: { color: '#d9c3ff', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', gap: 14, borderBottom: '1px solid rgba(176,128,255,.08)', padding: '9px 0' } satisfies CSSProperties,
-  empty: { minHeight: 300, display: 'grid', placeContent: 'center', justifyItems: 'center', gap: 12, color: '#777493' } satisfies CSSProperties,
+  page: { background: '#02020c', color: '#ecebff', minHeight: 'calc(100vh - 74px)', position: 'relative' } satisfies CSSProperties,
+  primary: {
+    alignItems: 'center',
+    background: '#9b4dff',
+    border: 0,
+    borderRadius: 8,
+    color: '#fff',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    fontWeight: 850,
+    gap: 8,
+    height: 44,
+    justifyContent: 'center',
+    padding: '0 18px',
+  } satisfies CSSProperties,
+  results: { display: 'grid', gap: 28 } satisfies CSSProperties,
+  section: { display: 'grid', gap: 12 } satisfies CSSProperties,
+  sectionTitle: { alignItems: 'center', color: '#c798ff', display: 'flex', fontSize: 18, fontWeight: 850, gap: 8 } satisfies CSSProperties,
+  shell: { display: 'grid', gap: 22, margin: '0 auto', padding: '42px 16px 72px', position: 'relative', width: 'min(1120px,100%)', zIndex: 1 } satisfies CSSProperties,
+  sources: { color: '#bdb7d5', display: 'grid', fontSize: 13, gap: 7 } satisfies CSSProperties,
+  title: { fontSize: 'clamp(34px,6vw,64px)', fontWeight: 520, lineHeight: 1, margin: 0 } satisfies CSSProperties,
 } as const
-

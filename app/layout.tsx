@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import AuthSessionSync from '@/components/AuthSessionSync'
+import Navbar from '@/components/Navbar'
 import PwaRegister from '@/components/PwaRegister'
 import PageViewTracker from '@/components/analytics/PageViewTracker'
 import OfflineBanner from '@/components/ui/OfflineBanner'
@@ -52,7 +53,8 @@ export default function RootLayout({
           <PageViewTracker />
           <AuthSessionSync />
           <PwaRegister />
-          {children}
+          <Navbar />
+          <div style={{ paddingTop: 74 }}>{children}</div>
         </ErrorBoundary>
       </body>
     </html>

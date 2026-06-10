@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation'
 import type { CSSProperties } from 'react'
 
 export const PRODUCT_NAV_ITEMS = [
-  { href: '/exam-mode', label: 'Exam Mode' },
-  { href: '/solver', label: 'Solver' },
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/mock', label: 'Mock Test' },
-  { href: '/adaptive-mode', label: 'Question Generator' },
+  { href: '/solver', label: 'Solver' },
+  { href: '/exam-mode', label: 'Exam Mode' },
+  { href: '/adaptive-mode', label: 'Adaptive Mode' },
+  { href: '/qbank', label: 'QBank' },
+  { href: '/profile', label: 'Profile' },
 ] as const
 
 type ProductNavProps = {

@@ -80,7 +80,18 @@ export async function runRedTeamEvaluation(subsetCount = 100) {
   const questions = generateAdversarialQuestions(subsetCount)
   
   let passedCount = 0
-  const results: any[] = []
+  const results: Array<{
+    category: string
+    details: {
+      hasBadge: boolean
+      hasReference: boolean
+      mathPassed: boolean
+      noRawLatex: boolean
+    }
+    id: string
+    passed: boolean
+    question: string
+  }> = []
   
   for (const q of questions) {
     const solverResult = await solveQuestion('student_test', q.questionText, q.subject)
@@ -97,7 +108,7 @@ export async function runRedTeamEvaluation(subsetCount = 100) {
     }
     
     // Quality metrics: check confidence badges, keyword coverage
-    const hasBadge = solverResult.confidenceBadge && solverResult.confidenceBadge.length > 0
+    const hasBadge = Boolean(solverResult.confidenceBadge && solverResult.confidenceBadge.length > 0)
     const hasReference = solverResult.answer.includes('Past paper reference') || solverResult.answer.includes('source')
     const noRawLatex = !solverResult.answer.includes('\\ce{')
     

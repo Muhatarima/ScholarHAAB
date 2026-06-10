@@ -15,7 +15,7 @@ export type LlmTextResult = {
   text: string
 }
 
-const DEFAULT_PROVIDER_ORDER: LlmProvider[] = ['groq', 'gemini']
+const DEFAULT_PROVIDER_ORDER: LlmProvider[] = ['gemini', 'groq']
 const DEFAULT_GROQ_MODELS = ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile']
 const DEFAULT_GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash-lite', 'gemini-2.0-flash']
 

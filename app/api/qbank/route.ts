@@ -22,6 +22,15 @@ import {
   type Message as UnderstandingMessage,
 } from '@/lib/ai/universalUnderstanding'
 
+function withoutConfidence<T extends Record<string, unknown>>(value: T) {
+  const clean = { ...value }
+  delete clean.confidence
+  delete clean.confidenceBadge
+  delete clean.confidenceLabel
+  delete clean.confidenceScore
+  return clean
+}
+
 export async function POST(req: Request) {
   const { user, error: authError } = await requireAuth(req)
   if (authError) return authError
@@ -70,7 +79,7 @@ export async function POST(req: Request) {
         subject,
         topic,
       })
-      const response = Response.json(result, {
+      const response = Response.json(withoutConfidence(result as Record<string, unknown>), {
         headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
       })
       return response
@@ -145,8 +154,6 @@ export async function POST(req: Request) {
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
-        confidence: 'AI_REASONING',
-        confidenceBadge: 'AI REASONING - verify before exam',
         from_cache: true,
         mode: 'hardest_answer_bank',
         intent,
@@ -161,8 +168,6 @@ export async function POST(req: Request) {
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
-        confidence: 'AI_REASONING',
-        confidenceBadge: 'AI REASONING - verify before exam',
         from_cache: true,
         mode: 'deep_exam_answer_bank',
         intent,
@@ -180,8 +185,6 @@ export async function POST(req: Request) {
       const response = Response.json({
         answer: cleanedAnswer,
         response: cleanedAnswer,
-        confidence: 'AI_REASONING',
-        confidenceBadge: 'AI REASONING - verify before exam',
         from_cache: true,
         mode: 'concept_answer_bank',
         intent,
@@ -197,9 +200,6 @@ export async function POST(req: Request) {
     const response = Response.json({
       answer: cleanedAnswer,
       response: cleanedAnswer,
-      confidence: solved.confidence,
-      confidenceBadge: solved.confidenceBadge,
-      confidenceScore: solved.confidenceScore,
       sources: solved.sources,
       subject: solved.subject,
       topic: solved.topic,
@@ -257,7 +257,7 @@ export async function GET(req: Request) {
       subject,
       topic,
     })
-    return Response.json(result, {
+    return Response.json(withoutConfidence(result as Record<string, unknown>), {
       headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId },
     })
   } catch (error) {

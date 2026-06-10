@@ -11,17 +11,22 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const [authed, setAuthed] = useState(false)
 
   useEffect(() => {
+    let active = true
     const bypassAuth =
       process.env.NODE_ENV !== 'production' &&
       process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
     if (bypassAuth) {
-      setAuthed(true)
-      setChecking(false)
-      return
+      queueMicrotask(() => {
+        if (!active) return
+        setAuthed(true)
+        setChecking(false)
+      })
+      return () => {
+        active = false
+      }
     }
 
-    let active = true
     const supabase = createSupabaseClient()
 
     void supabase.auth.getUser().then(({ data }) => {
