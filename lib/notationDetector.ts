@@ -126,6 +126,11 @@ function convertDerivative(source: string) {
 function convertMathText(raw: string) {
   let text = raw.trim()
   text = convertDerivative(text)
+  text = text
+    .replace(/\b1\s*\/\s*2\b/g, '\\frac{1}{2}')
+    .replace(/\bm\/s\^?2\b/gi, '\\mathrm{m\\,s^{-2}}')
+    .replace(/\bm\/s\b/gi, '\\mathrm{m\\,s^{-1}}')
+    .replace(/\bms\^?-?2\b/gi, '\\mathrm{m\\,s^{-2}}')
   text = text.replace(/[¼½¾⅓⅔⅛⅜⅝⅞]/g, (match) => FRACTION_MAP[match] ?? match)
   text = convertUnicodeScripts(text)
   text = convertPlainScripts(text)
@@ -307,6 +312,11 @@ export function detectAndWrapNotation(text: string) {
     }
     output += tokenized.slice(cursor, index)
     const kind = shouldTreatAsChemistry(value) ? 'chem' : 'math'
+    if (/^(?:mol|dm|kg|ms|m|s|N|J|V|A)$/.test(value)) {
+      output += value
+      cursor = index + value.length
+      continue
+    }
     output += `$${toLatexNotation(value, kind)}$`
     cursor = index + value.length
   }

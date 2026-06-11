@@ -1,28 +1,15 @@
 'use client'
 
-import { ImageUp, Send, Sparkles } from 'lucide-react'
-import { useMemo, useState, type CSSProperties } from 'react'
+import { ImageUp, Send, X } from 'lucide-react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import AnswerRenderer from '@/components/AnswerRenderer'
 import AuthGuard from '@/components/auth/AuthGuard'
 import StarBackground from '@/components/StarBackground'
-import { recognizeImage } from '@/lib/ocr/tesseract'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 
-type Message = {
-  answer?: string
-  question: string
-  sources?: Source[]
-}
-
-type Source = {
-  board?: string | null
-  id?: string
-  paper?: string | null
-  questionNumber?: string | number | null
-  subject?: string | null
-  title?: string
-  topic?: string | null
-  year?: number | string | null
+type ChatMessage = {
+  content: string
+  role: 'assistant' | 'user'
 }
 
 async function readJson(response: Response) {
@@ -34,87 +21,93 @@ async function readJson(response: Response) {
   }
 }
 
-function sourceLine(source: Source) {
-  return [
-    source.title,
-    source.board,
-    source.subject,
-    source.topic,
-    source.year,
-    source.paper,
-    source.questionNumber ? `Q${source.questionNumber}` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = String(reader.result || '')
+      resolve(result.includes(',') ? result.split(',')[1] ?? '' : result)
+    }
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+function errorMessage(value: unknown, fallback: string) {
+  if (typeof value === 'string' && value.trim()) return value
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    if (typeof record.message === 'string') return record.message
+    if (typeof record.error === 'string') return record.error
+  }
+  return fallback
 }
 
 function SolverInner() {
-  const [question, setQuestion] = useState('')
-  const [subject, setSubject] = useState('')
-  const [topic, setTopic] = useState('')
-  const [ocrText, setOcrText] = useState('')
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [ocrLoading, setOcrLoading] = useState(false)
   const [error, setError] = useState('')
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
-  const combinedQuestion = useMemo(
-    () => [question.trim(), ocrText.trim()].filter(Boolean).join('\n\n'),
-    [ocrText, question]
-  )
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, loading])
 
-  async function uploadImage(file: File | null) {
-    if (!file) return
-    setOcrLoading(true)
+  function uploadFiles(files: FileList | null) {
     setError('')
-    try {
-      const text = await recognizeImage(file)
-      setOcrText(text)
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Image text extraction failed.')
-    } finally {
-      setOcrLoading(false)
-    }
+    setSelectedFiles(Array.from(files ?? []).slice(0, 4))
+    if (fileRef.current) fileRef.current.value = ''
   }
 
-  async function ask() {
-    if (!combinedQuestion.trim()) {
-      setError('Write a question or upload an image first.')
-      return
-    }
+  async function sendMessage() {
+    const question = input.trim()
+    if ((!question && selectedFiles.length === 0) || loading) return
 
+    const preview = [question, ...selectedFiles.map((file) => `[${file.name}]`)].filter(Boolean).join('\n')
+    const nextMessages: ChatMessage[] = [...messages, { content: preview || '[Attachment]', role: 'user' }]
+    setMessages(nextMessages)
+    setInput('')
     setLoading(true)
     setError('')
+
     try {
-      const history = messages.flatMap((message) => [
-        { role: 'user' as const, content: message.question },
-        ...(message.answer ? [{ role: 'assistant' as const, content: message.answer }] : []),
-      ])
+      const files = await Promise.all(
+        selectedFiles.map(async (file) => ({
+          base64: await readFileAsBase64(file),
+          name: file.name,
+          type: file.type || null,
+        }))
+      )
+      const history = messages.slice(-10).map((message) => ({
+        content: message.content,
+        role: message.role,
+      }))
       const response = await fetch('/api/solver', {
-        body: JSON.stringify({
-          history,
-          question: combinedQuestion,
-          subject: subject.trim() || null,
-          topic: topic.trim() || null,
-        }),
+        body: JSON.stringify({ files, history, question: question || 'Please solve the uploaded question.' }),
         headers: await buildSupabaseAuthHeaders({ 'Content-Type': 'application/json' }),
         method: 'POST',
       })
       const data = await readJson(response)
-      if (!response.ok) throw new Error(data.error || 'Solver failed.')
-
-      setMessages((items) => [
-        ...items,
+      if (!response.ok) throw new Error(errorMessage(data.error, 'Solver failed.'))
+      setMessages((current) => [
+        ...current,
         {
-          answer: String(data.answer || ''),
-          question: combinedQuestion,
-          sources: Array.isArray(data.sources) ? data.sources : [],
+          content: String(data.answer || data.response || 'I could not solve that yet.'),
+          role: 'assistant',
         },
       ])
-      setQuestion('')
-      setOcrText('')
+      setSelectedFiles([])
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Solver failed.')
+      setMessages((current) => [
+        ...current,
+        {
+          content: caught instanceof Error ? caught.message : 'Solver failed.',
+          role: 'assistant',
+        },
+      ])
     } finally {
       setLoading(false)
     }
@@ -123,74 +116,81 @@ function SolverInner() {
   return (
     <main style={styles.page}>
       <StarBackground variant="chat" />
-      <section style={styles.shell}>
-        <header style={styles.header}>
-          <span style={styles.eyebrow}>Solver</span>
-          <h1 style={styles.title}>Ask a question. Get the working.</h1>
-        </header>
-
-        <div style={styles.controls}>
-          <input value={subject} onChange={(event) => setSubject(event.target.value)} placeholder="Subject (optional)" style={styles.field} />
-          <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Topic (optional)" style={styles.field} />
-        </div>
-
-        <div style={styles.askBox}>
-          <textarea
-            value={question}
-            onChange={(event) => setQuestion(event.target.value)}
-            placeholder="Paste or type the exact question..."
-            style={styles.textarea}
-          />
-          {ocrText ? (
-            <div style={styles.ocrBox}>
-              <strong>Image text</strong>
-              <p>{ocrText}</p>
-            </div>
-          ) : null}
-          <div style={styles.actions}>
-            <label style={styles.upload}>
-              <ImageUp size={17} />
-              {ocrLoading ? 'Reading image...' : 'Upload image'}
-              <input
-                accept="image/*"
-                type="file"
-                onChange={(event) => void uploadImage(event.target.files?.[0] ?? null)}
-                style={{ display: 'none' }}
-              />
-            </label>
-            <button type="button" onClick={() => void ask()} disabled={loading || ocrLoading} style={styles.primary}>
-              {loading ? <Sparkles size={17} /> : <Send size={17} />}
-              {loading ? 'Solving...' : 'Solve'}
-            </button>
+      <section style={styles.chat}>
+        {!messages.length ? (
+          <div style={styles.empty}>
+            <h1 style={styles.title}>Solver</h1>
+            <p style={styles.muted}>Type a question or upload a photo.</p>
           </div>
-        </div>
-
-        {error ? <p style={styles.error}>{error}</p> : null}
-
-        <div style={styles.thread}>
-          {messages.map((message, index) => (
-            <article key={`${index}-${message.question}`} style={styles.message}>
-              <div style={styles.userBubble}>{message.question}</div>
-              {message.answer ? (
-                <div style={styles.answer}>
-                  <AnswerRenderer content={message.answer} />
-                  {message.sources?.length ? (
-                    <div style={styles.sources}>
-                      <strong>Sources</strong>
-                      {message.sources.slice(0, 5).map((source, sourceIndex) => (
-                        <span key={`${source.id}-${sourceIndex}`}>{sourceLine(source)}</span>
-                      ))}
-                    </div>
-                  ) : null}
+        ) : (
+          <div style={styles.messages}>
+            {messages.map((message, index) => (
+              <div key={`${message.role}-${index}`} style={styles.row(message.role)}>
+                <div style={styles.bubble(message.role)}>
+                  {message.role === 'assistant' ? <AnswerRenderer content={message.content} /> : message.content}
                 </div>
-              ) : null}
-            </article>
-          ))}
-          {!messages.length ? (
-            <div style={styles.empty}>Upload a question image or type a topic to start.</div>
-          ) : null}
-        </div>
+              </div>
+            ))}
+            {loading ? (
+              <div style={styles.row('assistant')}>
+                <div style={styles.bubble('assistant')}>Solving...</div>
+              </div>
+            ) : null}
+            <div ref={bottomRef} />
+          </div>
+        )}
       </section>
+
+      {error ? <div style={styles.error}>{error}</div> : null}
+
+      <form
+        style={styles.composer}
+        onSubmit={(event) => {
+          event.preventDefault()
+          void sendMessage()
+        }}
+      >
+        <input
+          ref={fileRef}
+          accept="image/*,.pdf"
+          multiple
+          type="file"
+          onChange={(event) => uploadFiles(event.target.files)}
+          style={{ display: 'none' }}
+        />
+        {selectedFiles.length ? (
+          <div style={styles.attachments}>
+            {selectedFiles.map((file) => (
+              <span key={`${file.name}-${file.size}`} style={styles.attachment}>
+                {file.name}
+                <button type="button" onClick={() => setSelectedFiles((current) => current.filter((item) => item !== file))} style={styles.removeAttachment} aria-label={`Remove ${file.name}`}>
+                  <X size={13} />
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <div style={styles.composerRow}>
+          <button type="button" onClick={() => fileRef.current?.click()} disabled={loading} style={styles.iconButton} aria-label="Upload image or PDF">
+            <ImageUp size={20} />
+          </button>
+          <textarea
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault()
+                void sendMessage()
+              }
+            }}
+            placeholder="Message Solver..."
+            style={styles.input}
+          />
+          <button type="submit" disabled={(!input.trim() && selectedFiles.length === 0) || loading} style={styles.send} aria-label="Send">
+            <Send size={19} />
+          </button>
+        </div>
+      </form>
     </main>
   )
 }
@@ -204,80 +204,127 @@ export default function SolverPage() {
 }
 
 const styles = {
-  actions: {
+  bubble: (role: ChatMessage['role']) => ({
+    background: role === 'user' ? 'linear-gradient(130deg,#7733cc,#aa55ff)' : 'transparent',
+    border: role === 'user' ? 'none' : '0',
+    borderRadius: role === 'user' ? '18px 18px 4px 18px' : 8,
+    color: '#f4f1ff',
+    fontSize: role === 'user' ? 16 : 18,
+    lineHeight: role === 'user' ? 1.65 : 1.85,
+    maxWidth: role === 'user' ? 'min(760px, 88vw)' : 'min(820px, 92vw)',
+    overflowWrap: 'anywhere',
+    padding: role === 'user' ? '12px 16px' : '2px 0',
+    whiteSpace: 'pre-wrap',
+  }) satisfies CSSProperties,
+  chat: {
+    margin: '0 auto',
+    minHeight: 'calc(100vh - 116px)',
+    padding: '54px 16px 190px',
+    position: 'relative',
+    width: 'min(980px, 100%)',
+    zIndex: 1,
+  } satisfies CSSProperties,
+  composer: {
+    background: 'rgba(10,8,24,.97)',
+    border: '1px solid rgba(176,128,255,.22)',
+    borderRadius: 22,
+    bottom: 24,
+    boxShadow: '0 24px 80px rgba(0,0,0,.48)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    left: '50%',
+    padding: 12,
+    position: 'fixed',
+    transform: 'translateX(-50%)',
+    width: 'min(860px, calc(100vw - 32px))',
+    zIndex: 20,
+  } satisfies CSSProperties,
+  attachment: {
+    alignItems: 'center',
+    background: 'rgba(155,77,255,.14)',
+    border: '1px solid rgba(176,128,255,.22)',
+    borderRadius: 8,
+    color: '#d8ccf2',
+    display: 'inline-flex',
+    fontSize: 12,
+    gap: 6,
+    maxWidth: 190,
+    overflow: 'hidden',
+    padding: '7px 8px',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  } satisfies CSSProperties,
+  attachments: {
     alignItems: 'center',
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 10,
-    justifyContent: 'space-between',
+    gap: 6,
+    maxWidth: 260,
   } satisfies CSSProperties,
-  answer: {
-    background: 'rgba(255,255,255,.035)',
-    border: '1px solid rgba(176,128,255,.14)',
-    borderRadius: 8,
-    padding: 18,
-  } satisfies CSSProperties,
-  askBox: {
-    background: 'rgba(255,255,255,.025)',
-    border: '1px solid rgba(176,128,255,.14)',
-    borderRadius: 8,
-    display: 'grid',
-    gap: 12,
-    padding: 14,
-  } satisfies CSSProperties,
-  controls: {
+  composerRow: {
+    alignItems: 'end',
     display: 'grid',
     gap: 10,
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gridTemplateColumns: '44px minmax(0,1fr) 44px',
+    width: '100%',
   } satisfies CSSProperties,
   empty: {
-    color: '#aaa7c8',
+    alignContent: 'center',
     display: 'grid',
-    minHeight: 200,
+    minHeight: 'calc(100vh - 220px)',
     placeItems: 'center',
+    textAlign: 'center',
   } satisfies CSSProperties,
   error: {
+    bottom: 94,
     color: '#fbbf24',
-    lineHeight: 1.6,
+    left: '50%',
+    position: 'fixed',
+    transform: 'translateX(-50%)',
+    width: 'min(920px, calc(100vw - 28px))',
+    zIndex: 21,
   } satisfies CSSProperties,
-  eyebrow: {
-    color: '#b983ff',
-    fontSize: 12,
-    fontWeight: 850,
-    textTransform: 'uppercase',
-  } satisfies CSSProperties,
-  field: {
-    background: '#090816',
-    border: '1px solid rgba(176,128,255,.18)',
+  iconButton: {
+    alignItems: 'center',
+    background: 'rgba(255,255,255,.04)',
+    border: '1px solid rgba(176,128,255,.16)',
     borderRadius: 8,
-    color: '#f4f1ff',
+    color: '#d8ccf2',
+    cursor: 'pointer',
+    display: 'inline-flex',
     height: 44,
+    justifyContent: 'center',
+    width: 44,
+  } satisfies CSSProperties,
+  input: {
+    background: 'transparent',
+    border: 0,
+    color: '#f4f1ff',
+    font: 'inherit',
+    maxHeight: 150,
+    minHeight: 48,
     outline: 'none',
-    padding: '0 12px',
+    padding: '11px 4px',
+    resize: 'none',
+    width: '100%',
   } satisfies CSSProperties,
-  header: {
+  messages: {
     display: 'grid',
-    gap: 8,
+    gap: 24,
   } satisfies CSSProperties,
-  message: {
-    display: 'grid',
-    gap: 14,
-  } satisfies CSSProperties,
-  ocrBox: {
-    background: 'rgba(74,222,128,.05)',
-    border: '1px solid rgba(74,222,128,.18)',
-    borderRadius: 8,
-    color: '#d8fce5',
-    lineHeight: 1.65,
-    padding: 12,
-  } satisfies CSSProperties,
+  muted: { color: '#aaa7c8', lineHeight: 1.6, margin: 0 } satisfies CSSProperties,
   page: {
     background: '#02020c',
     color: '#ecebff',
     minHeight: 'calc(100vh - 74px)',
     position: 'relative',
   } satisfies CSSProperties,
-  primary: {
+  row: (role: ChatMessage['role']) => ({
+    display: 'flex',
+    justifyContent: role === 'user' ? 'flex-end' : 'flex-start',
+  }) satisfies CSSProperties,
+  send: {
     alignItems: 'center',
     background: '#9b4dff',
     border: 0,
@@ -285,70 +332,28 @@ const styles = {
     color: '#fff',
     cursor: 'pointer',
     display: 'inline-flex',
-    fontWeight: 850,
-    gap: 8,
     height: 44,
-    padding: '0 18px',
+    justifyContent: 'center',
+    width: 44,
   } satisfies CSSProperties,
-  shell: {
-    display: 'grid',
-    gap: 18,
-    margin: '0 auto',
-    padding: '42px 16px 72px',
-    position: 'relative',
-    width: 'min(980px, 100%)',
-    zIndex: 1,
-  } satisfies CSSProperties,
-  sources: {
-    borderTop: '1px solid rgba(176,128,255,.12)',
-    color: '#bcb5d8',
-    display: 'grid',
-    fontSize: 13,
-    gap: 7,
-    marginTop: 16,
-    paddingTop: 12,
-  } satisfies CSSProperties,
-  textarea: {
-    background: '#070614',
-    border: '1px solid rgba(176,128,255,.18)',
-    borderRadius: 8,
-    color: '#f4f1ff',
-    minHeight: 140,
-    outline: 'none',
-    padding: 14,
-    resize: 'vertical',
-    width: '100%',
-  } satisfies CSSProperties,
-  thread: {
-    display: 'grid',
-    gap: 18,
-  } satisfies CSSProperties,
-  title: {
-    fontSize: 'clamp(34px,6vw,62px)',
-    fontWeight: 520,
-    lineHeight: 1,
-    margin: 0,
-  } satisfies CSSProperties,
-  upload: {
+  removeAttachment: {
     alignItems: 'center',
-    border: '1px solid rgba(176,128,255,.24)',
-    borderRadius: 8,
-    color: '#d8ccf2',
+    background: 'rgba(255,255,255,.08)',
+    border: 0,
+    borderRadius: 999,
+    color: '#f4f1ff',
     cursor: 'pointer',
     display: 'inline-flex',
-    fontWeight: 800,
-    gap: 8,
-    height: 44,
-    padding: '0 14px',
+    height: 20,
+    justifyContent: 'center',
+    padding: 0,
+    width: 20,
   } satisfies CSSProperties,
-  userBubble: {
-    alignSelf: 'end',
-    background: 'linear-gradient(135deg,#7c3aed,#b45cff)',
-    borderRadius: '18px 18px 4px 18px',
-    justifySelf: 'end',
-    lineHeight: 1.55,
-    maxWidth: 'min(760px, 100%)',
-    overflowWrap: 'anywhere',
-    padding: '12px 16px',
+  title: {
+    color: '#f4f1ff',
+    fontSize: 'clamp(42px,7vw,76px)',
+    fontWeight: 520,
+    lineHeight: 1,
+    margin: '0 0 10px',
   } satisfies CSSProperties,
 } as const

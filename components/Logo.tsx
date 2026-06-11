@@ -9,7 +9,7 @@ type LogoProps = {
 
 export default function Logo({ compact = false, href = '/', style }: LogoProps) {
   return (
-    <Link href={href} aria-label="ScholarHaab home" style={styles.link}>
+    <Link href={href} aria-label="ScholarHAAB home" style={styles.link}>
       <span style={{ ...styles.wrap(compact), ...style }}>
         <span style={styles.orbit(compact)}>
           <span style={styles.core(compact)} />
@@ -17,7 +17,7 @@ export default function Logo({ compact = false, href = '/', style }: LogoProps) 
         </span>
         <span style={styles.text(compact)}>
           <span style={styles.scholar(compact)}>Scholar</span>
-          <span style={styles.haab(compact)}>Haab</span>
+          <span style={styles.haab(compact)}>HAAB</span>
         </span>
       </span>
     </Link>

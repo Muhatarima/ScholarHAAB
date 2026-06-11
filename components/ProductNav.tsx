@@ -9,7 +9,7 @@ export const PRODUCT_NAV_ITEMS = [
   { href: '/solver', label: 'Solver' },
   { href: '/exam-mode', label: 'Exam Mode' },
   { href: '/adaptive-mode', label: 'Adaptive Mode' },
-  { href: '/qbank', label: 'QBank' },
+  { href: '/qbank', label: 'Mock Test' },
   { href: '/profile', label: 'Profile' },
 ] as const
 

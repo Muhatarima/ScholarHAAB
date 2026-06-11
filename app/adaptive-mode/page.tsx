@@ -29,6 +29,16 @@ async function readJson(response: Response) {
   }
 }
 
+function errorMessage(value: unknown, fallback: string) {
+  if (typeof value === 'string' && value.trim()) return value
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    if (typeof record.message === 'string') return record.message
+    if (typeof record.error === 'string') return record.error
+  }
+  return fallback
+}
+
 function AdaptiveModeInner() {
   const [subject, setSubject] = useState('Physics')
   const [topic, setTopic] = useState('Kinematics')
@@ -53,7 +63,7 @@ function AdaptiveModeInner() {
         method: 'POST',
       })
       const data = await readJson(response)
-      if (!response.ok) throw new Error(data.error || 'Question generation failed.')
+      if (!response.ok) throw new Error(errorMessage(data.error, 'Question generation failed.'))
       setResult(data)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Question generation failed.')
@@ -117,13 +127,23 @@ function AdaptiveModeInner() {
             <section style={styles.block}>
               <h2>Step-by-step reasoning</h2>
               <ol style={styles.list}>
-                {(result.explanation ?? []).map((step, index) => <li key={`${index}-${step}`}>{step}</li>)}
+                {(result.explanation ?? []).map((step, index) => (
+                  <li key={`${index}-${step}`}>
+                    <AnswerRenderer content={step} />
+                  </li>
+                ))}
               </ol>
             </section>
             {result.commonMistakes?.length ? (
               <section style={styles.block}>
                 <h2>Common mistakes</h2>
-                <ul style={styles.list}>{result.commonMistakes.map((mistake) => <li key={mistake}>{mistake}</li>)}</ul>
+                <ul style={styles.list}>
+                  {result.commonMistakes.map((mistake) => (
+                    <li key={mistake}>
+                      <AnswerRenderer content={mistake} />
+                    </li>
+                  ))}
+                </ul>
               </section>
             ) : null}
             {result.sourcePattern ? <p style={styles.muted}>{result.sourcePattern}</p> : null}

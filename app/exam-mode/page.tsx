@@ -1,34 +1,28 @@
 'use client'
 
-import { BookOpen, Calculator, Search, Target } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import AnswerRenderer from '@/components/AnswerRenderer'
 import AuthGuard from '@/components/auth/AuthGuard'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 
-type Source = {
-  board?: string | null
-  id?: string
+type PastPaperQuestion = {
+  id: string
+  markScheme: string
+  marks: number
   paper?: string | null
   questionNumber?: string | number | null
-  subject?: string | null
-  title?: string
-  topic?: string | null
+  questionText: string
+  sourceTitle?: string
   year?: number | string | null
 }
 
 type ExamResult = {
-  formulas?: Array<{ formula?: string; meaning?: string; sourceIds?: string[]; whenToUse?: string }>
-  importantQuestions?: Array<{ question?: string; sourceIds?: string[]; whyImportant?: string }>
-  importantTopics?: Array<{ name?: string; sourceIds?: string[]; whyImportant?: string }>
-  observation?: string
-  sources?: Source[]
-  summary?: string
+  questions?: PastPaperQuestion[]
 }
 
 const SUBJECTS = ['Physics', 'Mathematics', 'Chemistry']
-const DIFFICULTIES = ['easy', 'medium', 'hard']
 
 async function readJson(response: Response) {
   const text = await response.text()
@@ -39,29 +33,25 @@ async function readJson(response: Response) {
   }
 }
 
-function sourceLine(source: Source) {
-  return [
-    source.title,
-    source.board,
-    source.subject,
-    source.topic,
-    source.year,
-    source.paper,
-    source.questionNumber ? `Q${source.questionNumber}` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
+function errorMessage(value: unknown, fallback: string) {
+  if (typeof value === 'string' && value.trim()) return value
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    if (typeof record.message === 'string') return record.message
+    if (typeof record.error === 'string') return record.error
+  }
+  return fallback
 }
 
 function ExamModeInner() {
   const [subject, setSubject] = useState('Physics')
   const [topic, setTopic] = useState('Kinematics')
-  const [difficulty, setDifficulty] = useState('medium')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState<ExamResult | null>(null)
+  const [openId, setOpenId] = useState<string | null>(null)
 
-  async function analyze() {
+  async function loadQuestions() {
     if (!subject || !topic.trim()) {
       setError('Subject and topic are required.')
       return
@@ -69,17 +59,18 @@ function ExamModeInner() {
 
     setLoading(true)
     setError('')
+    setResult(null)
     try {
       const response = await fetch('/api/exam-mode', {
-        body: JSON.stringify({ difficulty, subject, topic: topic.trim() }),
+        body: JSON.stringify({ subject, topic: topic.trim() }),
         headers: await buildSupabaseAuthHeaders({ 'Content-Type': 'application/json' }),
         method: 'POST',
       })
       const data = await readJson(response)
-      if (!response.ok) throw new Error(data.error || 'Analysis failed.')
+      if (!response.ok) throw new Error(errorMessage(data.error, 'Could not load questions.'))
       setResult(data)
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Analysis failed.')
+      setError(caught instanceof Error ? caught.message : 'Could not load questions.')
     } finally {
       setLoading(false)
     }
@@ -91,7 +82,7 @@ function ExamModeInner() {
       <section style={styles.shell}>
         <header style={styles.header}>
           <span style={styles.eyebrow}>Exam Mode</span>
-          <h1 style={styles.title}>Past-paper priorities</h1>
+          <h1 style={styles.title}>Past-paper questions</h1>
         </header>
 
         <div style={styles.controls}>
@@ -99,78 +90,46 @@ function ExamModeInner() {
             {SUBJECTS.map((item) => <option key={item}>{item}</option>)}
           </select>
           <input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="Topic" style={styles.field} />
-          <select value={difficulty} onChange={(event) => setDifficulty(event.target.value)} style={styles.field}>
-            {DIFFICULTIES.map((item) => <option key={item} value={item}>{item[0].toUpperCase() + item.slice(1)}</option>)}
-          </select>
-          <button type="button" onClick={() => void analyze()} disabled={loading} style={styles.primary}>
+          <button type="button" onClick={() => void loadQuestions()} disabled={loading} style={styles.primary}>
             <Search size={17} />
-            {loading ? 'Analysing...' : 'Analyse'}
+            {loading ? 'Loading...' : 'Load Questions'}
           </button>
         </div>
 
         {error ? <p style={styles.error}>{error}</p> : null}
 
-        {result ? (
-          <div style={styles.results}>
-            <section style={styles.section}>
-              <div style={styles.sectionTitle}><Calculator size={19} /> Key formulas</div>
-              <div style={styles.grid}>
-                {(result.formulas ?? []).map((item, index) => (
-                  <article key={`${item.formula}-${index}`} style={styles.card}>
-                    <strong style={styles.formula}>{item.formula}</strong>
-                    <p>{item.meaning}</p>
-                    <p style={styles.muted}>{item.whenToUse}</p>
-                    {item.sourceIds?.length ? <small>{item.sourceIds.join(', ')}</small> : null}
-                  </article>
-                ))}
-                {!result.formulas?.length ? <p style={styles.muted}>No formula was extracted from the retrieved chunks.</p> : null}
-              </div>
-            </section>
-
-            <section style={styles.section}>
-              <div style={styles.sectionTitle}><Target size={19} /> Observation</div>
-              <article style={styles.card}>
-                <AnswerRenderer content={result.observation || result.summary || 'No observation returned yet.'} />
-              </article>
-            </section>
-
-            <section style={styles.section}>
-              <div style={styles.sectionTitle}><Target size={19} /> Important topics</div>
-              <div style={styles.grid}>
-                {(result.importantTopics ?? []).map((item, index) => (
-                  <article key={`${item.name}-${index}`} style={styles.card}>
-                    <strong>{item.name}</strong>
-                    <p>{item.whyImportant}</p>
-                    {item.sourceIds?.length ? <small>{item.sourceIds.join(', ')}</small> : null}
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            <section style={styles.section}>
-              <div style={styles.sectionTitle}><BookOpen size={19} /> Important questions</div>
-              <div style={styles.list}>
-                {(result.importantQuestions ?? []).slice(0, 5).map((item, index) => (
-                  <article key={`${item.question}-${index}`} style={styles.card}>
-                    <strong>{item.question}</strong>
-                    <p>{item.whyImportant}</p>
-                    {item.sourceIds?.length ? <small>{item.sourceIds.join(', ')}</small> : null}
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            <section style={styles.section}>
-              <div style={styles.sectionTitle}>Retrieved evidence</div>
-              <div style={styles.sources}>
-                {(result.sources ?? []).slice(0, 8).map((source, index) => (
-                  <span key={`${source.id}-${index}`}>{sourceLine(source)}</span>
-                ))}
-              </div>
-            </section>
+        {result?.questions?.length ? (
+          <div style={styles.list}>
+            {result.questions.map((question, index) => {
+              const isOpen = openId === question.id
+              return (
+                <article key={question.id} style={styles.card}>
+                  <div style={styles.cardHeader}>
+                    <strong>Question {index + 1}</strong>
+                    <span style={styles.meta}>
+                      {question.marks} marks
+                      {question.paper ? ` · ${question.paper}` : ''}
+                      {question.year ? ` · ${question.year}` : ''}
+                      {question.questionNumber ? ` · Q${question.questionNumber}` : ''}
+                    </span>
+                  </div>
+                  <AnswerRenderer content={question.questionText} />
+                  <button type="button" onClick={() => setOpenId(isOpen ? null : question.id)} style={styles.secondary}>
+                    {isOpen ? 'Hide Mark Scheme' : 'Show Mark Scheme'}
+                  </button>
+                  {isOpen ? (
+                    <div style={styles.scheme}>
+                      <AnswerRenderer content={question.markScheme} />
+                    </div>
+                  ) : null}
+                </article>
+              )
+            })}
           </div>
+        ) : result ? (
+          <div style={styles.empty}>No questions found.</div>
         ) : (
-          <div style={styles.empty}>Choose a subject and topic to analyse.</div>
+          <div style={styles.empty}>Choose a subject and topic.</div>
         )}
       </section>
     </main>
@@ -190,24 +149,22 @@ const styles = {
     background: 'rgba(255,255,255,.032)',
     border: '1px solid rgba(176,128,255,.14)',
     borderRadius: 8,
+    display: 'grid',
+    gap: 12,
     lineHeight: 1.65,
     padding: 16,
   } satisfies CSSProperties,
+  cardHeader: { alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'space-between' } satisfies CSSProperties,
   controls: {
     background: 'rgba(255,255,255,.025)',
     border: '1px solid rgba(176,128,255,.12)',
     borderRadius: 8,
     display: 'grid',
     gap: 10,
-    gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+    gridTemplateColumns: 'minmax(160px,.6fr) minmax(240px,1.4fr) auto',
     padding: 14,
   } satisfies CSSProperties,
-  empty: {
-    color: '#aaa7c8',
-    display: 'grid',
-    minHeight: 260,
-    placeItems: 'center',
-  } satisfies CSSProperties,
+  empty: { color: '#aaa7c8', display: 'grid', minHeight: 260, placeItems: 'center' } satisfies CSSProperties,
   error: { color: '#fbbf24' } satisfies CSSProperties,
   eyebrow: { color: '#b983ff', fontSize: 12, fontWeight: 850, textTransform: 'uppercase' } satisfies CSSProperties,
   field: {
@@ -220,11 +177,9 @@ const styles = {
     outline: 'none',
     padding: '0 12px',
   } satisfies CSSProperties,
-  formula: { color: '#f3d9ff', display: 'block', fontSize: 18, marginBottom: 8 } satisfies CSSProperties,
-  grid: { display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' } satisfies CSSProperties,
   header: { display: 'grid', gap: 8 } satisfies CSSProperties,
-  list: { display: 'grid', gap: 12 } satisfies CSSProperties,
-  muted: { color: '#aaa7c8' } satisfies CSSProperties,
+  list: { display: 'grid', gap: 14 } satisfies CSSProperties,
+  meta: { color: '#aaa7c8', fontSize: 13 } satisfies CSSProperties,
   page: { background: '#02020c', color: '#ecebff', minHeight: 'calc(100vh - 74px)', position: 'relative' } satisfies CSSProperties,
   primary: {
     alignItems: 'center',
@@ -240,10 +195,22 @@ const styles = {
     justifyContent: 'center',
     padding: '0 18px',
   } satisfies CSSProperties,
-  results: { display: 'grid', gap: 28 } satisfies CSSProperties,
-  section: { display: 'grid', gap: 12 } satisfies CSSProperties,
-  sectionTitle: { alignItems: 'center', color: '#c798ff', display: 'flex', fontSize: 18, fontWeight: 850, gap: 8 } satisfies CSSProperties,
+  scheme: {
+    background: '#080716',
+    border: '1px solid rgba(176,128,255,.12)',
+    borderRadius: 8,
+    padding: 14,
+  } satisfies CSSProperties,
+  secondary: {
+    background: 'rgba(255,255,255,.04)',
+    border: '1px solid rgba(176,128,255,.18)',
+    borderRadius: 8,
+    color: '#e9d5ff',
+    cursor: 'pointer',
+    fontWeight: 800,
+    justifySelf: 'start',
+    padding: '9px 12px',
+  } satisfies CSSProperties,
   shell: { display: 'grid', gap: 22, margin: '0 auto', padding: '42px 16px 72px', position: 'relative', width: 'min(1120px,100%)', zIndex: 1 } satisfies CSSProperties,
-  sources: { color: '#bdb7d5', display: 'grid', fontSize: 13, gap: 7 } satisfies CSSProperties,
   title: { fontSize: 'clamp(34px,6vw,64px)', fontWeight: 520, lineHeight: 1, margin: 0 } satisfies CSSProperties,
 } as const

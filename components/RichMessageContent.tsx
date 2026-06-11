@@ -1,7 +1,7 @@
 'use client'
 
 
-function cleanBrokenLatexText(value: string) {
+function cleanBrokenLatexTextLegacy(value: string) {
   return String(value ?? '')
     .replace(/\\ce\{([^{}]+)\}/g, '$1')
     .replace(/\ce\{([^{}]+)\}/g, '$1')
@@ -9,6 +9,27 @@ function cleanBrokenLatexText(value: string) {
     .replace(/\lambda/g, 'λ')
     .replace(/\\Omega/g, 'Ω')
     .replace(/\Omega/g, 'Ω')
+}
+
+function cleanBrokenLatexText(value: string) {
+  return String(value ?? '')
+    .replace(/Ãƒâ€”/g, 'x')
+    .replace(/Ã¢â€ â€™/g, '->')
+    .replace(/Ã¢â‚¬â€œ|Ã¢â‚¬â€/g, '-')
+    .replace(/Ã‚Â·/g, '-')
+    .replace(/Ã‚\s*/g, '')
+    .replace(/\\\\text\{([^{}]+)\}/g, '$1')
+    .replace(/\\text\{([^{}]+)\}/g, '$1')
+    .replace(/(\d+(?:\.\d+)?)\s*([a-zA-Z])(?=\s|[,.])/g, '$1 $2')
+    .replace(/\b(\d+(?:\.\d+)?)\s*m\s*\/\s*s\^?2\b/gi, '$1 $\\mathrm{m\\,s^{-2}}$')
+    .replace(/\b(\d+(?:\.\d+)?)\s*m\s*\/\s*s\b/gi, '$1 $\\mathrm{m\\,s^{-1}}$')
+    .replace(/\bm\s*\/\s*s\^?2\b/gi, '$\\mathrm{m\\,s^{-2}}$')
+    .replace(/\bm\s*\/\s*s\b/gi, '$\\mathrm{m\\,s^{-1}}$')
+    .replace(/\bs\s*=\s*ut\s*\+\s*1\s*\/\s*2\s*at\^?2\b/gi, '$s = ut + \\frac{1}{2}at^{2}$')
+    .replace(/\ba\s*=\s*\(?\s*v\s*-\s*u\s*\)?\s*\/\s*t\b/gi, '$a = \\frac{v-u}{t}$')
+    .replace(/\bu\s*=\s*0\b/g, '$u = 0$')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
 }
 
 import type { ReactNode } from 'react'
@@ -46,7 +67,7 @@ function renderMathAwareText(text: string, keyBase: string) {
     <>
       {parts.map((part, index) => {
         const isBold = part.startsWith('**') && part.endsWith('**')
-        const value = isBold ? part.slice(2, -2) : part
+        const value = cleanBrokenLatexText(isBold ? part.slice(2, -2) : part)
         const rendered = (
           <MathRenderer
             key={`${keyBase}-math-${index}`}
@@ -93,10 +114,24 @@ function normalizeMarkSchemePointLists(text: string) {
   })
 }
 
+function splitReadableLines(line: string) {
+  const clean = line.trim()
+  if (clean.length < 170) return [clean]
+
+  return clean
+    .replace(/\s+(?=(?:We can|Using|Substituting|Rearranging|Now,|Therefore,|So,|Since|The integral|This gives|Finally,|Let)\b)/g, '\n')
+    .replace(/([.!?])\s+(?=(?:We|This|Now|Using|Substituting|Rearranging|Therefore|So|The|Since|To)\b)/g, '$1\n')
+    .split('\n')
+    .map((part) => part.trim())
+    .filter(Boolean)
+}
+
 function renderParagraph(lines: string[], keyBase: string) {
+  const readableLines = lines.flatMap(splitReadableLines)
+
   return (
     <div key={keyBase} style={{ display: 'grid', gap: '8px' }}>
-      {lines.map((line, index) => (
+      {readableLines.map((line, index) => (
         <p
           key={`${keyBase}-p-${index}`}
           style={{

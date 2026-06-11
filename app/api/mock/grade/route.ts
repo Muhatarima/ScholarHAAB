@@ -3,6 +3,7 @@ import { requireAuth } from '@/lib/auth/requireAuth'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 import { trackSolvedTopic } from '@/lib/progress/autoTrack'
 import { gradeMockAnswer } from '@/lib/mock/gradeMock'
+import { generateJson } from '@/lib/llm/failover'
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
@@ -44,6 +45,90 @@ function fallbackGrade(answer: string, markScheme: string, marks: number) {
   }
 }
 
+type LlmGrade = {
+  hitPoints?: unknown[]
+  isCorrect?: boolean
+  missingPoints?: unknown[]
+  score?: number
+}
+
+function pointText(value: unknown) {
+  if (typeof value === 'string') return value.trim()
+  if (typeof value === 'number') return String(value)
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    for (const key of ['point', 'text', 'criterion', 'mark', 'missing', 'feedback', 'reason']) {
+      const clean = cleanString(record[key], '')
+      if (clean) return clean
+    }
+
+    try {
+      const json = JSON.stringify(value)
+      return json === '{}' ? '' : json
+    } catch {
+      return ''
+    }
+  }
+
+  return ''
+}
+
+function normalizePoints(value: unknown, fallback: string[]) {
+  const source = Array.isArray(value) ? value : fallback
+  const points = source
+    .map((item) => pointText(item))
+    .filter((item) => item && item !== '[object Object]')
+    .slice(0, 6)
+
+  return points.length ? points : fallback
+}
+
+async function gradeWithMarkScheme(input: {
+  answer: string
+  markScheme: string
+  marks: number
+  questionText: string
+}) {
+  const fallback = gradeMockAnswer({
+    answer: input.answer,
+    markScheme: input.markScheme,
+    marks: input.marks,
+  })
+
+  try {
+    const result = await generateJson<LlmGrade>({
+      maxTokens: 700,
+      prompt: [
+        `Question: ${input.questionText}`,
+        '',
+        `Mark scheme: ${input.markScheme}`,
+        '',
+        `Student answer: ${input.answer}`,
+        '',
+        `Maximum marks: ${input.marks}`,
+        '',
+        'Return JSON only: {"score":0,"isCorrect":false,"hitPoints":[],"missingPoints":[]}',
+      ].join('\n'),
+      system:
+        'Grade only against the supplied mark scheme. Do not create a new solution. Award marks for equivalent wording when scientifically correct.',
+      temperature: 0,
+    })
+
+    const score = Math.max(0, Math.min(input.marks, Math.round(Number(result.data.score ?? fallback.score))))
+    const percentage = Math.round((score / Math.max(1, input.marks)) * 100)
+    return {
+      ...fallback,
+      hitPoints: normalizePoints(result.data.hitPoints, fallback.hitPoints),
+      isCorrect: typeof result.data.isCorrect === 'boolean' ? result.data.isCorrect : percentage >= 60,
+      missingPoints: normalizePoints(result.data.missingPoints, fallback.missingPoints),
+      percentage,
+      score,
+    }
+  } catch {
+    return fallback
+  }
+}
+
 export async function POST(req: Request) {
   let userId: string | undefined
 
@@ -71,7 +156,7 @@ export async function POST(req: Request) {
     if (!answer) return json({ error: 'Write an answer first.' }, 400)
 
     const grade = markScheme
-      ? gradeMockAnswer({ answer, markScheme, marks })
+      ? await gradeWithMarkScheme({ answer, markScheme, marks, questionText })
       : fallbackGrade(answer, questionText, marks)
 
     if (userId) {
@@ -104,7 +189,7 @@ export async function POST(req: Request) {
             paper,
             difficulty,
             questionText,
-            label: 'Exam-style mock based on A/O Level pattern',
+            label: 'Past paper mark scheme',
           },
         })
         if (!error) savedAttempt = true
@@ -115,7 +200,7 @@ export async function POST(req: Request) {
 
     return json({
       success: true,
-      label: 'Exam-style mock based on A/O Level pattern',
+      label: 'Past paper mark scheme',
       grade,
       savedAttempt,
     })

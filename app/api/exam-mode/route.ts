@@ -1,23 +1,14 @@
 import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/requireAuth'
-import { runExamModePipeline } from '@/lib/rag/pipelines'
+import { getPastPaperQuestions } from '@/lib/mock/pastPaperDocuments'
 import { createRequestId, logError } from '@/lib/server/logger'
 
 export const runtime = 'nodejs'
-export const maxDuration = 60
+export const maxDuration = 30
 export const dynamic = 'force-dynamic'
 
 function text(value: unknown) {
   return typeof value === 'string' ? value.trim() : ''
-}
-
-function withoutConfidence<T extends Record<string, unknown>>(value: T) {
-  const clean = { ...value }
-  delete clean.confidence
-  delete clean.confidenceBadge
-  delete clean.confidenceLabel
-  delete clean.confidenceScore
-  return clean
 }
 
 export async function POST(req: Request) {
@@ -30,8 +21,6 @@ export async function POST(req: Request) {
     const body = (await req.json()) as Record<string, unknown>
     const subject = text(body.subject)
     const topic = text(body.topic)
-    const board = text(body.board) || null
-    const difficulty = text(body.difficulty) || null
 
     if (!subject || !topic) {
       return NextResponse.json(
@@ -40,16 +29,21 @@ export async function POST(req: Request) {
       )
     }
 
-    const result = await runExamModePipeline({ board, requestId, subject, topic })
+    const questions = await getPastPaperQuestions({ count: 20, subject, topic })
+
+    if (!questions.length) {
+      return NextResponse.json(
+        {
+          error: `No real past paper questions found for ${subject} / ${topic}. Try another topic name from the database.`,
+          questions: [],
+          requestId,
+        },
+        { status: 404, headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId } }
+      )
+    }
 
     return NextResponse.json(
-      withoutConfidence({
-        ...result,
-        difficulty,
-        observation:
-          result.summary ||
-          'Observation is based on retrieved formulas, repeated wording, and question patterns from the indexed library.',
-      } as Record<string, unknown>),
+      { questions, subject, topic },
       { headers: { 'Cache-Control': 'no-store', 'x-request-id': requestId } }
     )
   } catch (error) {
@@ -58,8 +52,8 @@ export async function POST(req: Request) {
       user_id: user.id,
     })
     return NextResponse.json(
-      { error: 'Exam Mode is temporarily unavailable. Please try again in a moment.', requestId },
-      { status: 503, headers: { 'x-request-id': requestId } }
+      { error: 'Could not load past paper questions.', requestId },
+      { status: 500, headers: { 'x-request-id': requestId } }
     )
   }
 }

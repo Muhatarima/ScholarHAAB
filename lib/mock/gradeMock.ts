@@ -48,8 +48,8 @@ export function gradeMockAnswer({
   const percentage = Math.round((score / Math.max(1, marks)) * 100)
   const isCorrect = percentage >= 60
   const improvementAdvice = isCorrect
-    ? 'Good exam direction. Now tighten the wording so every sentence earns a mark.'
-    : 'Revise the missing mark points, then answer again using the exact keywords.'
+    ? 'Correct. Your answer matches the main mark-scheme points.'
+    : 'Incorrect or incomplete. Add the missing mark-scheme points, then try again.'
 
   return {
     score,

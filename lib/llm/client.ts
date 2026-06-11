@@ -63,7 +63,7 @@ function groqModels() {
 
 function timeoutMs() {
   const parsed = Number(process.env.LLM_TIMEOUT_MS || process.env.AI_PROVIDER_TIMEOUT_MS)
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 15_000
 }
 
 function maxTokens(input?: number) {
@@ -111,7 +111,7 @@ async function fetchJson(url: string, init: RequestInit, requestId?: string) {
 }
 
 async function withRetry<T>(label: string, requestId: string | undefined, work: () => Promise<T>) {
-  const attempts = Math.max(1, Number(process.env.LLM_RETRY_ATTEMPTS || 2))
+  const attempts = Math.max(1, Number(process.env.LLM_RETRY_ATTEMPTS || 3))
   let lastError: unknown
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {

@@ -16,6 +16,22 @@ import {
   type RagMetadata,
 } from '@/lib/rag/retrieve'
 
+async function generateJsonOrFallback<T>(
+  input: Parameters<typeof generateJson<T>>[0],
+  fallback: T
+) {
+  try {
+    return await generateJson<T>(input)
+  } catch {
+    return {
+      data: fallback,
+      model: 'fallback',
+      provider: 'general',
+      text: JSON.stringify(fallback),
+    }
+  }
+}
+
 export type RagSource = {
   id: string
   title: string
@@ -61,6 +77,40 @@ function toSource(match: RagMatch): RagSource {
 
 function sourceIds(matches: RagMatch[]) {
   return matches.map((_, index) => `S${index + 1}`)
+}
+
+function sanitizeStudentText(value: unknown) {
+  return String(value ?? '')
+    .replace(/\[(?:S|s)\d+(?:\s*,\s*(?:S|s)\d+)*\]/g, 'the past-paper material')
+    .replace(/\b(?:S|s)\d+(?:\s*,\s*(?:S|s)\d+)+\b/g, 'the past-paper material')
+    .replace(/\bBased on\s+(?:the\s+)?past-paper material\.?/gi, 'Built from the past-paper pattern.')
+    .replace(/\bBased on\s+(?:\[?S\d+\]?(?:\s*,\s*\[?S\d+\]?)*)\.?/gi, 'Built from the past-paper pattern.')
+    .replace(/\bRetrieved evidence\b/gi, 'Past-paper material')
+    .replace(/\bObservation from\s+\d+\s+retrieved chunks:?\s*/gi, '')
+    .replace(/\bpartial corpus match\b/gi, 'past-paper match')
+    .replace(/\bconfidence score\b/gi, 'score')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+function sanitizeStringList(values: unknown) {
+  return Array.isArray(values)
+    ? values.map((value) => sanitizeStudentText(value)).filter(Boolean)
+    : []
+}
+
+function sanitizeQbankItems<T extends Record<string, unknown>>(
+  values: T[] | undefined,
+  keys: Array<keyof T>
+) {
+  return (values ?? []).map((item) => {
+    const clean = { ...item }
+    for (const key of keys) {
+      clean[key] = sanitizeStudentText(item[key]) as T[keyof T]
+    }
+    delete (clean as Record<string, unknown>).sourceIds
+    return clean
+  })
 }
 
 const TOPIC_ALIASES: Array<[string, string[]]> = [
@@ -259,6 +309,48 @@ function fallbackStudyAnswer(question: string, _matches: RagMatch[]) {
   return directExamAnswer(question)
 }
 
+function noPastPaperDataNote(subject: string, topic: string) {
+  return `No past paper data found for ${subject} / ${topic}. Using general knowledge.`
+}
+
+function fallbackAdaptivePractice(input: {
+  difficulty?: string | null
+  subject: string
+  topic: string
+}) {
+  const difficulty = input.difficulty || 'medium'
+  const questionText = [
+    `A ${difficulty} ${input.subject} question on ${input.topic}:`,
+    `Explain the key idea behind ${input.topic}, then apply it to one exam-style situation. Include any relevant formula only if it is needed.`,
+  ].join(' ')
+
+  return {
+    answer: [
+      `For ${input.topic}, start with the correct definition or formula.`,
+      'Apply it directly to the given situation using correct units or exam keywords.',
+      'Finish with a clear final sentence that answers the command word.',
+    ].join('\n\n'),
+    commonMistakes: [
+      'Writing a vague answer without the key exam word.',
+      'Forgetting units in calculation answers.',
+      'Not linking the reason to the final effect.',
+    ],
+    explanation: [
+      'Identify the command word in the question.',
+      'Write the relevant definition, law, or formula.',
+      'Apply it to the given situation using correct units or keywords.',
+      'Finish with a clear final answer.',
+    ],
+    question: {
+      marks: 4,
+      options: [],
+      text: questionText,
+      type: 'structured',
+    },
+    sourcePattern: 'General exam-style practice. No matching past-paper question was found in the database for this topic.',
+  }
+}
+
 function directExamAnswer(question: string, sourceLine = '') {
   const lower = question.toLowerCase()
 
@@ -419,7 +511,7 @@ export async function runExplainPipeline(input: {
     })
 
     return {
-      answer: chat.text,
+      answer: sanitizeStudentText(chat.text),
       confidenceLabel: 'Study chat',
       confidenceScore: 100,
       model: `${chat.provider}:${chat.model}`,
@@ -462,7 +554,9 @@ export async function runExplainPipeline(input: {
   }
   const evidence = evidenceSummary(retrieval.matches)
 
-  const generation = await generateText({
+  let generation: Awaited<ReturnType<typeof generateText>>
+  try {
+    generation = await generateText({
     maxTokens: 1_500,
     prompt: [
       'RETRIEVED EVIDENCE:',
@@ -486,10 +580,17 @@ export async function runExplainPipeline(input: {
       'If evidence is weak, say exactly what is weak and still give the best useful answer.',
     ].join('\n'),
     temperature: 0.12,
-  })
+    })
+  } catch {
+    generation = {
+      model: 'fallback',
+      provider: 'general' as never,
+      text: fallbackStudyAnswer(input.query, retrieval.matches),
+    }
+  }
 
   return {
-    answer: generation.text,
+    answer: sanitizeStudentText(generation.text),
     model: `${generation.provider}:${generation.model}`,
     retrievalMode: retrieval.mode,
     ...evidence,
@@ -533,10 +634,31 @@ export async function runExamModePipeline(input: {
   })
 
   if (!retrieval.matches.length) {
-    throw new Error(`I found related exam-style material for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
+    return {
+      board: input.board ?? null,
+      formulas: [],
+      importantQuestions: fallbackExamQuestions(input.topic, []),
+      importantTopics: [
+        {
+          importance: 'medium',
+          name: input.topic,
+          sourceIds: [],
+          whyImportant:
+            'No matching library chunk was retrieved, so this is a general study priority rather than a past-paper frequency claim.',
+        },
+      ],
+      model: 'general:fallback',
+      retrievalMode: retrieval.mode,
+      subject: input.subject,
+      summary: noPastPaperDataNote(input.subject, input.topic),
+      topic: input.topic,
+      confidenceLabel: 'General knowledge',
+      confidenceScore: 0,
+      sources: [],
+    }
   }
 
-  const generated = await generateJson<ExamModeJson>({
+  const generated = await generateJsonOrFallback<ExamModeJson>({
     maxTokens: 1_100,
     prompt: [
       `SUBJECT: ${input.subject}`,
@@ -560,6 +682,20 @@ export async function runExamModePipeline(input: {
       'Do not use general knowledge. Do not invent metadata.',
     ].join('\n'),
     temperature: 0.08,
+  }, {
+    formulas: [],
+    importantQuestions: fallbackExamQuestions(input.topic, retrieval.matches),
+    importantTopics: [
+      {
+        importance: 'medium',
+        name: input.topic,
+        sourceIds: fallbackSourceIds(retrieval.matches),
+        whyImportant:
+          'The retrieved chunks are relevant, but the model could not produce strict JSON analysis.',
+      },
+    ],
+    summary:
+      `Retrieved ${retrieval.matches.length} chunks for ${input.subject} / ${input.topic}, but JSON analysis used a safe fallback.`,
   })
   const generatedData = generated.data
   const model = `${generated.provider}:${generated.model}`
@@ -615,10 +751,20 @@ export async function runAdaptiveModePipeline(input: {
   })
 
   if (!retrieval.matches.length) {
-    throw new Error(`Using an exam-style practice pattern for ${input.subject} / ${input.topic}. Try a related topic name such as motion, velocity, integration, waves, or electricity.`)
+    return {
+      ...fallbackAdaptivePractice(input),
+      board: input.board ?? null,
+      model: 'general:fallback',
+      retrievalMode: retrieval.mode,
+      subject: input.subject,
+      topic: input.topic,
+      confidenceLabel: 'General knowledge',
+      confidenceScore: 0,
+      sources: [],
+    }
   }
 
-  const generated = await generateJson<AdaptiveModeJson>({
+  const generated = await generateJsonOrFallback<AdaptiveModeJson>({
     maxTokens: 1_500,
     prompt: [
       `SUBJECT: ${input.subject}`,
@@ -632,17 +778,17 @@ export async function runAdaptiveModePipeline(input: {
       '',
       'Create one mock question in the same past-paper style, then solve it. If a retrieved question is already perfect, adapt it lightly instead of copying long text.',
       'Return JSON only with this shape:',
-      '{"question":{"type":"MCQ|numerical|structured","text":"","marks":4,"options":[]},"answer":"","explanation":["step 1","step 2"],"commonMistakes":[],"sourcePattern":"Based on [S1], [S2]"}',
+      '{"question":{"type":"MCQ|numerical|structured","text":"","marks":4,"options":[]},"answer":"","explanation":["step 1","step 2"],"commonMistakes":[],"sourcePattern":"Past-paper style from stored question patterns"}',
     ].join('\n'),
     requestId: input.requestId,
     system: [
       'You generate adaptive practice from retrieved past-paper patterns.',
       'Use the supplied chunks as the source of style, difficulty, and marking.',
-      'Do not invent exact source metadata; cite source IDs.',
+      'Do not invent exact source metadata. Do not mention source IDs in student-facing text.',
       'Show step-by-step reasoning and units for numerical answers.',
     ].join('\n'),
     temperature: 0.18,
-  })
+  }, fallbackAdaptivePractice(input))
   const generatedData = generated.data
   const model = `${generated.provider}:${generated.model}`
   const evidence = evidenceSummary(retrieval.matches)
@@ -668,24 +814,24 @@ export async function runAdaptiveModePipeline(input: {
         : []
 
   return {
-    answer,
     board: input.board ?? null,
-    commonMistakes: generatedData.commonMistakes ?? [],
-    explanation,
     model,
     question: {
       marks: rawQuestion.marks ?? 4,
-      options: rawQuestion.options ?? [],
+      options: sanitizeStringList(rawQuestion.options),
       text:
-        rawQuestion.text ??
+        sanitizeStudentText(rawQuestion.text) ||
         `A ${input.difficulty ?? 'medium'} ${input.subject} question on ${input.topic}, based on the retrieved past-paper pattern.`,
       type: rawQuestion.type ?? 'structured',
     },
     retrievalMode: retrieval.mode,
-    sourcePattern: generatedData.sourcePattern ?? `Based on ${sourceIds(retrieval.matches).join(', ')}`,
+    sourcePattern: sanitizeStudentText(generatedData.sourcePattern) || 'Past-paper style from stored question patterns.',
     subject: input.subject,
     topic: input.topic,
     ...evidence,
+    answer: sanitizeStudentText(answer),
+    commonMistakes: sanitizeStringList(generatedData.commonMistakes),
+    explanation: sanitizeStringList(explanation),
   }
 }
 
@@ -732,10 +878,41 @@ export async function runQbankAnalysisPipeline(input: {
   })
 
   if (!retrieval.matches.length) {
-    throw new Error(`No QBank evidence found for ${input.subject} / ${input.topic}. Try a related topic keyword.`)
+    return {
+      board: input.board ?? null,
+      difficultyLevels: [
+        {
+          evidence:
+            'No matching QBank or past-paper chunks were retrieved, so difficulty cannot be inferred from the database.',
+          level: 'medium',
+          sourceIds: [],
+        },
+      ],
+      model: 'general:fallback',
+      practiceQuestions: fallbackExamQuestions(input.topic, []),
+      repeatedConcepts: [
+        {
+          concept: input.topic,
+          frequencyHint: 'No database frequency available.',
+          sourceIds: [],
+        },
+      ],
+      retrievalMode: retrieval.mode,
+      studyPlan: [
+        `Review the definition and core method for ${input.topic}.`,
+        'Practise one short explanation question and one calculation or application question.',
+        'Check your answer against exam keywords and units.',
+      ],
+      subject: input.subject,
+      summary: noPastPaperDataNote(input.subject, input.topic),
+      topic: input.topic,
+      confidenceLabel: 'General knowledge',
+      confidenceScore: 0,
+      sources: [],
+    }
   }
 
-  const generated = await generateJson<QbankAnalysisJson>({
+  const generated = await generateJsonOrFallback<QbankAnalysisJson>({
     maxTokens: 1_600,
     prompt: [
       `SUBJECT: ${input.subject}`,
@@ -756,13 +933,45 @@ export async function runQbankAnalysisPipeline(input: {
       'Cite source IDs for every evidence-based claim.',
     ].join('\n'),
     temperature: 0.1,
+  }, {
+    difficultyLevels: [
+      {
+        evidence: 'Retrieved evidence was available, but model JSON analysis failed.',
+        level: 'medium',
+        sourceIds: fallbackSourceIds(retrieval.matches),
+      },
+    ],
+    practiceQuestions: fallbackExamQuestions(input.topic, retrieval.matches),
+    repeatedConcepts: [
+      {
+        concept: input.topic,
+        frequencyHint: `Based on ${retrieval.matches.length} retrieved chunks.`,
+        sourceIds: fallbackSourceIds(retrieval.matches),
+      },
+    ],
+    studyPlan: [
+      `Review the main method for ${input.topic}.`,
+      'Practise the retrieved question patterns.',
+      'Check answers against formula, substitution, unit, and final wording.',
+    ],
+    summary:
+      `Retrieved ${retrieval.matches.length} chunks for ${input.subject} / ${input.topic}, but JSON analysis used a safe fallback.`,
   })
   const generatedData = generated.data
   const model = `${generated.provider}:${generated.model}`
   const evidence = evidenceSummary(retrieval.matches)
-  const repeatedConcepts = generatedData.repeatedConcepts ?? []
-  const difficultyLevels = generatedData.difficultyLevels ?? []
-  const practiceQuestions = generatedData.practiceQuestions ?? []
+  const repeatedConcepts = sanitizeQbankItems(generatedData.repeatedConcepts, [
+    'concept',
+    'frequencyHint',
+  ])
+  const difficultyLevels = sanitizeQbankItems(generatedData.difficultyLevels, [
+    'evidence',
+    'level',
+  ])
+  const practiceQuestions = sanitizeQbankItems(generatedData.practiceQuestions, [
+    'question',
+    'whyPractice',
+  ])
 
   return {
     board: input.board ?? null,
@@ -771,12 +980,10 @@ export async function runQbankAnalysisPipeline(input: {
     practiceQuestions,
     repeatedConcepts,
     retrievalMode: retrieval.mode,
-    studyPlan: generatedData.studyPlan?.length
-      ? generatedData.studyPlan
-      : [],
+    studyPlan: sanitizeStringList(generatedData.studyPlan),
     subject: input.subject,
     summary:
-      generatedData.summary ||
+      sanitizeStudentText(generatedData.summary) ||
       `This analysis uses ${retrieval.matches.length} retrieved chunks for ${input.subject} / ${input.topic}.`,
     topic: input.topic,
     ...evidence,

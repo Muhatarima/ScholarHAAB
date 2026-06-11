@@ -21,7 +21,7 @@ export default function Navbar() {
     () => PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`)),
     [pathname]
   )
-  const homeHref = authed ? '/dashboard' : '/'
+  const homeHref = '/'
   const showAppLinks = authed && !isPublic
 
   useEffect(() => {

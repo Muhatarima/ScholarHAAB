@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
-import RichMessageContent from '@/components/RichMessageContent'
 import StarBackground from '@/components/StarBackground'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 
@@ -67,6 +66,16 @@ type DashboardPayload = {
   }>
 }
 
+function uniqueByLabel<T>(items: T[], label: (item: T) => string) {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    const key = label(item).toLowerCase().trim()
+    if (!key || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 function DashboardInner() {
   const [data, setData] = useState<DashboardPayload | null>(null)
   const [error, setError] = useState('')
@@ -108,6 +117,17 @@ function DashboardInner() {
     () => profile?.subjects?.length ? profile.subjects : dashboard?.subjects ?? [],
     [dashboard?.subjects, profile?.subjects]
   )
+  const attemptedCount = Number(dashboard?.totalQuestionsAttempted ?? 0)
+  const hasStudyData = attemptedCount > 0 || progress.some((row) => Number(row.attempted_count ?? 0) > 0)
+  const visibleWeakPoints = hasStudyData
+    ? uniqueByLabel(weakPoints, (point) => `${point.subject ?? 'General'}-${point.topic ?? 'General'}`)
+    : []
+  const visibleRecommendations = hasStudyData
+    ? uniqueByLabel(recommendations, (item) => `${item.subject ?? 'General'}-${item.topic ?? item.concept ?? 'General'}`)
+    : []
+  const visibleProgress = hasStudyData
+    ? uniqueByLabel(progress, (row) => `${row.subject ?? 'General'}-${row.topic ?? 'General'}`)
+    : []
 
   return (
     <main style={styles.page}>
@@ -143,7 +163,7 @@ function DashboardInner() {
               </article>
               <article style={styles.panel}>
                 <span style={styles.label}>Questions</span>
-                <strong style={styles.metric}>{dashboard?.totalQuestionsAttempted ?? 0}</strong>
+                <strong style={styles.metric}>{attemptedCount}</strong>
                 <p style={styles.muted}>{dashboard?.questionsToday ?? 0} done today</p>
               </article>
               <article style={styles.panel}>
@@ -157,13 +177,13 @@ function DashboardInner() {
               <article style={styles.panel}>
                 <h2 style={styles.sectionTitle}>Weak topics</h2>
                 <div style={styles.list}>
-                  {weakPoints.slice(0, 6).map((point) => (
+                  {visibleWeakPoints.slice(0, 6).map((point) => (
                     <div key={`${point.subject}-${point.topic}`} style={styles.row}>
                       <strong>{point.topic ?? 'General'}</strong>
                       <span>{point.subject ?? 'General'} · {point.accuracy ?? 0}%</span>
                     </div>
                   ))}
-                  {!weakPoints.length ? <p style={styles.muted}>No weak topic data yet.</p> : null}
+                  {!visibleWeakPoints.length ? <p style={styles.muted}>No weak topic data yet.</p> : null}
                 </div>
               </article>
 
@@ -195,24 +215,23 @@ function DashboardInner() {
             </section>
 
             <section style={styles.panel}>
-              <h2 style={styles.sectionTitle}>RAG alternative explanation path</h2>
+              <h2 style={styles.sectionTitle}>Next practice</h2>
               <p style={styles.muted}>
-                Built from your indexed documents. It re-explains difficult concepts using a different source style.
+                Clean, focused suggestions from your recent work.
               </p>
               <div style={styles.recommendations}>
-                {recommendations.map((item, index) => (
+                {visibleRecommendations.map((item, index) => (
                   <article key={`${item.topic}-${index}`} style={styles.recommendation}>
                     <span style={styles.badge}>{item.reason?.replaceAll('_', ' ') ?? 'recommendation'}</span>
                     <h3>{item.concept || item.topic}</h3>
-                    <RichMessageContent content={item.explanation || ''} />
                     {item.practicePrompt ? <p style={styles.practice}>{item.practicePrompt}</p> : null}
                     <small style={styles.muted}>
                       {(item.sources ?? []).slice(0, 2).map((source) => source.title).join(' · ')}
                     </small>
                   </article>
                 ))}
-                {!recommendations.length ? (
-                  <p style={styles.muted}>Ask or attempt more questions to generate RAG recommendations.</p>
+                {!visibleRecommendations.length ? (
+                  <p style={styles.muted}>Practice a few questions to unlock targeted next steps.</p>
                 ) : null}
               </div>
             </section>
@@ -220,7 +239,7 @@ function DashboardInner() {
             <section style={styles.panel}>
               <h2 style={styles.sectionTitle}>Performance by topic</h2>
               <div style={styles.progressList}>
-                {progress.slice(0, 10).map((row) => (
+                {visibleProgress.slice(0, 10).map((row) => (
                   <div key={`${row.subject}-${row.topic}`} style={styles.progressRow}>
                     <span>{row.subject ?? 'General'} · {row.topic ?? 'General'}</span>
                     <div style={styles.barTrack}>
@@ -229,7 +248,7 @@ function DashboardInner() {
                     <strong>{Math.round(Number(row.accuracy ?? 0))}%</strong>
                   </div>
                 ))}
-                {!progress.length ? <p style={styles.muted}>No topic attempts recorded yet.</p> : null}
+                {!visibleProgress.length ? <p style={styles.muted}>No topic attempts recorded yet.</p> : null}
               </div>
             </section>
           </>

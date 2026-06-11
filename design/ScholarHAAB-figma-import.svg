@@ -1,0 +1,314 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="2680" viewBox="0 0 1920 2680">
+  <defs>
+    <style>
+      .bg { fill: #02020c; }
+      .frame { fill: #050514; stroke: rgba(176,128,255,.24); stroke-width: 1; }
+      .panel { fill: rgba(255,255,255,.035); stroke: rgba(176,128,255,.18); stroke-width: 1; }
+      .panel2 { fill: #0a0818; stroke: rgba(176,128,255,.24); stroke-width: 1; }
+      .mutedPanel { fill: #080713; stroke: rgba(255,255,255,.08); stroke-width: 1; }
+      .purple { fill: #9b4dff; }
+      .purple2 { fill: #c06cff; }
+      .blue { fill: #60a5fa; }
+      .green { fill: #34d399; }
+      .yellow { fill: #facc15; }
+      .red { fill: #fb7185; }
+      .text { fill: #ecebff; font-family: Inter, Segoe UI, Arial, sans-serif; }
+      .muted { fill: #c7c2dc; font-family: Inter, Segoe UI, Arial, sans-serif; }
+      .dim { fill: #8b86a6; font-family: Inter, Segoe UI, Arial, sans-serif; }
+      .accent { fill: #b983ff; font-family: Inter, Segoe UI, Arial, sans-serif; }
+      .small { font-size: 14px; }
+      .body { font-size: 18px; }
+      .h2 { font-size: 30px; font-weight: 760; }
+      .h1 { font-size: 58px; font-weight: 640; letter-spacing: 0; }
+      .hero { font-size: 76px; font-weight: 560; letter-spacing: 0; }
+      .label { font-size: 12px; font-weight: 850; letter-spacing: 1.5px; text-transform: uppercase; }
+      .buttonText { fill: #ffffff; font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 16px; font-weight: 850; }
+      .cardTitle { fill: #ecebff; font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 22px; font-weight: 760; }
+      .metric { fill: #ecebff; font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 42px; font-weight: 840; }
+      .shadow { filter: drop-shadow(0 22px 60px rgba(0,0,0,.45)); }
+    </style>
+    <radialGradient id="logoCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="55%" stop-color="#000000"/>
+      <stop offset="60%" stop-color="#35106b"/>
+      <stop offset="74%" stop-color="#b14cff"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="buttonGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7733cc"/>
+      <stop offset="100%" stop-color="#aa55ff"/>
+    </linearGradient>
+    <linearGradient id="diskGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#b14cff" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#b14cff" stop-opacity=".35"/>
+      <stop offset="58%" stop-color="#e7c8ff"/>
+      <stop offset="78%" stop-color="#b14cff" stop-opacity=".85"/>
+      <stop offset="100%" stop-color="#b14cff" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="stars" width="160" height="160" patternUnits="userSpaceOnUse">
+      <rect width="160" height="160" fill="#02020c"/>
+      <circle cx="22" cy="28" r="1.2" fill="#ffffff" opacity=".38"/>
+      <circle cx="92" cy="46" r="1" fill="#b983ff" opacity=".5"/>
+      <circle cx="132" cy="122" r="1.4" fill="#ffffff" opacity=".34"/>
+      <circle cx="48" cy="118" r=".9" fill="#60a5fa" opacity=".42"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="2680" fill="#0b0b17"/>
+  <text x="80" y="70" class="text h2">ScholarHAAB App UI - Figma Import Board</text>
+  <text x="80" y="102" class="muted body">Import this SVG into Figma. Ungroup frames to edit text, shapes, cards, and layout.</text>
+
+  <!-- Shared logo symbol drawn inline per frame -->
+
+  <!-- Landing Page -->
+  <g id="Landing-Page" transform="translate(80,150)">
+    <rect width="560" height="760" rx="26" fill="url(#stars)" stroke="rgba(176,128,255,.22)"/>
+    <g transform="translate(44,42)">
+      <ellipse cx="25" cy="22" rx="31" ry="6" fill="url(#diskGrad)" transform="rotate(-7 25 22)"/>
+      <circle cx="25" cy="22" r="16" fill="url(#logoCore)"/>
+      <text x="62" y="30" class="text" font-size="24" font-weight="760">Scholar</text>
+      <text x="154" y="30" class="accent" font-size="24" font-weight="900">Haab</text>
+    </g>
+    <text x="44" y="140" class="accent label">Cambridge exam preparation</text>
+    <text x="44" y="214" class="text hero">Past-paper</text>
+    <text x="44" y="292" class="text hero">intelligence</text>
+    <text x="44" y="370" class="text hero">for study.</text>
+    <text x="44" y="422" class="muted body">RAG-grounded Solver, Exam Mode, Adaptive</text>
+    <text x="44" y="450" class="muted body">practice, and QBank from one verified source.</text>
+    <rect x="44" y="500" width="176" height="52" rx="8" fill="#9b4dff"/>
+    <text x="71" y="533" class="buttonText">Enter ScholarHaab</text>
+    <rect x="232" y="500" width="96" height="52" rx="8" fill="none" stroke="rgba(176,128,255,.3)"/>
+    <text x="260" y="533" class="muted" font-size="16" font-weight="800">Login</text>
+    <g transform="translate(44,604)">
+      <rect width="224" height="94" rx="8" class="panel"/>
+      <text x="18" y="34" class="cardTitle">Solver</text>
+      <text x="18" y="62" class="dim small">Ask text or image questions.</text>
+      <rect x="246" width="224" height="94" rx="8" class="panel"/>
+      <text x="264" y="34" class="cardTitle">QBank</text>
+      <text x="264" y="62" class="dim small">Repeated concepts and practice.</text>
+    </g>
+  </g>
+
+  <!-- Dashboard -->
+  <g id="Dashboard" transform="translate(680,150)">
+    <rect width="560" height="760" rx="26" fill="url(#stars)" stroke="rgba(176,128,255,.22)"/>
+    <text x="44" y="72" class="accent label">Dashboard</text>
+    <text x="44" y="126" class="text h1">Study cockpit</text>
+    <text x="44" y="162" class="muted body">A Level · Cambridge</text>
+    <rect x="402" y="72" width="114" height="44" rx="8" fill="#9b4dff"/>
+    <text x="424" y="100" class="buttonText">Profile</text>
+    <g transform="translate(44,212)">
+      <rect width="146" height="118" rx="8" class="panel"/>
+      <text x="16" y="30" class="accent label">Setup</text>
+      <text x="16" y="73" class="metric" font-size="34">Complete</text>
+      <text x="16" y="100" class="dim small">Physics, Maths</text>
+      <rect x="164" width="146" height="118" rx="8" class="panel"/>
+      <text x="180" y="30" class="accent label">Questions</text>
+      <text x="180" y="75" class="metric">128</text>
+      <text x="180" y="100" class="dim small">12 done today</text>
+      <rect x="328" width="146" height="118" rx="8" class="panel"/>
+      <text x="344" y="30" class="accent label">Accuracy</text>
+      <text x="344" y="75" class="metric">82%</text>
+      <text x="344" y="100" class="dim small">5 day streak</text>
+    </g>
+    <g transform="translate(44,366)">
+      <rect width="228" height="170" rx="8" class="panel"/>
+      <text x="18" y="38" class="cardTitle">Weak topics</text>
+      <text x="18" y="78" class="text small" font-weight="760">Waves</text>
+      <text x="128" y="78" class="dim small">Physics · 56%</text>
+      <rect x="18" y="92" width="190" height="8" rx="4" fill="#171429"/>
+      <rect x="18" y="92" width="106" height="8" rx="4" fill="#fb7185"/>
+      <text x="18" y="128" class="text small" font-weight="760">Differentiation</text>
+      <text x="128" y="128" class="dim small">Math · 61%</text>
+      <rect x="18" y="142" width="190" height="8" rx="4" fill="#171429"/>
+      <rect x="18" y="142" width="118" height="8" rx="4" fill="#facc15"/>
+      <rect x="246" width="228" height="170" rx="8" class="panel"/>
+      <text x="264" y="38" class="cardTitle">Next practice</text>
+      <rect x="264" y="62" width="78" height="24" rx="6" fill="rgba(155,77,255,.18)" stroke="rgba(176,128,255,.28)"/>
+      <text x="276" y="79" class="accent small">Priority</text>
+      <text x="264" y="114" class="text small" font-weight="760">Paper 2 waves drill</text>
+      <text x="264" y="142" class="dim small">Use v = f lambda before substitution.</text>
+    </g>
+    <g transform="translate(44,568)">
+      <rect width="474" height="134" rx="8" class="panel"/>
+      <text x="18" y="38" class="cardTitle">Performance by topic</text>
+      <text x="18" y="78" class="dim small">Physics · Electricity</text>
+      <rect x="172" y="68" width="214" height="10" rx="5" fill="#171429"/>
+      <rect x="172" y="68" width="172" height="10" rx="5" fill="#34d399"/>
+      <text x="404" y="78" class="text small" font-weight="800">80%</text>
+      <text x="18" y="110" class="dim small">Chemistry · Mole concept</text>
+      <rect x="172" y="100" width="214" height="10" rx="5" fill="#171429"/>
+      <rect x="172" y="100" width="146" height="10" rx="5" fill="#60a5fa"/>
+      <text x="404" y="110" class="text small" font-weight="800">68%</text>
+    </g>
+  </g>
+
+  <!-- Solver -->
+  <g id="Solver" transform="translate(1280,150)">
+    <rect width="560" height="760" rx="26" fill="url(#stars)" stroke="rgba(176,128,255,.22)"/>
+    <text x="44" y="94" class="text h1">Solver</text>
+    <text x="44" y="132" class="muted body">Type a question or upload a photo.</text>
+    <g transform="translate(44,190)">
+      <rect x="184" y="0" width="290" height="78" rx="18" fill="url(#buttonGrad)"/>
+      <text x="206" y="33" class="buttonText">Find x if 2x + 5 = 17</text>
+      <text x="206" y="59" class="buttonText" opacity=".72">[attached question.png]</text>
+      <text x="0" y="132" class="accent label">Verified answer</text>
+      <text x="0" y="172" class="text body">2x + 5 = 17</text>
+      <text x="0" y="204" class="text body">2x = 12</text>
+      <text x="0" y="236" class="text body">x = 6</text>
+      <text x="0" y="284" class="muted body">Mark-scheme tip: show the subtraction step</text>
+      <text x="0" y="312" class="muted body">before dividing by 2.</text>
+    </g>
+    <g transform="translate(44,606)" class="shadow">
+      <rect width="474" height="96" rx="22" fill="#0a0818" stroke="rgba(176,128,255,.24)"/>
+      <rect x="16" y="26" width="42" height="42" rx="8" fill="rgba(155,77,255,.14)" stroke="rgba(176,128,255,.2)"/>
+      <text x="31" y="53" class="accent" font-size="22">+</text>
+      <rect x="72" y="20" width="326" height="56" rx="8" fill="#070614" stroke="rgba(176,128,255,.12)"/>
+      <text x="92" y="54" class="dim body">Message Solver...</text>
+      <circle cx="434" cy="48" r="22" fill="#9b4dff"/>
+      <text x="427" y="56" class="buttonText">→</text>
+    </g>
+  </g>
+
+  <!-- QBank / Mock -->
+  <g id="QBank-Mock-Test" transform="translate(80,980)">
+    <rect width="860" height="720" rx="26" fill="url(#stars)" stroke="rgba(176,128,255,.22)"/>
+    <text x="44" y="72" class="accent label">Mock Test</text>
+    <text x="44" y="128" class="text h1">Practice like the real exam.</text>
+    <g transform="translate(44,176)">
+      <rect width="160" height="48" rx="8" class="panel2"/>
+      <text x="20" y="30" class="text body">Physics</text>
+      <rect x="174" width="210" height="48" rx="8" class="panel2"/>
+      <text x="194" y="30" class="text body">Waves</text>
+      <rect x="398" width="120" height="48" rx="8" class="panel2"/>
+      <text x="418" y="30" class="text body">3</text>
+      <rect x="532" width="210" height="48" rx="8" fill="#9b4dff"/>
+      <text x="562" y="30" class="buttonText">Generate Mock</text>
+    </g>
+    <g transform="translate(44,262)">
+      <rect width="500" height="390" rx="8" class="panel"/>
+      <text x="20" y="38" class="accent label">Question 1</text>
+      <text x="376" y="38" class="dim small">4 marks · 2023 · Q5</text>
+      <text x="20" y="86" class="text body">A wave has frequency 50 Hz and wavelength</text>
+      <text x="20" y="116" class="text body">3.0 m. Calculate the wave speed.</text>
+      <rect x="20" y="154" width="460" height="126" rx="8" fill="#070614" stroke="rgba(176,128,255,.18)"/>
+      <text x="40" y="190" class="dim body">Write the answer you would give...</text>
+      <rect x="20" y="312" width="116" height="42" rx="8" fill="none" stroke="rgba(176,128,255,.28)"/>
+      <text x="43" y="339" class="muted small" font-weight="800">Previous</text>
+      <rect x="168" y="312" width="150" height="42" rx="8" fill="#9b4dff"/>
+      <text x="194" y="339" class="buttonText" font-size="14">Submit Answer</text>
+      <rect x="356" y="312" width="96" height="42" rx="8" fill="none" stroke="rgba(176,128,255,.28)"/>
+      <text x="388" y="339" class="muted small" font-weight="800">Next</text>
+      <rect x="530" width="242" height="390" rx="8" class="panel"/>
+      <text x="552" y="38" class="cardTitle">Teacher feedback</text>
+      <text x="552" y="86" class="green" font-size="30" font-weight="860">3/4</text>
+      <text x="552" y="132" class="text small" font-weight="760">Earned marks</text>
+      <text x="552" y="162" class="dim small">Used v = f lambda</text>
+      <text x="552" y="188" class="dim small">Substituted values correctly</text>
+      <text x="552" y="234" class="text small" font-weight="760">Improve</text>
+      <text x="552" y="264" class="dim small">Include unit: m/s</text>
+      <text x="552" y="320" class="accent small">Model answer</text>
+      <text x="552" y="348" class="dim small">v = 50 x 3.0 = 150 m/s</text>
+    </g>
+  </g>
+
+  <!-- Docs / Pitch -->
+  <g id="Docs-Module" transform="translate(980,980)">
+    <rect width="860" height="720" rx="26" fill="#050514" stroke="rgba(176,128,255,.22)"/>
+    <rect width="238" height="720" rx="26" fill="#090817"/>
+    <g transform="translate(28,34)">
+      <rect width="32" height="32" rx="8" fill="#7c3aed"/>
+      <text x="44" y="24" class="text" font-size="20" font-weight="820">ScholarHAAB</text>
+    </g>
+    <text x="28" y="114" class="dim small" font-weight="820">Product Pitch</text>
+    <text x="28" y="156" class="muted small">Overview</text>
+    <text x="28" y="198" class="muted small">Problem</text>
+    <text x="28" y="240" class="muted small">Solution</text>
+    <text x="28" y="282" class="muted small">Team</text>
+    <text x="28" y="354" class="dim small" font-weight="820">Technical Specs</text>
+    <text x="28" y="396" class="muted small">Live Metrics</text>
+    <text x="28" y="438" class="muted small">Architecture</text>
+    <text x="28" y="480" class="muted small">Data Stack</text>
+    <g transform="translate(282,72)">
+      <rect width="132" height="28" rx="14" fill="rgba(155,77,255,.18)" stroke="rgba(176,128,255,.28)"/>
+      <text x="18" y="19" class="accent small" font-weight="820">LIVE DOCS</text>
+      <text x="0" y="102" class="text h1">The Future of AI</text>
+      <text x="0" y="164" class="text h1">Exam Preparation.</text>
+      <text x="0" y="214" class="muted body">A technical and business overview of the</text>
+      <text x="0" y="242" class="muted body">ScholarHAAB ecosystem.</text>
+      <g transform="translate(0,306)">
+        <rect width="132" height="112" rx="8" class="panel"/>
+        <text x="20" y="54" class="metric" font-size="34">100%</text>
+        <text x="20" y="84" class="dim small">Actionable coverage</text>
+        <rect x="154" width="132" height="112" rx="8" class="panel"/>
+        <text x="174" y="54" class="metric" font-size="34">33/33</text>
+        <text x="174" y="84" class="dim small">RAG eval</text>
+        <rect x="308" width="132" height="112" rx="8" class="panel"/>
+        <text x="328" y="54" class="metric" font-size="34">16/16</text>
+        <text x="328" y="84" class="dim small">QA suite</text>
+      </g>
+      <rect y="472" width="510" height="92" rx="8" class="panel"/>
+      <text x="20" y="36" class="cardTitle">Architecture</text>
+      <text x="20" y="66" class="dim small">Next.js UI → API Layer → RAG + AI Engine → Supabase / pgvector</text>
+    </g>
+  </g>
+
+  <!-- Components -->
+  <g id="Design-System" transform="translate(80,1780)">
+    <rect width="1760" height="760" rx="26" fill="#050514" stroke="rgba(176,128,255,.22)"/>
+    <text x="44" y="70" class="text h2">Reusable UI Components</text>
+    <text x="44" y="104" class="muted body">Dark exam-prep system, compact controls, confidence badges, dashboard cards, and chat patterns.</text>
+    <g transform="translate(44,154)">
+      <rect width="260" height="132" rx="8" class="panel"/>
+      <text x="18" y="34" class="accent label">Metric card</text>
+      <text x="18" y="82" class="metric">82%</text>
+      <text x="18" y="110" class="dim small">Overall accuracy</text>
+      <rect x="300" width="260" height="132" rx="8" class="panel"/>
+      <text x="318" y="34" class="accent label">Confidence</text>
+      <rect x="318" y="58" width="92" height="28" rx="6" fill="rgba(52,211,153,.15)" stroke="rgba(52,211,153,.32)"/>
+      <text x="334" y="77" class="green small" font-weight="850">VERIFIED</text>
+      <rect x="420" y="58" width="76" height="28" rx="6" fill="rgba(250,204,21,.15)" stroke="rgba(250,204,21,.32)"/>
+      <text x="437" y="77" class="yellow small" font-weight="850">PARTIAL</text>
+      <rect x="600" width="360" height="132" rx="22" class="panel2"/>
+      <rect x="620" y="38" width="236" height="54" rx="8" fill="#070614" stroke="rgba(176,128,255,.14)"/>
+      <text x="640" y="72" class="dim body">Message Solver...</text>
+      <circle cx="914" cy="65" r="22" fill="#9b4dff"/>
+      <text x="907" y="73" class="buttonText">→</text>
+      <rect x="1000" width="260" height="132" rx="8" class="panel"/>
+      <text x="1018" y="34" class="cardTitle">Weak topic row</text>
+      <text x="1018" y="72" class="dim small">Physics · Waves</text>
+      <rect x="1018" y="88" width="210" height="10" rx="5" fill="#171429"/>
+      <rect x="1018" y="88" width="118" height="10" rx="5" fill="#fb7185"/>
+      <rect x="1300" width="360" height="132" rx="8" class="panel"/>
+      <text x="1318" y="34" class="cardTitle">Primary action</text>
+      <rect x="1318" y="58" width="190" height="48" rx="8" fill="#9b4dff"/>
+      <text x="1348" y="89" class="buttonText">Generate Mock</text>
+    </g>
+    <g transform="translate(44,356)">
+      <text x="0" y="0" class="accent label">Color tokens</text>
+      <rect x="0" y="28" width="120" height="80" rx="8" fill="#02020c" stroke="rgba(255,255,255,.16)"/>
+      <text x="0" y="134" class="dim small">#02020c</text>
+      <rect x="150" y="28" width="120" height="80" rx="8" fill="#0a0818"/>
+      <text x="150" y="134" class="dim small">#0a0818</text>
+      <rect x="300" y="28" width="120" height="80" rx="8" fill="#9b4dff"/>
+      <text x="300" y="134" class="dim small">#9b4dff</text>
+      <rect x="450" y="28" width="120" height="80" rx="8" fill="#b983ff"/>
+      <text x="450" y="134" class="dim small">#b983ff</text>
+      <rect x="600" y="28" width="120" height="80" rx="8" fill="#34d399"/>
+      <text x="600" y="134" class="dim small">#34d399</text>
+      <rect x="750" y="28" width="120" height="80" rx="8" fill="#60a5fa"/>
+      <text x="750" y="134" class="dim small">#60a5fa</text>
+      <rect x="900" y="28" width="120" height="80" rx="8" fill="#facc15"/>
+      <text x="900" y="134" class="dim small">#facc15</text>
+      <rect x="1050" y="28" width="120" height="80" rx="8" fill="#fb7185"/>
+      <text x="1050" y="134" class="dim small">#fb7185</text>
+    </g>
+    <g transform="translate(44,570)">
+      <text x="0" y="0" class="accent label">Typography</text>
+      <text x="0" y="54" class="text h1">Study cockpit</text>
+      <text x="420" y="54" class="text h2">Section title</text>
+      <text x="720" y="54" class="muted body">Readable body copy for focused learning workflows.</text>
+      <text x="0" y="114" class="dim small">Font: Inter / Segoe UI fallback. Letter spacing: 0 for headings, 1.5px for uppercase labels.</text>
+    </g>
+  </g>
+</svg>

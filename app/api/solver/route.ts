@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { runExplainPipeline } from '@/lib/rag/pipelines'
 import { createRequestId, logError } from '@/lib/server/logger'
+import {
+  normalizeChatFilesPayload,
+  prepareUploadedFiles,
+  selectUploadedFileChunks,
+} from '@/lib/server/file-input'
 import { getSupabaseAdmin } from '@/lib/server/supabase-admin'
 
 export const runtime = 'nodejs'
@@ -40,6 +45,17 @@ function withoutConfidence<T extends Record<string, unknown>>(value: T) {
   return clean
 }
 
+function uploadedContextBlock(query: string, body: Record<string, unknown>) {
+  const files = normalizeChatFilesPayload({
+    fileBase64: typeof body.fileBase64 === 'string' ? body.fileBase64 : undefined,
+    fileName: typeof body.fileName === 'string' ? body.fileName : undefined,
+    fileType: typeof body.fileType === 'string' ? body.fileType : undefined,
+    files: body.files,
+  })
+
+  return { files }
+}
+
 async function saveConversation(input: {
   answer: string
   question: string
@@ -67,17 +83,37 @@ export async function POST(req: Request) {
     const question = text(body.question || body.message)
     const subject = text(body.subject) || null
     const topic = text(body.topic) || null
+    const { files } = uploadedContextBlock(question, body)
 
-    if (!question) {
+    if (!question && files.length === 0) {
       return NextResponse.json(
-        { error: 'Question is required.', requestId },
+        { error: 'Question or uploaded image/PDF is required.', requestId },
         { status: 400, headers: { 'x-request-id': requestId } }
       )
     }
 
+    const uploaded = files.length ? await prepareUploadedFiles(files) : null
+    const fileChunks = uploaded
+      ? selectUploadedFileChunks(question || 'uploaded question', uploaded.chunks, 6)
+      : []
+    const fileText = fileChunks
+      .map((chunk, index) => [
+        `Uploaded file excerpt ${index + 1}: ${chunk.sourceTitle}`,
+        chunk.page ? `Page: ${chunk.page}` : '',
+        chunk.content,
+      ].filter(Boolean).join('\n'))
+      .join('\n\n')
+    const effectiveQuestion = [
+      question || 'Please solve the uploaded question.',
+      fileText ? `Use this uploaded question text:\n${fileText}` : '',
+      uploaded?.warnings.length
+        ? `Upload note: ${uploaded.warnings.join(' ')}`
+        : '',
+    ].filter(Boolean).join('\n\n')
+
     const result = await runExplainPipeline({
       history: history(body.history),
-      query: question,
+      query: effectiveQuestion,
       requestId,
       subject,
       topic,
@@ -85,7 +121,7 @@ export async function POST(req: Request) {
 
     await saveConversation({
       answer: result.answer,
-      question,
+      question: question || uploaded?.fileSummary || 'Uploaded question',
       userId: user.id,
     })
 

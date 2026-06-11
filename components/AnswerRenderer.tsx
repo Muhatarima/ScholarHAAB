@@ -2,38 +2,65 @@
 
 import { BlockMath, InlineMath } from 'react-katex'
 import type { CSSProperties, ReactNode } from 'react'
+import MathRenderer from '@/components/MathRenderer'
 
 type AnswerRendererProps = {
   content: string
 }
 
+function cleanDisplayText(value: string) {
+  return String(value ?? '')
+    .replace(/Ã—/g, 'x')
+    .replace(/â†’/g, '->')
+    .replace(/â€“|â€”/g, '-')
+    .replace(/Â·/g, '-')
+    .replace(/Â\s*/g, '')
+    .replace(/\\\\text\{([^{}]+)\}/g, '$1')
+    .replace(/\\text\{([^{}]+)\}/g, '$1')
+    .replace(/(\d+(?:\.\d+)?)\s*([a-zA-Z])(?=\s|[,.])/g, '$1 $2')
+    .replace(/\b(\d+(?:\.\d+)?)\s*m\s*\/\s*s\^?2\b/gi, '$1 $\\mathrm{m\\,s^{-2}}$')
+    .replace(/\b(\d+(?:\.\d+)?)\s*m\s*\/\s*s\b/gi, '$1 $\\mathrm{m\\,s^{-1}}$')
+    .replace(/\bm\s*\/\s*s\^?2\b/gi, '$\\mathrm{m\\,s^{-2}}$')
+    .replace(/\bm\s*\/\s*s\b/gi, '$\\mathrm{m\\,s^{-1}}$')
+    .replace(/\bs\s*=\s*ut\s*\+\s*1\s*\/\s*2\s*at\^?2\b/gi, '$s = ut + \\frac{1}{2}at^{2}$')
+    .replace(/\ba\s*=\s*\(?\s*v\s*-\s*u\s*\)?\s*\/\s*t\b/gi, '$a = \\frac{v-u}{t}$')
+    .replace(/\bu\s*=\s*0\b/g, '$u = 0$')
+    .replace(/\s{2,}/g, ' ')
+}
+
+function normalizePlainFormula(value: string) {
+  return value
+    .replace(/\b([A-Za-z])_([A-Za-z0-9]+)\b/g, '$1_{$2}')
+    .replace(/\b([A-Za-z]+)_([A-Za-z0-9]+)\b/g, '$1_{$2}')
+    .replace(/\^([+-]?\d+)/g, '^{$1}')
+    .replace(/\b1\s*\/\s*2\b/g, '\\frac{1}{2}')
+    .replace(/\*/g, '\\times ')
+    .replace(/\bF_net\b/g, 'F_{net}')
+    .replace(/\bF_g\b/g, 'F_g')
+    .replace(/\bm\/s\^\{?2\}?/g, '\\mathrm{m\\,s^{-2}}')
+    .replace(/\bm\/s\b/g, '\\mathrm{m\\,s^{-1}}')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function isFormulaOnly(value: string) {
+  const trimmed = value.trim()
+  return (
+    trimmed.length <= 120 &&
+    !trimmed.includes('$') &&
+    /[=+\-*/^_]/.test(trimmed) &&
+    !/[.!?]\s*$/.test(trimmed) &&
+    !/\b(the|and|because|therefore|since|where|given|question|answer|step)\b/i.test(trimmed)
+  )
+}
+
 function renderMathText(text: string): ReactNode[] {
-  const nodes: ReactNode[] = []
-  const pattern = /(\$\$[^$]+\$\$|\$[^$]+\$|\\\([^)]+\\\))/g
-  let lastIndex = 0
-  let match: RegExpExecArray | null
-
-  while ((match = pattern.exec(text))) {
-    if (match.index > lastIndex) {
-      nodes.push(text.slice(lastIndex, match.index))
-    }
-
-    const token = match[0]
-    const value = token.startsWith('$$')
-      ? token.slice(2, -2)
-      : token.startsWith('$')
-        ? token.slice(1, -1)
-        : token.slice(2, -2)
-
-    nodes.push(<InlineMath key={`${match.index}-${value}`} math={value} />)
-    lastIndex = match.index + token.length
+  if (isFormulaOnly(text)) {
+    const math = normalizePlainFormula(text)
+    return [<InlineMath key={`formula-${math}`} math={math} />]
   }
 
-  if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex))
-  }
-
-  return nodes
+  return [<MathRenderer key={text} text={text} />]
 }
 
 function renderBlock(block: string, index: number) {
@@ -41,7 +68,7 @@ function renderBlock(block: string, index: number) {
   if (!trimmed) return null
 
   if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) {
-    return <BlockMath key={index} math={trimmed.slice(2, -2)} />
+    return <BlockMath key={index} math={normalizePlainFormula(trimmed.slice(2, -2))} />
   }
 
   const heading = /^(#{1,3})\s+(.+)$/.exec(trimmed)
@@ -70,9 +97,11 @@ function renderBlock(block: string, index: number) {
 }
 
 export default function AnswerRenderer({ content }: AnswerRendererProps) {
+  const displayContent = cleanDisplayText(content)
+
   return (
     <div style={styles.root}>
-      {content.split(/\n{2,}/).map(renderBlock)}
+      {displayContent.split(/\n{2,}/).map(renderBlock)}
     </div>
   )
 }

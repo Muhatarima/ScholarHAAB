@@ -26,13 +26,9 @@ function cleanBrokenLatexText(value: unknown) {
 import Link from 'next/link'
 import SharedLogo from '@/components/Logo'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import AIReasoningBadge from '@/components/AIReasoningBadge'
-import Badge from '@/components/Badge'
 import ProductNav from '@/components/ProductNav'
 import RichMessageContent from '@/components/RichMessageContent'
-import SourceCard from '@/components/SourceCard'
 import StarBackdrop from '@/components/StarBackdrop'
-import VerifiedBadge from '@/components/VerifiedBadge'
 import type { Product, PromptMode } from '@/lib/products'
 import { buildSupabaseAuthHeaders } from '@/lib/supabase/auth-headers'
 import { createSupabaseClient } from '@/lib/supabase/clientClient'
@@ -105,6 +101,19 @@ function readFileAsBase64(file: File): Promise<string> {
     reader.onerror = () => reject(reader.error)
     reader.readAsDataURL(file)
   })
+}
+
+async function readResponseJson(response: Response): Promise<Record<string, unknown>> {
+  const text = await response.text()
+  try {
+    return text ? JSON.parse(text) : {}
+  } catch {
+    return {
+      error: response.ok
+        ? 'The server returned an unreadable response.'
+        : 'The server returned a non-JSON error. Please try again.',
+    }
+  }
 }
 
 function LogoSvg({ compact = false }: { compact?: boolean }) {
@@ -200,19 +209,6 @@ function ThemeIcon({ name, size = 20 }: { name: ThemeIconName; size?: number }) 
       ) : null}
     </svg>
   )
-}
-
-function sourceText(sources?: SourceCitation[]) {
-  const source = sources?.[0]
-  if (!source) return ''
-  return String(source.title || source.source || source.label || 'Cambridge mark scheme')
-}
-
-function confidenceText(confidence?: string) {
-  if (confidence === 'VERIFIED') return 'Past-paper supported'
-  if (confidence === 'PATTERN_BASED') return 'Exam-style answer'
-  if (confidence === 'PARTIAL') return 'Partly supported'
-  return 'Study answer'
 }
 
 function replaceRetiredFallback(message: Message): Message {
@@ -405,31 +401,42 @@ export default function ProductChatShell({ product }: { product: Product }) {
           })),
         }),
       })
-      const data = await res.json()
+      const data = await readResponseJson(res)
+      if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Request failed.')
       if (typeof data.sessionId === 'string') setSessionId(data.sessionId)
-      if (data.usage) setUsage(data.usage)
+      if (data.usage && typeof data.usage === 'object') setUsage(data.usage as UsageState)
+      const understood =
+        data.understood && typeof data.understood === 'object'
+          ? (data.understood as { skippedTopic?: unknown })
+          : null
+      const truth =
+        data.truth && typeof data.truth === 'object'
+          ? (data.truth as { source?: unknown })
+          : null
       setMessages((current) => [
         ...current,
         {
           role: 'assistant',
-          content: data.answer || data.response || data.error || 'Connection issue. Send the question once more.',
-          confidence: typeof data.confidence === 'string' ? data.confidence : undefined,
-          confidenceBadge: typeof data.confidenceBadge === 'string' ? data.confidenceBadge : undefined,
-          confidenceScore: typeof data.confidenceScore === 'number' ? data.confidenceScore : undefined,
+          content:
+            ([data.answer, data.response, data.error].find((value) => typeof value === 'string') as string | undefined) ??
+            'Connection issue. Send the question once more.',
+          confidence: undefined,
+          confidenceBadge: undefined,
+          confidenceScore: undefined,
           chapterGap:
             data.chapterGap && typeof data.chapterGap === 'object'
               ? (data.chapterGap as Message['chapterGap'])
-              : data.understood?.skippedTopic
+              : understood?.skippedTopic
                 ? {
-                    skippedTopic: String(data.understood.skippedTopic),
+                    skippedTopic: String(understood.skippedTopic),
                     currentTopic: typeof data.topic === 'string' ? data.topic : 'Current topic',
-                    recommendation: `We will avoid ${data.understood.skippedTopic} and use a simpler route first.`,
+                    recommendation: `We will avoid ${understood.skippedTopic} and use a simpler route first.`,
                   }
                 : undefined,
           sources: Array.isArray(data.sources)
             ? data.sources
-            : data.truth?.source
-              ? [{ title: String(data.truth.source) }]
+            : truth?.source
+              ? [{ title: String(truth.source) }]
               : undefined,
         },
       ])
@@ -561,7 +568,6 @@ export default function ProductChatShell({ product }: { product: Product }) {
           <div style={styles.history}>
             {messages.map((message, index) => {
               const isUser = message.role === 'user'
-              const citation = sourceText(message.sources)
               return (
                 <div key={`${message.role}-${index}-${message.id ?? ''}`} style={styles.messageRow(isUser)}>
                   <div style={isUser ? styles.userBubble : styles.aiText}>
@@ -601,7 +607,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
                 )}
                 <span style={styles.attachmentName}>{preview.name}</span>
                 <button type="button" onClick={() => removeSelectedFile(index)} style={styles.attachmentRemove} aria-label={`Remove ${preview.name}`}>
-                  Ã—
+                  x
                 </button>
               </div>
             ))}
@@ -626,7 +632,7 @@ export default function ProductChatShell({ product }: { product: Product }) {
             style={styles.input}
           />
           <button type="submit" disabled={loading} style={styles.send}>
-            â†’
+            Send
           </button>
         </div>
       </form>
@@ -955,18 +961,6 @@ const styles = {
     color: '#E8E8FF',
     lineHeight: 1.75,
     paddingTop: 4,
-  } satisfies CSSProperties,
-  source: {
-    color: '#77779d',
-    fontSize: 11,
-    marginTop: 8,
-  } satisfies CSSProperties,
-  confidenceBadge: {
-    color: '#cda2ff',
-    fontSize: 12,
-    fontWeight: 800,
-    letterSpacing: '0.01em',
-    marginBottom: 8,
   } satisfies CSSProperties,
   chapterGapCard: {
     background: 'rgba(245,158,11,0.1)',

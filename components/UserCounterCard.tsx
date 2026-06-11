@@ -17,74 +17,61 @@ export default function UserCounterCard() {
   const n = count ?? 0
   const pct = Math.min((n / GOAL) * 100, 100)
 
- return (
-  <div
-  style={{
-    border: '1px solid rgba(170,85,255,.2)',
-    borderRadius: 32,
-    padding: '40px',
-    marginTop: 30,
-    background:
-      'linear-gradient(145deg, rgba(20,16,40,.95), rgba(8,8,25,.9))',
-    boxShadow: '0 20px 80px rgba(120,60,255,.25)',
-  }}
->
-  <div
-    style={{
-      color: '#AA66FF',
-      fontSize: 12,
-      letterSpacing: 3,
-      textTransform: 'uppercase',
-      marginBottom: 12,
-    }}
-  >
-    GLOBAL COMMUNITY
-  </div>
-
-  <div
-    style={{
-      fontSize: 'clamp(60px,10vw,120px)',
-      fontWeight: 800,
-      lineHeight: 1,
-      background:
-        'linear-gradient(112deg,#fff,#f2e8ff,#c78bff,#8f3dff)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-    }}
-  >
-    {n.toLocaleString()}
-  </div>
-
-  <div
-    style={{
-      color: '#bdbddd',
-      fontSize: 18,
-      marginTop: 10,
-    }}
-  >
-    students joined ScholarHAAB
-  </div>
-
-  <div
-    style={{
-      marginTop: 28,
-      height: 12,
-      borderRadius: 999,
-      background: 'rgba(255,255,255,.06)',
-      overflow: 'hidden',
-    }}
-  >
-    <div
-      style={{
-        width: `${pct}%`,
-        height: '100%',
-        borderRadius: 999,
-        background:
-          'linear-gradient(90deg,#7733cc,#aa55ff,#d4a0ff)',
-        transition: 'width 1s ease',
-      }}
-    />
-  </div>
-</div>
-)
+  return (
+    <section style={styles.card} aria-label="Students joined ScholarHAAB">
+      <div>
+        <p style={styles.label}>Students joined ScholarHAA</p>
+        <div style={styles.count}>{n.toLocaleString()}</div>
+      </div>
+      <div style={styles.progressTrack} aria-hidden="true">
+        <div style={{ ...styles.progressFill, width: `${pct}%` }} />
+      </div>
+    </section>
+  )
 }
+
+const styles = {
+  card: {
+    background: 'linear-gradient(145deg, rgba(20,16,40,.95), rgba(8,8,25,.9))',
+    border: '1px solid rgba(170,85,255,.2)',
+    borderRadius: 8,
+    boxShadow: '0 20px 80px rgba(120,60,255,.16)',
+    display: 'grid',
+    gap: 24,
+    padding: '34px',
+  },
+  copy: {
+    color: '#bdb7da',
+    fontSize: 17,
+    lineHeight: 1.55,
+    margin: '10px 0 0',
+  },
+  count: {
+    background: 'linear-gradient(112deg,#fff,#f2e8ff,#c78bff,#8f3dff)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontSize: 'clamp(56px,9vw,108px)',
+    fontWeight: 900,
+    lineHeight: 1,
+  },
+  label: {
+    color: '#c994ff',
+    fontSize: 12,
+    fontWeight: 900,
+    letterSpacing: 2.4,
+    margin: '0 0 12px',
+    textTransform: 'uppercase' as const,
+  },
+  progressFill: {
+    background: 'linear-gradient(90deg,#7733cc,#aa55ff,#d4a0ff)',
+    borderRadius: 999,
+    height: '100%',
+    transition: 'width 1s ease',
+  },
+  progressTrack: {
+    background: 'rgba(255,255,255,.07)',
+    borderRadius: 999,
+    height: 10,
+    overflow: 'hidden',
+  },
+} as const
