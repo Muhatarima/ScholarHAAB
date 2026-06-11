@@ -27,10 +27,6 @@ export default async function Home() {
   return (
     <main style={styles.page}>
       <StarBackground variant="chat" />
-      <header style={styles.header}>
-        <Logo href="/" compact />
-        <ProductNav compact style={styles.nav} />
-      </header>
       <section style={styles.shell}>
         <div style={styles.hero}>
           <Logo href="/" />

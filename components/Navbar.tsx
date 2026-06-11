@@ -22,7 +22,7 @@ export default function Navbar() {
     [pathname]
   )
   const homeHref = '/'
-  const showAppLinks = authed && !isPublic
+  const showAppLinks = (authed && !isPublic) || pathname === '/'
 
   useEffect(() => {
     let active = true
@@ -84,9 +84,16 @@ export default function Navbar() {
                   </Link>
                 )
               })}
-              <button type="button" onClick={() => void logout()} style={styles.logout}>
-                Logout
-              </button>
+              {authed ? (
+                <button type="button" onClick={() => void logout()} style={styles.logout}>
+                  Logout
+                </button>
+              ) : ready ? (
+                <>
+                  <Link href="/login" style={styles.link}>Login</Link>
+                  <Link href="/register" style={{ ...styles.link, ...styles.activeLink }}>Register</Link>
+                </>
+              ) : null}
             </nav>
 
             <button
@@ -124,9 +131,16 @@ export default function Navbar() {
               </Link>
             )
           })}
-          <button type="button" onClick={() => void logout()} style={{ ...styles.mobileLink, ...styles.logoutMobile }}>
-            Logout
-          </button>
+          {authed ? (
+            <button type="button" onClick={() => void logout()} style={{ ...styles.mobileLink, ...styles.logoutMobile }}>
+              Logout
+            </button>
+          ) : ready ? (
+            <>
+              <Link href="/login" onClick={() => setOpen(false)} style={styles.mobileLink}>Login</Link>
+              <Link href="/register" onClick={() => setOpen(false)} style={{ ...styles.mobileLink, ...styles.activeLink }}>Register</Link>
+            </>
+          ) : null}
         </nav>
       ) : null}
     </header>
