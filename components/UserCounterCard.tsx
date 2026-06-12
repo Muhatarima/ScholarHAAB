@@ -20,7 +20,7 @@ export default function UserCounterCard() {
   return (
     <section style={styles.card} aria-label="Students joined ScholarHAAB">
       <div>
-        <p style={styles.label}>Students joined ScholarHAA</p>
+        <p style={styles.label}>Students joined ScholarHAAB</p>
         <div style={styles.count}>{n.toLocaleString()}</div>
       </div>
       <div style={styles.progressTrack} aria-hidden="true">
